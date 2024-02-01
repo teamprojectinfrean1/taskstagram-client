@@ -9,7 +9,6 @@ import { useNavigate } from "react-router-dom";
 const queryClient = new QueryClient();
 
 const App = () => {
-
   const [logged, setLogged] = useState(true);
   return (
     <RecoilRoot>
@@ -37,6 +36,7 @@ const App = () => {
               path="/find/password"
               element={<AuthMain formType="find-password" />}
             ></Route>
+            <Route path="/signup/success" element={<AuthMain formType="signup-success" />}></Route>
           </Routes>
         </Router>
       </QueryClientProvider>

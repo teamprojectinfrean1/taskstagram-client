@@ -4,6 +4,7 @@ import LoginForm from "../components/auth/component/LoginForm";
 import SignupForm from "../components/auth/component/SignupForm";
 import FindEmailForm from "../components/auth/component/FindEmail";
 import FindPasswordForm from "../components/auth/component/FindPasswordForm";
+import SignupSuccess from "../components/auth/component/SignupSuccess";
 import { Box } from "@mui/material";
 
 interface ProysType {
@@ -26,6 +27,10 @@ const AuthMain = (props: ProysType) => {
     case "find-password":
       formComponent = <FindPasswordForm />;
       break;
+    case "signup-success":
+      formComponent = <SignupSuccess />
+      break;
+      
     default:
       formComponent = <LoginForm />;
   }
