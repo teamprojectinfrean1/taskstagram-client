@@ -11,10 +11,6 @@ const LoginForm = () => {
   const [passwd, setPasswd] = useState("");
   const [showModal, setShowModal] = useState(false);
 
-  // const testzz = () => {
-  //   console.log(showModal)
-  // }
-
   return (
     <>
       <div className="base-layout">

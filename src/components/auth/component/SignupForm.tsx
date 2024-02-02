@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "../common/SocialIcons";
 import {
@@ -22,6 +22,7 @@ const SignupForm = () => {
   const [passwdDoubleFlag, setPasswdDoubleFlag] = useState(false);
 
   const effectCheck = () => {
+    console.log(emailFlag, passwdFlag, passwdDoubleFlag)
     if (emailFlag && passwdFlag && passwdDoubleFlag) {
       navigate("/signup/success");
     }
