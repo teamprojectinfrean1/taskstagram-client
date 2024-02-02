@@ -1,47 +1,41 @@
-import { RecoilRoot } from "recoil";
-import { QueryClient, QueryClientProvider } from "react-query";
-import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import "./App.css";
-import AuthMain from "./pages/AuthMain";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import NotFoundPage from "@/pages/NotFoundPage";
+import AuthPage from "@/pages/AuthPage";
+import PageLayout from "@/components/PageLayout";
+import IssuePage from "@/pages/IssuePage";
+import TaskPage from "@/pages/TaskPage";
+import ProfilePage from "@/pages/ProfilePage";
 
-const queryClient = new QueryClient();
+const router = createBrowserRouter([
+  {
+    path: "/auth",
+    element: <AuthPage />,
+    errorElement: <NotFoundPage />,
+  },
+  {
+    path: "/",
+    element: <PageLayout />,
+    errorElement: <NotFoundPage />,
+    children: [
+      {
+        index: true,
+        element: <IssuePage />,
+      },
+      {
+        path: "/tasks",
+        element: <TaskPage />,
+      },
+      {
+        path: "/mypage",
+        element: <ProfilePage />,
+      },
+    ],
+  },
+]);
+
 
 const App = () => {
-  const [logged, setLogged] = useState(true);
-  return (
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <Router>
-          <Routes>
-            {logged ? (
-              <Route path="/" element={<AuthMain formType="login" />}></Route>
-            ) : (
-              <></>
-            )}
-            <Route
-              path="/login"
-              element={<AuthMain formType="login" />}
-            ></Route>
-            <Route
-              path="/signup"
-              element={<AuthMain formType="signup" />}
-            ></Route>
-            <Route
-              path="/find/username"
-              element={<AuthMain formType="find-username" />}
-            ></Route>
-            <Route
-              path="/find/password"
-              element={<AuthMain formType="find-password" />}
-            ></Route>
-            <Route path="/signup/success" element={<AuthMain formType="signup-success" />}></Route>
-          </Routes>
-        </Router>
-      </QueryClientProvider>
-    </RecoilRoot>
-  );
+  return <RouterProvider router={router} />;
 };
 
 export default App;
