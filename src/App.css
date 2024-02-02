@@ -3,11 +3,6 @@
   width: 80%;
 }
 
-.auth-bgcolor {
-  background-color: #D6E4E7;
-  min-height: 100vh;
-}
-
 .border-red {
   border: 0.5px solid red
 }

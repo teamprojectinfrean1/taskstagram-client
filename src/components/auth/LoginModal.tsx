@@ -1,5 +1,5 @@
-import "../Auth.css";
-import { Modal, Button, Box } from "@mui/material";
+import "./Auth.css";
+import { Modal, Button, Box, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 interface PropsType {
@@ -13,13 +13,15 @@ const LoginModal = (props: PropsType) => {
       <Modal open={props.showModal}>
         <Box className="modal-style" boxShadow={10}>
           <HighlightOffIcon className="state-left" />
-          <div style={{ width: "80%", margin: "auto" }}>
-            <div style={{ marginTop: 15 }}>
-              <h4>로그인에 실패했습니다.</h4>
-              <p style={{ marginTop: 5 }}>
+          <Box sx={{ width: "80%", m: "auto" }}>
+            <Box sx={{ mt: 2 }}>
+              <Typography sx={{ fontWeight: "bold" }}>
+                로그인에 실패했습니다.
+              </Typography>
+              <Typography sx={{ mt: 1 }}>
                 이메일이나 비밀번호를 확인해 주세요.
-              </p>
-            </div>
+              </Typography>
+            </Box>
             <Button
               variant="contained"
               fullWidth
@@ -30,7 +32,7 @@ const LoginModal = (props: PropsType) => {
             >
               확인
             </Button>
-          </div>
+          </Box>
         </Box>
       </Modal>
     </>

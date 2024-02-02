@@ -1,20 +1,22 @@
+import { Box } from "@mui/material";
+
 const SocialIcons = () => {
   return (
     <>
-      <div
-        style={{
-          width: "80%",
-          margin: "auto",
-          marginTop: 20,
+      <Box
+        sx={{
+          m: "auto",
           display: "flex",
           justifyContent: "space-around",
+          width: "80%",
+          mt: 3,
         }}
       >
         <img src="favicon.ico" alt="..." width={50} />
         <img src="favicon.ico" alt="..." width={50} />
         <img src="favicon.ico" alt="..." width={50} />
         <img src="favicon.ico" alt="..." width={50} />
-      </div>
+      </Box>
     </>
   );
 };

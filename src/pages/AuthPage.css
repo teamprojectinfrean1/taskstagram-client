@@ -22,3 +22,8 @@
   color: red;
 }
 
+.auth-bgcolor {
+  background-color: #D6E4E7;
+  min-height: 100vh;
+}
+

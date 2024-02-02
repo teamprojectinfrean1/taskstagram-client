@@ -1,10 +1,11 @@
+import "./Auth.css";
 import { useState } from "react";
-import SocialIcons from "../common/SocialIcons";
-import FindorJoinLink from "../common/FindorJoinLink";
-import { emailCheck, passwdCheck } from "../../../utils/authCheck";
+import SocialIcons from "../SocialIcons";
+import FindorJoinLink from "../FindorJoinLink";
+import { emailCheck, passwdCheck } from "@/utils/authCheck";
 import LoginModal from "./LoginModal";
 
-import { Button, Divider, OutlinedInput } from "@mui/material";
+import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
@@ -13,9 +14,11 @@ const LoginForm = () => {
 
   return (
     <>
-      <div className="base-layout">
-        <h2 style={{ marginTop: 60 }}>로그인</h2>
-        <p style={{ marginTop: 40, marginLeft: 3 }}>Email</p>
+      <Box className="base-layout">
+        <Typography variant="h5" sx={{ fontWeight: "bold", mt: 8 }}>
+          로그인
+        </Typography>
+        <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
         <OutlinedInput
           type="email"
           fullWidth
@@ -27,7 +30,7 @@ const LoginForm = () => {
           }}
         />
         {/* {email && !emailCheck(email) && <p>확인.</p>} */}
-        <p className="form-name">Password</p>
+        <Typography sx={{ mt: 3, ml: 0.5 }}>Password</Typography>
         <OutlinedInput
           type="password"
           fullWidth
@@ -49,14 +52,14 @@ const LoginForm = () => {
         >
           로그인
         </Button>
-        <div style={{ marginTop: 20 }}>
+        <Box sx={{ mt: 2 }}>
           <FindorJoinLink />
-        </div>
+        </Box>
         <Divider sx={{ mt: 3 }}>간편 로그인</Divider>
         <SocialIcons />
 
         <LoginModal showModal={showModal} setShowModal={setShowModal} />
-      </div>
+      </Box>
     </>
   );
 };
