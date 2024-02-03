@@ -1,7 +1,12 @@
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "../SocialIcons";
-import { emailCheck, passwdCheck, passwdDoubleCheck } from "@/utils/authCheck";
+import {
+  emailCheck,
+  passwdCheck,
+  passwdDoubleCheck,
+  apiAuthTest,
+} from "@/utils/authCheck";
 
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
@@ -18,9 +23,9 @@ const SignupForm = () => {
   const [passwdDoubleFlag, setPasswdDoubleFlag] = useState(false);
 
   const effectCheck = () => {
-    console.log(emailFlag, passwdFlag, passwdDoubleFlag);
     if (emailFlag && passwdFlag && passwdDoubleFlag) {
-      navigate("/auth/signup/success");
+      apiAuthTest({email, passwd, passwdDouble})
+      navigate("/auth/signup/success", { state: { email } });
     }
   };
 
@@ -90,7 +95,9 @@ const SignupForm = () => {
           }
           onBlur={(e) => {
             setPasswdDouble(e.target.value);
-            setPasswdDoubleFlag(passwdDoubleCheck({ passwd, passwdDouble }));
+            setPasswdDoubleFlag(
+              passwdDoubleCheck({ passwd, passwdDouble: e.target.value })
+            );
           }}
         />
         {passwdDouble && !passwdDoubleCheck({ passwd, passwdDouble }) && (

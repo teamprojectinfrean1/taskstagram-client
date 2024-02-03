@@ -1,8 +1,9 @@
 import { Button, Box, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const SignupSuccess = () => {
   const navigate = useNavigate();
+  const {email} = useLocation().state;
 
   return (
     <>
@@ -20,7 +21,7 @@ const SignupSuccess = () => {
           </Typography>
         </Typography>
         <Box sx={{ mt: 5, mb: 5 }}>
-          <Typography>asdqweq@naver.com님, 가입이 완료되었습니다.</Typography>
+          <Typography>{email}님, 가입이 완료되었습니다.</Typography>
         </Box>
         <Typography>확인 버튼을 누르면</Typography>
         <Typography>로그인 화면으로 이동합니다.</Typography>

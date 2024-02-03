@@ -12,6 +12,7 @@ interface ProysType {
 }
 
 const AuthPage = (props: ProysType) => {
+
   let formComponent;
 
   switch (props.formType) {

@@ -1,14 +1,14 @@
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import "@/App.css";
+import { useEffect } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
 import AuthPage from "./pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
 import ProfilePage from "@/pages/ProfilePage";
-import "@/App.css";
+import { loggedState } from "./Store";
+import { useRecoilValue } from "recoil";
 
 const router = createBrowserRouter([
   {
@@ -21,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: "signup",
-        element: <AuthPage formType="signup" />
+        element: <AuthPage formType="signup" />,
       },
       {
         path: "find/email",
@@ -29,12 +29,12 @@ const router = createBrowserRouter([
       },
       {
         path: "find/password",
-        element: <AuthPage formType="find-password" />
+        element: <AuthPage formType="find-password" />,
       },
       {
         path: "signup/success",
-        element: <AuthPage formType="signup-success" />
-      }
+        element: <AuthPage formType="signup-success" />,
+      },
     ],
   },
   {
@@ -59,6 +59,12 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
+
+  const logged = useRecoilValue(loggedState);
+
+  useEffect(() => {
+    logged? router.navigate("/") : router.navigate("/auth")
+  }, [logged])
 
   return (
     <>
