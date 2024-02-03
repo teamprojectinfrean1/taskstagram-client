@@ -13,7 +13,7 @@ type TypeProps = {
 
 const Task = ({key, taskName, taskExplanation, onSettingBtnClick, onShowTaskModal, onSelectTaskId}:TypeProps) => {
     return <div>
-        <Card sx={{width:240, height:240, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
+        <Card sx={{width:240, height:200, borderRadius: 4, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader 
                 action={
                     <IconButton aria-label='settings' onClick={onSettingBtnClick}>
@@ -22,7 +22,7 @@ const Task = ({key, taskName, taskExplanation, onSettingBtnClick, onShowTaskModa
                 } 
                 title={taskName}>
             </CardHeader>
-            <Card sx={{width:190, height:120, padding:3}} 
+            <Card sx={{width:190, height:80, borderRadius: 2, padding:3, '&:hover': {cursor: 'pointer'}}} 
                 variant="outlined" 
                 onClick={()=>{
                     onShowTaskModal(true);
