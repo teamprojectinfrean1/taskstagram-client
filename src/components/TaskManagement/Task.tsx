@@ -1,43 +1,35 @@
-import { CardHeader, IconButton, Paper, Typography } from '@mui/material';
-import Card from '@mui/material/Card';
+import { Card, CardHeader, IconButton, Typography } from '@mui/material';
 import theme from '@/theme/theme';
-import { styled } from '@mui/material/styles';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 type TypeProps = {
+    key:string;
     taskName: string;
     taskExplanation: string,
     onSettingBtnClick: () => void;
+    onShowTaskModal(type:boolean): void;
+    onSelectTaskId(type:string): void;
 };
 
-const onTaskPaperClick = () => console.log("taskpaper clicked");
-
-const TaskCard = styled(Card)(() => ({
-    width: 240,
-    height: 240,
-    padding: 5,
-    background: theme.palette.secondary.light
-  }));
-
-const TaskPaper = styled(Paper)(() => ({
-    width: 200,
-    height: 120,
-    padding: 18,
-    textAlign: 'left',
-  }));
-
-const Task = ({taskName, taskExplanation, onSettingBtnClick}:TypeProps) => {
+const Task = ({key, taskName, taskExplanation, onSettingBtnClick, onShowTaskModal, onSelectTaskId}:TypeProps) => {
     return <div>
-        <TaskCard variant="elevation" square={false}> 
+        <Card sx={{width:240, height:240, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader 
                 action={
                     <IconButton aria-label='settings' onClick={onSettingBtnClick}>
                         <MoreVertIcon />
                     </IconButton>
                 } 
-                title={taskName}></CardHeader>
-            <TaskPaper variant="outlined" onClick={onTaskPaperClick}>{taskExplanation}</TaskPaper>
-        </TaskCard>
+                title={taskName}>
+            </CardHeader>
+            <Card sx={{width:190, height:120, padding:3}} 
+                variant="outlined" 
+                onClick={()=>{
+                    onShowTaskModal(true);
+                    onSelectTaskId(key);
+                }}>{taskExplanation}</Card>
+            
+        </Card>
     </div>
 }
 
