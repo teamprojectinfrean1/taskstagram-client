@@ -16,7 +16,7 @@ const TaskPage = () => {
         return {
         taskId: `TaskId${index+1}`,
         taskName: `Task${index+1}`,
-        taskExplanation: `Task${index+1}설명`,
+        taskExplanation: `Task${index+1}에 대한 설명을 간단하게 적어주세요.에 대한 설명을 간단하게 적어주세요.에 대한 설명을 간단하게 적어주세요.`,
         isSelected: false}
       });
     setTasks([...taskobjs]);
@@ -29,7 +29,7 @@ const TaskPage = () => {
             <Grid item xs={2} sm={4} md={3} key={task.taskId}>
               <Task key={task.taskId}
                 taskName={task.taskName} 
-                taskExplanation={task.taskExplanation} 
+                taskExplanation={task.taskExplanation.length > 55 ? task.taskExplanation.substring(0,55).concat("...") : task.taskExplanation}
                 onSettingBtnClick={() => console.log("task")}
                 onShowTaskModal={setShowModal}
                 onSelectTaskId={setSelectedTaskId}
