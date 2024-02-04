@@ -11,3 +11,5 @@ npx create-react-app frontend --template typescript
 
 # npm 설치
 npm i axios react-query react-router-dom recoil 
+
+git push test
