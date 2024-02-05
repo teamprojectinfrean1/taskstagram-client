@@ -1,6 +1,15 @@
-import { Modal, Grid, Box, Typography, TextField, Autocomplete } from '@mui/material';
+import { Modal, Grid, Box, Stack, Typography, TextField, Autocomplete } from '@mui/material';
+import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import React, { useEffect, useState } from 'react';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { taskListState } from '@/stores/Store';
+import TaskObj from '@/models/TaskObj';
 
 type ModalProps={
+    task: TaskObj,
     isOpen: boolean,
     onCloseModal: () => void;
 }
@@ -29,23 +38,76 @@ const style = {
     p: 4,
   };
 
-const TaskModal = ({isOpen, onCloseModal}:ModalProps) =>{
+const replaceItemAtIndex = (arr:TaskObj[], index:number, newValue:TaskObj) => {
+    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+}
+
+const TaskModal = ({task, isOpen, onCloseModal}:ModalProps) =>{
+    debugger;
+    const [taskList, setTaskList] = useRecoilState(taskListState);
+    const [taskNameValue, setTaskNameValue] = useState(!task ? "" :task.taskName);
+    const [taskExplanationValue, setTaskExplanationValue] = useState(!task ? "" :task.taskExplanation);
+
+    const checkSelectedItem = (e:React.MouseEvent) => {
+        const index = taskList.findIndex((listItem) => listItem === task);
+        const newList = replaceItemAtIndex(taskList, index, {
+            ...task,
+            isSelected: false,
+        });
+        setTaskList(newList);
+        console.log("task", taskList);
+    }
+
+    //Task명 input 변경이벤트
+    const onTaskNameChanged = (e:React.ChangeEvent<HTMLTextAreaElement>) =>{
+        setTaskNameValue(e.target.value);
+        console.log(taskNameValue);
+    }
+    
+    //Task 설명 input 변경이벤트
+    const onTaskExplanationChanged = (e:React.ChangeEvent<HTMLTextAreaElement>) =>{
+        setTaskExplanationValue(e.target.value);
+    }
+
+    //모달창 닫힘 이벤트
+    const onModalClose = () => {
+        onCloseModal();
+        if(taskNameValue && taskExplanationValue){
+            setTaskList((oldTaskList) => [
+                ...oldTaskList,
+                {
+                    taskId: taskNameValue,
+                    taskName: taskNameValue,
+                    taskExplanation: taskExplanationValue,
+                    isSelected: false
+                }
+            ]);
+        }
+
+        // const index = taskList.findIndex((listItem) => listItem === task);
+        // const newList = replaceItemAtIndex(taskList, index, {
+        //     ...task,
+        //     isSelected: false,
+        // });
+        // setTaskList(newList);
+    }
+
     return <div>
-        <Modal open={isOpen} onClose={onCloseModal}>
+        <Modal open={isOpen} onClose={onModalClose}>
             <Box sx={style}>
-                <Grid container spacing={1}>
+                <Grid container spacing={2}>
                     <Grid item xs={8}>
                         <Box sx={{display: 'grid',
                             gap: 1,}}>
                             <Typography>Task명</Typography>
                             <TextField fullWidth sx={{"& .MuiInputBase-root": {
                                 height: 40
-                            }}} color="secondary" focused />
+                            }}} color="secondary" defaultValue={taskNameValue} onChange={onTaskNameChanged}/>
                             <Typography>내용</Typography>
                             <TextField fullWidth sx={{
                                 "& .MuiInputBase-root": {height: 120}, 
                                 gridColumn: '1', 
-                                gridRow: 'span 4'}} color="secondary" focused />
+                                gridRow: 'span 4'}} color="secondary" defaultValue={taskExplanationValue} onChange={onTaskExplanationChanged}/>
                         </Box>
                     </Grid>
                     <Grid item xs={4}>
@@ -81,7 +143,19 @@ const TaskModal = ({isOpen, onCloseModal}:ModalProps) =>{
                                 )}
                             />
                             <Typography>기간</Typography>
-                            <TextField color="secondary" focused />
+                            <Stack direction="row" spacing={2}>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker']}>
+                                    <DatePicker label="Start" name="startDate" />
+                                </DemoContainer>
+                                </LocalizationProvider>
+                                <LocalizationProvider dateAdapter={AdapterDayjs}>
+                                <DemoContainer components={['DatePicker']}>
+                                    <DatePicker label="End" name="startDate" />
+                                </DemoContainer>
+                                </LocalizationProvider>
+                            </Stack>
+
                             <Typography>하위 이슈</Typography>
                             <TextField color="secondary" focused />
                             <Typography>수정/삭제 권한</Typography>
