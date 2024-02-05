@@ -1,19 +1,31 @@
-import { Card, CardHeader, IconButton, Typography } from '@mui/material';
+import { Grid, Card, CardHeader, IconButton, Typography } from '@mui/material';
 import theme from '@/theme/theme';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import TaskObj from '@/models/TaskObj';
+import { useRecoilState } from 'recoil';
+import { taskListState } from '@/stores/Store';
+import React from 'react';
 
 type TypeProps = {
-    key:string;
+    item:TaskObj;
     taskName: string;
     taskExplanation: string,
     onSettingBtnClick: () => void;
     onShowTaskModal(type:boolean): void;
-    onSelectTaskId(type:string): void;
+    onSelectTask(type:TaskObj): void;
 };
 
-const Task = ({key, taskName, taskExplanation, onSettingBtnClick, onShowTaskModal, onSelectTaskId}:TypeProps) => {
+const replaceItemAtIndex = (arr:TaskObj[], index:number, newValue:TaskObj) => {
+    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+}
+
+
+const Task = ({item, taskName, taskExplanation, onSettingBtnClick, onShowTaskModal, onSelectTask}:TypeProps) => {
+    const [taskList, setTaskList] = useRecoilState(taskListState);
+    const index = taskList.findIndex((listItem) => listItem === item);
+
     return <div>
-        <Card sx={{width:240, height:200, borderRadius: 4, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
+        <Card sx={{borderRadius: 4, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader 
                 action={
                     <IconButton aria-label='settings' onClick={onSettingBtnClick}>
@@ -22,11 +34,11 @@ const Task = ({key, taskName, taskExplanation, onSettingBtnClick, onShowTaskModa
                 } 
                 title={taskName}>
             </CardHeader>
-            <Card sx={{width:190, height:80, borderRadius: 2, padding:3, '&:hover': {cursor: 'pointer'}}} 
+            <Card sx={{borderRadius: 2, padding:3, '&:hover': {cursor: 'pointer'}}} 
                 variant="outlined" 
-                onClick={()=>{
+                onClick={(e)=>{
                     onShowTaskModal(true);
-                    onSelectTaskId(key);
+                    onSelectTask(item);
                 }}>{taskExplanation}</Card>
             
         </Card>
