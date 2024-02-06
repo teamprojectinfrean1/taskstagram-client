@@ -13,6 +13,7 @@ import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "@/components/TextEditor";
 import CommentsContainer from "@/components/CommentsContainer";
+import { IssueFormData } from "@/models/Issue";
 
 type BasicModalProps = {
   modalButtonContent: React.ReactNode; // 아이콘으로 변경

@@ -1,19 +1,10 @@
 import BasicModal from "@/components/BasicModal";
 import SearchableSelect from "@/components/SearchableSelect";
 import { useState, Fragment } from "react";
+import { IssueFormData } from "@/models/Issue";
 
 type IssueFormModalProps = {
   isInitialEntry: boolean;
-};
-
-type IssueFormData = {
-  title: string | null;
-  content: string | null;
-  assignee: string[] | null;
-  task: string | null;
-  dateRange: [string, string] | null;
-  type: string | null;
-  status: string | null;
 };
 
 const IssueFormModal = ({ isInitialEntry }: IssueFormModalProps) => {
