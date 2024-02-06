@@ -1,4 +1,4 @@
-// import "../Auth.css";
+import "./Auth.css";
 import { Link } from "react-router-dom";
 
 import { Box, Typography, Divider, Button, OutlinedInput } from "@mui/material";

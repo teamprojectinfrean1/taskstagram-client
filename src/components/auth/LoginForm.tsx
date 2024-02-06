@@ -2,7 +2,7 @@ import "./Auth.css";
 import { useState } from "react";
 import SocialIcons from "../SocialIcons";
 import FindorJoinLink from "../FindorJoinLink";
-import { emailCheck, passwdCheck } from "@/utils/authCheck";
+import { effectCheck } from "@/utils/authCheck";
 import LoginModal from "./LoginModal";
 
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";

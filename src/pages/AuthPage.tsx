@@ -12,7 +12,6 @@ interface ProysType {
 }
 
 const AuthPage = (props: ProysType) => {
-
   let formComponent;
 
   switch (props.formType) {
@@ -40,12 +39,22 @@ const AuthPage = (props: ProysType) => {
     <>
       <Box className="auth-bgcolor">
         <Box className="base-layout">
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            <LogoAndName />
-            <Box className="base-login-layout form-size" boxShadow={10}>
-              {formComponent}
+          {props.formType === "signup" ? (
+            <Box sx={{ display: "flex", justifyContent:"center"}}>
+              <Box className="signup-form-size" boxShadow={10}>
+                {formComponent}
+              </Box>
             </Box>
-          </Box>
+          ) : (
+            <>
+              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+                <LogoAndName />
+                <Box className="form-size" boxShadow={10}>
+                  {formComponent}
+                </Box>
+              </Box>
+            </>
+          )}
         </Box>
       </Box>
     </>

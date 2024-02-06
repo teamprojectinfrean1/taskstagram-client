@@ -1,12 +1,22 @@
-.base-login-layout {
+/* .base-login-layout {
   background-color: #FFFFFF;
   border-radius: 5%;
-}
+} */
 
 .form-size {
   margin: 100px;
   width: 550px;
   height: 580px;
+  background-color: #FFFFFF;
+  border-radius: 5%;
+}
+
+.signup-form-size {
+  margin: 100px;
+  width: 1100px;
+  height: 580;
+  background-color: #FFFFFF;
+  border-radius: 5%;
 }
 
 .close-right-end {

@@ -4,7 +4,7 @@ import { Box, Typography } from "@mui/material";
 const LogoAndName = () => {
   return (
     <>
-      <Box className="auth-bgcolor">
+      <Box>
         <Box sx={{ mt: 40 }}>
           <img src="favicon.ico" alt="..." width={50} />
           <Typography variant="h2">tasktagram</Typography>
