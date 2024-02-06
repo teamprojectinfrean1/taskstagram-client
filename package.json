@@ -4,10 +4,12 @@
   "private": true,
   "dependencies": {
     "@craco/craco": "^7.1.0",
+    "@date-io/date-fns": "^3.0.0",
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.15.7",
     "@mui/material": "^5.15.7",
+    "@mui/x-date-pickers": "^6.19.3",
     "@testing-library/jest-dom": "^5.17.0",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
@@ -16,8 +18,10 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.7",
+    "date-fns": "^3.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
@@ -50,6 +54,7 @@
     ]
   },
   "devDependencies": {
+    "@types/react-draft-wysiwyg": "^1.13.8",
     "tsconfig-paths-webpack-plugin": "^4.1.0"
   }
 }
