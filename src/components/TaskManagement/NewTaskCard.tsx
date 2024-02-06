@@ -1,12 +1,14 @@
-import { Card, Box, Grid, IconButton, Typography } from '@mui/material';
+import { Card, Grid, IconButton, Typography } from '@mui/material';
 import theme from '@/theme/theme';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
+import TaskObj from '@/models/TaskObj';
 
 type TypeProps = {
     onShowTaskModal(type:boolean): void;
+    onClick(type:TaskObj|null): void;
 }
 
-const NewTaskCard = ({onShowTaskModal}:TypeProps) => {
+const NewTaskCard = ({onClick, onShowTaskModal}:TypeProps) => {
     return <div>
         <Card sx={{borderRadius: 4, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}>
         <Grid
@@ -15,7 +17,10 @@ const NewTaskCard = ({onShowTaskModal}:TypeProps) => {
             justifyContent="center"
             alignItems="center"
             >
-            <IconButton aria-label='settings' onClick={() => onShowTaskModal(true)}>
+            <IconButton onClick={() => {
+                onClick(null);
+                onShowTaskModal(true);
+            }}>
                 <AddCircleRoundedIcon fontSize="large"/>
             </IconButton>
             <Typography variant="subtitle1">TASK</Typography>

@@ -4,13 +4,15 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import React, { useEffect, useState } from 'react';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { taskListState } from '@/stores/Store';
 import TaskObj from '@/models/TaskObj';
 
 type ModalProps={
     task: TaskObj,
     isOpen: boolean,
+    onAdd(type:TaskObj): void;
+    onReplace(previousType:TaskObj, newType:TaskObj): void;
     onCloseModal: () => void;
 }
 
@@ -38,30 +40,19 @@ const style = {
     p: 4,
   };
 
-const replaceItemAtIndex = (arr:TaskObj[], index:number, newValue:TaskObj) => {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
-}
-
-const TaskModal = ({task, isOpen, onCloseModal}:ModalProps) =>{
-    debugger;
+const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>{
     const [taskList, setTaskList] = useRecoilState(taskListState);
-    const [taskNameValue, setTaskNameValue] = useState(!task ? "" :task.taskName);
-    const [taskExplanationValue, setTaskExplanationValue] = useState(!task ? "" :task.taskExplanation);
+    const [taskNameValue, setTaskNameValue] = useState("");
+    const [taskExplanationValue, setTaskExplanationValue] = useState("");
 
-    const checkSelectedItem = (e:React.MouseEvent) => {
-        const index = taskList.findIndex((listItem) => listItem === task);
-        const newList = replaceItemAtIndex(taskList, index, {
-            ...task,
-            isSelected: false,
-        });
-        setTaskList(newList);
-        console.log("task", taskList);
-    }
+    useEffect(()=>{
+        setTaskNameValue(task ? task.taskName : '');
+        setTaskExplanationValue(task ? task.taskExplanation : '');
+    },[task]);
 
     //Task명 input 변경이벤트
     const onTaskNameChanged = (e:React.ChangeEvent<HTMLTextAreaElement>) =>{
         setTaskNameValue(e.target.value);
-        console.log(taskNameValue);
     }
     
     //Task 설명 input 변경이벤트
@@ -71,46 +62,49 @@ const TaskModal = ({task, isOpen, onCloseModal}:ModalProps) =>{
 
     //모달창 닫힘 이벤트
     const onModalClose = () => {
-        onCloseModal();
-        if(taskNameValue && taskExplanationValue){
-            setTaskList((oldTaskList) => [
-                ...oldTaskList,
-                {
-                    taskId: taskNameValue,
+
+        if(!task){//새로운 task 생성시
+            if(taskNameValue){//일단 제목 입력시에만 생성되도록
+                onAdd({
+                    taskId: taskList.length + "s",//임시 Id
                     taskName: taskNameValue,
                     taskExplanation: taskExplanationValue,
                     isSelected: false
-                }
-            ]);
+                });
+            }
+
+            setTaskNameValue('');
+            setTaskExplanationValue('');
+        }else{//이미 생성된 Task
+            onReplace(task,{
+                ...task,
+                taskName: taskNameValue,
+                taskExplanation: taskExplanationValue
+            });
         }
 
-        // const index = taskList.findIndex((listItem) => listItem === task);
-        // const newList = replaceItemAtIndex(taskList, index, {
-        //     ...task,
-        //     isSelected: false,
-        // });
-        // setTaskList(newList);
+        onCloseModal();
     }
 
     return <div>
         <Modal open={isOpen} onClose={onModalClose}>
             <Box sx={style}>
                 <Grid container spacing={2}>
-                    <Grid item xs={8}>
+                    <Grid item xs={7}>
                         <Box sx={{display: 'grid',
                             gap: 1,}}>
                             <Typography>Task명</Typography>
                             <TextField fullWidth sx={{"& .MuiInputBase-root": {
                                 height: 40
-                            }}} color="secondary" defaultValue={taskNameValue} onChange={onTaskNameChanged}/>
+                            }}} color="secondary" value={taskNameValue} onChange={onTaskNameChanged}/>
                             <Typography>내용</Typography>
                             <TextField fullWidth sx={{
                                 "& .MuiInputBase-root": {height: 120}, 
                                 gridColumn: '1', 
-                                gridRow: 'span 4'}} color="secondary" defaultValue={taskExplanationValue} onChange={onTaskExplanationChanged}/>
+                                gridRow: 'span 4'}} color="secondary" value={taskExplanationValue} onChange={onTaskExplanationChanged}/>
                         </Box>
                     </Grid>
-                    <Grid item xs={4}>
+                    <Grid item xs={5}>
                         <Box sx={{display: 'grid',
                             gap: 1,}}>
                             <Typography>담당자</Typography>
@@ -137,7 +131,7 @@ const TaskModal = ({task, isOpen, onCloseModal}:ModalProps) =>{
                                     {...params}
                                     inputProps={{
                                         ...params.inputProps,
-                                        autoComplete: 'new-password', // disable autocomplete and autofill
+                                        autoComplete: 'new-password',
                                     }}
                                     />
                                 )}

@@ -1,45 +1,32 @@
-import { Grid, Card, CardHeader, IconButton, Typography } from '@mui/material';
+import { Card, CardHeader, IconButton } from '@mui/material';
 import theme from '@/theme/theme';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TaskObj from '@/models/TaskObj';
-import { useRecoilState } from 'recoil';
-import { taskListState } from '@/stores/Store';
-import React from 'react';
 
 type TypeProps = {
     item:TaskObj;
-    taskName: string;
-    taskExplanation: string,
-    onSettingBtnClick: () => void;
+    onDelete(type:TaskObj): void;
     onShowTaskModal(type:boolean): void;
-    onSelectTask(type:TaskObj): void;
+    onSelectedTask(type:TaskObj): void;
 };
 
-const replaceItemAtIndex = (arr:TaskObj[], index:number, newValue:TaskObj) => {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
-}
-
-
-const Task = ({item, taskName, taskExplanation, onSettingBtnClick, onShowTaskModal, onSelectTask}:TypeProps) => {
-    const [taskList, setTaskList] = useRecoilState(taskListState);
-    const index = taskList.findIndex((listItem) => listItem === item);
-
+const Task = ({item, onDelete, onShowTaskModal, onSelectedTask}:TypeProps) => {
     return <div>
         <Card sx={{borderRadius: 4, padding:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader 
                 action={
-                    <IconButton aria-label='settings' onClick={onSettingBtnClick}>
-                        <MoreVertIcon />
+                    <IconButton onClick={() => onDelete(item)}>
+                        <DeleteOutlineIcon />
                     </IconButton>
                 } 
-                title={taskName}>
+                title={item.taskName}>
             </CardHeader>
             <Card sx={{borderRadius: 2, padding:3, '&:hover': {cursor: 'pointer'}}} 
                 variant="outlined" 
-                onClick={(e)=>{
+                onClick={()=>{
                     onShowTaskModal(true);
-                    onSelectTask(item);
-                }}>{taskExplanation}</Card>
+                    onSelectedTask(item);
+                }}>{item.taskExplanation.length > 55 ? item.taskExplanation.substring(0,55).concat("...") : item.taskExplanation}</Card>
             
         </Card>
     </div>
