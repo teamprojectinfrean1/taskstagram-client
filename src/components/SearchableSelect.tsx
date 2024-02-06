@@ -35,7 +35,7 @@ const SearchableSelect = ({
         {label}
       </InputLabel>
       <Autocomplete
-        value={selectedOptions}
+        value={[]}
         onChange={handleOptionChange}
         options={possibleOptions}
         isOptionEqualToValue={(option, value) => {
