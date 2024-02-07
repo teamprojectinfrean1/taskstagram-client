@@ -4,25 +4,33 @@ import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { EditorState, ContentState } from "draft-js";
 
 type TextEditorProps = {
-  isInitialEntry: boolean;
+  id: string;
+  initialContent: string | null;
+  // onSelectionChange: (value: ContentState| null) => void;
 };
 
-const TextEditor = ({ isInitialEntry }: TextEditorProps) => {
-  const [editorState, setEditorState] = useState(
-    isInitialEntry
-      ? EditorState.createEmpty()
-      : EditorState.createWithContent(ContentState.createFromText(""))
-  ); /* API에서 반환된 텍스트 콘텐츠로 업데이트 필요 */
+const TextEditor = ({
+  id,
+  initialContent,
+  // onSelectionChange,
+}: TextEditorProps) => {
+  // const handleEditorChange = (newEditorState: EditorState) => {
+  //   const contentState = newEditorState.getCurrentContent();
+  //   onSelectionChange(contentState);
+  // };
 
-  const handleEditorChange = (newEditorState: EditorState) => {
-    setEditorState(newEditorState);
-  };
 
   return (
     <div>
       <Editor
-        editorState={editorState}
-        onEditorStateChange={handleEditorChange}
+        editorState={
+          initialContent
+            ? EditorState.createWithContent(
+                ContentState.createFromText(initialContent)
+              )
+            : EditorState.createEmpty()
+        }
+        // onEditorStateChange={handleEditorChange}
         localization={{ locale: "ko" }}
         editorStyle={{
           height: "400px",

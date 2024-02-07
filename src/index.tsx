@@ -15,7 +15,7 @@ const root = ReactDOM.createRoot(
 const queryClient = new QueryClient();
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <RecoilRoot>
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
@@ -23,7 +23,7 @@ root.render(
         </ThemeProvider>
       </QueryClientProvider>
     </RecoilRoot>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function
