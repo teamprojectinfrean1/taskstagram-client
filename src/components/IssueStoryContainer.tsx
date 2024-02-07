@@ -35,7 +35,7 @@ const IssueStoryContainer = ({
           ))}
         </Box>
 
-        <IconButton // this shouldn't be rendering at all if the container is not full
+        <IconButton // 컨테이터가 다 찼을 경우에만 렌더링하도록 변경
           size="large"
           aria-label={ariaLabel}
           sx={{ m: 2 }}

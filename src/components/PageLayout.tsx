@@ -18,7 +18,6 @@ const PageLayout = () => {
           marginLeft: isSideNavOpen ? "var(--side-nav-width)" : "0",
           transition: "margin-left 0.5s ease-out",
           p: 4,
-          backgroundColor: "beige",
         }}
       >
         <Outlet />
