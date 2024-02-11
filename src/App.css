@@ -1,0 +1,12 @@
+.base-layout {
+  margin: auto;
+  width: 80%;
+}
+
+.border-red {
+  border: 0.5px solid red
+}
+
+.text-center {
+  text-align: center;
+}
