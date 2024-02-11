@@ -3,7 +3,7 @@ import { Box, Typography, OutlinedInput, Button } from "@mui/material";
 import { phoneNumberDoubleCheck } from "@/utils/authCheck";
 import { useState } from "react";
 
-interface PropsType {
+type PropsType = {
   phoneCertifi: string;
   phoneNumberFlag: boolean;
   phoneCertifiFlag: boolean;
@@ -11,25 +11,28 @@ interface PropsType {
   setPhoneCertifiFlag(phoneNumberFlag: boolean): void;
 }
 
-const PhoneCertifiInput = (props: PropsType) => {
+const PhoneCertifiInput = ({
+  phoneCertifi,
+  phoneNumberFlag,
+  phoneCertifiFlag,
+  setPhoneCertifi,
+  setPhoneCertifiFlag,
+}: PropsType) => {
+
   const phoneCertifiEffectCheck = () => {
-    if (props.phoneCertifi) {
-      return !props.phoneCertifiFlag ? (
-        <>
-          <Box className="error-font">
-            <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-              인증 번호를 다시 확인해주세요.
-            </Typography>
-          </Box>
-        </>
-      ) : (
-        <>
-          <Typography
-            sx={{ ml: 1, mt: 0.1, fontWeight: "bold", fontSize: "11px" }}
-          >
-            인증이 완료되었습니다.
+    if (phoneCertifi) {
+      return !phoneCertifiFlag ? (
+        <Box className="error-font">
+          <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
+            인증 번호를 다시 확인해주세요.
           </Typography>
-        </>
+        </Box>
+      ) : (
+        <Typography
+          sx={{ ml: 1, mt: 0.1, fontWeight: "bold", fontSize: "11px" }}
+        >
+          인증이 완료되었습니다.
+        </Typography>
       );
     }
   };
@@ -44,15 +47,10 @@ const PhoneCertifiInput = (props: PropsType) => {
             fullWidth
             size="small"
             placeholder={"인증번호 6자리"}
-            error={props.phoneCertifi && !props.phoneCertifiFlag ? true : false}
+            error={phoneCertifi && !phoneCertifiFlag ? true : false}
+            value={phoneCertifi}
             onBlur={(e) => {
-              props.setPhoneCertifi(e.target.value);
-              // props.setPhoneCertifiFlag(
-              //   effectCheck({
-              //     type: "phoneNumber",
-              //     phoneCertifi: e.target.value,
-              //   })
-              // );
+              setPhoneCertifi(e.target.value);
             }}
             sx={{
               "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
@@ -64,14 +62,9 @@ const PhoneCertifiInput = (props: PropsType) => {
         <Button
           variant="contained"
           sx={{
-            bgcolor: props.phoneNumberFlag ? "#173665" : "#B2B4B8",
+            bgcolor: phoneNumberFlag ? "#173665" : "#B2B4B8",
             height: "38px",
           }}
-          // onClick={() => {
-          //   props.setPhoneCertifiFlag(
-          //     phoneNumberDoubleCheck(props.phoneCertifi)
-          //   );
-          // }}
         >
           인증
         </Button>

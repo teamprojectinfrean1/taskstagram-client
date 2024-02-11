@@ -7,14 +7,14 @@ import FindPasswordForm from "../components/auth/FindPasswordForm";
 import SignupSuccess from "../components/auth/SignupSuccess";
 import { Box } from "@mui/material";
 
-interface ProysType {
+type ProysType = {
   formType: string;
 }
 
-const AuthPage = (props: ProysType) => {
+const AuthPage = ({ formType }: ProysType) => {
   let formComponent;
 
-  switch (props.formType) {
+  switch (formType) {
     case "login":
       formComponent = <LoginForm />;
       break;
@@ -36,28 +36,24 @@ const AuthPage = (props: ProysType) => {
   }
 
   return (
-    <>
-      <Box className="auth-bgcolor">
-        <Box className="base-layout">
-          {props.formType === "signup" ? (
-            <Box sx={{ display: "flex", justifyContent:"center"}}>
-              <Box className="signup-form-size" boxShadow={10}>
-                {formComponent}
-              </Box>
+    <Box className="auth-bgcolor">
+      <Box className="base-layout">
+        {formType === "signup" ? (
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Box className="signup-form-size" boxShadow={10}>
+              {formComponent}
             </Box>
-          ) : (
-            <>
-              <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-                <LogoAndName />
-                <Box className="form-size" boxShadow={10}>
-                  {formComponent}
-                </Box>
-              </Box>
-            </>
-          )}
-        </Box>
+          </Box>
+        ) : (
+          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
+            <LogoAndName />
+            <Box className="form-size" boxShadow={10}>
+              {formComponent}
+            </Box>
+          </Box>
+        )}
       </Box>
-    </>
+    </Box>
   );
 };
 

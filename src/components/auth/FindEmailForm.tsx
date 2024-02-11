@@ -7,7 +7,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 const FindEmail = () => {
   return (
     <>
-      <Link to="/auth">
+      <Link to="/auth/login">
         <ArrowBackIcon fontSize="large" sx={{ m: 3, color: "#5F6368" }} />
       </Link>
       <Box className="find-layout">

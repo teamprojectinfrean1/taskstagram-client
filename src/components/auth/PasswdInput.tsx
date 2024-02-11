@@ -1,13 +1,13 @@
 import { Box, Typography, OutlinedInput } from "@mui/material";
-import { effectCheck } from "@/utils/authCheck";
+import { checkAuthInputValidity } from "@/utils/authCheck";
 
-interface PropsType {
+type PropsType = {
   passwd: string;
   setPasswd(passwd: string): void;
   setPasswdFlag(passwdFlag: boolean): void;
 }
 
-const PasswdInput = (props: PropsType) => {
+const PasswdInput = ({ passwd, setPasswd, setPasswdFlag }: PropsType) => {
   return (
     <>
       <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password</Typography>
@@ -16,27 +16,26 @@ const PasswdInput = (props: PropsType) => {
         fullWidth
         size="small"
         placeholder={"비밀번호"}
+        value={passwd}
         error={
-          props.passwd && !effectCheck({ type: "passwd", passwd: props.passwd })
+          passwd && !checkAuthInputValidity({ type: "passwd", passwd })
             ? true
             : false
         }
         onBlur={(e) => {
-          props.setPasswd(e.target.value);
-          props.setPasswdFlag(
-            effectCheck({ type: "passwd", passwd: e.target.value })
+          setPasswd(e.target.value);
+          setPasswdFlag(
+            checkAuthInputValidity({ type: "passwd", passwd: e.target.value })
           );
         }}
       />
-      {props.passwd &&
-        !effectCheck({ type: "passwd", passwd: props.passwd }) && (
-          <Box className="error-font">
-            <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-              영문, 숫자, 특수문자 2가지 이상 포함. 8자 이상 32자 이하(공백
-              제외)
-            </Typography>
-          </Box>
-        )}
+      {passwd && !checkAuthInputValidity({ type: "passwd", passwd }) && (
+        <Box className="error-font">
+          <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
+            영문, 숫자, 특수문자 2가지 이상 포함. 8자 이상 32자 이하(공백 제외)
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };

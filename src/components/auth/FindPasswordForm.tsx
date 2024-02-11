@@ -7,7 +7,7 @@ import { Box, Divider, Button, OutlinedInput, Typography } from "@mui/material";
 const FindPasswordForm = () => {
   return (
     <>
-      <Link to="/auth">
+      <Link to="/auth/login">
         <ArrowBackIcon fontSize="large" sx={{ m: 3, color: "#5F6368" }} />
       </Link>
       <Box className="base-layout">

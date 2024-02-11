@@ -1,26 +1,31 @@
 import "./Auth.css";
 import { Box, Typography, OutlinedInput, Button } from "@mui/material";
-import { effectCheck } from "@/utils/authCheck";
+import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useEffect, useState } from "react";
 
-interface PropsType {
+type PropsType = {
   phoneNumber: string;
   phoneNumberFlag: boolean;
   setPhoneNumber(phoneNumber: string): void;
   setPhoneNumberFlag(phoneNumberFlag: boolean): void;
 }
 
-const PhoneInput = (props: PropsType) => {
+const PhoneInput = ({
+  phoneNumber,
+  phoneNumberFlag,
+  setPhoneNumber,
+  setPhoneNumberFlag,
+}: PropsType) => {
   const [phoneButtonName, setPhoneButtonName] = useState("인증 요청");
   const [phrase, setPhrase] = useState("");
 
   useEffect(() => {
     phoneButtonCheck();
-  }, [props.phoneNumberFlag]);
+  }, [phoneNumberFlag]);
 
   const phoneEffectComment = () => {
-    if (props.phoneNumber) {
-      return !props.phoneNumberFlag ? (
+    if (phoneNumber) {
+      return !phoneNumberFlag ? (
         <>
           <Box className="error-font">
             <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
@@ -30,8 +35,14 @@ const PhoneInput = (props: PropsType) => {
         </>
       ) : (
         <>
-          <Typography 
-            sx={{ position: 'absolute', ml: 1, mt: 0.1, fontWeight: "bold", fontSize: "11px" }}
+          <Typography
+            sx={{
+              position: "absolute",
+              ml: 1,
+              mt: 0.1,
+              fontWeight: "bold",
+              fontSize: "11px",
+            }}
           >
             {phrase}
           </Typography>
@@ -41,11 +52,11 @@ const PhoneInput = (props: PropsType) => {
   };
 
   const changePhrase = () => {
-    const phoneEffectFlag = effectCheck({
+    const phoneEffectFlag = checkAuthInputValidity({
       type: "phoneNumber",
-      phoneNumber: props.phoneNumber,
+      phoneNumber,
     });
-    props.setPhoneNumberFlag(phoneEffectFlag);
+    setPhoneNumberFlag(phoneEffectFlag);
     phoneEffectFlag
       ? setPhrase("인증 번호가 전송되었습니다.")
       : setPhrase("휴대폰 번호를 다시 확인해주세요.");
@@ -56,8 +67,7 @@ const PhoneInput = (props: PropsType) => {
   };
 
   const phoneButtonCheck = () => {
-    console.log(props.phoneNumberFlag);
-    props.phoneNumberFlag
+    phoneNumberFlag
       ? setPhoneButtonName("재전송")
       : setPhoneButtonName("인증 요청");
   };
@@ -72,9 +82,10 @@ const PhoneInput = (props: PropsType) => {
             fullWidth
             size="small"
             placeholder={"01012345678"}
-            error={props.phoneNumber && errorFlag() ? true : false}
+            value={phoneNumber}
+            error={phoneNumber && errorFlag() ? true : false}
             onBlur={(e) => {
-              props.setPhoneNumber(e.target.value);
+              setPhoneNumber(e.target.value);
             }}
             sx={{
               "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
@@ -86,7 +97,7 @@ const PhoneInput = (props: PropsType) => {
         <Button
           variant="contained"
           sx={{
-            bgcolor: props.phoneNumberFlag ? "#173665" : "#B2B4B8",
+            bgcolor: phoneNumberFlag ? "#173665" : "#B2B4B8",
             height: "38px",
           }}
           onClick={() => {

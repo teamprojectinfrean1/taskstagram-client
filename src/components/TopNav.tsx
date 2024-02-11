@@ -1,7 +1,7 @@
 import { AppBar, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 
-interface TopNavProps {
+type TopNavProps = {
   onMenuClick: () => void;
 };
 

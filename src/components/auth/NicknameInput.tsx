@@ -1,13 +1,17 @@
-import { effectCheck } from "@/utils/authCheck";
+import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Box, Typography, OutlinedInput } from "@mui/material";
 
-interface PropsType {
+type PropsType = {
   nickname: string;
   setNickname(nickname: string): void;
   setNicknameFlag(nicknameFlag: boolean): void;
 }
 
-const NicknameInput = (props: PropsType) => {
+const NicknameInput = ({
+  nickname,
+  setNickname,
+  setNicknameFlag,
+}: PropsType) => {
   return (
     <>
       <Typography sx={{ mt: 3, ml: 0.5 }}>Nickname</Typography>
@@ -16,27 +20,29 @@ const NicknameInput = (props: PropsType) => {
         fullWidth
         size="small"
         placeholder={"닉네임"}
+        value={nickname}
         error={
-          props.nickname &&
-          !effectCheck({ type: "nickname", nickname: props.nickname })
+          nickname && !checkAuthInputValidity({ type: "nickname", nickname })
             ? true
             : false
         }
         onBlur={(e) => {
-          props.setNickname(e.target.value);
-          props.setNicknameFlag(
-            effectCheck({ type: "nickname", nickname: e.target.value })
+          setNickname(e.target.value);
+          setNicknameFlag(
+            checkAuthInputValidity({
+              type: "nickname",
+              nickname: e.target.value,
+            })
           );
         }}
       />
-      {props.nickname &&
-        !effectCheck({ type: "nickname", nickname: props.nickname }) && (
-          <Box className="error-font">
-            <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-              닉네임은 초성 금지,2글자 이상, 10글자 이하여야 합니다.
-            </Typography>
-          </Box>
-        )}
+      {nickname && !checkAuthInputValidity({ type: "nickname", nickname }) && (
+        <Box className="error-font">
+          <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
+            닉네임은 초성 금지,2글자 이상, 10글자 이하여야 합니다.
+          </Typography>
+        </Box>
+      )}
     </>
   );
 };

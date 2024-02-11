@@ -11,16 +11,18 @@ const phoneNumberRegEx = /^[0-9]{11}$/;
 // 인증 번호 검사
 const phoneCertifiRegEx = /^[0-9]{6}$/;
 
-interface PasswdType {
+type PasswdType = {
   passwd: string;
   passwdDouble: string;
 }
 
-interface AuthType extends PasswdType {
+type AuthType = { 
   email: string;
+  passwd: string;
+  passwdDouble: string;
 }
 
-interface effectType {
+type effectType = {
   type: string;
   email?: string;
   passwd?: string;
@@ -29,7 +31,7 @@ interface effectType {
   phoneCertifi?: string;
 }
 
-export const effectCheck = (props: effectType) => {
+export const checkAuthInputValidity = (props: effectType) => {
   switch (props.type) {
     case "email":
       return emailRegEx.test(props.email || "");
@@ -38,7 +40,7 @@ export const effectCheck = (props: effectType) => {
     case "nickname":
       if (props.nickname) {
         const nicknameLength = props.nickname.length;
-        return nicknameLength >= 2 && nicknameLength <= 10 && !koreanInitialRegEx ? true : false;
+        return nicknameLength >= 2 && nicknameLength <= 10 && !koreanInitialRegEx.test(props.nickname || "") ? true : false;
       } else {
         return false;
       }

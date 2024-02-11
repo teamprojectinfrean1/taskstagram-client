@@ -1,13 +1,13 @@
 import { Box, Typography, OutlinedInput } from "@mui/material";
-import { effectCheck } from "@/utils/authCheck";
+import { checkAuthInputValidity } from "@/utils/authCheck";
 
-interface PropsType {
+type PropsType = {
   email: string;
   setEmail(email: string): void;
   setEmailFlag(emailFlag: boolean): void;
 }
 
-const EmailInput = (props: PropsType) => {
+const EmailInput = ({ email, setEmail, setEmailFlag }: PropsType) => {
   return (
     <>
       <Typography sx={{ mt: 3, ml: 0.5 }}>Email</Typography>
@@ -16,13 +16,20 @@ const EmailInput = (props: PropsType) => {
         fullWidth
         size="small"
         placeholder={"example@email.com"}
-        error={props.email && !effectCheck({type: "email", email: props.email}) ? true : false}
+        error={
+          email && !checkAuthInputValidity({ type: "email", email })
+            ? true
+            : false
+        }
+        value={email}
         onBlur={(e) => {
-          props.setEmail(e.target.value);
-          props.setEmailFlag(effectCheck({type: "email", email: e.target.value}));
+          setEmail(e.target.value);
+          setEmailFlag(
+            checkAuthInputValidity({ type: "email", email: e.target.value })
+          );
         }}
       />
-      {props.email && !effectCheck({type: "email", email: props.email}) && (
+      {email && !checkAuthInputValidity({ type: "email", email }) && (
         <Box className="error-font">
           <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
             이메일 형식이 올바르지 않습니다.

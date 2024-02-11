@@ -1,14 +1,19 @@
 import { Box, Typography, OutlinedInput } from "@mui/material";
 import { passwdDoubleCheck } from "@/utils/authCheck";
 
-interface PropsType {
+type PropsType = {
   passwd: string;
   passwdDouble: string;
   setPasswdDouble(passwdDouble: string): void;
   setPasswdDoubleFlag(passwdDoubleFlag: boolean): void;
 }
 
-const PasswdDoubleInput = (props: PropsType) => {
+const PasswdDoubleInput = ({
+  passwd,
+  passwdDouble,
+  setPasswdDouble,
+  setPasswdDoubleFlag,
+}: PropsType) => {
   return (
     <>
       <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password check</Typography>
@@ -18,28 +23,29 @@ const PasswdDoubleInput = (props: PropsType) => {
         size="small"
         placeholder={"비밀번호 확인"}
         error={
-          props.passwdDouble &&
+          passwdDouble &&
           !passwdDoubleCheck({
-            passwd: props.passwd,
-            passwdDouble: props.passwdDouble,
+            passwd,
+            passwdDouble,
           })
             ? true
             : false
         }
+        value={passwdDouble}
         onBlur={(e) => {
-          props.setPasswdDouble(e.target.value);
-          props.setPasswdDoubleFlag(
+          setPasswdDouble(e.target.value);
+          setPasswdDoubleFlag(
             passwdDoubleCheck({
-              passwd: props.passwd,
+              passwd,
               passwdDouble: e.target.value,
             })
           );
         }}
       />
-      {props.passwdDouble &&
+      {passwdDouble &&
         !passwdDoubleCheck({
-          passwd: props.passwd,
-          passwdDouble: props.passwdDouble,
+          passwd,
+          passwdDouble,
         }) && (
           <Box className="error-font">
             <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
