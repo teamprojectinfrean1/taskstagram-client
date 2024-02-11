@@ -1,5 +1,5 @@
 import Task from "@/components/TaskManagement/Task";
-import NewTaskCard from "@/components/TaskManagement/NewTaskCard";
+import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
 import { useState, useEffect } from "react";
 import { Grid, Box, Typography } from '@mui/material';
@@ -54,26 +54,26 @@ const TaskPage = () => {
 
     return (
       <div>
-        <Box sx={{ flexGrow: 1}}>
-          <Grid container spacing={1} padding={5}>
+        <Box>
+          <Grid container spacing={1} p={5}>
             <Typography>TASK</Typography>
             <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               {taskList.length > 0 ? taskList.map(task =>
                 <Grid item xs={3} key={task.taskId}>
                   <Task key={task.taskId}
-                    item={task}
+                    selectedTask={task}
                     onDelete={deleteTask}
                     onShowTaskModal={setShowModal}
                     onSelectedTask={setSelectedTask}
                   />
                 </Grid>) : null}
                 <Grid item xs={3}>
-                  <NewTaskCard onClick={setSelectedTask} onShowTaskModal={setShowModal}></NewTaskCard>
+                  <NewTask onClick={setSelectedTask} onShowTaskModal={setShowModal}></NewTask>
                 </Grid>
             </Grid>
           </Grid>
         </Box>
-        <TaskModal task={selectedTask as TaskObj} 
+        <TaskModal selectedTask={selectedTask as TaskObj} 
           isOpen={showModal} 
           onAdd={addTask}
           onReplace={replaceTask}

@@ -1,18 +1,15 @@
-import { Modal, Grid, Box, Stack, Typography, TextField, Autocomplete } from '@mui/material';
-import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { Modal, Grid, Box, Typography, TextField, Autocomplete } from '@mui/material';
+import TaskDurationDatePicker from "@/components/TaskManagement/TaskDurationDatePicker";
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { taskListState } from '@/stores/Store';
 import TaskObj from '@/models/TaskObj';
 
-type ModalProps={
-    task: TaskObj,
+type TaskModalProps={
+    selectedTask: TaskObj,
     isOpen: boolean,
-    onAdd(type:TaskObj): void;
-    onReplace(previousType:TaskObj, newType:TaskObj): void;
+    onAdd(task:TaskObj): void;
+    onReplace(currentTask:TaskObj, newTask:TaskObj): void;
     onCloseModal: () => void;
 }
 
@@ -40,15 +37,15 @@ const style = {
     p: 4,
   };
 
-const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>{
+const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskModalProps) =>{
     const [taskList, setTaskList] = useRecoilState(taskListState);
     const [taskNameValue, setTaskNameValue] = useState("");
     const [taskExplanationValue, setTaskExplanationValue] = useState("");
 
     useEffect(()=>{
-        setTaskNameValue(task ? task.taskName : '');
-        setTaskExplanationValue(task ? task.taskExplanation : '');
-    },[task]);
+        setTaskNameValue(selectedTask ? selectedTask.taskName : '');
+        setTaskExplanationValue(selectedTask ? selectedTask.taskExplanation : '');
+    },[selectedTask]);
 
     //Task명 input 변경이벤트
     const onTaskNameChanged = (e:React.ChangeEvent<HTMLTextAreaElement>) =>{
@@ -63,7 +60,7 @@ const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>
     //모달창 닫힘 이벤트
     const onModalClose = () => {
 
-        if(!task){//새로운 task 생성시
+        if(!selectedTask){//새로운 task 생성시
             if(taskNameValue){//일단 제목 입력시에만 생성되도록
                 onAdd({
                     taskId: taskList.length + "s",//임시 Id
@@ -76,8 +73,8 @@ const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>
             setTaskNameValue('');
             setTaskExplanationValue('');
         }else{//이미 생성된 Task
-            onReplace(task,{
-                ...task,
+            onReplace(selectedTask,{
+                ...selectedTask,
                 taskName: taskNameValue,
                 taskExplanation: taskExplanationValue
             });
@@ -86,7 +83,7 @@ const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>
         onCloseModal();
     }
 
-    return <div>
+    return (
         <Modal open={isOpen} onClose={onModalClose}>
             <Box sx={style}>
                 <Grid container spacing={2}>
@@ -137,19 +134,7 @@ const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>
                                 )}
                             />
                             <Typography>기간</Typography>
-                            <Stack direction="row" spacing={2}>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="Start" name="startDate" />
-                                </DemoContainer>
-                                </LocalizationProvider>
-                                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                                <DemoContainer components={['DatePicker']}>
-                                    <DatePicker label="End" name="startDate" />
-                                </DemoContainer>
-                                </LocalizationProvider>
-                            </Stack>
-
+                            <TaskDurationDatePicker></TaskDurationDatePicker>
                             <Typography>하위 이슈</Typography>
                             <TextField color="secondary" focused />
                             <Typography>수정/삭제 권한</Typography>
@@ -159,7 +144,7 @@ const TaskModal = ({task, isOpen, onAdd, onReplace, onCloseModal}:ModalProps) =>
                 </Grid>
             </Box>
         </Modal>
-    </div>
+    )
 }
 
 export default TaskModal;
