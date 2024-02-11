@@ -18,8 +18,12 @@
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.7",
     "dayjs": "^1.11.10",
+    "draft-js": "^0.11.7",
+    "immutable": "^4.3.5",
+    "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-draft-wysiwyg": "^1.15.0",
     "react-query": "^3.39.3",
     "react-router-dom": "^6.21.3",
     "react-scripts": "5.0.1",
@@ -52,6 +56,8 @@
     ]
   },
   "devDependencies": {
+    "@types/lodash.debounce": "^4.0.9",
+    "@types/react-draft-wysiwyg": "^1.13.8",
     "tsconfig-paths-webpack-plugin": "^4.1.0"
   }
 }
