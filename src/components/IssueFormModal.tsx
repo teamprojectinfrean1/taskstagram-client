@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState } from "react";
 import {
   Box,
   Button,
@@ -15,7 +15,7 @@ import TextEditor from "@/components/TextEditor";
 import CommentsContainer from "@/components/CommentsContainer";
 import SearchableSelect from "@/components/SearchableSelect";
 import { IssueFormData } from "@/models/Issue";
-import { ContentState } from "draft-js";
+import { RawDraftContentState } from "draft-js";
 
 type IssueFormModalProps = {
   isInitialEntry?: boolean;
@@ -24,7 +24,7 @@ type IssueFormModalProps = {
 };
 
 const IssueFormModal = ({
-  isInitialEntry,
+  isInitialEntry = false,
   open,
   handleClose,
 }: IssueFormModalProps) => {
@@ -42,18 +42,24 @@ const IssueFormModal = ({
 
   const handleInputChange = (
     field: keyof IssueFormData,
-    value: string | string[] | ContentState | null
+    value: string | RawDraftContentState | string[] | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const formJson = Object.fromEntries((formData as any).entries());
-    // content: draftToHtml(convertToRaw(props.editorState.getCurrentContent()))
-    console.log(formJson);
-    handleClose();
+    // api 명세서 참고하고 추후 수정 필요:
+    // const formData = new FormData(event.currentTarget);
+  
+    // const rawContentState = formData.get('content');
+    // const contentString = rawContentState ? JSON.stringify(rawContentState) : null;
+  
+    // const formJson = Object.fromEntries(formData.entries());
+    // formJson.content = contentString;
+  
+    // console.log(formJson);
+    // handleClose();
   };
 
   return (
@@ -100,7 +106,13 @@ const IssueFormModal = ({
               <InputLabel htmlFor="content" sx={{ fontWeight: "bold", mb: 1 }}>
                 Content
               </InputLabel>
-              <TextEditor id="content" initialContent={formData.content} />
+              <TextEditor
+                id="content"
+                initialContent={formData.content}
+                handleContentChange={(content) =>
+                  handleInputChange("content", content)
+                }
+              />
             </Box>
             <CommentsContainer />
           </Grid>

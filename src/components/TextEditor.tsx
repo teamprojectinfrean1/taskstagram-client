@@ -1,45 +1,46 @@
 import { useState } from "react";
-import { Editor } from "react-draft-wysiwyg";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
-import { EditorState, ContentState } from "draft-js";
+import { Editor } from "react-draft-wysiwyg";
+import { EditorState, convertToRaw, convertFromRaw, RawDraftContentState } from "draft-js";
 
 type TextEditorProps = {
   id: string;
-  initialContent: string | null;
-  // onSelectionChange: (value: ContentState| null) => void;
+  initialContent?: RawDraftContentState; 
+  handleContentChange: (content: RawDraftContentState) => void;
 };
 
 const TextEditor = ({
   id,
   initialContent,
-  // onSelectionChange,
+  handleContentChange,
 }: TextEditorProps) => {
-  // const handleEditorChange = (newEditorState: EditorState) => {
-  //   const contentState = newEditorState.getCurrentContent();
-  //   onSelectionChange(contentState);
-  // };
+  const [editorState, setEditorState] = useState(() => {
+    if (initialContent) {
+      return EditorState.createWithContent(convertFromRaw(initialContent));
+    }
+    return EditorState.createEmpty();
+  });
 
+
+  const onEditorStateChange = (newState: EditorState) => {
+    setEditorState(newState);
+    handleContentChange(convertToRaw(newState.getCurrentContent()));
+  };
 
   return (
-    <div>
-      <Editor
-        editorState={
-          initialContent
-            ? EditorState.createWithContent(
-                ContentState.createFromText(initialContent)
-              )
-            : EditorState.createEmpty()
-        }
-        // onEditorStateChange={handleEditorChange}
-        localization={{ locale: "ko" }}
-        editorStyle={{
-          height: "400px",
-          width: "100%",
-          border: "1px solid lightgray",
-          padding: "20px",
-        }}
-      />
-    </div>
+    <Editor
+      editorState={editorState}
+      wrapperClassName="wrapper-class"
+      editorClassName="editor-class"
+      onEditorStateChange={onEditorStateChange}
+      localization={{ locale: "ko" }}
+      editorStyle={{
+        height: "400px",
+        width: "100%",
+        border: "1px solid lightgray",
+        padding: "20px",
+      }}
+    />
   );
 };
 
