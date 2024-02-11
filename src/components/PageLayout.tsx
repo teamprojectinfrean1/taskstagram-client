@@ -14,8 +14,9 @@ const PageLayout = () => {
       <Box
         component="main"
         sx={{
-          marginLeft: isSideNavOpen ? "var(--side-nav-width)" : '0',
-          transition: 'margin-left 0.5s ease-out',
+          height: "calc(100% - var(--top-nav-height))",
+          marginLeft: isSideNavOpen ? "var(--side-nav-width)" : "0",
+          transition: "margin-left 0.5s ease-out",
           p: 4,
         }}
       >

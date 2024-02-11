@@ -18,8 +18,9 @@ const SideNav = ({ open }: SideNavProps) => {
       anchor="left"
       open={open}
       sx={{
+        width: 'var(--side-nav-width)',
         ".MuiDrawer-paper": {
-          marginTop: "var(--top-nav-height)",
+          marginTop: 'var(--top-nav-height)',
         },
       }}
     >
