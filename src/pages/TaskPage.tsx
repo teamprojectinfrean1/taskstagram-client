@@ -46,8 +46,7 @@ const TaskPage = () => {
   //       return {
   //       taskId: `TaskId${index+1}`,
   //       taskName: `Task${index+1}`,
-  //       taskExplanation: `Task${index+1}에 대한 설명을 간단하게 적어주세요.`,
-  //       isSelected: false}
+  //       taskExplanation: `Task${index+1}에 대한 설명을 간단하게 적어주세요.`}
   //     });
   //   setTaskList([...taskobjs]);
   // }, []);

@@ -1,9 +1,10 @@
-import { Modal, Grid, Box, Typography, TextField, Autocomplete } from '@mui/material';
+import { Modal, Grid, Box, Typography, TextField } from '@mui/material';
 import TaskDurationDatePicker from "@/components/TaskManagement/TaskDurationDatePicker";
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { taskListState } from '@/stores/Store';
 import TaskObj from '@/models/TaskObj';
+import SearchableSelect from "@/components/SearchableSelect";
 
 type TaskModalProps={
     selectedTask: TaskObj,
@@ -39,44 +40,50 @@ const style = {
 
 const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskModalProps) =>{
     const [taskList, setTaskList] = useRecoilState(taskListState);
-    const [taskNameValue, setTaskNameValue] = useState("");
-    const [taskExplanationValue, setTaskExplanationValue] = useState("");
-
+    const [formData, setFormData] = useState<TaskObj>({
+        taskId: "",
+        taskName: "",
+        taskExplanation: "",
+        taskAssignee: null
+    });
+ 
     useEffect(()=>{
-        setTaskNameValue(selectedTask ? selectedTask.taskName : '');
-        setTaskExplanationValue(selectedTask ? selectedTask.taskExplanation : '');
+        setFormData({
+            taskId: selectedTask ? selectedTask.taskId : '',
+            taskName: selectedTask ? selectedTask.taskName : '',
+            taskExplanation: selectedTask ? selectedTask.taskExplanation : '',
+            taskAssignee: selectedTask ? selectedTask.taskAssignee : null
+        })
     },[selectedTask]);
 
-    //Task명 input 변경이벤트
-    const onTaskNameChanged = (e:React.ChangeEvent<HTMLTextAreaElement>) =>{
-        setTaskNameValue(e.target.value);
-    }
-    
-    //Task 설명 input 변경이벤트
-    const onTaskExplanationChanged = (e:React.ChangeEvent<HTMLTextAreaElement>) =>{
-        setTaskExplanationValue(e.target.value);
+    const handleInputChange = (field: keyof TaskObj, value: string | string[] | null) => {
+        setFormData((prev) => ({ ...prev, [field]: value }));
     }
 
     //모달창 닫힘 이벤트
     const onModalClose = () => {
 
         if(!selectedTask){//새로운 task 생성시
-            if(taskNameValue){//일단 제목 입력시에만 생성되도록
+            if(formData.taskName){//일단 제목 입력시에만 생성되도록
                 onAdd({
                     taskId: taskList.length + "s",//임시 Id
-                    taskName: taskNameValue,
-                    taskExplanation: taskExplanationValue,
-                    isSelected: false
+                    taskName: formData.taskName,
+                    taskExplanation: formData.taskExplanation,
+                    taskAssignee: formData.taskAssignee
                 });
             }
-
-            setTaskNameValue('');
-            setTaskExplanationValue('');
+            setFormData({
+                taskId: "",
+                taskName: "",
+                taskExplanation: "",
+                taskAssignee: null
+            });
         }else{//이미 생성된 Task
             onReplace(selectedTask,{
                 ...selectedTask,
-                taskName: taskNameValue,
-                taskExplanation: taskExplanationValue
+                taskName: formData.taskName,
+                taskExplanation: formData.taskExplanation,
+                taskAssignee: formData.taskAssignee
             });
         }
 
@@ -93,45 +100,23 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                             <Typography>Task명</Typography>
                             <TextField fullWidth sx={{"& .MuiInputBase-root": {
                                 height: 40
-                            }}} color="secondary" value={taskNameValue} onChange={onTaskNameChanged}/>
+                            }}} color="secondary" value={formData.taskName} onChange={(e) => handleInputChange("taskName", e.target.value)}/>
                             <Typography>내용</Typography>
                             <TextField fullWidth sx={{
                                 "& .MuiInputBase-root": {height: 120}, 
                                 gridColumn: '1', 
-                                gridRow: 'span 4'}} color="secondary" value={taskExplanationValue} onChange={onTaskExplanationChanged}/>
+                                gridRow: 'span 4'}} color="secondary" value={formData.taskExplanation} onChange={(e) => handleInputChange("taskExplanation", e.target.value)}/>
                         </Box>
                     </Grid>
                     <Grid item xs={5}>
                         <Box sx={{display: 'grid',
                             gap: 1,}}>
-                            <Typography>담당자</Typography>
-                            <Autocomplete
-                                id="country-select-demo"
-                                sx={{ width: 300 }}
-                                options={users}
-                                autoHighlight
-                                getOptionLabel={(option) => option.name}
-                                renderOption={(props, option) => (
-                                    <Box component="li" sx={{ '& > img': { mr: 2, flexShrink: 0 } }} {...props}>
-                                    <img
-                                        loading="lazy"
-                                        width="20"
-                                        srcSet={`https://flagcdn.com/w40/${option.id.toLowerCase()}.png 2x`}
-                                        src={`https://flagcdn.com/w20/${option.id.toLowerCase()}.png`}
-                                        alt=""
-                                    />
-                                    {option.name}
-                                    </Box>
-                                )}
-                                renderInput={(params) => (
-                                    <TextField
-                                    {...params}
-                                    inputProps={{
-                                        ...params.inputProps,
-                                        autoComplete: 'new-password',
-                                    }}
-                                    />
-                                )}
+                            <SearchableSelect
+                                label="담당자"
+                                possibleOptions={["Option 1", "Option 2", "Option 3"]}
+                                selectedOptions={formData.taskAssignee}
+                                multiselect
+                                onSelectionChange={(value) => handleInputChange("taskAssignee", value)}
                             />
                             <Typography>기간</Typography>
                             <TaskDurationDatePicker></TaskDurationDatePicker>

@@ -2,7 +2,7 @@ type TaskObj = {
     taskId: string,
     taskName: string,
     taskExplanation: string,
-    isSelected: boolean
+    taskAssignee: string[] | null
 }
 
 export default TaskObj;
