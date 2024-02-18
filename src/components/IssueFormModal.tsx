@@ -98,7 +98,7 @@ const IssueFormModal = ({
                 id="title"
                 variant="outlined"
                 fullWidth
-                value={formData.title ?? ""}
+                value={formData.title}
                 onChange={(e) => handleInputChange("title", e.target.value)}
               />
             </Box>
@@ -108,8 +108,8 @@ const IssueFormModal = ({
               </InputLabel>
               <TextEditor
                 id="content"
-                initialContent={formData.content}
-                handleContentChange={(content) =>
+                initialContent={formData.content}               
+                 handleContentChange={(content) =>
                   handleInputChange("content", content)
                 }
               />
@@ -119,7 +119,7 @@ const IssueFormModal = ({
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
             <SearchableSelect
               label="담당자"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
+              possibleOptions={["asdfasdfasdfasdfasdfasdfasdfasd1", "Option 2", "Option 3"]}
               selectedOptions={formData.assignee}
               multiselect
               onSelectionChange={(value) =>

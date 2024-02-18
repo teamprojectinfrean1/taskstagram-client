@@ -5,7 +5,7 @@ import { EditorState, convertToRaw, convertFromRaw, RawDraftContentState } from 
 
 type TextEditorProps = {
   id: string;
-  initialContent?: RawDraftContentState; 
+  initialContent: RawDraftContentState | null; 
   handleContentChange: (content: RawDraftContentState) => void;
 };
 
