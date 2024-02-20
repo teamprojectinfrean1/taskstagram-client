@@ -1,4 +1,4 @@
-import { Modal, Grid, Box, Typography, TextField, InputLabel } from '@mui/material';
+import { Modal, Grid, Box, Typography, TextField, InputLabel, RadioGroup, Radio, FormControl, FormControlLabel } from '@mui/material';
 import TaskDurationDatePicker from "@/components/TaskManagement/TaskDurationDatePicker";
 import React, { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
@@ -8,6 +8,9 @@ import SearchableSelect from "@/components/SearchableSelect";
 import { Dayjs } from 'dayjs';
 import TextEditor from '../TextEditor';
 import { RawDraftContentState } from 'draft-js';
+import theme from '@/theme/theme';
+import TagChip from './TagChip';
+import Tag from '@/models/Tag';
 
 type TaskModalProps={
     selectedTask: TaskObj,
@@ -48,9 +51,11 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
         taskName: "",
         taskExplanation: null,
         taskAssignee: null,
+        taskTags: null,
         taskStartDate: null,
         taskEndDate: null,
-        taskSubIssues: null
+        taskSubIssues: null,
+        taskAuthorityType: ""
     });
  
     useEffect(()=>{
@@ -59,13 +64,15 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
             taskName: selectedTask ? selectedTask.taskName : '',
             taskExplanation: selectedTask ? selectedTask.taskExplanation : null,
             taskAssignee: selectedTask ? selectedTask.taskAssignee : null,
+            taskTags: selectedTask ? selectedTask.taskTags : null,
             taskStartDate: selectedTask ? selectedTask.taskStartDate : null,
             taskEndDate: selectedTask ? selectedTask.taskEndDate : null,
-            taskSubIssues: selectedTask ? selectedTask.taskSubIssues : null
+            taskSubIssues: selectedTask ? selectedTask.taskSubIssues : null,
+            taskAuthorityType: selectedTask ? selectedTask.taskAuthorityType : ""
         })
     },[selectedTask]);
 
-    const handleInputChange = (field: keyof TaskObj, value: string | string[] | Dayjs | RawDraftContentState | null) => {
+    const handleInputChange = (field: keyof TaskObj, value: string | string[] | Tag[] | Dayjs | RawDraftContentState | null) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     }
 
@@ -79,9 +86,11 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                     taskName: formData.taskName,
                     taskExplanation: formData.taskExplanation,
                     taskAssignee: formData.taskAssignee,
+                    taskTags: formData.taskTags,
                     taskStartDate: formData.taskStartDate,
                     taskEndDate: formData.taskEndDate,
-                    taskSubIssues: formData.taskSubIssues
+                    taskSubIssues: formData.taskSubIssues,
+                    taskAuthorityType: formData.taskAuthorityType
                 });
             }
             setFormData({
@@ -89,9 +98,11 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                 taskName: "",
                 taskExplanation: null,
                 taskAssignee: null,
+                taskTags: null,
                 taskStartDate: null,
                 taskEndDate: null,
-                taskSubIssues: null
+                taskSubIssues: null,
+                taskAuthorityType: ""
             });
             console.log('formData', formData)
         }else{//이미 생성된 Task
@@ -102,7 +113,8 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                 taskAssignee: formData.taskAssignee,
                 taskStartDate: formData.taskStartDate,
                 taskEndDate: formData.taskEndDate,
-                taskSubIssues: formData.taskSubIssues
+                taskSubIssues: formData.taskSubIssues,
+                taskAuthorityType: formData.taskAuthorityType
             });
         }
 
@@ -148,6 +160,13 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                                 multiselect
                                 onSelectionChange={(value) => handleInputChange("taskAssignee", value)}
                             />
+                            <InputLabel htmlFor="태그" sx={{ fontWeight: "bold", mb: 1 }}>
+                                태그
+                            </InputLabel>
+                            <TagChip
+                                tagList={formData.taskTags}
+                                onTagDelete={(tag) => handleInputChange("taskTags", formData.taskTags ? formData.taskTags.filter((chip) => chip.key !== tag.key) : null)}
+                            />
                             <InputLabel htmlFor="기간" sx={{ fontWeight: "bold", mb: 1 }}>
                                 기간
                             </InputLabel>
@@ -156,14 +175,28 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                                 endDate={formData.taskEndDate}
                                 onChangeStartDate={(value) => handleInputChange("taskStartDate", value)}
                                 onChangeEndDate={(value) => handleInputChange("taskEndDate", value)}></TaskDurationDatePicker>
-                            <InputLabel htmlFor="하위 이슈" sx={{ fontWeight: "bold", mb: 1 }}>
-                                하위 이슈
-                            </InputLabel>
-                            <TextField color="secondary" focused />
+                            <SearchableSelect
+                                label="하위 이슈"
+                                possibleOptions={["Option 1", "Option 2", "Option 3"]}
+                                selectedOptions={formData.taskSubIssues}
+                                multiselect
+                                onSelectionChange={(value) => handleInputChange("taskSubIssues", value)}
+                            />
                             <InputLabel htmlFor="수정/삭제 권한" sx={{ fontWeight: "bold", mb: 1 }}>
                                 수정/삭제 권한
                             </InputLabel>
-                            <TextField color="secondary" focused />
+                            <Box sx={{borderRadius: 1, border:1, p:2, borderColor: theme.palette.secondary.light}}>
+                                <FormControl>
+                                    <RadioGroup
+                                        aria-labelledby="demo-controlled-radio-buttons-group"
+                                        name="controlled-radio-buttons-group"
+                                        value={formData.taskAuthorityType}
+                                        onChange={(e) => handleInputChange("taskAuthorityType", e.target.value)}>
+                                        <FormControlLabel value="allUsers" control={<Radio />} label="모든 구성원" />
+                                        <FormControlLabel value="onlyLeader" control={<Radio />} label="리더만" />
+                                    </RadioGroup>
+                                </FormControl>
+                            </Box>
                         </Box>
                     </Grid>
                 </Grid>
