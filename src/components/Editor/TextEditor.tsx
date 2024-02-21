@@ -1,11 +1,17 @@
 import { useState } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw, convertFromRaw, RawDraftContentState } from "draft-js";
+import toolbarOptions from "@/components/Editor/toolbarConfig";
+import {
+  EditorState,
+  convertToRaw,
+  convertFromRaw,
+  RawDraftContentState,
+} from "draft-js";
 
 type TextEditorProps = {
   id: string;
-  initialContent: RawDraftContentState | null; 
+  initialContent: RawDraftContentState | null;
   handleContentChange: (content: RawDraftContentState) => void;
 };
 
@@ -21,7 +27,6 @@ const TextEditor = ({
     return EditorState.createEmpty();
   });
 
-
   const onEditorStateChange = (newState: EditorState) => {
     setEditorState(newState);
     handleContentChange(convertToRaw(newState.getCurrentContent()));
@@ -30,10 +35,10 @@ const TextEditor = ({
   return (
     <Editor
       editorState={editorState}
-      wrapperClassName="wrapper-class"
-      editorClassName="editor-class"
+      editorClassName="custom-scrollbar"
       onEditorStateChange={onEditorStateChange}
       localization={{ locale: "ko" }}
+      toolbar={toolbarOptions}
       editorStyle={{
         height: "400px",
         width: "100%",

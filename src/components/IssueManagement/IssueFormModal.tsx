@@ -8,14 +8,18 @@ import {
   Grid,
   InputLabel,
   TextField,
+  Typography,
 } from "@mui/material";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
-import TextEditor from "@/components/TextEditor";
-import CommentsContainer from "@/components/CommentsContainer";
+import TextEditor from "@/components/Editor/TextEditor";
+import CommentContainer from "@/components/Comment/CommentContainer";
 import SearchableSelect from "@/components/SearchableSelect";
 import { IssueFormData } from "@/models/Issue";
 import { RawDraftContentState } from "draft-js";
+import theme from "@/theme/theme";
+import DateRangePicker from "@/components/DateRangePicker";
+import { grey } from "@mui/material/colors";
 
 type IssueFormModalProps = {
   isInitialEntry?: boolean;
@@ -38,8 +42,6 @@ const IssueFormModal = ({
     status: null,
   });
 
-  console.log(formData);
-
   const handleInputChange = (
     field: keyof IssueFormData,
     value: string | RawDraftContentState | string[] | null
@@ -51,13 +53,13 @@ const IssueFormModal = ({
     event.preventDefault();
     // api 명세서 참고하고 추후 수정 필요:
     // const formData = new FormData(event.currentTarget);
-  
+
     // const rawContentState = formData.get('content');
     // const contentString = rawContentState ? JSON.stringify(rawContentState) : null;
-  
+
     // const formJson = Object.fromEntries(formData.entries());
     // formJson.content = contentString;
-  
+
     // console.log(formJson);
     // handleClose();
   };
@@ -68,14 +70,15 @@ const IssueFormModal = ({
       onClose={handleClose}
       PaperProps={{
         sx: {
-          maxWidth: 1200,
+          maxWidth: 1400,
           width: "100%",
+          backgroundColor: theme.palette.background.default,
         },
         component: "form",
         onSubmit: handleSubmit,
       }}
     >
-      <DialogContent>
+      <DialogContent className="custom-scrollbar">
         <DialogActions sx={{ mb: 3, p: 0 }}>
           <Button
             type="submit"
@@ -98,7 +101,7 @@ const IssueFormModal = ({
                 id="title"
                 variant="outlined"
                 fullWidth
-                value={formData.title}
+                value={formData.title ?? ""}
                 onChange={(e) => handleInputChange("title", e.target.value)}
               />
             </Box>
@@ -108,18 +111,21 @@ const IssueFormModal = ({
               </InputLabel>
               <TextEditor
                 id="content"
-                initialContent={formData.content}               
-                 handleContentChange={(content) =>
+                initialContent={formData.content}
+                handleContentChange={(content) =>
                   handleInputChange("content", content)
                 }
               />
             </Box>
-            <CommentsContainer />
+            <CommentContainer />
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
+            <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
+              날짜
+            </Typography>
             <SearchableSelect
               label="담당자"
-              possibleOptions={["asdfasdfasdfasdfasdfasdfasdfasd1", "Option 2", "Option 3"]}
+              possibleOptions={["Option 1", "Option 2", "Option 3"]}
               selectedOptions={formData.assignee}
               multiselect
               onSelectionChange={(value) =>
@@ -131,6 +137,13 @@ const IssueFormModal = ({
               possibleOptions={["Option 1", "Option 2", "Option 3"]}
               selectedOptions={formData.task}
               onSelectionChange={(value) => handleInputChange("task", value)}
+            />
+            <InputLabel htmlFor="dateRange" sx={{ fontWeight: "bold", mb: 1 }}>
+              기간
+            </InputLabel>
+            <DateRangePicker
+              selectedOptions={formData.dateRange}
+              onSelectionChange={(value) => handleInputChange("dateRange", value)}
             />
             <SearchableSelect
               label="타입"
