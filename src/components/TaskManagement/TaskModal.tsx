@@ -9,8 +9,7 @@ import { Dayjs } from 'dayjs';
 import TextEditor from '../TextEditor';
 import { RawDraftContentState } from 'draft-js';
 import theme from '@/theme/theme';
-import TagChip from './TagChip';
-import Tag from '@/models/Tag';
+import TaskTagChipMaker from './TaskTagChipMaker';
 
 type TaskModalProps={
     selectedTask: TaskObj,
@@ -37,7 +36,7 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 1300,
+    width: 1300,//추후 반응형으로 변경 예정
     height: 700,
     bgcolor: 'background.paper',
     boxShadow: 24,
@@ -72,7 +71,7 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
         })
     },[selectedTask]);
 
-    const handleInputChange = (field: keyof TaskObj, value: string | string[] | Tag[] | Dayjs | RawDraftContentState | null) => {
+    const handleInputChange = (field: keyof TaskObj, value: string | string[] | Dayjs | RawDraftContentState | null) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     }
 
@@ -93,23 +92,12 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                     taskAuthorityType: formData.taskAuthorityType
                 });
             }
-            setFormData({
-                taskId: "",
-                taskName: "",
-                taskExplanation: null,
-                taskAssignee: null,
-                taskTags: null,
-                taskStartDate: null,
-                taskEndDate: null,
-                taskSubIssues: null,
-                taskAuthorityType: ""
-            });
-            console.log('formData', formData)
         }else{//이미 생성된 Task
             onReplace(selectedTask,{
                 ...selectedTask,
                 taskName: formData.taskName,
                 taskExplanation: formData.taskExplanation,
+                taskTags: formData.taskTags,
                 taskAssignee: formData.taskAssignee,
                 taskStartDate: formData.taskStartDate,
                 taskEndDate: formData.taskEndDate,
@@ -117,6 +105,17 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                 taskAuthorityType: formData.taskAuthorityType
             });
         }
+        setFormData({
+            taskId: "",
+            taskName: "",
+            taskExplanation: null,
+            taskAssignee: null,
+            taskTags: null,
+            taskStartDate: null,
+            taskEndDate: null,
+            taskSubIssues: null,
+            taskAuthorityType: ""
+        });
 
         onCloseModal();
     }
@@ -163,9 +162,9 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                             <InputLabel htmlFor="태그" sx={{ fontWeight: "bold", mb: 1 }}>
                                 태그
                             </InputLabel>
-                            <TagChip
+                            <TaskTagChipMaker
                                 tagList={formData.taskTags}
-                                onTagDelete={(tag) => handleInputChange("taskTags", formData.taskTags ? formData.taskTags.filter((chip) => chip.key !== tag.key) : null)}
+                                onTagSelectionChange={(value) => handleInputChange("taskTags", value)}
                             />
                             <InputLabel htmlFor="기간" sx={{ fontWeight: "bold", mb: 1 }}>
                                 기간
