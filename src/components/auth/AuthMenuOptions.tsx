@@ -1,11 +1,11 @@
-import "./auth/Auth.css";
+import "./Auth.css";
 import { Link } from "react-router-dom";
 
 import { Box, Stack, Typography, Divider } from "@mui/material";
 
 const AuthMenuOptions = () => {
   return (
-    <Box className="find-join-select">
+    <Box className="base-layout">
       <Stack
         direction="row"
         spacing={5}

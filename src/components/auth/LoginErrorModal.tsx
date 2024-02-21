@@ -5,14 +5,16 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 type PropsType = {
   showModal: boolean;
   handleClose(): void;
-}
+};
 
 const LoginErrorModal = ({ showModal, handleClose }: PropsType) => {
   return (
     <Modal open={showModal}>
       <Box className="modal-style" boxShadow={10}>
-        <HighlightOffIcon className="state-left" />
-        <Box sx={{ width: "80%", m: "auto" }}>
+        <HighlightOffIcon
+          sx={{ position: "absolute", mt: 2, ml: 0.8, color: "red" }}
+        />
+        <Box className="base-layout">
           <Box sx={{ mt: 2 }}>
             <Typography sx={{ fontWeight: "bold" }}>
               로그인에 실패했습니다.
@@ -24,7 +26,12 @@ const LoginErrorModal = ({ showModal, handleClose }: PropsType) => {
           <Button
             variant="contained"
             fullWidth
-            sx={{ my: 2, bgcolor: "#CCCCCC", color: "#121923" }}
+            sx={{
+              my: 2,
+              bgcolor: "#CCCCCC",
+              color: "#121923",
+              ":hover": { bgcolor: "#CCCCCC" },
+            }}
             onClick={() => {
               handleClose();
             }}

@@ -1,5 +1,5 @@
-import "./Auth.css";
-import { Box, Typography, OutlinedInput, Button } from "@mui/material";
+import theme from "@/theme/theme";
+import { Typography, OutlinedInput, Button, Grid } from "@mui/material";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useEffect, useState } from "react";
 
@@ -8,105 +8,115 @@ type PropsType = {
   phoneNumberFlag: boolean;
   setPhoneNumber(phoneNumber: string): void;
   setPhoneNumberFlag(phoneNumberFlag: boolean): void;
-}
+  phoneButtonOnClick: boolean;
+  setPhoneButtonOnClick(value: boolean): void;
+};
 
 const PhoneInput = ({
   phoneNumber,
   phoneNumberFlag,
   setPhoneNumber,
   setPhoneNumberFlag,
+  phoneButtonOnClick,
+  setPhoneButtonOnClick,
 }: PropsType) => {
-  const [phoneButtonName, setPhoneButtonName] = useState("인증 요청");
-  const [phrase, setPhrase] = useState("");
+  const [phoneButtonName, setPhoneButtonName] = useState("인증요청");
 
   useEffect(() => {
-    phoneButtonCheck();
-  }, [phoneNumberFlag]);
+    if (phoneNumberFlag && phoneButtonOnClick) {
+      setPhoneButtonName("재전송");
+    } else {
+      setPhoneButtonOnClick(false);
+      setPhoneButtonName("인증요청");
+    }
+  }, [phoneNumberFlag, phoneButtonOnClick]);
 
-  const phoneEffectComment = () => {
+  const changeViewPhoneValidity = () => {
     if (phoneNumber) {
-      return !phoneNumberFlag ? (
-        <>
-          <Box className="error-font">
-            <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-              {phrase}
-            </Typography>
-          </Box>
-        </>
-      ) : (
-        <>
+      if (!phoneNumberFlag) {
+        return (
           <Typography
             sx={{
               position: "absolute",
-              ml: 1,
               mt: 0.1,
+              ml: 1,
+              fontWeight: "bold",
+              fontSize: "11px",
+              color: `${theme.palette.error.main}`,
+            }}
+          >
+            휴대폰 번호 형식이 올바르지 않습니다.
+          </Typography>
+        );
+      } else if (phoneNumberFlag && phoneButtonOnClick) {
+        return (
+          <Typography
+            sx={{
+              position: "absolute",
+              mt: 0.1,
+              ml: 1,
               fontWeight: "bold",
               fontSize: "11px",
             }}
           >
-            {phrase}
+            인증 번호가 전송되었습니다.
           </Typography>
-        </>
-      );
+        );
+      }
     }
   };
 
-  const changePhrase = () => {
-    const phoneEffectFlag = checkAuthInputValidity({
-      type: "phoneNumber",
-      phoneNumber,
-    });
-    setPhoneNumberFlag(phoneEffectFlag);
-    phoneEffectFlag
-      ? setPhrase("인증 번호가 전송되었습니다.")
-      : setPhrase("휴대폰 번호를 다시 확인해주세요.");
-  };
-
-  const errorFlag = () => {
-    return phrase === "휴대폰 번호를 다시 확인해주세요." ? true : false;
-  };
-
-  const phoneButtonCheck = () => {
-    phoneNumberFlag
-      ? setPhoneButtonName("재전송")
-      : setPhoneButtonName("인증 요청");
+  const handleButtonClick = () => {
+    if (!phoneNumberFlag) {
+      setPhoneButtonName("인증요청");
+    } else {
+      setPhoneButtonOnClick(true);
+    }
   };
 
   return (
     <>
-      <Typography sx={{ mt: 3, ml: 0.5 }}>휴대폰 번호</Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box>
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
           <OutlinedInput
             type="number"
             fullWidth
             size="small"
             placeholder={"01012345678"}
             value={phoneNumber}
-            error={phoneNumber && errorFlag() ? true : false}
-            onBlur={(e) => {
+            error={phoneNumber && !phoneNumberFlag ? true : false}
+            onChange={(e) => {
               setPhoneNumber(e.target.value);
+              setPhoneNumberFlag(
+                checkAuthInputValidity({
+                  type: "phoneNumber",
+                  authValue: e.target.value,
+                })
+              );
             }}
             sx={{
               "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
                 { "-webkit-appearance": "none", margin: 0 },
             }}
           />
-          {phoneEffectComment()}
-        </Box>
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: phoneNumberFlag ? "#173665" : "#B2B4B8",
-            height: "38px",
-          }}
-          onClick={() => {
-            changePhrase();
-          }}
-        >
-          {phoneButtonName}
-        </Button>
-      </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              bgcolor: `${theme.palette.secondary.main}`,
+              height: "41px",
+              borderRadius: "7px",
+            }}
+            onClick={handleButtonClick}
+            disabled={!phoneNumberFlag}
+          >
+            {phoneButtonName}
+          </Button>
+        </Grid>
+      </Grid>
+      {changeViewPhoneValidity()}
     </>
   );
 };

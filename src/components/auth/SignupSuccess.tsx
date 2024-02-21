@@ -1,3 +1,4 @@
+import theme from "@/theme/theme";
 import { Button, Box, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
 
@@ -7,14 +8,14 @@ const SignupSuccess = () => {
 
   return (
     <Box className="base-layout text-center">
-      <Typography variant="h5" sx={{ fontWeight: "bold", mt: 12 }}>
+      <Typography variant="h3" sx={{ fontFamily: "Pattaya", mt: 12 }}>
         Welcome to
       </Typography>
-      <Typography variant="h5" sx={{ fontWeight: "bold", color: "#2388B3" }}>
+      <Typography variant="h3" sx={{ fontFamily: "Pattaya", color: "#2388B3" }}>
         Task
         <Typography
-          variant="h5"
-          sx={{ fontWeight: "bold", display: "inline", color: "black" }}
+          variant="h3"
+          sx={{ fontFamily: "Pattaya", display: "inline", color: "black" }}
         >
           tagram!
         </Typography>
@@ -28,9 +29,13 @@ const SignupSuccess = () => {
         variant="contained"
         size="large"
         fullWidth
-        sx={{ mt: 7, bgcolor: "#1B698A" }}
+        sx={{
+          mt: 6,
+          bgcolor: `${theme.palette.secondary.main}`,
+          borderRadius: "7px",
+        }}
         onClick={() => {
-          navigate("/login");
+          navigate("/auth/login");
         }}
       >
         확인

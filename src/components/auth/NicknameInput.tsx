@@ -1,14 +1,17 @@
+import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
-import { Box, Typography, OutlinedInput } from "@mui/material";
+import { Typography, OutlinedInput } from "@mui/material";
 
 type PropsType = {
   nickname: string;
+  nicknameFlag: boolean;
   setNickname(nickname: string): void;
   setNicknameFlag(nicknameFlag: boolean): void;
-}
+};
 
 const NicknameInput = ({
   nickname,
+  nicknameFlag,
   setNickname,
   setNicknameFlag,
 }: PropsType) => {
@@ -21,27 +24,30 @@ const NicknameInput = ({
         size="small"
         placeholder={"닉네임"}
         value={nickname}
-        error={
-          nickname && !checkAuthInputValidity({ type: "nickname", nickname })
-            ? true
-            : false
-        }
-        onBlur={(e) => {
+        error={nickname && !nicknameFlag ? true : false}
+        onChange={(e) => {
           setNickname(e.target.value);
           setNicknameFlag(
             checkAuthInputValidity({
               type: "nickname",
-              nickname: e.target.value,
+              authValue: e.target.value,
             })
           );
         }}
       />
-      {nickname && !checkAuthInputValidity({ type: "nickname", nickname }) && (
-        <Box className="error-font">
-          <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-            닉네임은 초성 금지,2글자 이상, 10글자 이하여야 합니다.
-          </Typography>
-        </Box>
+      {nickname && !nicknameFlag && (
+        <Typography
+          sx={{
+            position: "absolute",
+            mt: 0.1,
+            ml: 1,
+            fontWeight: "bold",
+            fontSize: "11px",
+            color: theme.palette.error.main,
+          }}
+        >
+          닉네임은 초성 금지,2글자 이상, 10글자 이하여야 합니다.
+        </Typography>
       )}
     </>
   );

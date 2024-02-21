@@ -1,21 +1,29 @@
 import { Box } from "@mui/material";
+import kakaoLoginButton from "@/assets/kakako_login_button.png";
+import kakaoSignupButton from "@/assets/kakao_signup_button.png";
 
-const SocialIcons = () => {
+type PropsType = {
+  authPage: "login" | "signup";
+};
+
+const SocialIcons = ({ authPage }: PropsType) => {
   return (
-    <Box
-      sx={{
-        m: "auto",
-        display: "flex",
-        justifyContent: "space-around",
-        width: "80%",
-        mt: 3,
-      }}
-    >
-      <img src="favicon.ico" alt="..." width={50} />
-      <img src="favicon.ico" alt="..." width={50} />
-      <img src="favicon.ico" alt="..." width={50} />
-      <img src="favicon.ico" alt="..." width={50} />
-    </Box>
+    <>
+      <Box
+        className="base-layout"
+        sx={{
+          display: "flex",
+          justifyContent: "space-around",
+          mt: 2,
+        }}
+      >
+        {authPage === "login" ? (
+          <img src={kakaoLoginButton} alt="kakakoLoginButton" />
+        ) : (
+          <img src={kakaoSignupButton} alt="kakaoSignupButton" />
+        )}
+      </Box>
+    </>
   );
 };
 
