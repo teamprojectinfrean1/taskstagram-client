@@ -1,21 +1,24 @@
-import { Modal, Grid, Box, Typography, TextField, InputLabel, RadioGroup, Radio, FormControl, FormControlLabel } from '@mui/material';
+import { Modal, Grid, Box, Button, TextField, InputLabel, RadioGroup, Radio, FormControl, FormControlLabel } from '@mui/material';
 import TaskDurationDatePicker from "@/components/TaskManagement/TaskDurationDatePicker";
-import React, { useEffect, useState } from 'react';
-import { useRecoilState } from 'recoil';
-import { taskListState } from '@/stores/Store';
+import { useEffect, useState } from 'react';
 import TaskObj from '@/models/TaskObj';
 import SearchableSelect from "@/components/SearchableSelect";
 import { Dayjs } from 'dayjs';
-import TextEditor from '../TextEditor';
+import SaveAsIcon from "@mui/icons-material/SaveAs";
+import CloseIcon from "@mui/icons-material/Close";
+import DeleteIcon from '@mui/icons-material/Delete';
+import TextEditor from '@/components/TextEditor';
 import { RawDraftContentState } from 'draft-js';
 import theme from '@/theme/theme';
-import TaskTagChipMaker from './TaskTagChipMaker';
+import TaskTagChipMaker from '@/components/TaskManagement/TaskTagChipMaker';
+import uuid from 'react-uuid';
 
 type TaskModalProps={
     selectedTask: TaskObj,
     isOpen: boolean,
     onAdd(task:TaskObj): void;
     onReplace(currentTask:TaskObj, newTask:TaskObj): void;
+    onDelete(task:TaskObj): void;
     onCloseModal: () => void;
 }
 
@@ -36,15 +39,14 @@ const style = {
     top: '50%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
-    width: 1300,//추후 반응형으로 변경 예정
-    height: 700,
+    maxWidth: 1300,//추후 반응형으로 변경 예정
+    width: "100%",
     bgcolor: 'background.paper',
     boxShadow: 24,
-    p: 4,
+    p: 2,
   };
 
-const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskModalProps) =>{
-    const [taskList, setTaskList] = useRecoilState(taskListState);
+const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onDelete, onCloseModal}:TaskModalProps) =>{
     const [formData, setFormData] = useState<TaskObj>({
         taskId: "",
         taskName: "",
@@ -58,40 +60,58 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
     });
  
     useEffect(()=>{
-        setFormData({
-            taskId: selectedTask ? selectedTask.taskId : '',
-            taskName: selectedTask ? selectedTask.taskName : '',
-            taskExplanation: selectedTask ? selectedTask.taskExplanation : null,
-            taskAssignee: selectedTask ? selectedTask.taskAssignee : null,
-            taskTags: selectedTask ? selectedTask.taskTags : null,
-            taskStartDate: selectedTask ? selectedTask.taskStartDate : null,
-            taskEndDate: selectedTask ? selectedTask.taskEndDate : null,
-            taskSubIssues: selectedTask ? selectedTask.taskSubIssues : null,
-            taskAuthorityType: selectedTask ? selectedTask.taskAuthorityType : ""
-        })
-    },[selectedTask]);
+        if (isOpen === true && selectedTask) {
+            setFormData({
+                taskId: selectedTask.taskId,
+                taskName: selectedTask.taskName,
+                taskExplanation: selectedTask.taskExplanation,
+                taskAssignee: selectedTask.taskAssignee,
+                taskTags: selectedTask.taskTags,
+                taskStartDate: selectedTask.taskStartDate,
+                taskEndDate: selectedTask.taskEndDate,
+                taskSubIssues: selectedTask.taskSubIssues,
+                taskAuthorityType: selectedTask.taskAuthorityType
+            });
+        }
+    },[selectedTask, isOpen]);
 
+    //각 입력란 change 이벤트
     const handleInputChange = (field: keyof TaskObj, value: string | string[] | Dayjs | RawDraftContentState | null) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     }
 
-    //모달창 닫힘 이벤트
-    const onModalClose = () => {
+    const handleModalClose = () => {
+        //초기화
+        setFormData({
+            taskId: "",
+            taskName: "",
+            taskExplanation: null,
+            taskAssignee: null,
+            taskTags: null,
+            taskStartDate: null,
+            taskEndDate: null,
+            taskSubIssues: null,
+            taskAuthorityType: ""
+        });
+        //모달창 닫기
+        onCloseModal();
+    }
+
+    //저장버튼 이벤트
+    const onClickSaveBtn = () => {
 
         if(!selectedTask){//새로운 task 생성시
-            if(formData.taskName){//일단 제목 입력시에만 생성되도록
-                onAdd({
-                    taskId: taskList.length + "s",//임시 Id
-                    taskName: formData.taskName,
-                    taskExplanation: formData.taskExplanation,
-                    taskAssignee: formData.taskAssignee,
-                    taskTags: formData.taskTags,
-                    taskStartDate: formData.taskStartDate,
-                    taskEndDate: formData.taskEndDate,
-                    taskSubIssues: formData.taskSubIssues,
-                    taskAuthorityType: formData.taskAuthorityType
-                });
-            }
+            onAdd({
+                taskId: uuid(),//taskId 주입
+                taskName: formData.taskName,
+                taskExplanation: formData.taskExplanation,
+                taskAssignee: formData.taskAssignee,
+                taskTags: formData.taskTags,
+                taskStartDate: formData.taskStartDate,
+                taskEndDate: formData.taskEndDate,
+                taskSubIssues: formData.taskSubIssues,
+                taskAuthorityType: formData.taskAuthorityType
+            });
         }else{//이미 생성된 Task
             onReplace(selectedTask,{
                 ...selectedTask,
@@ -105,24 +125,40 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                 taskAuthorityType: formData.taskAuthorityType
             });
         }
-        setFormData({
-            taskId: "",
-            taskName: "",
-            taskExplanation: null,
-            taskAssignee: null,
-            taskTags: null,
-            taskStartDate: null,
-            taskEndDate: null,
-            taskSubIssues: null,
-            taskAuthorityType: ""
-        });
+        handleModalClose();
+    }
 
-        onCloseModal();
+    //삭제버튼 이벤트
+    const onClickDeleteBtn = () => {
+        onDelete(selectedTask);
+        handleModalClose();
     }
 
     return (
-        <Modal open={isOpen} onClose={onModalClose}>
+        <Modal open={isOpen} onClose={handleModalClose}>
             <Box sx={style}>
+                <Box sx={{ mb:1, p:0 }}>
+                    {/* <저장버튼 활성화 조건> 
+                        1. 필수값 체크(일단 Task명으로만)
+                        2. 이전값 이후값 비교*/}
+                    <Button
+                        type="submit"
+                        onClick={onClickSaveBtn}
+                        disabled={formData.taskName === ""}
+                        startIcon={<SaveAsIcon />}>
+                        저장
+                    </Button>
+                    <Button
+                        type="submit"
+                        onClick={onClickDeleteBtn}
+                        disabled={selectedTask === null}
+                        startIcon={<DeleteIcon />}>
+                        삭제
+                    </Button>
+                    <Button onClick={handleModalClose} startIcon={<CloseIcon />}>
+                        취소
+                    </Button>
+                </Box>
                 <Grid container spacing={2}>
                     <Grid item xs={7}>
                         <Box sx={{display: 'grid',
@@ -141,12 +177,6 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onCloseModal}:TaskMo
                                 initialContent={formData.taskExplanation}
                                 handleContentChange={(value) => handleInputChange("taskExplanation", value)}
                             />
-                            {/* <TextField fullWidth sx={{
-                                "& .MuiInputBase-root": {height: 120}, 
-                                gridColumn: '1', 
-                                gridRow: 'span 4'}} color="secondary" 
-                                value={formData.taskExplanation} 
-                                onChange={(e) => handleInputChange("taskExplanation", e.target.value)}/> */}
                         </Box>
                     </Grid>
                     <Grid item xs={5}>

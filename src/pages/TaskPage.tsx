@@ -2,7 +2,7 @@ import Task from "@/components/TaskManagement/Task";
 import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
 import { useState, useEffect } from "react";
-import { Grid, Box, Typography } from '@mui/material';
+import { Grid, Box, Typography, Pagination } from '@mui/material';
 import TaskObj from "@/models/TaskObj";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { taskListState } from "@/stores/Store";
@@ -70,12 +70,14 @@ const TaskPage = () => {
                   <NewTask onClick={setSelectedTask} onShowTaskModal={setShowModal}></NewTask>
                 </Grid>
             </Grid>
+            <Pagination count={Math.floor(taskList.length/8) === 0 ? 1 : Math.floor(taskList.length/8)} shape="rounded"/>
           </Grid>
         </Box>
         <TaskModal selectedTask={selectedTask as TaskObj} 
           isOpen={showModal} 
           onAdd={addTask}
           onReplace={replaceTask}
+          onDelete={deleteTask}
           onCloseModal={() => setShowModal(false)}></TaskModal>
         
       </div>
