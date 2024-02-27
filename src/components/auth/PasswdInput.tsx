@@ -15,6 +15,8 @@ const PasswdInput = ({
   setPasswd,
   setPasswdFlag,
 }: PropsType) => {
+  const passwdFlagState = !!(passwd && !passwdFlag);
+
   return (
     <>
       <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password</Typography>
@@ -24,15 +26,18 @@ const PasswdInput = ({
         size="small"
         placeholder={"비밀번호"}
         value={passwd}
-        error={passwd && !passwdFlag ? true : false}
+        error={passwdFlagState}
         onChange={(e) => {
           setPasswd(e.target.value);
           setPasswdFlag(
-            checkAuthInputValidity({ type: "passwd", authValue: e.target.value })
+            checkAuthInputValidity({
+              type: "passwd",
+              authValue: e.target.value,
+            })
           );
         }}
       />
-      {passwd && !passwdFlag && (
+      {passwdFlagState && (
         <Typography
           sx={{
             position: "absolute",

@@ -1,69 +1,69 @@
 import "@/App.css";
 import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { loggedState } from "@/stores/Store";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
-import AuthPage from "./pages/AuthPage";
+import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
 import ProfilePage from "@/pages/ProfilePage";
-import { loggedState } from "./stores/Store";
-import { useRecoilValue } from "recoil";
-import FindEmailForm from "./components/auth/FindEmailForm"
-import LoginForm from "./components/auth/LoginForm";
-import SignupForm from "./components/auth/SignupForm";
-import FindEmailLayout from "./components/auth/FindEmailLayout";
-import FindEmailSuccess from "./components/auth/FindEmailSuccess";
-import FindPasswdLayout from "./components/auth/FindPasswdLayout";
-import FindPasswordForm from "./components/auth/FindPasswdForm";
-import FindPasswdSuccess from "./components/auth/FindPasswdSuccess";
-import SignupSuccess from "./components/auth/SignupSuccess";
+import FindEmailForm from "@/components/auth/FindEmailForm";
+import LoginForm from "@/components/auth/LoginForm";
+import SignupForm from "@/components/auth/SignupForm";
+import FindEmailLayout from "@/components/auth/FindEmailLayout";
+import FindEmailSuccess from "@/components/auth/FindEmailSuccess";
+import FindPasswdLayout from "@/components/auth/FindPasswdLayout";
+import FindPasswordForm from "@/components/auth/FindPasswdForm";
+import FindPasswdSuccess from "@/components/auth/FindPasswdSuccess";
+import SignupSuccess from "@/components/auth/SignupSuccess";
 
 const router = createBrowserRouter([
   {
-    path:'/auth',
+    path: "/auth",
     element: <AuthPage />,
     children: [
       {
-        path: 'login',
-        element: <LoginForm />
+        path: "login",
+        element: <LoginForm />,
       },
       {
-        path:'signup',
-        element: <SignupForm />
+        path: "signup",
+        element: <SignupForm />,
       },
       {
-        path: 'signup/success',
-        element: <SignupSuccess />
+        path: "signup/success",
+        element: <SignupSuccess />,
       },
       {
-        path:'find/email',
+        path: "find/email",
         element: <FindEmailLayout />,
         children: [
           {
             index: true,
-            element: <FindEmailForm />
+            element: <FindEmailForm />,
           },
           {
-            path: 'success',
-            element: <FindEmailSuccess />
-          }
-        ]
+            path: "success",
+            element: <FindEmailSuccess />,
+          },
+        ],
       },
       {
-        path: 'find/password',
+        path: "find/password",
         element: <FindPasswdLayout />,
         children: [
           {
             index: true,
-            element: <FindPasswordForm />
+            element: <FindPasswordForm />,
           },
           {
-            path: 'success',
-            element: <FindPasswdSuccess />
-          }
-        ]
-      }
+            path: "success",
+            element: <FindPasswdSuccess />,
+          },
+        ],
+      },
     ],
   },
   {

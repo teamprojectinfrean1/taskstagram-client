@@ -18,6 +18,9 @@ const PhoneCertifiInput = ({
   setPhoneCertifiFlag,
   phoneButtonOnClick,
 }: PropsType) => {
+
+  console.log(phoneCertifiFlag)
+
   const changeViewPhoneCertifiValidity = () => {
     if (phoneCertifi) {
       return (
@@ -28,9 +31,9 @@ const PhoneCertifiInput = ({
             ml: 1,
             fontWeight: "bold",
             fontSize: "11px",
-            ...(phoneCertifiFlag ? {} : { color: theme.palette.error.main }),
+            ...(!phoneCertifiFlag && { color: theme.palette.error.main })
           }}
-        >
+          >
           {phoneCertifiFlag
             ? "인증이 완료되었습니다."
             : "인증 번호를 확인해주세요."}

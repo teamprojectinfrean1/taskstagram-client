@@ -15,6 +15,7 @@ const EmailInput = ({
   setEmail,
   setEmailFlag,
 }: PropsType) => {
+  const emailFlagState = !!(email && !emailFlag);
 
   return (
     <>
@@ -24,7 +25,8 @@ const EmailInput = ({
         fullWidth
         size="small"
         placeholder={"example@email.com"}
-        error={email && !emailFlag ? true : false}
+        error={emailFlagState}
+        value={email}
         onChange={(e) => {
           setEmail(e.target.value);
           setEmailFlag(
@@ -32,7 +34,7 @@ const EmailInput = ({
           );
         }}
       />
-      {email && !emailFlag && (
+      {emailFlagState && (
         <Typography
           sx={{
             position: "absolute",

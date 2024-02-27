@@ -31,6 +31,8 @@ const PhoneInput = ({
     }
   }, [phoneNumberFlag, phoneButtonOnClick]);
 
+  const phoneNumberFlagState = phoneNumber && !phoneNumberFlag
+
   const changeViewPhoneValidity = () => {
     if (phoneNumber) {
       if (!phoneNumberFlag) {
@@ -84,7 +86,7 @@ const PhoneInput = ({
             size="small"
             placeholder={"01012345678"}
             value={phoneNumber}
-            error={phoneNumber && !phoneNumberFlag ? true : false}
+            error={!!phoneNumberFlagState}
             onChange={(e) => {
               setPhoneNumber(e.target.value);
               setPhoneNumberFlag(
