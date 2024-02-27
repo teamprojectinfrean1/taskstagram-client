@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Typography, OutlinedInput } from "@mui/material";
 
-type PropsType = {
+type NicknameInputProps = {
   nickname: string;
   nicknameFlag: boolean;
   setNickname(nickname: string): void;
@@ -14,7 +14,9 @@ const NicknameInput = ({
   nicknameFlag,
   setNickname,
   setNicknameFlag,
-}: PropsType) => {
+}: NicknameInputProps) => {
+  const nicknameFlagState = !!(nickname && !nicknameFlag);
+
   return (
     <>
       <Typography sx={{ mt: 3, ml: 0.5 }}>Nickname</Typography>
@@ -24,7 +26,7 @@ const NicknameInput = ({
         size="small"
         placeholder={"닉네임"}
         value={nickname}
-        error={nickname && !nicknameFlag ? true : false}
+        error={nicknameFlagState}
         onChange={(e) => {
           setNickname(e.target.value);
           setNicknameFlag(
@@ -35,7 +37,7 @@ const NicknameInput = ({
           );
         }}
       />
-      {nickname && !nicknameFlag && (
+      {nicknameFlagState && (
         <Typography
           sx={{
             position: "absolute",

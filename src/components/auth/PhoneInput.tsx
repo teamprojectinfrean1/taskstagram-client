@@ -3,7 +3,7 @@ import { Typography, OutlinedInput, Button, Grid } from "@mui/material";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useEffect, useState } from "react";
 
-type PropsType = {
+type PhoneInputProps = {
   phoneNumber: string;
   phoneNumberFlag: boolean;
   setPhoneNumber(phoneNumber: string): void;
@@ -19,7 +19,9 @@ const PhoneInput = ({
   setPhoneNumberFlag,
   phoneButtonOnClick,
   setPhoneButtonOnClick,
-}: PropsType) => {
+}: PhoneInputProps) => {
+
+  const phoneNumberFlagState = !!(phoneNumber && !phoneNumberFlag)
   const [phoneButtonName, setPhoneButtonName] = useState("인증요청");
 
   useEffect(() => {
@@ -84,7 +86,7 @@ const PhoneInput = ({
             size="small"
             placeholder={"01012345678"}
             value={phoneNumber}
-            error={phoneNumber && !phoneNumberFlag ? true : false}
+            error={phoneNumberFlagState}
             onChange={(e) => {
               setPhoneNumber(e.target.value);
               setPhoneNumberFlag(

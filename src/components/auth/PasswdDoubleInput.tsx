@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { Typography, OutlinedInput } from "@mui/material";
 import { passwdDoubleCheck } from "@/utils/authCheck";
 
-type PropsType = {
+type PasswdDoubleInputProps = {
   passwd: string;
   passwdDouble: string;
   passwdDoubleFlag: boolean;
@@ -16,7 +16,7 @@ const PasswdDoubleInput = ({
   passwdDoubleFlag,
   setPasswdDouble,
   setPasswdDoubleFlag,
-}: PropsType) => {
+}: PasswdDoubleInputProps) => {
   return (
     <>
       <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password check</Typography>

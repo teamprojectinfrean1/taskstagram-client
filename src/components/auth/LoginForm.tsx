@@ -1,6 +1,6 @@
 import theme from "@/theme/theme";
 import { useState } from "react";
-import SocialIcons from "../SocialIcons";
+import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
 import LoginModal from "./LoginErrorModal";
 

@@ -7,23 +7,28 @@ import { Box } from "@mui/material";
 const AuthPage = () => {
   const location = useLocation();
 
+  const routedSignup = location.pathname == "/auth/signup";
+
   return (
-    <Box sx={{ minHeight: "100vh", bgcolor: `${theme.palette.background.default}` }}>
+    <Box
+      sx={{
+        minHeight: "100vh",
+        bgcolor: `${theme.palette.background.default}`,
+      }}
+    >
       <Box className="base-layout">
-        {location.pathname !== "/auth/signup" ? (
-          <Box sx={{ display: "grid", gridTemplateColumns: "1fr 1fr" }}>
-            <LogoAndName />
-            <Box className="form-size" boxShadow={10}>
-              <Outlet />
-            </Box>
+        <Box
+          sx={
+            routedSignup
+              ? { display: "flex", justifyContent: "center" }
+              : { display: "grid", gridTemplateColumns: "1fr 1fr" }
+          }
+        >
+          {!routedSignup && <LogoAndName />}
+          <Box className={routedSignup ? "signup-form-size" : "form-size"}>
+            <Outlet />
           </Box>
-        ) : (
-          <Box sx={{ display: "flex", justifyContent: "center" }}>
-            <Box className="signup-form-size" boxShadow={10}>
-              <Outlet />
-            </Box>
-          </Box>
-        )}
+        </Box>
       </Box>
     </Box>
   );

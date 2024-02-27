@@ -1,7 +1,6 @@
-import "./Auth.css";
 import { Link } from "react-router-dom";
 
-import { Box, Stack, Typography, Divider } from "@mui/material";
+import { Box, Stack, Divider } from "@mui/material";
 
 const AuthMenuOptions = () => {
   return (

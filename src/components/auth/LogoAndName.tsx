@@ -1,10 +1,9 @@
-import "./Auth.css";
 import { Box, Typography } from "@mui/material";
 
 const LogoAndName = () => {
   return (
     <Box sx={{ my: "auto" }}>
-      <img src='favicon.ico' alt="..." width={100} />
+      <img src="favicon.ico" alt="..." width={100} />
       <Box display="flex" sx={{ my: 5 }}>
         <Typography
           variant="h1"
@@ -22,21 +21,20 @@ const LogoAndName = () => {
 
       <Box display="flex" sx={{ ml: 3 }}>
         <Box
-          className="auth-main-first-circle"
-          sx={{ bgcolor: "#dee1e6" }}
-        ></Box>
-        <Box
-          className="auth-main-secondary-circle"
-          sx={{ ml: 10, bgcolor: "#d7dadf" }}
-        ></Box>
-        <Box
-          className="auth-main-secondary-circle"
-          sx={{ ml: 20, bgcolor: "#d1d3d8" }}
-        ></Box>
-        <Box
-          className="auth-main-secondary-circle"
-          sx={{ ml: 30, bgcolor: "#cbcdd2" }}
-        ></Box>
+          sx={{
+            "& > *": {
+              position: "absolute",
+              borderRadius: "50%",
+              width: "120px",
+              height: "120px",
+            },
+          }}
+        >
+          <Box sx={{ bgcolor: "#dee1e6" }} />
+          <Box sx={{ ml: 10, bgcolor: "#d7dadf" }} />
+          <Box sx={{ ml: 20, bgcolor: "#d1d3d8" }} />
+          <Box sx={{ ml: 30, bgcolor: "#cbcdd2" }} />
+        </Box>
       </Box>
     </Box>
   );

@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { Typography, OutlinedInput, Button, Grid } from "@mui/material";
 import { phoneCertifiCheck } from "@/utils/authCheck";
 
-type PropsType = {
+type PhoneCertifiInputProps = {
   phoneCertifi: string;
   phoneNumberFlag: boolean;
   phoneCertifiFlag: boolean;
@@ -17,7 +17,7 @@ const PhoneCertifiInput = ({
   setPhoneCertifi,
   setPhoneCertifiFlag,
   phoneButtonOnClick,
-}: PropsType) => {
+}: PhoneCertifiInputProps) => {
   const changeViewPhoneCertifiValidity = () => {
     if (phoneCertifi) {
       return (

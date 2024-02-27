@@ -10,3 +10,8 @@
 .text-center {
   text-align: center;
 }
+
+.link-style {
+  text-decoration: none;
+  color: black;
+}

@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Typography, OutlinedInput } from "@mui/material";
 
-type PropsType = {
+type EmailInputProps = {
   email: string;
   emailFlag: boolean;
   setEmail(email: string): void;
@@ -14,7 +14,8 @@ const EmailInput = ({
   emailFlag,
   setEmail,
   setEmailFlag,
-}: PropsType) => {
+}: EmailInputProps) => {
+  const emailFlagState = !!(email && !emailFlag);
 
   return (
     <>
@@ -24,7 +25,8 @@ const EmailInput = ({
         fullWidth
         size="small"
         placeholder={"example@email.com"}
-        error={email && !emailFlag ? true : false}
+        value={email}
+        error={emailFlagState}
         onChange={(e) => {
           setEmail(e.target.value);
           setEmailFlag(
@@ -32,7 +34,7 @@ const EmailInput = ({
           );
         }}
       />
-      {email && !emailFlag && (
+      {emailFlagState && (
         <Typography
           sx={{
             position: "absolute",
