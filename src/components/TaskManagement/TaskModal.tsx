@@ -10,7 +10,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import TextEditor from '@/components/TextEditor';
 import { RawDraftContentState } from 'draft-js';
 import theme from '@/theme/theme';
-import TaskTagChipMaker from '@/components/TaskManagement/TaskTagChipMaker';
+import TaskTagChipMaker from '@/components/TagChipMaker';
 import uuid from 'react-uuid';
 
 type TaskModalProps={
@@ -44,6 +44,9 @@ const style = {
     bgcolor: 'background.paper',
     boxShadow: 24,
     p: 2,
+    height: "auto",
+    maxHeight: "90%",
+    overflowY: "scroll",
   };
 
 const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onDelete, onCloseModal}:TaskModalProps) =>{
@@ -135,9 +138,9 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onDelete, onCloseMod
     }
 
     return (
-        <Modal open={isOpen} onClose={handleModalClose}>
+        <Modal open={isOpen} onClose={handleModalClose} disableScrollLock>
             <Box sx={style}>
-                <Box sx={{ mb:1, p:0 }}>
+                <Box sx={{ mb:1, p:0, display:"flex", justifyContent:"right" }}>
                     {/* <저장버튼 활성화 조건> 
                         1. 필수값 체크(일단 Task명으로만)
                         2. 이전값 이후값 비교*/}
@@ -160,7 +163,7 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onDelete, onCloseMod
                     </Button>
                 </Box>
                 <Grid container spacing={2}>
-                    <Grid item xs={7}>
+                    <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
                         <Box sx={{display: 'grid',
                             gap: 1,}}>
                             <InputLabel htmlFor="Task명" sx={{ fontWeight: "bold", mb: 1 }}>
@@ -179,53 +182,50 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onDelete, onCloseMod
                             />
                         </Box>
                     </Grid>
-                    <Grid item xs={5}>
-                        <Box sx={{display: 'grid',
-                            gap: 1,}}>
-                            <SearchableSelect
-                                label="담당자"
-                                possibleOptions={["Option 1", "Option 2", "Option 3"]}
-                                selectedOptions={formData.taskAssignee}
-                                multiselect
-                                onSelectionChange={(value) => handleInputChange("taskAssignee", value)}
-                            />
-                            <InputLabel htmlFor="태그" sx={{ fontWeight: "bold", mb: 1 }}>
-                                태그
-                            </InputLabel>
-                            <TaskTagChipMaker
-                                tagList={formData.taskTags}
-                                onTagSelectionChange={(value) => handleInputChange("taskTags", value)}
-                            />
-                            <InputLabel htmlFor="기간" sx={{ fontWeight: "bold", mb: 1 }}>
-                                기간
-                            </InputLabel>
-                            <TaskDurationDatePicker
-                                startDate={formData.taskStartDate}
-                                endDate={formData.taskEndDate}
-                                onChangeStartDate={(value) => handleInputChange("taskStartDate", value)}
-                                onChangeEndDate={(value) => handleInputChange("taskEndDate", value)}></TaskDurationDatePicker>
-                            <SearchableSelect
-                                label="하위 이슈"
-                                possibleOptions={["Option 1", "Option 2", "Option 3"]}
-                                selectedOptions={formData.taskSubIssues}
-                                multiselect
-                                onSelectionChange={(value) => handleInputChange("taskSubIssues", value)}
-                            />
-                            <InputLabel htmlFor="수정/삭제 권한" sx={{ fontWeight: "bold", mb: 1 }}>
-                                수정/삭제 권한
-                            </InputLabel>
-                            <Box sx={{borderRadius: 1, border:1, p:2, borderColor: theme.palette.secondary.light}}>
-                                <FormControl>
-                                    <RadioGroup
-                                        aria-labelledby="demo-controlled-radio-buttons-group"
-                                        name="controlled-radio-buttons-group"
-                                        value={formData.taskAuthorityType}
-                                        onChange={(e) => handleInputChange("taskAuthorityType", e.target.value)}>
-                                        <FormControlLabel value="allUsers" control={<Radio />} label="모든 구성원" />
-                                        <FormControlLabel value="onlyLeader" control={<Radio />} label="리더만" />
-                                    </RadioGroup>
-                                </FormControl>
-                            </Box>
+                    <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
+                        <SearchableSelect
+                            label="담당자"
+                            possibleOptions={["Option 1", "Option 2", "Option 3"]}
+                            selectedOptions={formData.taskAssignee}
+                            multiselect
+                            onSelectionChange={(value) => handleInputChange("taskAssignee", value)}
+                        />
+                        <InputLabel htmlFor="태그" sx={{ fontWeight: "bold", mb: 1 }}>
+                            태그
+                        </InputLabel>
+                        <TaskTagChipMaker
+                            tagList={formData.taskTags}
+                            onTagSelectionChange={(value) => handleInputChange("taskTags", value)}
+                        />
+                        <InputLabel htmlFor="기간" sx={{ fontWeight: "bold", mb: 1 }}>
+                            기간
+                        </InputLabel>
+                        <TaskDurationDatePicker
+                            startDate={formData.taskStartDate}
+                            endDate={formData.taskEndDate}
+                            onChangeStartDate={(value) => handleInputChange("taskStartDate", value)}
+                            onChangeEndDate={(value) => handleInputChange("taskEndDate", value)}></TaskDurationDatePicker>
+                        <SearchableSelect
+                            label="하위 이슈"
+                            possibleOptions={["Option 1", "Option 2", "Option 3"]}
+                            selectedOptions={formData.taskSubIssues}
+                            multiselect
+                            onSelectionChange={(value) => handleInputChange("taskSubIssues", value)}
+                        />
+                        <InputLabel htmlFor="수정/삭제 권한" sx={{ fontWeight: "bold", mb: 1 }}>
+                            수정/삭제 권한
+                        </InputLabel>
+                        <Box sx={{borderRadius: 1, border:1, p:2, borderColor: theme.palette.secondary.light}}>
+                            <FormControl>
+                                <RadioGroup
+                                    aria-labelledby="demo-controlled-radio-buttons-group"
+                                    name="controlled-radio-buttons-group"
+                                    value={formData.taskAuthorityType}
+                                    onChange={(e) => handleInputChange("taskAuthorityType", e.target.value)}>
+                                    <FormControlLabel value="allUsers" control={<Radio />} label="모든 구성원" />
+                                    <FormControlLabel value="onlyLeader" control={<Radio />} label="리더만" />
+                                </RadioGroup>
+                            </FormControl>
                         </Box>
                     </Grid>
                 </Grid>

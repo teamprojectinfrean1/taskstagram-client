@@ -5,7 +5,7 @@ type TagProps = {
     onTagSelectionChange: (tags: string[] | null) => void;
 }
 
-const TaskTagChipMaker = ({tagList, onTagSelectionChange}:TagProps) => {
+const TagChipMaker = ({tagList, onTagSelectionChange}:TagProps) => {
     const handleTagsChange = (event: React.SyntheticEvent<Element, Event>, value: string[] | null) => {
         onTagSelectionChange(value);
     }
@@ -35,4 +35,4 @@ const TaskTagChipMaker = ({tagList, onTagSelectionChange}:TagProps) => {
 }
 
 
-export default TaskTagChipMaker;
+export default TagChipMaker;

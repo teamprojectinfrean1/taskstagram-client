@@ -58,7 +58,7 @@ const TaskPage = () => {
             <Typography>TASK</Typography>
             <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
               {taskList.length > 0 ? taskList.map(task =>
-                <Grid item xs={3} key={task.taskId}>
+                <Grid item xs={12} md={3} key={task.taskId}>
                   <Task key={task.taskId}
                     selectedTask={task}
                     onDelete={deleteTask}
@@ -66,7 +66,7 @@ const TaskPage = () => {
                     onSelectedTask={setSelectedTask}
                   />
                 </Grid>) : null}
-                <Grid item xs={3}>
+                <Grid item xs={12} md={3}>
                   <NewTask onClick={setSelectedTask} onShowTaskModal={setShowModal}></NewTask>
                 </Grid>
             </Grid>

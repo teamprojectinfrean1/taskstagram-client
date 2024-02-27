@@ -16,7 +16,7 @@ const NewTask = ({onClick, onShowTaskModal}:NewTaskProps) => {
                 display:"flex",
                 flexDirection:"column",
                 justifyContent:"center",
-                alignContent:"center"}} 
+                alignItems:"center"}} 
             variant="elevation" 
             square={false}>
             <IconButton onClick={() => {
