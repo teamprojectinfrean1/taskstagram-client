@@ -17,6 +17,8 @@ const PasswdDoubleInput = ({
   setPasswdDouble,
   setPasswdDoubleFlag,
 }: PasswdDoubleInputProps) => {
+  const passwdDoubleFlagState = !!(passwdDouble && !passwdDoubleFlag);
+
   return (
     <>
       <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password check</Typography>
@@ -25,7 +27,7 @@ const PasswdDoubleInput = ({
         fullWidth
         size="small"
         placeholder={"비밀번호 확인"}
-        error={passwdDouble && !passwdDoubleFlag ? true : false}
+        error={passwdDoubleFlagState}
         value={passwdDouble}
         onChange={(e) => {
           setPasswdDouble(e.target.value);
@@ -37,7 +39,7 @@ const PasswdDoubleInput = ({
           );
         }}
       />
-      {passwdDouble && !passwdDoubleFlag && (
+      {passwdDoubleFlagState && (
         <Typography
           sx={{
             position: "absolute",
