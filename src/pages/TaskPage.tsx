@@ -54,9 +54,12 @@ const TaskPage = () => {
     return (
       <div>
         <Box>
-          <Grid container spacing={1} p={5}>
-            <Typography>TASK</Typography>
-            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }}>
+          <Grid container direction="column" spacing={1} p={5}>
+            <Typography
+              sx={{ borderBottom: "1px solid black", width:"45px" }}>
+              TASK
+            </Typography>
+            <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{height: "100%", minHeight: "450px", m:1}}>
               {taskList.length > 0 ? taskList.map(task =>
                 <Grid item xs={12} md={3} key={task.taskId}>
                   <Task key={task.taskId}
@@ -70,7 +73,9 @@ const TaskPage = () => {
                   <NewTask onClick={setSelectedTask} onShowTaskModal={setShowModal}></NewTask>
                 </Grid>
             </Grid>
-            <Pagination count={Math.floor(taskList.length/8) === 0 ? 1 : Math.floor(taskList.length/8)} shape="rounded"/>
+            <Box sx={{display:"flex", justifyContent:"center"}}>
+              <Pagination count={Math.floor(taskList.length/8) === 0 ? 1 : Math.floor(taskList.length/8)} shape="rounded"/>
+            </Box>
           </Grid>
         </Box>
         <TaskModal selectedTask={selectedTask as TaskObj} 

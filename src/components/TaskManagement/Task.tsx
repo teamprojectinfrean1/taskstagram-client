@@ -17,7 +17,7 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
         onSelectedTask(selectedTask);
     }
     return (
-        <Card sx={{borderRadius: 4, p:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
+        <Card sx={{height:"200px", borderRadius: 4, p:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader
                 sx={{'&:hover': {cursor: 'pointer'}}}
                 onClick={onClick}
@@ -31,7 +31,7 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
                 } 
                 title={selectedTask.taskName}>
             </CardHeader>
-            <CardContent sx={{backgroundColor: "white", borderRadius: 3, '&:hover': {cursor: 'pointer'}}} 
+            <CardContent sx={{height:"calc(100% - 65px)", backgroundColor: "white", borderRadius: 3, '&:hover': {cursor: 'pointer'}}} 
                 onClick={onClick}>
                 {selectedTask.taskExplanation && 
                     <Typography variant="subtitle1">
