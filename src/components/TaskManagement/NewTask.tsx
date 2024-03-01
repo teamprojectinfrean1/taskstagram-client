@@ -12,7 +12,8 @@ const NewTask = ({onClick, onShowTaskModal}:NewTaskProps) => {
     return (
         <Card sx={{
                 height:"200px",
-                borderRadius: 4, 
+                borderRadius: 4,
+                boxShadow:3,
                 p:1, 
                 background:theme.palette.secondary.light,
                 display:"flex",
@@ -27,7 +28,7 @@ const NewTask = ({onClick, onShowTaskModal}:NewTaskProps) => {
             }}>
                 <AddCircleRoundedIcon fontSize="large"/>
             </IconButton>
-            <Typography variant="subtitle1" sx={{textAlign:"center"}}>TASK</Typography>
+            <Typography variant="subtitle1" sx={{textAlign:"center", fontWeight:"bold"}}>TASK</Typography>
         </Card>
     )
 

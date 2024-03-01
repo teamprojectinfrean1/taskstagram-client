@@ -56,7 +56,8 @@ const TaskPage = () => {
         <Box>
           <Grid container direction="column" spacing={1} p={5}>
             <Typography
-              sx={{ borderBottom: "1px solid black", width:"45px" }}>
+              variant="h5"
+              sx={{ borderBottom: "1px solid black", width:"65px", fontWeight:"bold" }}>
               TASK
             </Typography>
             <Grid container rowSpacing={2} columnSpacing={{ xs: 1, sm: 2, md: 3 }} sx={{height: "100%", minHeight: "450px", m:1}}>
@@ -73,7 +74,7 @@ const TaskPage = () => {
                   <NewTask onClick={setSelectedTask} onShowTaskModal={setShowModal}></NewTask>
                 </Grid>
             </Grid>
-            <Box sx={{display:"flex", justifyContent:"center"}}>
+            <Box sx={{display:"flex", justifyContent:"center", m:3}}>
               <Pagination count={Math.floor(taskList.length/8) === 0 ? 1 : Math.floor(taskList.length/8)} shape="rounded"/>
             </Box>
           </Grid>
