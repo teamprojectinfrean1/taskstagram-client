@@ -17,9 +17,12 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
         onSelectedTask(selectedTask);
     }
     return (
-        <Card sx={{height:"200px", borderRadius: 4, p:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
+        <Card sx={{height:"200px", borderRadius: 4, p:1, boxShadow:3, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader
-                sx={{'&:hover': {cursor: 'pointer'}}}
+                sx={{'&:hover': {cursor: 'pointer'},
+                "& .MuiCardHeader-content": {
+                  overflow: "hidden"
+                }}}
                 onClick={onClick}
                 action={
                     <IconButton onClick={(e) => {
@@ -29,15 +32,19 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
                         <DeleteOutlineIcon />
                     </IconButton>
                 } 
-                title={selectedTask.taskName}>
+                title={selectedTask.taskName}
+                titleTypographyProps={{ noWrap: true, variant:"h6", fontWeight:"bold" }}>
             </CardHeader>
-            <CardContent sx={{height:"calc(100% - 65px)", backgroundColor: "white", borderRadius: 3, '&:hover': {cursor: 'pointer'}}} 
+            <CardContent sx={{height:"calc(100% - 70px)", backgroundColor: "white", borderRadius: 3, mx:1, '&:hover': {cursor: 'pointer'}}} 
                 onClick={onClick}>
                 {selectedTask.taskExplanation && 
-                    <Typography variant="subtitle1">
-                        {convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText().length > 55 ? 
-                            convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText().substring(0,55).concat("...") : 
-                            convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText()}
+                    <Typography variant="subtitle1"
+                        sx={{display:"-webkit-box", 
+                            WebkitLineClamp:3, 
+                            WebkitBoxOrient:'vertical', 
+                            overflow:"hidden", 
+                            textOverflow:"ellipsis"}}>
+                        {convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText()}
                     </Typography>}
             </CardContent>
         </Card>
