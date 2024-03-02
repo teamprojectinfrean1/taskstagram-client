@@ -10,24 +10,28 @@ type NewTaskProps = {
 
 const NewTask = ({onClick, onShowTaskModal}:NewTaskProps) => {
     return (
-        <Card sx={{
+        <Card 
+            onClick={() => {
+                onClick(null);
+                onShowTaskModal(true);
+            }}
+            sx={{
                 height:"200px",
                 borderRadius: 4,
                 boxShadow:3,
                 p:1, 
-                background:theme.palette.secondary.light,
+                background:theme.palette.primary.light,
                 display:"flex",
                 flexDirection:"column",
                 justifyContent:"center",
-                alignItems:"center"}} 
+                alignItems:"center",
+                "&:hover": {
+                    backgroundColor: theme.palette.secondary.light,
+                    cursor: 'pointer'
+                }}} 
             variant="elevation" 
             square={false}>
-            <IconButton onClick={() => {
-                onClick(null);
-                onShowTaskModal(true);
-            }}>
-                <AddCircleRoundedIcon fontSize="large"/>
-            </IconButton>
+            <AddCircleRoundedIcon fontSize="large"/>
             <Typography variant="subtitle1" sx={{textAlign:"center", fontWeight:"bold"}}>TASK</Typography>
         </Card>
     )

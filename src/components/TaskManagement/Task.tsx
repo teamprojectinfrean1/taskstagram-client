@@ -17,7 +17,16 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
         onSelectedTask(selectedTask);
     }
     return (
-        <Card sx={{height:"200px", borderRadius: 4, p:1, boxShadow:3, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
+        <Card sx={{height:"200px", 
+            borderRadius: 4, 
+            p:1, 
+            boxShadow:3, 
+            background:theme.palette.primary.light,
+            "&:hover": {
+                backgroundColor: theme.palette.secondary.light
+            }}} 
+            variant="elevation" 
+            square={false}> 
             <CardHeader
                 sx={{'&:hover': {cursor: 'pointer'},
                 "& .MuiCardHeader-content": {
