@@ -6,7 +6,7 @@ import {
   TextField,
   Autocomplete,
 } from "@mui/material";
-import DateRangePicker from "@/components/DateRangePicker";
+import DateRangePicker from "@/components/DurationPicker";
 import React, { useEffect, useState } from "react";
 import { useRecoilState } from "recoil";
 import { taskListState } from "@/stores/Store";

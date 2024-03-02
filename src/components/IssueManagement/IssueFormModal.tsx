@@ -15,21 +15,19 @@ import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "@/components/Editor/TextEditor";
 import CommentContainer from "@/components/Comment/CommentContainer";
 import SearchableSelect from "@/components/SearchableSelect";
-import { IssueFormData } from "@/models/Issue";
+import { Duration, IssueFormData } from "@/models/Issue";
 import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
-import DateRangePicker from "@/components/DateRangePicker";
+import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
 
 type IssueFormModalProps = {
-  isInitialEntry?: boolean;
-  open: boolean;
+  currentIssueId: string;
   handleClose: () => void;
 };
 
 const IssueFormModal = ({
-  isInitialEntry = false,
-  open,
+  currentIssueId,
   handleClose,
 }: IssueFormModalProps) => {
   const [formData, setFormData] = useState<IssueFormData>({
@@ -37,14 +35,14 @@ const IssueFormModal = ({
     content: null,
     assignee: null,
     task: null,
-    dateRange: null,
+    duration: { startDate: null, endDate: null },
     type: null,
     status: null,
   });
 
   const handleInputChange = (
     field: keyof IssueFormData,
-    value: string | RawDraftContentState | string[] | null
+    value: string | string[] | RawDraftContentState | Duration | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -66,7 +64,7 @@ const IssueFormModal = ({
 
   return (
     <Dialog
-      open={open}
+      open={!!(currentIssueId && currentIssueId.length > 0)}
       onClose={handleClose}
       PaperProps={{
         sx: {
@@ -141,9 +139,11 @@ const IssueFormModal = ({
             <InputLabel htmlFor="dateRange" sx={{ fontWeight: "bold", mb: 1 }}>
               기간
             </InputLabel>
-            <DateRangePicker
-              selectedOptions={formData.dateRange}
-              onSelectionChange={(value) => handleInputChange("dateRange", value)}
+            <DurationPicker
+              selectedOptions={formData.duration}
+              onSelectionChange={(value) =>
+                handleInputChange("duration", value)
+              }
             />
             <SearchableSelect
               label="타입"

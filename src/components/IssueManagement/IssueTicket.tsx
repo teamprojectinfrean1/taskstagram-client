@@ -12,23 +12,26 @@ import UserAvatar from "@/components/UserAvatar";
 import IssueFormModal from "@/components/IssueManagement/IssueFormModal";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import theme from "@/theme/theme";
+import { currentIssueIdToShowInModal } from '@/stores/issueStore';
+import { useRecoilState } from 'recoil';
 
 type IssueTicketProps = {
+  id: string;
   testText: string;
 };
 
-const IssueTicket = ({ testText }: IssueTicketProps) => {
+const IssueTicket = ({ id, testText }: IssueTicketProps) => {
   const taskNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(taskNameRef, "vertical");
-  const [openExistingIssueFormModal, setOpenExistingIssueFormModal] =
-    useState(false);
+
+  const [currentIssueId, setCurrentIssueId] = useRecoilState(currentIssueIdToShowInModal);
 
   return (
     <>
       <Card
         variant="outlined"
         onClick={() => {
-          setOpenExistingIssueFormModal(true);
+          setCurrentIssueId(id);
         }}
         sx={{
           flexShrink: 0,
@@ -86,12 +89,6 @@ const IssueTicket = ({ testText }: IssueTicketProps) => {
           </Box>
         </CardActionArea>
       </Card>
-      <IssueFormModal
-        open={openExistingIssueFormModal}
-        handleClose={() => {
-          setOpenExistingIssueFormModal(false);
-        }}
-      />
     </>
   );
 };

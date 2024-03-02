@@ -26,7 +26,7 @@ const IssueStoryContainer = ({
   const checkScrollButtons = () => {
     if (issueStoryListRef.current) {
       const { scrollLeft, scrollWidth, clientWidth } =
-        issueStoryListRef?.current;
+        issueStoryListRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(scrollLeft < scrollWidth - clientWidth - SCROLL_POSITION_TOLERANCE);
     }

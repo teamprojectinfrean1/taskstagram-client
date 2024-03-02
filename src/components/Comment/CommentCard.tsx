@@ -2,7 +2,7 @@ import UserAvatar from "@/components/UserAvatar";
 import { Box, Typography } from "@mui/material";
 import { grey } from "@mui/material/colors";
 
-const Comment = () => {
+const CommentCard = () => {
   return (
     <Box display="flex" alignItems="center" gap={4}>
       <UserAvatar sx={{ width: 50, height: 50 }} />
@@ -29,4 +29,4 @@ const Comment = () => {
   );
 };
 
-export default Comment;
+export default CommentCard;

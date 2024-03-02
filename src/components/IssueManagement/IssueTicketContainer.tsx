@@ -53,14 +53,35 @@ const IssueTicketContainer = ({
           className="custom-scrollbar"
           sx={{ overflow: "auto", px: 4, pb: 2 }}
         >
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " />
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli" />
-          <IssueTicket testText="Lorem ipsum dolor sit amet" />
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. " />
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli" />
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli" />
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli" />
-          <IssueTicket testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli" />
+          <IssueTicket
+            id="1"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+          />
+          <IssueTicket
+            id="2"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
+          />
+          <IssueTicket id="3" testText="Lorem ipsum dolor sit amet" />
+          <IssueTicket
+            id="4"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
+          />
+          <IssueTicket
+            id="5"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
+          />
+          <IssueTicket
+            id="6"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
+          />
+          <IssueTicket
+            id="7"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
+          />
+          <IssueTicket
+            id="8"
+            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
+          />
         </Stack>
       </Stack>
     </Paper>
