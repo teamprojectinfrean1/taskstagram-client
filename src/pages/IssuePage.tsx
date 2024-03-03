@@ -1,58 +1,58 @@
-import IssueFormModal from "@/components/IssueFormModal";
-import { Button } from "@mui/material";
-import { useState } from "react";
-import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
-import IssueTicketContainer from "@/components/IssueTicketContainer";
-import IssueStoryContainer from "@/components/IssueStoryContainer";
-import { Box } from "@mui/material";
+import IssueFormModal from "@/components/IssueManagement/IssueFormModal";
+import IssueTicketContainer from "@/components/IssueManagement/IssueTicketContainer";
+import IssueStoryContainer from "@/components/IssueManagement/IssueStoryContainer";
+import { Box, Stack } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { currentIssueIdToShowInModal } from '@/stores/issueStore';
+import { useRecoilState } from 'recoil';
 
 const IssuePage = () => {
-  const [open, setOpen] = useState(false);
-
+  const [currentIssueId, setCurrentIssueId] = useRecoilState(currentIssueIdToShowInModal);
+  
   return (
-    <div>
-      이슈 페이지
-      <Box
-        display="flex"
-        flexDirection="column"
-        gap={4}
-        sx={{ height: "100%" }}
+    <>
+      <Stack
+        spacing={4}
+        sx={{
+          height: "100%",
+          minHeight: "700px",
+        }}
       >
-        <IssueStoryContainer
-          title="진행 중"
-          IconComponent={KeyboardDoubleArrowRightIcon}
-          ariaLabel="next"
-        />
-        <Box display="flex" gap={4} width="100%">
+        <Box sx={{ height: "20%", minHeight: "120px" }}>
+          <IssueStoryContainer title="진행 중" />
+        </Box>
+        <Box
+          display="flex"
+          flexDirection={{
+            xs: "column",
+            md: "row",
+          }}
+          gap={4}
+          sx={{
+            height: "80%",
+            minHeight: "300px",
+          }}
+        >
           <IssueTicketContainer
-            title="할 일"
-            IconComponent={AddCircleIcon}
             ariaLabel="create issue"
+            IconComponent={AddCircleIcon}
+            onIconComponentClick={() => {}}
+            title="할 일"
           />
           <IssueTicketContainer
-            title="완료"
-            IconComponent={DeleteIcon}
             ariaLabel="delete issue"
+            IconComponent={DeleteIcon}
+            onIconComponentClick={() => {}}
+            title="완료"
           />
         </Box>
-      </Box>
-      <Button
-        variant="outlined"
-        onClick={() => {
-          setOpen(true);
-        }}
-      >
-        open
-      </Button>
+      </Stack>
       <IssueFormModal
-        open={open}
-        handleClose={() => {
-          setOpen(false);
-        }}
+        currentIssueId={currentIssueId}
+        handleClose={() => setCurrentIssueId('')}
       />
-    </div>
+    </>
   );
 };
 
