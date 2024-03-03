@@ -1,7 +1,5 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import PhoneInput from "./PhoneInput";
-import PhoneCertifiInput from "./PhoneCertifiInput";
 import { Box, Typography } from "@mui/material";
 
 const FindEmail = () => {
@@ -33,7 +31,7 @@ const FindEmail = () => {
 
       <Box>
         <Typography sx={{ mt: 5, ml: 0.5 }}>휴대폰 번호</Typography>
-        <PhoneInput
+        {/* <PhoneInput
           phoneNumber={findEmailPhoneNumber}
           phoneNumberFlag={findEmailPhoneNumberFlag}
           setPhoneNumber={setFindEmailPhoneNumber}
@@ -48,7 +46,7 @@ const FindEmail = () => {
           setPhoneCertifi={setFindEmailPhoneCertifi}
           setPhoneCertifiFlag={setFindEmailPhoneCertifiFlag}
           phoneButtonOnClick={findEmailPhoneButtonOnClick}
-        />
+        /> */}
       </Box>
     </>
   );

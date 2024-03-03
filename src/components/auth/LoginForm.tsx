@@ -1,15 +1,28 @@
 import theme from "@/theme/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import LoginModal from "./LoginErrorModal";
+import LoginModal from "./AuthResultModal";
+import { fetchLogin } from "@/utils/authCheck";
 
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 
 const LoginForm = () => {
+
   const [email, setEmail] = useState("");
   const [passwd, setPasswd] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false)
+
+  const handleLogin = () => {
+    const loginIsSuccess = fetchLogin();
+    setShowModal(!loginIsSuccess);
+    setIsSuccess(loginIsSuccess)
+  };
+
+  // useEffect(()=> {
+  //   console.log(showModal, isSuccess, isSuccess)
+  // })
 
   return (
     <Box className="base-layout">
@@ -49,9 +62,7 @@ const LoginForm = () => {
           bgcolor: `${theme.palette.secondary.main}`,
           borderRadius: "7px",
         }}
-        onClick={() => {
-          setShowModal(true);
-        }}
+        onClick={handleLogin}
       >
         로그인
       </Button>
@@ -61,7 +72,9 @@ const LoginForm = () => {
       <Divider sx={{ mt: 3 }}>간편 로그인</Divider>
       <SocialIcons authPage="login" />
       <LoginModal
+        type="login"
         showModal={showModal}
+        isSuccess = {isSuccess}
         handleClose={() => setShowModal(false)}
       />
     </Box>

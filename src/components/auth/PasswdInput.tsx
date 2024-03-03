@@ -4,23 +4,23 @@ import { checkAuthInputValidity } from "@/utils/authCheck";
 
 type PasswdInputProps = {
   passwd: string;
-  passwdFlag: boolean;
+  passwdValidityFlag: boolean;
   setPasswd(passwd: string): void;
-  setPasswdFlag(passwdFlag: boolean): void;
+  setPasswdValidityFlag(passwdFlag: boolean): void;
 };
 
 const PasswdInput = ({
   passwd,
-  passwdFlag,
   setPasswd,
-  setPasswdFlag,
+  passwdValidityFlag,
+  setPasswdValidityFlag,
 }: PasswdInputProps) => {
-  const passwdFlagState = !!(passwd && !passwdFlag);
+  const passwdFlagState = !!(passwd && !passwdValidityFlag);
 
   return (
     <>
-      <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password</Typography>
       <OutlinedInput
+        sx={{mt:3}}
         type="password"
         fullWidth
         size="small"
@@ -29,7 +29,7 @@ const PasswdInput = ({
         error={passwdFlagState}
         onChange={(e) => {
           setPasswd(e.target.value);
-          setPasswdFlag(
+          setPasswdValidityFlag(
             checkAuthInputValidity({
               type: "passwd",
               authValue: e.target.value,

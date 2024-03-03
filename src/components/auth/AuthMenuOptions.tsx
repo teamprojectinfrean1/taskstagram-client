@@ -18,7 +18,7 @@ const AuthMenuOptions = () => {
         <Link to="/auth/find/password" className="link-style">
           비밀번호 찾기
         </Link>
-        <Link to="/auth/signup" className="link-style">
+        <Link to="/auth/signup/required" className="link-style">
           회원가입
         </Link>
       </Stack>

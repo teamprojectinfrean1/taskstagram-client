@@ -11,13 +11,15 @@ import { loggedState } from "./stores/Store";
 import { useRecoilValue } from "recoil";
 import FindEmailForm from "@/components/auth/FindEmailForm";
 import LoginForm from "@/components/auth/LoginForm";
-import SignupForm from "@/components/auth/SignupForm";
+import SignupForm from "@/components/auth/SignupFormRequired";
 import FindEmailLayout from "@/components/auth/FindEmailLayout";
 import FindEmailSuccess from "@/components/auth/FindEmailSuccess";
 import FindPasswdLayout from "@/components/auth/FindPasswdLayout";
 import FindPasswordForm from "@/components/auth/FindPasswdForm";
 import FindPasswdSuccess from "@/components/auth/FindPasswdSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
+import SignupFormRequired from "@/components/auth/SignupFormRequired";
+import SignupFormOptional from "./components/auth/SignupFormOptional";
 
 const router = createBrowserRouter([
   {
@@ -29,8 +31,12 @@ const router = createBrowserRouter([
         element: <LoginForm />,
       },
       {
-        path: "signup",
-        element: <SignupForm />,
+        path: "signup/required",
+        element: <SignupFormRequired />,
+      },
+      {
+        path: "signup/optional",
+        element: <SignupFormOptional />
       },
       {
         path: "signup/success",
@@ -88,12 +94,12 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  // const logged = useRecoilValue(loggedState);
+  const logged = useRecoilValue(loggedState);
 
   // 로그인 유무
-  // useEffect(() => {
-  //   logged ? router.navigate("/") : router.navigate("/auth/login");
-  // }, [logged]);
+  useEffect(() => {
+    logged ? router.navigate("/") : router.navigate("/auth/login");
+  }, [logged]);
 
   return (
     <>

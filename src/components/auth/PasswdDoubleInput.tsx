@@ -5,24 +5,24 @@ import { passwdDoubleCheck } from "@/utils/authCheck";
 type PasswdDoubleInputProps = {
   passwd: string;
   passwdDouble: string;
-  passwdDoubleFlag: boolean;
   setPasswdDouble(passwdDouble: string): void;
-  setPasswdDoubleFlag(passwdDoubleFlag: boolean): void;
+  passwdDoubleValidityFlag: boolean;
+  setPasswdDoubleValidityFlag(passwdDoubleFlag: boolean): void;
 };
 
 const PasswdDoubleInput = ({
   passwd,
   passwdDouble,
-  passwdDoubleFlag,
   setPasswdDouble,
-  setPasswdDoubleFlag,
+  passwdDoubleValidityFlag,
+  setPasswdDoubleValidityFlag,
 }: PasswdDoubleInputProps) => {
-  const passwdDoubleFlagState = !!(passwdDouble && !passwdDoubleFlag);
+  const passwdDoubleFlagState = !!(passwdDouble && !passwdDoubleValidityFlag);
 
   return (
     <>
-      <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password check</Typography>
       <OutlinedInput
+        sx={{mt:3}}
         type="password"
         fullWidth
         size="small"
@@ -31,7 +31,7 @@ const PasswdDoubleInput = ({
         value={passwdDouble}
         onChange={(e) => {
           setPasswdDouble(e.target.value);
-          setPasswdDoubleFlag(
+          setPasswdDoubleValidityFlag(
             passwdDoubleCheck({
               passwd,
               passwdDouble: e.target.value,

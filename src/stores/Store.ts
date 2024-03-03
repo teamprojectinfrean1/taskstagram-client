@@ -10,3 +10,15 @@ export const loggedState = atom({
   key: "loggedState",
   default: false,
 });
+
+export const signupInfoState = atom({
+  key: "signupInfo",
+  default: {
+    email : "",
+    id: "",
+    passwd: "",
+    passwdDouble: "",
+    nickname: "",
+    profileImage: ""
+  }
+})
