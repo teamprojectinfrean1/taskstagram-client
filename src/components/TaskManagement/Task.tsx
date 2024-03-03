@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, IconButton, Typography } from '@mui/mate
 import theme from '@/theme/theme';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import TaskObj from '@/models/TaskObj';
+import { RawDraftContentState, convertFromRaw } from 'draft-js';
 
 type TaskProps = {
     selectedTask:TaskObj;
@@ -16,7 +17,7 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
         onSelectedTask(selectedTask);
     }
     return (
-        <Card sx={{borderRadius: 4, p:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
+        <Card sx={{height:"200px", borderRadius: 4, p:1, background:theme.palette.secondary.light}} variant="elevation" square={false}> 
             <CardHeader
                 sx={{'&:hover': {cursor: 'pointer'}}}
                 onClick={onClick}
@@ -30,11 +31,14 @@ const Task = ({selectedTask, onDelete, onShowTaskModal, onSelectedTask}:TaskProp
                 } 
                 title={selectedTask.taskName}>
             </CardHeader>
-            <CardContent sx={{backgroundColor: "white", borderRadius: 3, '&:hover': {cursor: 'pointer'}}} 
+            <CardContent sx={{height:"calc(100% - 65px)", backgroundColor: "white", borderRadius: 3, '&:hover': {cursor: 'pointer'}}} 
                 onClick={onClick}>
-                <Typography variant="subtitle1">
-                    {selectedTask.taskExplanation.length > 55 ? selectedTask.taskExplanation.substring(0,55).concat("...") : selectedTask.taskExplanation}
-                </Typography>
+                {selectedTask.taskExplanation && 
+                    <Typography variant="subtitle1">
+                        {convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText().length > 55 ? 
+                            convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText().substring(0,55).concat("...") : 
+                            convertFromRaw(selectedTask.taskExplanation as RawDraftContentState).getPlainText()}
+                    </Typography>}
             </CardContent>
         </Card>
     )

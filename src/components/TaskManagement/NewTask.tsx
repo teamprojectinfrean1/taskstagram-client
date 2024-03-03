@@ -10,13 +10,15 @@ type NewTaskProps = {
 
 const NewTask = ({onClick, onShowTaskModal}:NewTaskProps) => {
     return (
-        <Card sx={{borderRadius: 4, 
+        <Card sx={{
+                height:"200px",
+                borderRadius: 4, 
                 p:1, 
                 background:theme.palette.secondary.light,
                 display:"flex",
                 flexDirection:"column",
                 justifyContent:"center",
-                alignContent:"center"}} 
+                alignItems:"center"}} 
             variant="elevation" 
             square={false}>
             <IconButton onClick={() => {
