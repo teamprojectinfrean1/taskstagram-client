@@ -43,3 +43,9 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
+
+
+.link-style {
+  text-decoration: none;
+  color: black;
+}

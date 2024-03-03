@@ -1,19 +1,24 @@
-import { Box, Typography, OutlinedInput } from "@mui/material";
+import theme from "@/theme/theme";
+import { Typography, OutlinedInput } from "@mui/material";
 import { passwdDoubleCheck } from "@/utils/authCheck";
 
-type PropsType = {
+type PasswdDoubleInputProps = {
   passwd: string;
   passwdDouble: string;
+  passwdDoubleFlag: boolean;
   setPasswdDouble(passwdDouble: string): void;
   setPasswdDoubleFlag(passwdDoubleFlag: boolean): void;
-}
+};
 
 const PasswdDoubleInput = ({
   passwd,
   passwdDouble,
+  passwdDoubleFlag,
   setPasswdDouble,
   setPasswdDoubleFlag,
-}: PropsType) => {
+}: PasswdDoubleInputProps) => {
+  const passwdDoubleFlagState = !!(passwdDouble && !passwdDoubleFlag);
+
   return (
     <>
       <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password check</Typography>
@@ -22,17 +27,9 @@ const PasswdDoubleInput = ({
         fullWidth
         size="small"
         placeholder={"비밀번호 확인"}
-        error={
-          passwdDouble &&
-          !passwdDoubleCheck({
-            passwd,
-            passwdDouble,
-          })
-            ? true
-            : false
-        }
+        error={passwdDoubleFlagState}
         value={passwdDouble}
-        onBlur={(e) => {
+        onChange={(e) => {
           setPasswdDouble(e.target.value);
           setPasswdDoubleFlag(
             passwdDoubleCheck({
@@ -42,17 +39,20 @@ const PasswdDoubleInput = ({
           );
         }}
       />
-      {passwdDouble &&
-        !passwdDoubleCheck({
-          passwd,
-          passwdDouble,
-        }) && (
-          <Box className="error-font">
-            <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-              비밀번호가 일치하지 않습니다.
-            </Typography>
-          </Box>
-        )}
+      {passwdDoubleFlagState && (
+        <Typography
+          sx={{
+            position: "absolute",
+            mt: 0.1,
+            ml: 1,
+            fontWeight: "bold",
+            fontSize: "11px",
+            color: theme.palette.error.main,
+          }}
+        >
+          비밀번호가 일치하지 않습니다.
+        </Typography>
+      )}
     </>
   );
 };

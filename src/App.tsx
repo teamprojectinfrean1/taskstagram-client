@@ -9,29 +9,63 @@ import TaskPage from "@/pages/TaskPage";
 import ProfilePage from "@/pages/ProfilePage";
 import { loggedState } from "./stores/Store";
 import { useRecoilValue } from "recoil";
+import FindEmailForm from "@/components/auth/FindEmailForm";
+import LoginForm from "@/components/auth/LoginForm";
+import SignupForm from "@/components/auth/SignupForm";
+import FindEmailLayout from "@/components/auth/FindEmailLayout";
+import FindEmailSuccess from "@/components/auth/FindEmailSuccess";
+import FindPasswdLayout from "@/components/auth/FindPasswdLayout";
+import FindPasswordForm from "@/components/auth/FindPasswdForm";
+import FindPasswdSuccess from "@/components/auth/FindPasswdSuccess";
+import SignupSuccess from "@/components/auth/SignupSuccess";
 
 const router = createBrowserRouter([
   {
-    path: "/auth/login", 
-    element: <AuthPage formType="login" />,
+    path: "/auth",
+    element: <AuthPage />,
+    children: [
+      {
+        path: "login",
+        element: <LoginForm />,
+      },
+      {
+        path: "signup",
+        element: <SignupForm />,
+      },
+      {
+        path: "signup/success",
+        element: <SignupSuccess />,
+      },
+      {
+        path: "find/email",
+        element: <FindEmailLayout />,
+        children: [
+          {
+            index: true,
+            element: <FindEmailForm />,
+          },
+          {
+            path: "success",
+            element: <FindEmailSuccess />,
+          },
+        ],
+      },
+      {
+        path: "find/password",
+        element: <FindPasswdLayout />,
+        children: [
+          {
+            index: true,
+            element: <FindPasswordForm />,
+          },
+          {
+            path: "success",
+            element: <FindPasswdSuccess />,
+          },
+        ],
+      },
+    ],
   },
-  {
-    path: "/auth/signup",
-    element: <AuthPage formType="signup" />,
-  },
-  {
-    path: "/auth/find/email",
-    element: <AuthPage formType="find-email" />,
-  },
-  {
-    path: "/auth/find/password",
-    element: <AuthPage formType="find-password" />,
-  },
-  {
-    path: "/auth/signup/success",
-    element: <AuthPage formType="signup-success" />,
-  },
-    
   {
     path: "/",
     element: <PageLayout />,
@@ -54,13 +88,12 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-
-  const logged = useRecoilValue(loggedState);
+  // const logged = useRecoilValue(loggedState);
 
   // 로그인 유무
-  useEffect(() => {
-    logged? router.navigate("/") : router.navigate("/auth/login")
-  }, [logged])
+  // useEffect(() => {
+  //   logged ? router.navigate("/") : router.navigate("/auth/login");
+  // }, [logged]);
 
   return (
     <>
