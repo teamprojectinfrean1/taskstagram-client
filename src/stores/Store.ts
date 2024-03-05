@@ -6,19 +6,19 @@ export const taskListState = atom<TaskObj[]>({
   default: [],
 });
 
-export const loggedState = atom({
-  key: "loggedState",
-  default: false,
-});
+// export const loggedState = atom({
+//   key: "loggedState",
+//   default: false,
+// });
 
-export const signupInfoState = atom({
-  key: "signupInfo",
-  default: {
-    email : "",
-    id: "",
-    passwd: "",
-    passwdDouble: "",
-    nickname: "",
-    profileImage: ""
-  }
-})
+// export const signupInfoState = atom({
+//   key: "signupInfo",
+//   default: {
+//     email : "",
+//     id: "",
+//     passwd: "",
+//     passwdDouble: "",
+//     nickname: "",
+//     profileImage: ""
+//   }
+// })

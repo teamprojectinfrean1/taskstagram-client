@@ -26,8 +26,8 @@ const EmailInput = ({
   const emailIsDisabled = !!(!emailValidityFlag || emailDuplicateFlag);
 
   const changeEmailDuplicateButton = (email: string) => {
-    setShowModal(true)
-    const emailDuplication = fetchDupicate({ type: "email", value: email });
+    setShowModal(true);
+    const emailDuplication = fetchDupicate({ type: "email", authValue: email });
     emailDuplication
       ? setEmailDuplicateFlag(true)
       : setEmailDuplicateFlag(false);

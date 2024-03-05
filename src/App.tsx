@@ -7,7 +7,7 @@ import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
 import ProfilePage from "@/pages/ProfilePage";
-import { loggedState } from "./stores/Store";
+import { loggedState } from "./stores/AuthStore";
 import { useRecoilValue } from "recoil";
 import FindEmailForm from "@/components/auth/FindEmailForm";
 import LoginForm from "@/components/auth/LoginForm";

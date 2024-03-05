@@ -5,15 +5,15 @@ import SocialIcons from "./SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswdInput from "./PasswdInput";
 import PasswdDoubleInput from "./PasswdDoubleInput";
-import NicknameInput from "./NicknameInput";
-import { apiAuthTest } from "@/utils/authCheck";
+// import NicknameInput from "./NicknameInput";
 import { Box, Button, Divider, Typography, Grid } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilState } from "recoil";
-import { signupInfoState } from "@/stores/Store";
+import { signupInfoState } from "@/stores/AuthStore";
+import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 
-type SingupInfoTypes = {
+export type SignupInfoTypes = {
   key: string;
   value: string;
 };
@@ -28,21 +28,7 @@ const SignupFormRequired = () => {
 
   const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
 
-  const changeSignupInfo = ({ key, value }: SingupInfoTypes) => {
-    setSignupInfo({
-      ...signupInfo,
-      [key]: value,
-    });
-  };
-
-  const initalSignupInfo = {
-    email: "",
-    id: "",
-    passwd: "",
-    passwdDouble: "",
-    nickname: "",
-    profileImage: "",
-  };
+  const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   const [signupValidityFlag, setSignupValidityFlag] = useState({
     emailValidityFlag: false,
@@ -65,7 +51,7 @@ const SignupFormRequired = () => {
       signupValidityFlag.idValidityFlag && signupDuplicateFlag.idDuplicateFlag
     ),
     passwdField: !!signupValidityFlag.passwdValidityFlag,
-    passwdDoubleField : !!signupValidityFlag.passwdDoubleValidityFlag
+    passwdDoubleField: !!signupValidityFlag.passwdDoubleValidityFlag,
   };
 
   const changeSignupValidityFlag = ({ key, value }: SignupInfoFlagTypes) => {
@@ -90,9 +76,7 @@ const SignupFormRequired = () => {
         <ArrowBackIcon
           fontSize="large"
           sx={{ m: 3, color: "#5F6368" }}
-          onClick={() => {
-            setSignupInfo(initalSignupInfo);
-          }}
+          onClick={resetSignupInfo}
         />
       </Link>
       <Box className="base-layout">
@@ -142,14 +126,14 @@ const SignupFormRequired = () => {
         />
 
         <PasswdDoubleInput
-              passwd={signupInfo.passwd}
-              passwdDouble={signupInfo.passwdDouble}
-              setPasswdDouble={(value) => changeSignupInfo({key: "passwdDouble", value})}
-              passwdDoubleValidityFlag={signupValidityFlag.passwdDoubleValidityFlag}
-              setPasswdDoubleValidityFlag={(value) =>
-                changeSignupValidityFlag({ key: "passwdDoubleValidityFlag", value })
-              }
-            />
+          passwd={signupInfo.passwd}
+          // passwdDouble={signupInfo.passwdDouble}
+          // setPasswdDouble={(value) => changeSignupInfo({key: "passwdDouble", value})}
+          passwdDoubleValidityFlag={signupValidityFlag.passwdDoubleValidityFlag}
+          setPasswdDoubleValidityFlag={(value) =>
+            changeSignupValidityFlag({ key: "passwdDoubleValidityFlag", value })
+          }
+        />
         <Box sx={{ textAlign: "center", mt: 3 }}>
           <Button
             variant="contained"
@@ -161,7 +145,7 @@ const SignupFormRequired = () => {
             }}
             disabled={!requiredSignupInput}
             onClick={() => {
-              navigate("/auth/signup/optional")
+              navigate("/auth/signup/optional");
             }}
           >
             계속

@@ -1,44 +1,56 @@
 import theme from "@/theme/theme";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import { Button, Box, Typography, OutlinedInput, Grid } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import FaceIcon from "@mui/icons-material/Face";
+// import { styled } from "@mui/material/styles";
+// import FaceIcon from "@mui/icons-material/Face";
 import NicknameInput from "./NicknameInput";
-import PersonAddIcon from "@mui/icons-material/PersonAdd";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
+import { Link } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { signupInfoState } from "@/stores/AuthStore";
+import { fetchSignup } from "@/utils/authCheck";
+import ProfileImageInput from "./ProfileImageInput";
+import { SignupInfoTypes } from "./SignupFormRequired";
+import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 
 const SingupFormOptional = () => {
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    overflow: "hidden",
-    position: "absolute",
-  });
+  const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
-    // const handleSignup = () => {
-  //   const signupFlag = apiAuthTest(signupInfo);
-  //   signupFlag &&
-  //     navigate("/auth/signup/success", { state: { email: signupInfo.email } });
-  // };
+  const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
+
+  const handleSignup = ({ email, id, passwd, nickname, profileImage }: any) => {
+    const signupFlag = fetchSignup({
+      email,
+      id,
+      passwd,
+      nickname,
+      profileImage,
+    });
+    // signupFlag &&
+    //   navigate("/auth/signup/success", { state: { id: signupInfo.id } });
+  };
 
   return (
     <>
+      <Link to="/auth/login">
+        <ArrowBackIcon
+          fontSize="large"
+          sx={{ m: 3, color: "#5F6368" }}
+          onClick={resetSignupInfo}
+        />
+      </Link>
       <Box className="base-layout">
-        <Box sx={{ display: "flex", justifyContent: "center", mt: 6 }}>
-          <Button
-            component="label"
-            sx={{ backgroundColor: "#B2B4B8", p: 3, borderRadius: "50%" }}
-          >
-            <FaceIcon sx={{ fontSize: "80px", color: "black" }} />
-            <VisuallyHiddenInput type="file" />
-          </Button>
-        </Box>
-        <Box sx={{ mt: 3, textAlign: "center" }}>
-          <Typography variant="h4" fontWeight="bold">
-            닉네임 & 프로필 사진
-          </Typography>
-        </Box>
-        <NicknameInput />
+        <ProfileImageInput
+          profileImage={signupInfo.profileImage}
+          setProfileImage={(value) =>
+            changeSignupInfo({ key: "profileImage", value })
+          }
+        />
+        <NicknameInput
+          nickname={signupInfo.nickname}
+          setNickname={(value) => changeSignupInfo({ key: "nickname", value })}
+        />
 
-        <Box sx={{ textAlign: "center", mt: 7 }}>
+        <Box sx={{ textAlign: "center", mt: 5 }}>
           <Button
             variant="contained"
             size="large"
@@ -46,6 +58,9 @@ const SingupFormOptional = () => {
             sx={{
               bgcolor: `${theme.palette.secondary.main}`,
               borderRadius: "7px",
+            }}
+            onClick={() => {
+              handleSignup({ ...signupInfo });
             }}
           >
             가입하기

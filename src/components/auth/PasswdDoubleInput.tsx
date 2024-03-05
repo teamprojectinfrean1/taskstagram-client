@@ -1,22 +1,25 @@
 import theme from "@/theme/theme";
 import { Typography, OutlinedInput } from "@mui/material";
 import { passwdDoubleCheck } from "@/utils/authCheck";
+import { useState } from "react";
 
 type PasswdDoubleInputProps = {
   passwd: string;
-  passwdDouble: string;
-  setPasswdDouble(passwdDouble: string): void;
+  // passwdDouble: string;
+  // setPasswdDouble(passwdDouble: string): void;
   passwdDoubleValidityFlag: boolean;
   setPasswdDoubleValidityFlag(passwdDoubleFlag: boolean): void;
 };
 
 const PasswdDoubleInput = ({
   passwd,
-  passwdDouble,
-  setPasswdDouble,
+  // passwdDouble,
+  // setPasswdDouble,
   passwdDoubleValidityFlag,
   setPasswdDoubleValidityFlag,
 }: PasswdDoubleInputProps) => {
+
+  const [passwdDouble, setPasswdDouble] = useState("")
   const passwdDoubleFlagState = !!(passwdDouble && !passwdDoubleValidityFlag);
 
   return (

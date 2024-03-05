@@ -1,8 +1,8 @@
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 import CheckCircleIcon from "@mui/icons-material/CheckCircle";
-import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
+import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { Modal, Button, Box, Typography } from "@mui/material";
-import CheckIcon from '@mui/icons-material/Check';
+import CheckIcon from "@mui/icons-material/Check";
 
 type LoginErrorModalProps = {
   type: string;
@@ -23,7 +23,6 @@ const AuthResultModal = ({
   handleClose,
 }: LoginErrorModalProps) => {
   const handleIsSuccessText = ({ type, isSuccess }: testTypes) => {
-    console.log(type, isSuccess);
     switch (type) {
       case "login":
         return (
@@ -40,11 +39,9 @@ const AuthResultModal = ({
         );
       case "email":
         return isSuccess ? (
-          <>
-            <Typography sx={{ fontWeight: "bold" }}>
-              사용 가능한 이메일입니다.
-            </Typography>
-          </>
+          <Typography sx={{ fontWeight: "bold" }}>
+            사용 가능한 이메일입니다.
+          </Typography>
         ) : (
           <>
             <Typography sx={{ fontWeight: "bold", fontFamily: "Inter" }}>
@@ -60,6 +57,52 @@ const AuthResultModal = ({
               }}
             >
               동일한 이메일 주소로 중복 가입이 불가능합니다.
+            </Typography>
+          </>
+        );
+      case "id":
+        return isSuccess ? (
+          <Typography sx={{ fontWeight: "bold", fontFamily: "Inter" }}>
+            사용 가능한 아이디입니다.
+          </Typography>
+        ) : (
+          <>
+            <Typography sx={{ fontWeight: "bold", fontFamily: "Inter" }}>
+              이미 가입된 아이디입니다.
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 1,
+                color: "#565656",
+                fontFamily: "Inter",
+                fontWeight: "bold",
+              }}
+            >
+              다른 아이디를 입력해주세요.
+            </Typography>
+          </>
+        );
+      case "nickname":
+        return isSuccess ? (
+          <Typography sx={{ fontWeight: "bold", fontFamily: "Inter" }}>
+            사용 가능한 닉네임입니다.
+          </Typography>
+        ) : (
+          <>
+            <Typography sx={{ fontWeight: "bold", fontFamily: "Inter" }}>
+              이미 가입된 닉네임입니다.
+            </Typography>
+            <Typography
+              variant="body2"
+              sx={{
+                mt: 1,
+                color: "#565656",
+                fontFamily: "Inter",
+                fontWeight: "bold",
+              }}
+            >
+              다른 닉네임을 입력해 주세요.
             </Typography>
           </>
         );
@@ -93,7 +136,7 @@ const AuthResultModal = ({
             <>
               <HighlightOffIcon
                 sx={{
-                  color:'white',
+                  color: "white",
                   bgcolor: "#F30C0C",
                   borderRadius: "50%",
                   p: 0.2,
