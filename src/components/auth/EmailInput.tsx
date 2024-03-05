@@ -1,13 +1,22 @@
-import { Box, Typography, OutlinedInput } from "@mui/material";
+import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
+import { Typography, OutlinedInput } from "@mui/material";
 
-type PropsType = {
+type EmailInputProps = {
   email: string;
+  emailFlag: boolean;
   setEmail(email: string): void;
   setEmailFlag(emailFlag: boolean): void;
-}
+};
 
-const EmailInput = ({ email, setEmail, setEmailFlag }: PropsType) => {
+const EmailInput = ({
+  email,
+  emailFlag,
+  setEmail,
+  setEmailFlag,
+}: EmailInputProps) => {
+  const emailFlagState = !!(email && !emailFlag);
+
   return (
     <>
       <Typography sx={{ mt: 3, ml: 0.5 }}>Email</Typography>
@@ -16,25 +25,28 @@ const EmailInput = ({ email, setEmail, setEmailFlag }: PropsType) => {
         fullWidth
         size="small"
         placeholder={"example@email.com"}
-        error={
-          email && !checkAuthInputValidity({ type: "email", email })
-            ? true
-            : false
-        }
         value={email}
-        onBlur={(e) => {
+        error={emailFlagState}
+        onChange={(e) => {
           setEmail(e.target.value);
           setEmailFlag(
-            checkAuthInputValidity({ type: "email", email: e.target.value })
+            checkAuthInputValidity({ type: "email", authValue: e.target.value })
           );
         }}
       />
-      {email && !checkAuthInputValidity({ type: "email", email }) && (
-        <Box className="error-font">
-          <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-            이메일 형식이 올바르지 않습니다.
-          </Typography>
-        </Box>
+      {emailFlagState && (
+        <Typography
+          sx={{
+            position: "absolute",
+            mt: 0.1,
+            ml: 1,
+            fontWeight: "bold",
+            fontSize: "11px",
+            color: theme.palette.error.main,
+          }}
+        >
+          이메일 형식이 올바르지 않습니다.
+        </Typography>
       )}
     </>
   );

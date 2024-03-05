@@ -1,37 +1,39 @@
-import "./Auth.css";
-import { Box, Typography, OutlinedInput, Button } from "@mui/material";
-import { phoneNumberDoubleCheck } from "@/utils/authCheck";
-import { useState } from "react";
+import theme from "@/theme/theme";
+import { Typography, OutlinedInput, Button, Grid } from "@mui/material";
+import { phoneCertifiCheck } from "@/utils/authCheck";
 
-type PropsType = {
+type PhoneCertifiInputProps = {
   phoneCertifi: string;
   phoneNumberFlag: boolean;
   phoneCertifiFlag: boolean;
   setPhoneCertifi(phoneNumber: string): void;
   setPhoneCertifiFlag(phoneNumberFlag: boolean): void;
-}
+  phoneButtonOnClick: boolean;
+};
 
 const PhoneCertifiInput = ({
   phoneCertifi,
-  phoneNumberFlag,
   phoneCertifiFlag,
   setPhoneCertifi,
   setPhoneCertifiFlag,
-}: PropsType) => {
-
-  const phoneCertifiEffectCheck = () => {
+  phoneButtonOnClick,
+}: PhoneCertifiInputProps) => {
+  const changeViewPhoneCertifiValidity = () => {
     if (phoneCertifi) {
-      return !phoneCertifiFlag ? (
-        <Box className="error-font">
-          <Typography sx={{ fontWeight: "bold", fontSize: "11px" }}>
-            인증 번호를 다시 확인해주세요.
-          </Typography>
-        </Box>
-      ) : (
+      return (
         <Typography
-          sx={{ ml: 1, mt: 0.1, fontWeight: "bold", fontSize: "11px" }}
+          sx={{
+            position: "absolute",
+            mt: 0.1,
+            ml: 1,
+            fontWeight: "bold",
+            fontSize: "11px",
+            ...(phoneCertifiFlag ? {} : { color: theme.palette.error.main }),
+          }}
         >
-          인증이 완료되었습니다.
+          {phoneCertifiFlag
+            ? "인증이 완료되었습니다."
+            : "인증 번호를 확인해주세요."}
         </Typography>
       );
     }
@@ -39,9 +41,9 @@ const PhoneCertifiInput = ({
 
   return (
     <>
-      <Typography sx={{ mt: 3, ml: 0.5 }}>휴대폰 번호</Typography>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
-        <Box>
+      <Typography sx={{ mt: 2.5, ml: 0.5 }}>인증 번호</Typography>
+      <Grid container spacing={2}>
+        <Grid item xs={8}>
           <OutlinedInput
             type="number"
             fullWidth
@@ -49,7 +51,7 @@ const PhoneCertifiInput = ({
             placeholder={"인증번호 6자리"}
             error={phoneCertifi && !phoneCertifiFlag ? true : false}
             value={phoneCertifi}
-            onBlur={(e) => {
+            onChange={(e) => {
               setPhoneCertifi(e.target.value);
             }}
             sx={{
@@ -57,18 +59,26 @@ const PhoneCertifiInput = ({
                 { "-webkit-appearance": "none", margin: 0 },
             }}
           />
-          {phoneCertifiEffectCheck()}
-        </Box>
-        <Button
-          variant="contained"
-          sx={{
-            bgcolor: phoneNumberFlag ? "#173665" : "#B2B4B8",
-            height: "38px",
-          }}
-        >
-          인증
-        </Button>
-      </Box>
+        </Grid>
+        <Grid item xs={4}>
+          <Button
+            variant="contained"
+            fullWidth
+            sx={{
+              bgcolor: `${theme.palette.secondary.main}`,
+              height: "41px",
+              borderRadius: "7px",
+            }}
+            disabled={!phoneButtonOnClick}
+            onClick={() => {
+              setPhoneCertifiFlag(phoneCertifiCheck(phoneCertifi));
+            }}
+          >
+            인증
+          </Button>
+        </Grid>
+      </Grid>
+      {changeViewPhoneCertifiValidity()}
     </>
   );
 };

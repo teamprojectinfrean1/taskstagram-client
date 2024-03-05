@@ -12,9 +12,9 @@ const UserAvatar = ({ sx }: UserAvatarProps) => {
       /* src="" 나중에 추가 */
       sizes="140px"
       sx={{
-        ...sx,
         width: 60,
         height: 60,
+        ...sx,
       }}
     />
   );
