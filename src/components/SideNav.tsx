@@ -18,9 +18,9 @@ const SideNav = ({ open }: SideNavProps) => {
       anchor="left"
       open={open}
       sx={{
-        width: 'var(--side-nav-width)',
+        width: "var(--side-nav-width)",
         ".MuiDrawer-paper": {
-          marginTop: 'var(--top-nav-height)',
+          marginTop: "var(--top-nav-height)",
         },
       }}
     >
@@ -35,6 +35,12 @@ const SideNav = ({ open }: SideNavProps) => {
           <ListItemButton>
             <ListItemIcon>{/* 아이콘 플레이스홀더 */}</ListItemIcon>
             <ListItemText primary="Task 관리" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemIcon>{/* 아이콘 플레이스홀더 */}</ListItemIcon>
+            <ListItemText primary="프로젝트 설정" />
           </ListItemButton>
         </ListItem>
       </List>

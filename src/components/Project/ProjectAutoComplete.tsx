@@ -2,21 +2,29 @@ import ProjectObj from "@/models/ProjectObj";
 import { Autocomplete, Checkbox, TextField } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import { useEffect, useState } from "react";
 
 type ProjectAutoCompleteProps = {
   projects: ProjectObj[];
+  onClickCheckBox(selectedProject: ProjectObj | null): void;
 };
 
-const ProjectAutoComplete = ({ projects }: ProjectAutoCompleteProps) => {
-  const handleStartCheckBoxChange = (
-    e: React.MouseEvent<HTMLButtonElement>
+const ProjectAutoComplete = ({
+  projects,
+  onClickCheckBox,
+}: ProjectAutoCompleteProps) => {
+  const handleCheckBoxClick = (
+    e: React.MouseEvent<HTMLButtonElement>,
+    selectedProject: ProjectObj | null,
+    selectedValue: boolean
   ) => {
     e.stopPropagation();
+    onClickCheckBox(selectedProject);
   };
+
   return (
     <Autocomplete
       id="checkboxes-tags-demo"
-      disableCloseOnSelect
       disableClearable
       options={projects}
       getOptionLabel={(option) => option.projectName}
@@ -24,7 +32,10 @@ const ProjectAutoComplete = ({ projects }: ProjectAutoCompleteProps) => {
         <li {...props}>
           <Checkbox
             disableRipple
-            onClick={handleStartCheckBoxChange}
+            onClick={(e) => {
+              handleCheckBoxClick(e, option, selected);
+            }}
+            checked={option.isMainProject}
             icon={<StarBorderIcon fontSize="small" />}
             checkedIcon={<StarIcon fontSize="small" sx={{ color: "yellow" }} />}
             style={{ marginRight: 8 }}
@@ -32,7 +43,17 @@ const ProjectAutoComplete = ({ projects }: ProjectAutoCompleteProps) => {
           {option.projectName}
         </li>
       )}
-      style={{ width: 300 }}
+      sx={{
+        width: 300,
+        "& .MuiOutlinedInput-root": {
+          p: 0,
+          color: "#eee",
+          border: "1px solid #eee",
+        },
+        "& .MuiAutocomplete-popupIndicator": {
+          color: "#eee",
+        },
+      }}
       renderInput={(params) => <TextField {...params} />}
     />
   );
