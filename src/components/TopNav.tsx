@@ -18,15 +18,17 @@ function TopNav({ onMenuClick }: TopNavProps) {
     const projectA = {
       projectId: "1",
       projectName: "ProjectA",
-      isMainProejct: false,
+      isMainProject: false,
     } as ProjectObj;
     const projectB = {
       projectId: "2",
       projectName: "ProjectB",
-      isMainProejct: true,
+      isMainProject: true,
     } as ProjectObj;
     setProjectList([projectA, projectB]);
   }, []);
+
+  const handleChangeMainProject = (selectedProject: ProjectObj | null) => {};
 
   return (
     <AppBar position="static">
@@ -41,7 +43,10 @@ function TopNav({ onMenuClick }: TopNavProps) {
         >
           <MenuIcon />
         </IconButton>
-        <ProjectAutoComplete projects={projectList} />
+        <ProjectAutoComplete
+          projects={projectList}
+          onClickCheckBox={handleChangeMainProject}
+        />
       </Toolbar>
     </AppBar>
   );

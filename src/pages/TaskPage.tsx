@@ -95,6 +95,12 @@ const TaskPage = () => {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           sx={{ height: "100%", minHeight: "450px", m: 1 }}
         >
+          <Grid item xs={12} md={3}>
+            <NewTask
+              onClick={setSelectedTask}
+              onShowTaskModal={setShowModal}
+            ></NewTask>
+          </Grid>
           {taskList.length > 0
             ? taskList.map((task) => (
                 <Grid item xs={12} md={3} key={task.taskId}>
@@ -108,12 +114,6 @@ const TaskPage = () => {
                 </Grid>
               ))
             : null}
-          <Grid item xs={12} md={3}>
-            <NewTask
-              onClick={setSelectedTask}
-              onShowTaskModal={setShowModal}
-            ></NewTask>
-          </Grid>
         </Grid>
         <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
           <Pagination

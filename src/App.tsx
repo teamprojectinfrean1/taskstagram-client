@@ -18,6 +18,7 @@ import FindPasswdLayout from "@/components/auth/FindPasswdLayout";
 import FindPasswordForm from "@/components/auth/FindPasswdForm";
 import FindPasswdSuccess from "@/components/auth/FindPasswdSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
+import ProjectPage from "./pages/ProjectPage";
 
 const router = createBrowserRouter([
   {
@@ -82,6 +83,10 @@ const router = createBrowserRouter([
       {
         path: "/mypage",
         element: <ProfilePage />,
+      },
+      {
+        path: "/project",
+        element: <ProjectPage />,
       },
     ],
   },

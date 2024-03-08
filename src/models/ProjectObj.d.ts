@@ -1,7 +1,9 @@
 type ProjectObj = {
   projectId: string;
   projectName: string;
-  isMainProejct: bool;
+  projectContent: string;
+  projectTags: string[] | null;
+  isMainProject: bool;
 };
 
 export default ProjectObj;
