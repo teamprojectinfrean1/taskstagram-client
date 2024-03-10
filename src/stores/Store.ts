@@ -7,6 +7,11 @@ export const projectListState = atom<ProjectObj[]>({
   default: [],
 });
 
+export const selectedProjectState = atom<ProjectObj | null>({
+  key: "selectedProjectState",
+  default: null,
+});
+
 export const taskListState = atom<TaskObj[]>({
   key: "taskListState",
   default: [],

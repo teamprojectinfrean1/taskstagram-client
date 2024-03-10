@@ -3,7 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ProjectAutoComplete from "./Project/ProjectAutoComplete";
 import ProjectObj from "@/models/ProjectObj";
 import { useRecoilState } from "recoil";
-import { projectListState } from "@/stores/Store";
+import { projectListState, selectedProjectState } from "@/stores/Store";
 import { useEffect } from "react";
 
 type TopNavProps = {
@@ -12,6 +12,8 @@ type TopNavProps = {
 
 function TopNav({ onMenuClick }: TopNavProps) {
   const [projectList, setProjectList] = useRecoilState(projectListState);
+  const [selectedProject, setSelectedProject] =
+    useRecoilState(selectedProjectState);
 
   //추후 전체 project 조회로 변경
   useEffect(() => {
@@ -28,7 +30,13 @@ function TopNav({ onMenuClick }: TopNavProps) {
     setProjectList([projectA, projectB]);
   }, []);
 
-  const handleChangeMainProject = (selectedProject: ProjectObj | null) => {};
+  const handleChangeMainProject = (selectedProject: ProjectObj | null) => {
+    //setSelectedProject(selectedProject);
+  };
+
+  const handleChangeSelectedProject = (selectedProject: ProjectObj | null) => {
+    setSelectedProject(selectedProject);
+  };
 
   return (
     <AppBar position="static">
@@ -45,6 +53,8 @@ function TopNav({ onMenuClick }: TopNavProps) {
         </IconButton>
         <ProjectAutoComplete
           projects={projectList}
+          selectedProject={selectedProject}
+          onSelectedProjectChanged={handleChangeSelectedProject}
           onClickCheckBox={handleChangeMainProject}
         />
       </Toolbar>
