@@ -12,8 +12,8 @@ const UserAvatar = ({ sx }: UserAvatarProps) => {
       /* src="" 나중에 추가 */
       sizes="140px"
       sx={{
-        width: 60,
-        height: 60,
+        width: 50,
+        height: 50,
         ...sx,
       }}
     />

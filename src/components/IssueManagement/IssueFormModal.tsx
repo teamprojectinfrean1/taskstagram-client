@@ -15,11 +15,11 @@ import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "@/components/Editor/TextEditor";
 import CommentContainer from "@/components/Comment/CommentContainer";
 import SearchableSelect from "@/components/SearchableSelect";
-import { Duration, IssueFormData } from "@/models/Issue";
 import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
+import { Duration, IssueFormData } from "@/models/Issue";
 
 type IssueFormModalProps = {
   currentIssueId: string;

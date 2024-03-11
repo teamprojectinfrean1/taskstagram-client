@@ -10,7 +10,7 @@ import TextEditor from '@/components/Editor/TextEditor';
 import { RawDraftContentState } from 'draft-js';
 import theme from '@/theme/theme';
 import TaskTagChipMaker from '@/components/TagChipMaker';
-import uuid from 'react-uuid';
+// import uuid from 'react-uuid';
 
 type TaskModalProps={
     selectedTask: TaskObj,
@@ -104,7 +104,7 @@ const TaskModal = ({selectedTask, isOpen, onAdd, onReplace, onDelete, onCloseMod
 
         if(!selectedTask){//새로운 task 생성시
             onAdd({
-                taskId: uuid(),//taskId 주입
+                taskId: "x",
                 taskName: formData.taskName,
                 taskExplanation: formData.taskExplanation,
                 taskAssignee: formData.taskAssignee,

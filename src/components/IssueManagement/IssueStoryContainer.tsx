@@ -9,11 +9,9 @@ const SCROLL_AMOUNT_ON_ARROW_CLICK = 500;
 const SCROLL_POSITION_TOLERANCE = 5;
 
 type IssueStoryContainerProps = {
-  title: string;
 };
 
 const IssueStoryContainer = ({
-  title,
 }: IssueStoryContainerProps) => {
   const issueStoryListRef = useRef<HTMLDivElement>(null);
   const storyIsOverflowing = useOverflowDetection(
@@ -55,15 +53,7 @@ const IssueStoryContainer = ({
         display="flex"
         alignItems="center"
         sx={{ height: "100%", px: 1, py: 2 }}
-      >
-        <Box sx={{mb:"auto"}}>
-          <Typography
-            noWrap
-            sx={{ p: 1, ml: 2, borderBottom: "1px solid black" }}
-          >
-            {title}
-          </Typography>
-        </Box>
+      >   
         <IconButton
           size="large"
           aria-label="scroll leftwards"

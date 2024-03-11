@@ -4,8 +4,8 @@ import IssueTicket from "@/components/IssueManagement/IssueTicket";
 
 type IssueTicketContainerProps = {
   title: string;
-  IconComponent: React.ElementType<SvgIconProps>;
-  onIconComponentClick: () => void;
+  IconComponent?: React.ElementType<SvgIconProps>;
+  onIconComponentClick?: () => void;
   ariaLabel: string;
 };
 
@@ -26,7 +26,7 @@ const IssueTicketContainer = ({
       <Stack
         spacing={2}
         sx={{
-          pt: 2,
+          pt: 1,
           height: "100%",
         }}
       >
@@ -34,32 +34,33 @@ const IssueTicketContainer = ({
           display="flex"
           justifyContent="space-between"
           alignItems="center"
-          sx={{ px: 4 }}
+          sx={{ px: 2 }}
         >
           <Typography noWrap sx={{ borderBottom: "1px solid black", p: 1 }}>
             {title}
           </Typography>
-          <IconButton
-            size="large"
-            edge="end"
-            aria-label={ariaLabel}
-            onClick={() => onIconComponentClick()}
-          >
-            <IconComponent />
-          </IconButton>
+          {IconComponent && (
+            <IconButton
+              size="large"
+              edge="end"
+              aria-label={ariaLabel}
+              onClick={() =>
+                onIconComponentClick ? onIconComponentClick() : {}
+              }
+            >
+              <IconComponent />
+            </IconButton>
+          )}
         </Box>
         <Stack
           spacing={2}
           className="custom-scrollbar"
-          sx={{ overflow: "auto", px: 4, pb: 2 }}
+          sx={{ overflow: "auto", px: 2, pb: 2 }}
         >
+          search box
           <IssueTicket
             id="1"
             testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-          />
-          <IssueTicket
-            id="2"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
           />
           <IssueTicket id="3" testText="Lorem ipsum dolor sit amet" />
           <IssueTicket
