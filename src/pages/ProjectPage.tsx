@@ -3,14 +3,21 @@ import { useState, useEffect } from "react";
 import ProjectObj from "@/models/ProjectObj";
 import { Grid, TextField, Button, Box } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import DurationPicker from "@/components/DurationPicker";
+import ProjectMemberAutocomplete from "@/components/Project/ProjectMemberAutocomplete";
+
 const ProjectPage = () => {
   const [formData, setFormData] = useState<ProjectObj>({
     projectId: "",
     projectName: "",
     projectContent: "",
+    projectStartDate: null,
+    projectEndDate: null,
+    projectMemberUuidList: null,
     projectTags: null,
     isMainProject: false,
   });
+  const userUuidList = ["user1", "user2"];
   //각 입력란 change 이벤트
   const handleInputChange = (
     field: keyof ProjectObj,
@@ -54,12 +61,40 @@ const ProjectPage = () => {
           color="secondary"
           value={formData.projectName}
           onChange={(e) => handleInputChange("projectName", e.target.value)}
+          InputProps={{
+            sx: {
+              fontSize: "0.9rem",
+              height: "40px",
+            },
+          }}
         />
         <TextField
           fullWidth
           color="secondary"
           value={formData.projectContent}
           onChange={(e) => handleInputChange("projectContent", e.target.value)}
+          InputProps={{
+            sx: {
+              fontSize: "0.9rem",
+              height: "40px",
+            },
+          }}
+        />
+        <ProjectMemberAutocomplete
+          memberUuidList={userUuidList}
+          onSelectedMemberChanged={(value) =>
+            handleInputChange("projectMemberUuidList", value)
+          }
+        />
+        <DurationPicker
+          selectedStartDate={formData.projectStartDate}
+          selectedEndDate={formData.projectEndDate}
+          onStartDateSelectionChange={(value) =>
+            handleInputChange("projectStartDate", value)
+          }
+          onEndDateSelectionChange={(value) =>
+            handleInputChange("projectEndDate", value)
+          }
         />
         <TagChipMaker
           tagList={formData.projectTags}

@@ -31,7 +31,7 @@ function TopNav({ onMenuClick }: TopNavProps) {
   }, []);
 
   const handleChangeMainProject = (selectedProject: ProjectObj | null) => {
-    //setSelectedProject(selectedProject);
+    //메인 프로젝트 변경 api 호출
   };
 
   const handleChangeSelectedProject = (selectedProject: ProjectObj | null) => {

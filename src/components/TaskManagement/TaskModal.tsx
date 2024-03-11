@@ -21,6 +21,7 @@ import TextEditor from "@/components/Editor/TextEditor";
 import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
 import TaskTagChipMaker from "@/components/TagChipMaker";
+import DurationPicker from "@/components/DurationPicker";
 import uuid from "react-uuid";
 
 type TaskModalProps = {
@@ -50,8 +51,8 @@ const style = {
   left: "50%",
   transform: "translate(-50%, -50%)",
   maxWidth: 1300, //추후 반응형으로 변경 예정
-  width: "100%",
-  bgcolor: "background.paper",
+  width: "80%",
+  bgcolor: "white",
   boxShadow: 24,
   p: 2,
   height: "auto",
@@ -241,18 +242,14 @@ const TaskModal = ({
             <InputLabel htmlFor="기간" sx={{ fontWeight: "bold", mb: 1 }}>
               기간
             </InputLabel>
-            {/* <TaskDurationDatePicker
-                          startDate={formData.taskStartDate}
-                          endDate={formData.taskEndDate}
-                          onChangeStartDate={(value) => handleInputChange("taskStartDate", value)}
-                          onChangeEndDate={(value) => handleInputChange("taskEndDate", value)}></TaskDurationDatePicker> */}
-            <SearchableSelect
-              label="하위 이슈"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
-              selectedOptions={formData.taskSubIssues}
-              multiselect
-              onSelectionChange={(value) =>
-                handleInputChange("taskSubIssues", value)
+            <DurationPicker
+              selectedStartDate={formData.taskStartDate}
+              selectedEndDate={formData.taskEndDate}
+              onStartDateSelectionChange={(value) =>
+                handleInputChange("taskStartDate", value)
+              }
+              onEndDateSelectionChange={(value) =>
+                handleInputChange("taskEndDate", value)
               }
             />
             <InputLabel
