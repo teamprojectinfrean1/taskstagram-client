@@ -3,20 +3,14 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "./SocialIcons";
 import EmailInput from "./EmailInput";
-import PasswdInput from "./PasswdInput";
-import PasswdDoubleInput from "./PasswdDoubleInput";
-// import NicknameInput from "./NicknameInput";
+import PasswordInput from "./PasswordInput";
+import PasswordDoubleInput from "./PasswordDoubleInput";
 import { Box, Button, Divider, Typography, Grid } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
-import { useRecoilState } from "recoil";
+import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/AuthStore";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
-
-export type SignupInfoTypes = {
-  key: string;
-  value: string;
-};
 
 type SignupInfoFlagTypes = {
   key: string;
@@ -26,15 +20,15 @@ type SignupInfoFlagTypes = {
 const SignupFormRequired = () => {
   const navigate = useNavigate();
 
-  const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
+  const signupInfo = useRecoilValue(signupInfoState);
 
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   const [signupValidityFlag, setSignupValidityFlag] = useState({
     emailValidityFlag: false,
     idValidityFlag: false,
-    passwdValidityFlag: false,
-    passwdDoubleValidityFlag: false,
+    passwordValidityFlag: false,
+    passwordDoubleValidityFlag: false,
   });
 
   const [signupDuplicateFlag, setSignupDuplicateFlag] = useState({
@@ -50,8 +44,8 @@ const SignupFormRequired = () => {
     idField: !!(
       signupValidityFlag.idValidityFlag && signupDuplicateFlag.idDuplicateFlag
     ),
-    passwdField: !!signupValidityFlag.passwdValidityFlag,
-    passwdDoubleField: !!signupValidityFlag.passwdDoubleValidityFlag,
+    passwordField: !!signupValidityFlag.passwordValidityFlag,
+    passwordDoubleField: !!signupValidityFlag.passwordDoubleValidityFlag,
   };
 
   const changeSignupValidityFlag = ({ key, value }: SignupInfoFlagTypes) => {
@@ -61,13 +55,13 @@ const SignupFormRequired = () => {
     });
   };
 
-  const [requiredSignupInput, setRequiredSignupInput] = useState(false);
+  const [totalRequiredInputFlag, setTotalRequiredInputFlag] = useState(false);
 
   useEffect(() => {
     const requiredInputCheck = Object.values(requiredSignupField).every(
       (flag) => flag === true
     );
-    setRequiredSignupInput(requiredInputCheck);
+    setTotalRequiredInputFlag(requiredInputCheck);
   }, [requiredSignupField]);
 
   return (
@@ -116,22 +110,20 @@ const SignupFormRequired = () => {
             });
           }}
         />
-        <PasswdInput
-          passwd={signupInfo.passwd}
-          setPasswd={(value) => changeSignupInfo({ key: "passwd", value })}
-          passwdValidityFlag={signupValidityFlag.passwdValidityFlag}
-          setPasswdValidityFlag={(value) =>
-            changeSignupValidityFlag({ key: "passwdValidityFlag", value })
+        <PasswordInput
+          password={signupInfo.password}
+          setPassword={(value) => changeSignupInfo({ key: "password", value })}
+          passwordValidityFlag={signupValidityFlag.passwordValidityFlag}
+          setPasswordValidityFlag={(value) =>
+            changeSignupValidityFlag({ key: "passwordValidityFlag", value })
           }
         />
 
-        <PasswdDoubleInput
-          passwd={signupInfo.passwd}
-          // passwdDouble={signupInfo.passwdDouble}
-          // setPasswdDouble={(value) => changeSignupInfo({key: "passwdDouble", value})}
-          passwdDoubleValidityFlag={signupValidityFlag.passwdDoubleValidityFlag}
-          setPasswdDoubleValidityFlag={(value) =>
-            changeSignupValidityFlag({ key: "passwdDoubleValidityFlag", value })
+        <PasswordDoubleInput
+          password={signupInfo.password}
+          passwordDoubleValidityFlag={signupValidityFlag.passwordDoubleValidityFlag}
+          setPasswordDoubleValidityFlag={(value) =>
+            changeSignupValidityFlag({ key: "passwordDoubleValidityFlag", value })
           }
         />
         <Box sx={{ textAlign: "center", mt: 3 }}>
@@ -143,7 +135,7 @@ const SignupFormRequired = () => {
               bgcolor: `${theme.palette.secondary.main}`,
               borderRadius: "7px",
             }}
-            disabled={!requiredSignupInput}
+            disabled={!totalRequiredInputFlag}
             onClick={() => {
               navigate("/auth/signup/optional");
             }}

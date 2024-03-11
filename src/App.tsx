@@ -7,16 +7,13 @@ import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
 import ProfilePage from "@/pages/ProfilePage";
-import { loggedState } from "./stores/AuthStore";
-import { useRecoilValue } from "recoil";
-import FindEmailForm from "@/components/auth/FindEmailForm";
+import FindIdForm from "@/components/auth/FindIdForm";
 import LoginForm from "@/components/auth/LoginForm";
-import SignupForm from "@/components/auth/SignupFormRequired";
-import FindEmailLayout from "@/components/auth/FindEmailLayout";
-import FindEmailSuccess from "@/components/auth/FindEmailSuccess";
-import FindPasswdLayout from "@/components/auth/FindPasswdLayout";
-import FindPasswordForm from "@/components/auth/FindPasswdForm";
-import FindPasswdSuccess from "@/components/auth/FindPasswdSuccess";
+import FindIdLayout from "@/components/auth/FindIdLayout";
+import FindIdSuccess from "@/components/auth/FindIdSuccess";
+import FindPasswdLayout from "@/components/auth/FindPasswordLayout";
+import FindPasswordForm from "@/components/auth/FindPasswordForm";
+import FindPasswdSuccess from "@/components/auth/FindPasswordSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "./components/auth/SignupFormOptional";
@@ -36,23 +33,23 @@ const router = createBrowserRouter([
       },
       {
         path: "signup/optional",
-        element: <SignupFormOptional />
+        element: <SignupFormOptional />,
       },
       {
         path: "signup/success",
         element: <SignupSuccess />,
       },
       {
-        path: "find/email",
-        element: <FindEmailLayout />,
+        path: "find/id",
+        element: <FindIdLayout />,
         children: [
           {
             index: true,
-            element: <FindEmailForm />,
+            element: <FindIdForm />,
           },
           {
             path: "success",
-            element: <FindEmailSuccess />,
+            element: <FindIdSuccess />,
           },
         ],
       },
@@ -94,7 +91,8 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  const logged = useRecoilValue(loggedState);
+  
+  const logged = sessionStorage.getItem("accessToken")
 
   // 로그인 유무
   useEffect(() => {

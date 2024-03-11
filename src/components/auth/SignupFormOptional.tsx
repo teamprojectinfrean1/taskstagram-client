@@ -1,33 +1,35 @@
 import theme from "@/theme/theme";
-import { Button, Box, Typography, OutlinedInput, Grid } from "@mui/material";
-// import { styled } from "@mui/material/styles";
-// import FaceIcon from "@mui/icons-material/Face";
+import { Button, Box } from "@mui/material";
 import NicknameInput from "./NicknameInput";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
-import { Link } from "react-router-dom";
-import { useRecoilState } from "recoil";
+import { Link, useNavigate } from "react-router-dom";
+import { useRecoilValue} from "recoil";
 import { signupInfoState } from "@/stores/AuthStore";
-import { fetchSignup } from "@/utils/authCheck";
+import { fetchSignup } from "@/apis/auth";
 import ProfileImageInput from "./ProfileImageInput";
-import { SignupInfoTypes } from "./SignupFormRequired";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
+import { useQuery } from "react-query";
+import { useEffect } from "react";
 
 const SingupFormOptional = () => {
+  const navigate = useNavigate();
+
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
-  const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
+  const signupInfo = useRecoilValue(signupInfoState);
 
-  const handleSignup = ({ email, id, passwd, nickname, profileImage }: any) => {
-    const signupFlag = fetchSignup({
-      email,
-      id,
-      passwd,
-      nickname,
-      profileImage,
-    });
-    // signupFlag &&
-    //   navigate("/auth/signup/success", { state: { id: signupInfo.id } });
-  };
+  const { data, refetch } = useQuery(
+    "signup",
+    () => fetchSignup({ ...signupInfo }),
+    { enabled: false, cacheTime: 0 }
+  );
+  
+  useEffect(() => {
+    // api response 값 변경 되면, data.isSuccess로 변경 예정
+    if (data) {
+      navigate("/auth/signup/success", {state : data.userNickname})
+    }
+  }, [data])
 
   return (
     <>
@@ -60,7 +62,7 @@ const SingupFormOptional = () => {
               borderRadius: "7px",
             }}
             onClick={() => {
-              handleSignup({ ...signupInfo });
+              refetch()
             }}
           >
             가입하기

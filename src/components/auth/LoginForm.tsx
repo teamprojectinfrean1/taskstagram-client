@@ -1,28 +1,23 @@
 import theme from "@/theme/theme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import LoginModal from "./AuthResultModal";
-import { fetchLogin } from "@/utils/authCheck";
-
+import LoginErrorModal from "./LoginErrorModal";
+import { fetchLogin } from "@/apis/auth";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
+import { useQuery } from "react-query";
 
 const LoginForm = () => {
-
   const [email, setEmail] = useState("");
-  const [passwd, setPasswd] = useState("");
+  const [password, setPassword] = useState("");
   const [showModal, setShowModal] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false)
+  const [isSuccess, setIsSuccess] = useState(false);
 
-  const handleLogin = () => {
-    const loginIsSuccess = fetchLogin();
-    setShowModal(!loginIsSuccess);
-    setIsSuccess(loginIsSuccess)
-  };
-
-  // useEffect(()=> {
-  //   console.log(showModal, isSuccess, isSuccess)
-  // })
+  const { data, refetch } = useQuery(
+    "login",
+    () => fetchLogin({ email, password, setShowModal, setIsSuccess }),
+    { enabled: false, cacheTime: 0 }
+  );
 
   return (
     <Box className="base-layout">
@@ -48,9 +43,9 @@ const LoginForm = () => {
         size="small"
         placeholder={"비밀번호"}
         sx={{ mt: 1 }}
-        value={passwd}
+        value={password}
         onChange={(e) => {
-          setPasswd(e.target.value);
+          setPassword(e.target.value);
         }}
       />
       <Button
@@ -62,7 +57,9 @@ const LoginForm = () => {
           bgcolor: `${theme.palette.secondary.main}`,
           borderRadius: "7px",
         }}
-        onClick={handleLogin}
+        onClick={() => {
+          refetch()
+        }}
       >
         로그인
       </Button>
@@ -71,10 +68,9 @@ const LoginForm = () => {
       </Box>
       <Divider sx={{ mt: 3 }}>간편 로그인</Divider>
       <SocialIcons authPage="login" />
-      <LoginModal
-        type="login"
+      <LoginErrorModal
         showModal={showModal}
-        isSuccess = {isSuccess}
+        isSuccess={isSuccess}
         handleClose={() => setShowModal(false)}
       />
     </Box>

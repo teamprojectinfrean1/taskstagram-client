@@ -1,8 +1,9 @@
 import theme from "@/theme/theme";
-import { checkAuthInputValidity, fetchDupicate } from "@/utils/authCheck";
+import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
-import AuthResultModal from "./AuthResultModal";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useQuery } from "react-query";
+import { fetchEmailDupicate } from "@/apis/auth";
 
 type EmailInputProps = {
   email: string;
@@ -21,17 +22,35 @@ const EmailInput = ({
   emailDuplicateFlag,
   setEmailDuplicateFlag,
 }: EmailInputProps) => {
-  const [showModal, setShowModal] = useState(false);
+  const [isClickEmailButton, setIsClickEmailButton] = useState(false);
+  const [emailErrorState, setEmailErrorState] = useState(false);
+  const [emailErrorMessage, setEmailErrorMessage] = useState("");
+  
   const emailValidityState = !!(email && !emailValidityFlag);
   const emailIsDisabled = !!(!emailValidityFlag || emailDuplicateFlag);
 
-  const changeEmailDuplicateButton = (email: string) => {
-    setShowModal(true);
-    const emailDuplication = fetchDupicate({ type: "email", authValue: email });
-    emailDuplication
-      ? setEmailDuplicateFlag(true)
-      : setEmailDuplicateFlag(false);
-  };
+  const { data, refetch } = useQuery(
+    "checkMail",
+    () => fetchEmailDupicate({ email, setEmailErrorMessage, setEmailErrorState }),
+    { enabled: false, cacheTime: 0 }
+  );
+
+  useEffect(() => {
+    setIsClickEmailButton(false);
+    if (emailValidityState) {
+      setEmailErrorMessage("이메일 형식이 올바르지 않습니다.");
+      setEmailErrorState(true);
+    } else {
+      setEmailErrorMessage("");
+      setEmailErrorState(false);
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setEmailDuplicateFlag(data)
+    }
+  }, [data])
 
   return (
     <>
@@ -43,7 +62,7 @@ const EmailInput = ({
             size="small"
             placeholder={"example@email.com"}
             value={email}
-            error={emailValidityState}
+            error={emailErrorState}
             onChange={(e) => {
               setEmail(e.target.value);
               setEmailValidityFlag(
@@ -54,20 +73,18 @@ const EmailInput = ({
               );
             }}
           />
-          {emailValidityState && (
-            <Typography
-              sx={{
-                position: "absolute",
-                mt: 0.1,
-                ml: 1,
-                fontWeight: "bold",
-                fontSize: "11px",
-                color: theme.palette.error.main,
-              }}
-            >
-              이메일 형식이 올바르지 않습니다.
-            </Typography>
-          )}
+          <Typography
+            sx={{
+              position: "absolute",
+              mt: 0.1,
+              ml: 1,
+              fontWeight: "bold",
+              fontSize: "11px",
+              color: theme.palette.error.main,
+            }}
+          >
+            {emailErrorMessage}
+          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -80,19 +97,14 @@ const EmailInput = ({
             }}
             disabled={emailIsDisabled}
             onClick={() => {
-              changeEmailDuplicateButton(email);
+              refetch();
+              setIsClickEmailButton(true);
             }}
           >
             {emailDuplicateFlag ? "확인 완료" : "중복 확인"}
           </Button>
         </Grid>
       </Grid>
-      <AuthResultModal
-        type="email"
-        showModal={showModal}
-        isSuccess={emailDuplicateFlag}
-        handleClose={() => setShowModal(false)}
-      />
     </>
   );
 };

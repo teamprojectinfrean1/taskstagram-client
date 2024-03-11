@@ -1,36 +1,49 @@
-import { signupInfoState } from "@/stores/AuthStore";
 import theme from "@/theme/theme";
-import { checkAuthInputValidity, fetchDupicate } from "@/utils/authCheck";
-import { Typography, OutlinedInput, Grid, Button, Box } from "@mui/material";
-import { useState } from "react";
-import { useRecoilState } from "recoil";
-import AuthResultModal from "./AuthResultModal";
+import { checkAuthInputValidity } from "@/utils/authCheck";
+import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
+import { useEffect, useState } from "react";
+import { fetchNicknameDupicate } from "@/apis/auth";
+import { useQuery } from "react-query";
 
 type NicknameInputProps = {
   nickname: string;
-  // nicknameFlag: boolean;
   setNickname(nickname: string): void;
-  // setNicknameFlag(nicknameFlag: boolean): void;
 };
 
 const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
+  const [isClickNicknameButton, setIsClickNicknameButton] = useState(false);
+  const [nicknameErrorState, setNicknameErrorState] = useState(false);
+  const [nicknameErrorMessage, setNicknameErrorMessage] = useState("");
+
   const [nicknameValidityFlag, setNicknameValidityFlag] = useState(false);
   const [nicknameDuplicateFlag, setNicknameDuplicateFlag] = useState(false);
 
   const nicknameValidityState = !!(nickname && !nicknameValidityFlag);
   const nicknameIsDisabled = !!(!nicknameValidityFlag || nicknameDuplicateFlag);
 
-  const [showModal, setShowModal] = useState(false);
-  const changeNicknameDuplicateButton = (nickname: string) => {
-    setShowModal(true);
-    const nicknameDuplication = fetchDupicate({
-      type: "nickname",
-      authValue: nickname,
-    });
-    nicknameDuplication
-      ? setNicknameDuplicateFlag(true)
-      : setNicknameDuplicateFlag(false);
-  };
+
+  const { data, refetch } = useQuery(
+    "checkNickname",
+    () => fetchNicknameDupicate({ nickname, setNicknameErrorMessage, setNicknameErrorState }),
+    { enabled: false, cacheTime: 0 }
+  );
+
+  useEffect(() => {
+    setIsClickNicknameButton(false);
+    if (nicknameValidityState) {
+      setNicknameErrorMessage("닉네임은 초성 제외, 2 ~ 20자만 사용 가능합니다.");
+      setNicknameErrorState(true);
+    } else {
+      setNicknameErrorMessage("");
+      setNicknameErrorState(false);
+    }
+  }, [nickname]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setNicknameDuplicateFlag(data)
+    }
+  }, [data])
 
   return (
     <>
@@ -43,9 +56,9 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
             size="small"
             placeholder={"닉네임"}
             value={nickname}
-            error={nicknameValidityState}
+            error={nicknameErrorState}
             onChange={(e) => {
-              setNickname(e.target.value)
+              setNickname(e.target.value);
               setNicknameValidityFlag(
                 checkAuthInputValidity({
                   type: "nickname",
@@ -54,7 +67,6 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
               );
             }}
           />
-          {nicknameValidityState && (
             <Typography
               sx={{
                 position: "absolute",
@@ -65,9 +77,8 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
                 color: theme.palette.error.main,
               }}
             >
-              닉네임은 초성 금지,2글자 이상, 20글자 이하여야 합니다.
+              {nicknameErrorMessage}
             </Typography>
-          )}
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -80,19 +91,14 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
             }}
             disabled={nicknameIsDisabled}
             onClick={() => {
-              changeNicknameDuplicateButton(nickname);
+              refetch();
+              setIsClickNicknameButton(true)
             }}
           >
             {nicknameDuplicateFlag ? "확인 완료" : "중복 확인"}
           </Button>
         </Grid>
       </Grid>
-      <AuthResultModal
-        type="nickname"
-        showModal={showModal}
-        isSuccess={nicknameDuplicateFlag}
-        handleClose={() => setShowModal(false)}
-      />
     </>
   );
 };

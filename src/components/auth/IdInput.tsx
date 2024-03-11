@@ -1,8 +1,9 @@
 import theme from "@/theme/theme";
-import { checkAuthInputValidity, fetchDupicate } from "@/utils/authCheck";
+import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, OutlinedInput, Typography, Button } from "@mui/material";
-import { useState } from "react";
-import AuthResultModal from "./AuthResultModal";
+import { useEffect, useState } from "react";
+import { fetchIdDupicate } from "@/apis/auth";
+import { useQuery } from "react-query";
 
 type IdInputProps = {
   id: string;
@@ -21,15 +22,35 @@ const IdInput = ({
   idDuplicateFlag,
   setIdDuplicateFlag,
 }: IdInputProps) => {
-  const [showModal, setShowModal] = useState(false);
+  const [isClickIdButton, setIsClickIdButton] = useState(false);
+  const [idErrorState, setIdErrorState] = useState(false);
+  const [idErrorMessage, setIdErrorMessage] = useState("");
+
   const idValidityState = !!(id && !idValidityFlag);
   const idIsDisabled = !!(!idValidityFlag || idDuplicateFlag);
 
-  const changeIdDuplicateButton = (id: string) => {
-    setShowModal(true);
-    const idDuplication = fetchDupicate({ type: "id", authValue: id });
-    idDuplication ? setIdDuplicateFlag(true) : setIdDuplicateFlag(false);
-  };
+  const { data, refetch } = useQuery(
+    "checkId",
+    () => fetchIdDupicate({ id, setIdErrorMessage, setIdErrorState }),
+    { enabled: false, cacheTime: 0 }
+  );
+
+  useEffect(() => {
+    setIsClickIdButton(false);
+    if (idValidityState) {
+      setIdErrorMessage("아이디는 5 ~ 20자만 사용 가능합니다.");
+      setIdErrorState(true);
+    } else {
+      setIdErrorMessage("");
+      setIdErrorState(false);
+    }
+  }, [id]);
+
+  useEffect(() => {
+    if (data !== undefined) {
+      setIdDuplicateFlag(data)
+    }
+  }, [data])
 
   return (
     <>
@@ -41,7 +62,7 @@ const IdInput = ({
             size="small"
             placeholder={"아이디"}
             value={id}
-            error={idValidityState}
+            error={idErrorState}
             onChange={(e) => {
               setId(e.target.value);
               setIdValidityFlag(
@@ -52,20 +73,18 @@ const IdInput = ({
               );
             }}
           />
-          {idValidityState && (
-            <Typography
-              sx={{
-                position: "absolute",
-                mt: 0.1,
-                ml: 1,
-                fontWeight: "bold",
-                fontSize: "11px",
-                color: theme.palette.error.main,
-              }}
-            >
-              아이디는 5글자 이상 20글자 이하여야 합니다.
-            </Typography>
-          )}
+          <Typography
+            sx={{
+              position: "absolute",
+              mt: 0.1,
+              ml: 1,
+              fontWeight: "bold",
+              fontSize: "11px",
+              color: theme.palette.error.main,
+            }}
+          >
+            {idErrorMessage}
+          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -78,19 +97,14 @@ const IdInput = ({
             }}
             disabled={idIsDisabled}
             onClick={() => {
-              changeIdDuplicateButton(id);
+              refetch();
+              setIsClickIdButton(true);
             }}
           >
             {idDuplicateFlag ? "확인 완료" : "중복 확인"}
           </Button>
         </Grid>
       </Grid>
-      <AuthResultModal 
-      type="id"
-      showModal={showModal}
-      isSuccess={idDuplicateFlag}
-      handleClose={() => setShowModal(false)}
-      />
     </>
   );
 };

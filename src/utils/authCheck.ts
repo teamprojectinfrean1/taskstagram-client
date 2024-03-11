@@ -1,5 +1,4 @@
-import axios from "axios";
-import { AuthInputValueType, SignupInfoType } from "@/models/Auth";
+import { AuthInputValidityType } from "@/models/Auth";
 
 // 이메일 유효성 검사
 const emailRegEx =
@@ -12,24 +11,22 @@ const passwordRegEx =
 // 닉네임 유효성 검사
 const nicknameRegEx = /^[^ㄱ-ㅎ]{2,20}$/;
 
-// // 휴대폰 유효성 검사
-// const phoneNumberRegEx = /^[0-9]{11}$/;
-
-type PasswdType = {
-  passwd: string;
-  passwdDouble: string;
+type PasswordType = {
+  password: string;
+  passwordDouble: string;
 };
 
+// 회원가입 input 유효성 검사
 export const checkAuthInputValidity = ({
   type,
   authValue,
-}: AuthInputValueType) => {
+}: AuthInputValidityType) => {
   switch (type) {
     case "email":
       return emailRegEx.test(authValue || "");
     case "id":
       return idRegEx.test(authValue || "");
-    case "passwd":
+    case "password":
       return passwordRegEx.test(authValue || "");
     case "nickname":
       return nicknameRegEx.test(authValue || "");
@@ -39,62 +36,13 @@ export const checkAuthInputValidity = ({
   }
 };
 
-export const passwdDoubleCheck = ({ passwd, passwdDouble }: PasswdType) => {
-  return passwd === passwdDouble ? true : false;
+// 비밀번호 확인 검증
+export const passwordDoubleCheck = ({ password, passwordDouble }: PasswordType) => {
+  return password === passwordDouble ? true : false;
 };
 
-// 이메일, 아이디, 닉네임 중복검사
-export const fetchDupicate = ({ type, authValue }: AuthInputValueType) => {
-  let url;
-  switch (type) {
-    case "email":
-      url = "http://1.246.104.170:8080/api/v1/user/checkMail";
-      return axios
-        .get(url, {
-          params: {
-            email: authValue,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        });
-    case "id":
-      url = "http://1.246.104.170:8080/api/v1/user/checkId";
-      return axios
-        .get(url, {
-          params: {
-            id: authValue,
-          },
-        })
-        .then((res) => {
-          return res.data;
-        });
-    case "nickname":
-      return true;
-  }
-};
+// 이메일 인증 api 구현완료 시 활용할 예정
+// export const handleEmailCertifiNumber = (emailCertifi: string) => {
+//   return emailCertifi === '123456' ? true : false
+// }
 
-export const fetchLogin = () => {
-  const url = "http://1.246.104.170:8080/api/v1/auth/login";
-  axios
-    .post(url, {
-      email: "aaa@naver.com",
-      password: "Q!W@E#R$",
-    })
-    .then((res) => {
-      console.log(res.data);
-    });
-  return false;
-};
-
-export const fetchSignup = ({email, id, passwd, nickname, profileImage}: SignupInfoType) => {
-  // const test = {
-  //   email,
-  //   id,
-  //   passwd,
-  //   profileImage,
-  //   nickname: nickname? nickname : id
-  // }
-  console.log(email, id, passwd, nickname, profileImage)
-  // const url = "http://1.246.104.170:8080/api/v1/user/join"
-}

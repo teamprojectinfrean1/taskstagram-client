@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { signupInfoState } from "@/stores/AuthStore";
-import { SignupInfoTypes } from "@/components/auth/SignupFormRequired";
+import { SignupInfoTypes } from "@/models/Auth";
 
 export const useChangeSignupInfo = () => {
   const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
@@ -8,7 +8,7 @@ export const useChangeSignupInfo = () => {
   const initalSignupInfo = {
     email: "",
     id: "",
-    passwd: "",
+    password: "",
     nickname: "",
     profileImage: "",
   };
