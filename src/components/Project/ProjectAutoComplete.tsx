@@ -46,6 +46,8 @@ const ProjectAutoComplete = ({
     <Autocomplete
       disableClearable
       options={projects}
+      isOptionEqualToValue={(option, value) => option === value}
+      noOptionsText="일치하는 옵션이 없습니다"
       open={isOpen}
       onChange={handleOptionChange}
       onOpen={() => setIsOpen(true)}
@@ -65,6 +67,7 @@ const ProjectAutoComplete = ({
           {option.projectName}
         </li>
       )}
+      renderInput={(params) => <TextField {...params} />}
       PaperComponent={(props) => (
         <Paper
           {...props}
@@ -72,6 +75,7 @@ const ProjectAutoComplete = ({
             "& .MuiAutocomplete-listbox": {
               backgroundColor: "#121923",
               color: "white",
+              p: 0,
             },
           }}
         />
@@ -87,7 +91,6 @@ const ProjectAutoComplete = ({
           color: "white",
         },
       }}
-      renderInput={(params) => <TextField {...params} />}
     />
   );
 };
