@@ -2,7 +2,7 @@ import "@/App.css";
 import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
-import AuthPage from "./pages/AuthPage";
+import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
@@ -16,7 +16,7 @@ import FindPasswordForm from "@/components/auth/FindPasswordForm";
 import FindPasswdSuccess from "@/components/auth/FindPasswordSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
-import SignupFormOptional from "./components/auth/SignupFormOptional";
+import SignupFormOptional from "@/components/auth/SignupFormOptional";
 
 const router = createBrowserRouter([
   {
@@ -92,12 +92,12 @@ const router = createBrowserRouter([
 
 const App = () => {
   
-  const logged = sessionStorage.getItem("accessToken")
+  // const logged = sessionStorage.getItem("accessToken")
 
   // 로그인 유무
-  useEffect(() => {
-    logged ? router.navigate("/") : router.navigate("/auth/login");
-  }, [logged]);
+  // useEffect(() => {
+  //   logged ? router.navigate("/") : router.navigate("/auth/login");
+  // }, [logged]);
 
   return (
     <>

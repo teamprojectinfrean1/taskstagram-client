@@ -1,11 +1,12 @@
 import theme from "@/theme/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
 import LoginErrorModal from "./LoginErrorModal";
 import { fetchLogin } from "@/apis/auth";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
