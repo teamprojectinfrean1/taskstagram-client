@@ -36,7 +36,9 @@ const DurationPicker = ({
           sx={{ flex: 1 }}
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
           onChange={(date) => handleStartDateChange(date)}
-          slotProps={{ textField: { size: "small" } }}
+          slotProps={{
+            textField: { size: "small" },
+          }}
         />
         <DatePicker
           label="End"

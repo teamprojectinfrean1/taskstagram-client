@@ -22,7 +22,14 @@ const TagChipMaker = ({ tagList, onTagSelectionChange }: TagProps) => {
       options={[]}
       renderTags={(value, getTagProps) =>
         value.map((option, index) => (
-          <Chip label={"#" + option} {...getTagProps({ index })} />
+          <Chip
+            label={"#" + option}
+            {...getTagProps({ index })}
+            sx={{
+              height: "25px",
+              "& .MuiChip-deleteIcon": { fontSize: "17px" },
+            }}
+          />
         ))
       }
       renderInput={(params) => (
@@ -34,14 +41,13 @@ const TagChipMaker = ({ tagList, onTagSelectionChange }: TagProps) => {
             ...params.InputProps,
             sx: {
               fontSize: "0.9rem",
-              height: "40px",
             },
           }}
         />
       )}
       sx={{
         "& .MuiOutlinedInput-root": {
-          p: "0px 0px 0px 9px",
+          p: "4px 9px 4px 9px",
         },
       }}
     />
