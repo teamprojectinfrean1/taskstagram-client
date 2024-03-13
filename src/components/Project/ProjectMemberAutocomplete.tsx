@@ -1,5 +1,6 @@
 import { Autocomplete, TextField, Paper } from "@mui/material";
 import React, { useState } from "react";
+import theme from "@/theme/theme";
 
 type ProjectMemberAutocompleteProps = {
   memberUuidList: string[];
@@ -49,7 +50,7 @@ const ProjectMemberAutocomplete = ({
           {...props}
           sx={{
             "& .MuiAutocomplete-listbox": {
-              backgroundColor: "white",
+              backgroundColor: theme.palette.background.default,
               color: "black",
               p: 0,
             },

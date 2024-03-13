@@ -70,7 +70,7 @@ const Task = ({
       <CardContent
         sx={{
           height: "calc(100% - 70px)",
-          backgroundColor: "white",
+          backgroundColor: theme.palette.background.default,
           borderRadius: 3,
           mx: 1,
           "&:hover": { cursor: "pointer" },

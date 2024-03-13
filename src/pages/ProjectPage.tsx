@@ -14,6 +14,7 @@ import DurationPicker from "@/components/DurationPicker";
 import ProjectMemberAutocomplete from "@/components/Project/ProjectMemberAutocomplete";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { grey } from "@mui/material/colors";
+import theme from "@/theme/theme";
 
 const ProjectPage = () => {
   const [formData, setFormData] = useState<ProjectObj>({
@@ -53,8 +54,8 @@ const ProjectPage = () => {
               sx={{
                 width: "120px",
                 height: "30px",
-                backgroundColor: "#121923",
-                color: "white",
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.background.default,
               }}
             >
               저장
