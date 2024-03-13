@@ -52,7 +52,7 @@ const style = {
   transform: "translate(-50%, -50%)",
   maxWidth: 1300, //추후 반응형으로 변경 예정
   width: "80%",
-  bgcolor: "white",
+  bgcolor: theme.palette.background.default,
   boxShadow: 24,
   p: 2,
   height: "auto",

@@ -4,6 +4,7 @@ import { Autocomplete, Checkbox, TextField, Paper } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import React, { useState } from "react";
+import theme from "@/theme/theme";
 
 type ProjectAutoCompleteProps = {
   projects: ProjectObj[];
@@ -60,7 +61,12 @@ const ProjectAutoComplete = ({
             onClick={(e) => {
               handleCheckBoxClick(e, option, selected);
             }}
-            icon={<StarBorderIcon fontSize="small" sx={{ color: "white" }} />}
+            icon={
+              <StarBorderIcon
+                fontSize="small"
+                sx={{ color: theme.palette.background.default }}
+              />
+            }
             checkedIcon={<StarIcon fontSize="small" sx={{ color: "yellow" }} />}
             style={{ marginRight: 8 }}
           />
@@ -73,8 +79,8 @@ const ProjectAutoComplete = ({
           {...props}
           sx={{
             "& .MuiAutocomplete-listbox": {
-              backgroundColor: "#121923",
-              color: "white",
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.background.default,
               p: 0,
             },
           }}
@@ -84,11 +90,11 @@ const ProjectAutoComplete = ({
         width: 300,
         "& .MuiOutlinedInput-root": {
           p: 0,
-          color: "white",
+          color: theme.palette.background.default,
           border: "1px solid white",
         },
         "& .MuiAutocomplete-popupIndicator": {
-          color: "white",
+          color: theme.palette.background.default,
         },
       }}
     />

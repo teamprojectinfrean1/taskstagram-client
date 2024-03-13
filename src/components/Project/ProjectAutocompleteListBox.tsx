@@ -12,6 +12,7 @@ import {
 import ProjectObj from "@/models/ProjectObj";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
+import theme from "@/theme/theme";
 
 type CustomListboxProps = ListProps & {
   onCreateBtnClick: () => void;
@@ -29,7 +30,14 @@ const CustomListbox = forwardRef<HTMLUListElement, CustomListboxProps>(
     ref: Ref<HTMLUListElement>
   ) => {
     return (
-      <List ref={ref} sx={{ p: 0, backgroundColor: "#121923", color: "#eee" }}>
+      <List
+        ref={ref}
+        sx={{
+          p: 0,
+          backgroundColor: theme.palette.primary.main,
+          color: theme.palette.background.default,
+        }}
+      >
         {projects.map((option) => (
           <ListItem key={option.projectId}>
             <Checkbox
