@@ -24,3 +24,4 @@ export type IssueSummary = {
   userNickname: string;
   userImageUrl: string;
 };
+

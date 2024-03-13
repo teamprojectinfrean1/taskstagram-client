@@ -18,6 +18,7 @@ import { CSS } from "@dnd-kit/utilities";
 import { IssueSummary } from "@/models/Issue";
 import { SxProps } from "@mui/material";
 
+
 type IssueTicketProps = {
   issue: IssueSummary;
   index?: number;

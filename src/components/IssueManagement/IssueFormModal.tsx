@@ -146,12 +146,6 @@ const IssueFormModal = ({
               }
             />
             <SearchableSelect
-              label="타입"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
-              selectedOptions={formData.type}
-              onSelectionChange={(value) => handleInputChange("type", value)}
-            />
-            <SearchableSelect
               label="상태"
               possibleOptions={["Option 1", "Option 2", "Option 3"]}
               selectedOptions={formData.status}

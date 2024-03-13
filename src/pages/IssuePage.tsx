@@ -2,7 +2,7 @@ import { useState } from "react";
 import IssueFormModal from "@/components/IssueManagement/IssueFormModal";
 import IssueTicketContainer from "@/components/IssueManagement/IssueTicketContainer";
 import IssueStoryContainer from "@/components/IssueManagement/IssueStoryContainer";
-import { Box, Stack } from "@mui/material";
+import { Box, Fade, Stack } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
@@ -25,6 +25,7 @@ import {
 import { IssueSummary } from "@/models/Issue";
 import IssueTicket from "@/components/IssueManagement/IssueTicket";
 import { createPortal } from "react-dom";
+import IssueTicketMaker from "@/components/IssueManagement/IssueTicketMaker";
 
 const IssuePage = () => {
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
@@ -34,7 +35,8 @@ const IssuePage = () => {
   const [hoveredContainerId, setHoveredContainerId] = useState<string | null>(
     null
   );
-  
+  const [showIssueTicketMaker, setShowIssueTicketMaker] = useState(false);
+
   /* 추후 useState말고 useQuery 사용 예정 */
   const [todoItems, setTodoItems] = useState<Array<IssueSummary>>(
     mockToDoIssueSummaryList
@@ -103,6 +105,13 @@ const IssuePage = () => {
     setHoveredContainerId(null);
   };
 
+  const handleAddIssue = (newIssue: IssueSummary | null) => {
+    if (!!newIssue) {
+      setTodoItems([newIssue, ...todoItems]);
+    }
+    setShowIssueTicketMaker(false);
+  };
+
   return (
     <DndContext
       collisionDetection={rectIntersection}
@@ -138,10 +147,17 @@ const IssuePage = () => {
             containerId="toDo"
             isHovered={hoveredContainerId === "toDo"}
             issueTicketList={todoItems}
+            showIssueTicketMaker={showIssueTicketMaker}
             title="할 일"
             IconComponent={AddCircleIcon}
-            onIconComponentClick={() => {}}
-          />
+            onIconComponentClick={() => setShowIssueTicketMaker(true)}
+          >
+            <Fade in={showIssueTicketMaker} timeout={500} unmountOnExit>
+              <div>
+                <IssueTicketMaker handleAddIssue={handleAddIssue} />
+              </div>
+            </Fade>
+          </IssueTicketContainer>
           <IssueTicketContainer
             ariaLabel="create issue"
             containerId="inProgress"
@@ -161,7 +177,10 @@ const IssuePage = () => {
               {draggedIssue && (
                 <IssueTicket
                   issue={draggedIssue}
-                  sx={{ backgroundColor: "#F3F3F7", border: "1px solid #313449" }}
+                  sx={{
+                    backgroundColor: "#F3F3F7",
+                    border: "1px solid #313449",
+                  }}
                 />
               )}
             </DragOverlay>,

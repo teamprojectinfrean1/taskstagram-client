@@ -1,5 +1,6 @@
 import {
   Box,
+  Fade,
   IconButton,
   InputAdornment,
   Paper,
@@ -19,6 +20,8 @@ type IssueTicketContainerProps = {
   isHovered: boolean;
   issueTicketList: IssueSummary[];
   title: string;
+  children?: React.ReactNode;
+  showIssueTicketMaker?: boolean;
   IconComponent?: React.ElementType<SvgIconProps>;
   onIconComponentClick?: () => void;
 };
@@ -29,6 +32,9 @@ const IssueTicketContainer = ({
   isHovered,
   issueTicketList,
   title,
+  children,
+  showIssueTicketMaker = false,
+
   IconComponent,
   onIconComponentClick,
 }: IssueTicketContainerProps) => {
@@ -102,13 +108,18 @@ const IssueTicketContainer = ({
               },
             }}
           />
+          {children}
           {issueTicketList.map((issue, index) => (
-            <IssueTicket
-              key={issue.issueId}
-              index={index}
-              issue={issue}
-              parent={containerId}
-            />
+            <Fade in={true} timeout={500}>
+              <div>
+                <IssueTicket
+                  key={issue.issueId}
+                  index={index}
+                  issue={issue}
+                  parent={containerId}
+                />
+              </div>
+            </Fade>
           ))}
         </Stack>
       </Stack>

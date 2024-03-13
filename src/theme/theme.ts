@@ -36,6 +36,13 @@ const theme = createTheme({
         },
       },
     },
+    MuiAutocomplete: {
+      styleOverrides: {
+        paper: {
+          backgroundColor: 'white', // Your desired background color
+        },
+      },
+    },
   },
 });
 
