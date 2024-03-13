@@ -11,7 +11,7 @@ import WorkIcon from "@mui/icons-material/Work";
 import UserAvatar from "@/components/UserAvatar";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import theme from "@/theme/theme";
-import { currentIssueIdToShowInModal } from "@/stores/issueStore";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
@@ -38,8 +38,8 @@ const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
   const taskNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(taskNameRef, "vertical");
 
-  const [currentIssueId, setCurrentIssueId] = useRecoilState(
-    currentIssueIdToShowInModal
+  const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
+    issueIdToShowInModalState
   );
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
@@ -59,7 +59,7 @@ const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
         {...attributes}
         variant="outlined"
         onClick={() => {
-          setCurrentIssueId(issueId);
+          setIssueIdToShowInModal(issueId);
         }}
         sx={{
           flexShrink: 0,

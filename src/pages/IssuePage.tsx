@@ -4,7 +4,7 @@ import IssueTicketContainer from "@/components/IssueManagement/IssueTicketContai
 import IssueStoryContainer from "@/components/IssueManagement/IssueStoryContainer";
 import { Box, Stack } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
-import { currentIssueIdToShowInModal } from "@/stores/issueStore";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
 import {
   DndContext,
@@ -25,11 +25,10 @@ import {
 import { IssueSummary } from "@/models/Issue";
 import IssueTicket from "@/components/IssueManagement/IssueTicket";
 import { createPortal } from "react-dom";
-import theme from "@/theme/theme";
 
 const IssuePage = () => {
-  const [currentIssueId, setCurrentIssueId] = useRecoilState(
-    currentIssueIdToShowInModal
+  const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
+    issueIdToShowInModalState
   );
   const [draggedIssue, setDraggedIssue] = useState<IssueSummary | null>(null);
   const [hoveredContainerId, setHoveredContainerId] = useState<string | null>(
@@ -171,8 +170,8 @@ const IssuePage = () => {
         </Box>
       </Stack>
       <IssueFormModal
-        currentIssueId={currentIssueId}
-        handleClose={() => setCurrentIssueId("")}
+        currentIssueId={issueIdToShowInModal}
+        handleClose={() => setIssueIdToShowInModal("")}
       />
     </DndContext>
   );
