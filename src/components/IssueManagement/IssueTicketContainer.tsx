@@ -1,6 +1,5 @@
 import {
   Box,
-  Fade,
   IconButton,
   InputAdornment,
   Paper,
@@ -110,16 +109,12 @@ const IssueTicketContainer = ({
           />
           {children}
           {issueTicketList.map((issue, index) => (
-            <Fade in={true} timeout={500}>
-              <div>
-                <IssueTicket
-                  key={issue.issueId}
-                  index={index}
-                  issue={issue}
-                  parent={containerId}
-                />
-              </div>
-            </Fade>
+            <IssueTicket
+              key={issue.issueId}
+              index={index}
+              issue={issue}
+              parent={containerId}
+            />
           ))}
         </Stack>
       </Stack>

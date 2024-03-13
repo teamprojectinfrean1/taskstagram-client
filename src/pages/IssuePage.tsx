@@ -152,11 +152,11 @@ const IssuePage = () => {
             IconComponent={AddCircleIcon}
             onIconComponentClick={() => setShowIssueTicketMaker(true)}
           >
-            <Fade in={showIssueTicketMaker} timeout={500} unmountOnExit>
-              <div>
-                <IssueTicketMaker handleAddIssue={handleAddIssue} />
-              </div>
-            </Fade>
+            {/* <Fade in={showIssueTicketMaker} timeout={500} unmountOnExit> */}
+            {showIssueTicketMaker && (
+              <IssueTicketMaker handleAddIssue={handleAddIssue} />
+            )}
+            {/* </Fade> */}
           </IssueTicketContainer>
           <IssueTicketContainer
             ariaLabel="create issue"
