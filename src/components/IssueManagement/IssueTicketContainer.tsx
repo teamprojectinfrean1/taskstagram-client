@@ -1,26 +1,40 @@
 import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import IssueTicket from "@/components/IssueManagement/IssueTicket";
+import { useDroppable } from "@dnd-kit/core";
+import { IssueSummary } from "@/models/Issue";
 
 type IssueTicketContainerProps = {
+  ariaLabel: string;
+  containerId: string;
+  isHovered: boolean;
+  issueTicketList: IssueSummary[];
   title: string;
   IconComponent?: React.ElementType<SvgIconProps>;
   onIconComponentClick?: () => void;
-  ariaLabel: string;
 };
 
 const IssueTicketContainer = ({
   ariaLabel,
+  containerId,
+  isHovered,
+  issueTicketList,
+  title,
   IconComponent,
   onIconComponentClick,
-  title,
 }: IssueTicketContainerProps) => {
+  const { setNodeRef } = useDroppable({
+    id: containerId,
+  });
+
   return (
     <Paper
+      ref={setNodeRef}
       elevation={2}
       sx={{
         borderRadius: 3,
         flex: 1,
+        backgroundColor: isHovered ? "#C2C6D6" : null,
       }}
     >
       <Stack
@@ -55,34 +69,17 @@ const IssueTicketContainer = ({
         <Stack
           spacing={2}
           className="custom-scrollbar"
-          sx={{ overflow: "auto", px: 2, pb: 2 }}
+          sx={{ overflowY: "auto",  overflowX: "hidden", px: 2, pb: 2 }}
         >
           search box
-          <IssueTicket
-            id="1"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-          />
-          <IssueTicket id="3" testText="Lorem ipsum dolor sit amet" />
-          <IssueTicket
-            id="4"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. "
-          />
-          <IssueTicket
-            id="5"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
-          />
-          <IssueTicket
-            id="6"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
-          />
-          <IssueTicket
-            id="7"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
-          />
-          <IssueTicket
-            id="8"
-            testText="Lorem ipsum dolor sit amet, consectetur adipiscing eli"
-          />
+          {issueTicketList.map((issue, index) => (
+            <IssueTicket
+              key={issue.issueId}
+              index={index}
+              issue={issue}
+              parent={containerId}
+            />
+          ))}
         </Stack>
       </Stack>
     </Paper>

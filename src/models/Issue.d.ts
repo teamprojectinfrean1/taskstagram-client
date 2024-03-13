@@ -1,8 +1,7 @@
 import { RawDraftContentState } from "draft-js";
 
-
 export type Duration = {
-  startDate: string  | null;
+  startDate: string | null;
   endDate: string | null;
 };
 
@@ -16,4 +15,12 @@ export type IssueFormData = {
   status: string | null;
 };
 
-type Issue = {};
+export type IssueSummary = {
+  issueId: string;
+  issueName: string;
+  taskId: string;
+  taskName: string;
+  userUuid: string;
+  userNickname: string;
+  userImageUrl: string;
+};
