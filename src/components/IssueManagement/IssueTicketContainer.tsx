@@ -1,8 +1,17 @@
-import { Box, IconButton, Paper, Stack, Typography } from "@mui/material";
+import {
+  Box,
+  IconButton,
+  InputAdornment,
+  Paper,
+  Stack,
+  TextField,
+  Typography,
+} from "@mui/material";
 import { SvgIconProps } from "@mui/material/SvgIcon";
 import IssueTicket from "@/components/IssueManagement/IssueTicket";
 import { useDroppable } from "@dnd-kit/core";
 import { IssueSummary } from "@/models/Issue";
+import SearchIcon from "@mui/icons-material/Search";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
@@ -61,6 +70,7 @@ const IssueTicketContainer = ({
               onClick={() =>
                 onIconComponentClick ? onIconComponentClick() : {}
               }
+              sx={{ p: 1, mr: "1px" }}
             >
               <IconComponent />
             </IconButton>
@@ -69,9 +79,29 @@ const IssueTicketContainer = ({
         <Stack
           spacing={2}
           className="custom-scrollbar"
-          sx={{ overflowY: "auto",  overflowX: "hidden", px: 2, pb: 2 }}
+          sx={{ overflowY: "auto", overflowX: "hidden", px: 2, pb: 2 }}
         >
-          search box
+          <TextField
+            variant="outlined"
+            onChange={() => {}}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton onClick={() => {}}>
+                    <SearchIcon />
+                  </IconButton>
+                </InputAdornment>
+              ),
+            }}
+            sx={{
+              "& .MuiOutlinedInput-root": {
+                backgroundColor: "white",
+              },
+              "& .MuiOutlinedInput-input": {
+                py: 1.5,
+              },
+            }}
+          />
           {issueTicketList.map((issue, index) => (
             <IssueTicket
               key={issue.issueId}
