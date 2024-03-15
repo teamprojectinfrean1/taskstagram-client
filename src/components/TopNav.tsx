@@ -5,6 +5,8 @@ import ProjectObj from "@/models/ProjectObj";
 import { useRecoilState } from "recoil";
 import { projectListState, selectedProjectState } from "@/stores/Store";
 import { useEffect } from "react";
+import { useQuery } from "react-query";
+import { getProjectList } from "@/apis/ProjectApi";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -15,20 +17,14 @@ function TopNav({ onMenuClick }: TopNavProps) {
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
 
-  //추후 전체 project 조회로 변경
-  useEffect(() => {
-    const projectA = {
-      projectId: "1",
-      projectName: "ProjectA",
-      isMainProject: false,
-    } as ProjectObj;
-    const projectB = {
-      projectId: "2",
-      projectName: "ProjectB",
-      isMainProject: true,
-    } as ProjectObj;
-    setProjectList([projectA, projectB]);
-  }, []);
+  useQuery(
+    "getProjectList",
+    () => getProjectList("c00dc5dc-2aef-4579-b3fe-cb08b6d6825d"),
+    {
+      onSuccess: (projectList) => setProjectList(projectList),
+    }
+    //추후 실패시 동작되는 로직도 추가 예정
+  );
 
   const handleChangeMainProject = (selectedProject: ProjectObj | null) => {
     //메인 프로젝트 변경 api 호출
