@@ -61,6 +61,7 @@ const ProjectAutoComplete = ({
             onClick={(e) => {
               handleCheckBoxClick(e, option, selected);
             }}
+            checked={option.isMainProject}
             icon={
               <StarBorderIcon
                 fontSize="small"
