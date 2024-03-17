@@ -60,7 +60,7 @@ const Task = ({
             <DeleteOutlineIcon />
           </IconButton>
         }
-        title={selectedTask.taskName}
+        title={selectedTask.taskTitle}
         titleTypographyProps={{
           noWrap: true,
           variant: "h6",
@@ -77,7 +77,7 @@ const Task = ({
         }}
         onClick={onClick}
       >
-        {selectedTask.taskExplanation && (
+        {selectedTask.taskContent && (
           <Typography
             variant="subtitle1"
             sx={{
@@ -88,9 +88,10 @@ const Task = ({
               textOverflow: "ellipsis",
             }}
           >
-            {convertFromRaw(
-              selectedTask.taskExplanation as RawDraftContentState
-            ).getPlainText()}
+            {/* {convertFromRaw(
+              selectedTask.taskContent as RawDraftContentState
+            ).getPlainText()} */}
+            {selectedTask.taskContent}
           </Typography>
         )}
       </CardContent>
