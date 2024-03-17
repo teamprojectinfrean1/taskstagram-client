@@ -55,7 +55,7 @@ const ProjectAutoComplete = ({
       onClose={() => setIsOpen(false)}
       getOptionLabel={(option) => option.projectName}
       renderOption={(props, option, { selected }) => (
-        <li {...props}>
+        <li {...props} key={option.projectId}>
           <Checkbox
             disableRipple
             onClick={(e) => {

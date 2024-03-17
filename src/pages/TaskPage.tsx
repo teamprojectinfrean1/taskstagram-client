@@ -8,6 +8,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { taskListState, selectedProjectState } from "@/stores/Store";
 import { useQuery } from "react-query";
 import { getTaskList } from "@/apis/TaskApi";
+import Backdrop from "@mui/material/Backdrop";
+import CircularProgress from "@mui/material/CircularProgress";
 
 const TaskPage = () => {
   const [taskList, setTaskList] = useRecoilState(taskListState);
@@ -15,6 +17,7 @@ const TaskPage = () => {
   const [selectedTask, setSelectedTask] = useState<TaskObj | null>();
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
+  const [isBackDropOpen, setIsBackDropOpen] = useState(false);
 
   const { data, isLoading } = useQuery(
     ["getTaskList", selectedProject],
@@ -25,21 +28,11 @@ const TaskPage = () => {
         projectId: selectedProject !== null ? selectedProject.projectId : null,
       }),
     {
+      enabled: !!selectedProject && !!selectedProject.projectId,
       onSuccess: (taskList) => setTaskList(taskList),
     }
     //추후 실패시 동작되는 로직도 추가 예정
   );
-
-  // useEffect(() => {
-  //   setCurrentPage(Math.ceil((taskList.length + 1) / 8));
-  // }, [taskList.length]);
-
-  useEffect(() => {
-    if (selectedProject && data) {
-      setTaskList(data);
-      setCurrentPage(Math.ceil((taskList.length + 1) / 8));
-    }
-  }, [selectedProject, data]);
 
   //util에 주입예정
   const replaceItemAtIndex = (
@@ -156,6 +149,12 @@ const TaskPage = () => {
         onDelete={deleteTask}
         onCloseModal={hanldeCloseTaskModal}
       ></TaskModal>
+      <Backdrop
+        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
+        open={isLoading}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
     </div>
   );
 };
