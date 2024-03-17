@@ -22,6 +22,8 @@ import theme from "@/theme/theme";
 import TaskTagChipMaker from "@/components/TagChipMaker";
 import DurationPicker from "@/components/DurationPicker";
 import uuid from "react-uuid";
+import { useQuery } from "react-query";
+import { getTaskDetail } from "@/apis/TaskApi";
 
 type TaskModalProps = {
   selectedTask: TaskObj;
@@ -31,18 +33,6 @@ type TaskModalProps = {
   onDelete(task: TaskObj): void;
   onCloseModal: () => void;
 };
-
-type User = {
-  id: string;
-  label: string;
-  name: string;
-};
-
-const users: User[] = [
-  { id: "AD", label: "Andorra", name: "마효리" },
-  { id: "AF", label: "Afghanistan", name: "정석호" },
-  { id: "AI", label: "Anguilla", name: "박수빈" },
-];
 
 const style = {
   position: "absolute" as "absolute",
@@ -78,20 +68,26 @@ const TaskModal = ({
     taskStatus: null,
   });
 
+  const { data } = useQuery(
+    ["getTaskDetail", selectedTask],
+    () => getTaskDetail(selectedTask.taskId),
+    { enabled: !!selectedTask && !!selectedTask.taskId }
+  );
+
   useEffect(() => {
-    if (isOpen === true && selectedTask) {
+    if (isOpen === true && data) {
       setFormData({
-        taskId: selectedTask.taskId,
-        taskTitle: selectedTask.taskTitle,
-        taskContent: selectedTask.taskContent,
-        taskTags: selectedTask.taskTags,
-        taskStartDate: selectedTask.taskStartDate,
-        taskEndDate: selectedTask.taskEndDate,
-        taskAuthorityType: selectedTask.taskAuthorityType,
-        taskStatus: selectedTask.taskStatus,
+        taskId: data.taskId,
+        taskTitle: data.taskTitle,
+        taskContent: data.taskContent,
+        taskTags: data.taskTags,
+        taskStartDate: data.taskStartDate,
+        taskEndDate: data.taskEndDate,
+        taskAuthorityType: data.taskAuthorityType,
+        taskStatus: data.taskStatus,
       });
     }
-  }, [selectedTask, isOpen]);
+  }, [data, isOpen]);
 
   //각 입력란 change 이벤트
   const handleInputChange = (
