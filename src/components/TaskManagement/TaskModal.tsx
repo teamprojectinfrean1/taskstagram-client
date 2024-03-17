@@ -12,13 +12,12 @@ import {
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import TaskObj from "@/models/TaskObj";
-import SearchableSelect from "@/components/SearchableSelect";
 import { Dayjs } from "dayjs";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
 import TextEditor from "@/components/Editor/TextEditor";
-import { RawDraftContentState } from "draft-js";
+import { RawDraftContentState, convertToRaw } from "draft-js";
 import theme from "@/theme/theme";
 import TaskTagChipMaker from "@/components/TagChipMaker";
 import DurationPicker from "@/components/DurationPicker";
@@ -70,28 +69,26 @@ const TaskModal = ({
 }: TaskModalProps) => {
   const [formData, setFormData] = useState<TaskObj>({
     taskId: "",
-    taskName: "",
-    taskExplanation: null,
-    taskAssignee: null,
+    taskTitle: "",
+    taskContent: null,
     taskTags: null,
     taskStartDate: null,
     taskEndDate: null,
-    taskSubIssues: null,
     taskAuthorityType: "",
+    taskStatus: null,
   });
 
   useEffect(() => {
     if (isOpen === true && selectedTask) {
       setFormData({
         taskId: selectedTask.taskId,
-        taskName: selectedTask.taskName,
-        taskExplanation: selectedTask.taskExplanation,
-        taskAssignee: selectedTask.taskAssignee,
+        taskTitle: selectedTask.taskTitle,
+        taskContent: selectedTask.taskContent,
         taskTags: selectedTask.taskTags,
         taskStartDate: selectedTask.taskStartDate,
         taskEndDate: selectedTask.taskEndDate,
-        taskSubIssues: selectedTask.taskSubIssues,
         taskAuthorityType: selectedTask.taskAuthorityType,
+        taskStatus: selectedTask.taskStatus,
       });
     }
   }, [selectedTask, isOpen]);
@@ -108,14 +105,13 @@ const TaskModal = ({
     //초기화
     setFormData({
       taskId: "",
-      taskName: "",
-      taskExplanation: null,
-      taskAssignee: null,
+      taskTitle: "",
+      taskContent: null,
       taskTags: null,
       taskStartDate: null,
       taskEndDate: null,
-      taskSubIssues: null,
       taskAuthorityType: "",
+      taskStatus: null,
     });
     //모달창 닫기
     onCloseModal();
@@ -127,27 +123,25 @@ const TaskModal = ({
       //새로운 task 생성시
       onAdd({
         taskId: uuid(), //taskId 주입
-        taskName: formData.taskName,
-        taskExplanation: formData.taskExplanation,
-        taskAssignee: formData.taskAssignee,
+        taskTitle: formData.taskTitle,
+        taskContent: formData.taskContent,
         taskTags: formData.taskTags,
         taskStartDate: formData.taskStartDate,
         taskEndDate: formData.taskEndDate,
-        taskSubIssues: formData.taskSubIssues,
         taskAuthorityType: formData.taskAuthorityType,
+        taskStatus: formData.taskStatus,
       });
     } else {
       //이미 생성된 Task
       onReplace(selectedTask, {
         ...selectedTask,
-        taskName: formData.taskName,
-        taskExplanation: formData.taskExplanation,
+        taskTitle: formData.taskTitle,
+        taskContent: formData.taskContent,
         taskTags: formData.taskTags,
-        taskAssignee: formData.taskAssignee,
         taskStartDate: formData.taskStartDate,
         taskEndDate: formData.taskEndDate,
-        taskSubIssues: formData.taskSubIssues,
         taskAuthorityType: formData.taskAuthorityType,
+        taskStatus: formData.taskStatus,
       });
     }
     handleModalClose();
@@ -174,7 +168,7 @@ const TaskModal = ({
           <Button
             type="submit"
             onClick={onClickSaveBtn}
-            disabled={formData.taskName === ""}
+            disabled={formData.taskTitle === ""}
             startIcon={<SaveAsIcon />}
           >
             저장
@@ -205,31 +199,22 @@ const TaskModal = ({
                   },
                 }}
                 color="secondary"
-                value={formData.taskName}
-                onChange={(e) => handleInputChange("taskName", e.target.value)}
+                value={formData.taskTitle}
+                onChange={(e) => handleInputChange("taskTitle", e.target.value)}
               />
               <InputLabel htmlFor="내용" sx={{ fontWeight: "bold", mb: 1 }}>
                 내용
               </InputLabel>
               <TextEditor
                 id="content"
-                initialContent={formData.taskExplanation}
+                initialContent={null}
                 handleContentChange={(value) =>
-                  handleInputChange("taskExplanation", value)
+                  handleInputChange("taskContent", value)
                 }
               />
             </Box>
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
-            <SearchableSelect
-              label="담당자"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
-              selectedOptions={formData.taskAssignee}
-              multiselect
-              onSelectionChange={(value) =>
-                handleInputChange("taskAssignee", value)
-              }
-            />
             <InputLabel htmlFor="태그" sx={{ fontWeight: "bold", mb: 1 }}>
               태그
             </InputLabel>

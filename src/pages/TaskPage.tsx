@@ -5,17 +5,41 @@ import { useState, useEffect } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
 import TaskObj from "@/models/TaskObj";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { taskListState } from "@/stores/Store";
+import { taskListState, selectedProjectState } from "@/stores/Store";
+import { useQuery } from "react-query";
+import { getTaskList } from "@/apis/TaskApi";
 
 const TaskPage = () => {
   const [taskList, setTaskList] = useRecoilState(taskListState);
   const [showModal, setShowModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<TaskObj | null>();
   const [currentPage, setCurrentPage] = useState(1);
+  const selectedProject = useRecoilValue(selectedProjectState);
+
+  const { data, isLoading } = useQuery(
+    ["getTaskList", selectedProject],
+    () =>
+      getTaskList({
+        page: 1,
+        size: 7,
+        projectId: selectedProject !== null ? selectedProject.projectId : null,
+      }),
+    {
+      onSuccess: (taskList) => setTaskList(taskList),
+    }
+    //추후 실패시 동작되는 로직도 추가 예정
+  );
+
+  // useEffect(() => {
+  //   setCurrentPage(Math.ceil((taskList.length + 1) / 8));
+  // }, [taskList.length]);
 
   useEffect(() => {
-    setCurrentPage(Math.ceil((taskList.length + 1) / 8));
-  }, [taskList.length]);
+    if (selectedProject && data) {
+      setTaskList(data);
+      setCurrentPage(Math.ceil((taskList.length + 1) / 8));
+    }
+  }, [selectedProject, data]);
 
   //util에 주입예정
   const replaceItemAtIndex = (
@@ -101,7 +125,7 @@ const TaskPage = () => {
               onShowTaskModal={setShowModal}
             ></NewTask>
           </Grid>
-          {taskList.length > 0
+          {taskList && taskList.length > 0
             ? taskList.map((task) => (
                 <Grid item xs={12} md={3} key={task.taskId}>
                   <Task
@@ -117,7 +141,7 @@ const TaskPage = () => {
         </Grid>
         <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
           <Pagination
-            count={Math.ceil((taskList.length + 1) / 8)}
+            // count={Math.ceil((taskList.length + 1) / 8)}
             page={currentPage}
             onChange={handlePaginationChange}
             shape="rounded"
