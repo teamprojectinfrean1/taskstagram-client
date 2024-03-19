@@ -47,7 +47,7 @@ const EmailInput = ({
   }, [email]);
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data !== undefined && data !== null) {
       setEmailDuplicateFlag(data)
     }
   }, [data])

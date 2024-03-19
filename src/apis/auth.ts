@@ -6,8 +6,27 @@ const authURL = `${BASE_URL}/auth`;
 
 type fetchEmailDupicateProps = {
   email: string;
-  setEmailErrorMessage(value: string): void;
-  setEmailErrorState(value: boolean): void;
+  setEmailErrorMessage(message: string): void;
+  setEmailErrorState(errorState: boolean): void;
+};
+
+type fetchIdDupicateProps = {
+  id: string;
+  setIdErrorMessage(message: string): void;
+  setIdErrorState(errorState: boolean): void;
+};
+
+type fetchNicknameDupicateProps = {
+  nickname: string;
+  setNicknameErrorMessage(message: string): void;
+  setNicknameErrorState(errorState: boolean): void;
+};
+
+type fetchLoginProps = {
+  email: string;
+  password: string;
+  setShowModal(value: boolean): void;
+  setIsSuccess(isSuccess: boolean): void;
 };
 
 // 이메일 중복검사
@@ -16,28 +35,27 @@ export const fetchEmailDupicate = async ({
   setEmailErrorMessage,
   setEmailErrorState,
 }: fetchEmailDupicateProps) => {
-  const response = await axios
+  let response = null;
+  response = await axios
     .get(`${authURL}/checkMail`, {
       params: {
         email,
       },
     })
     .then((res) => {
-      return res.data.data;
+      if (res.data) {
+        return res.data.data;
+      }
     });
+
   if (!response) {
     setEmailErrorMessage(
       "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
     );
     setEmailErrorState(true);
   }
-  return response;
-};
 
-type fetchIdDupicateProps = {
-  id: string;
-  setIdErrorMessage(value: string): void;
-  setIdErrorState(value: boolean): void;
+  return response;
 };
 
 // 아이디 중복검사
@@ -46,29 +64,25 @@ export const fetchIdDupicate = async ({
   setIdErrorMessage,
   setIdErrorState,
 }: fetchIdDupicateProps) => {
-  const response = await axios
+  let response = null;
+  response = await axios
     .get(`${authURL}/checkId`, {
       params: {
         id,
       },
     })
     .then((res) => {
-      return res.data.data;
+      if (res.data) {
+        return res.data.data;
+      }
     });
+
   if (!response) {
-    setIdErrorMessage(
-      "이미 가입된 아이디입니다. 다른 아이디를 입력해주세요."
-    );
+    setIdErrorMessage("이미 가입된 아이디입니다. 다른 아이디를 입력해주세요.");
     setIdErrorState(true);
   }
 
   return response;
-};
-
-type fetchNicknameDupicateProps = {
-  nickname: string;
-  setNicknameErrorMessage(value: string): void;
-  setNicknameErrorState(value: boolean): void;
 };
 
 // 닉네임 중복검사
@@ -77,15 +91,19 @@ export const fetchNicknameDupicate = async ({
   setNicknameErrorMessage,
   setNicknameErrorState,
 }: fetchNicknameDupicateProps) => {
-  const response = await axios
+  let response = null;
+  response = await axios
     .get(`${authURL}/checkNickname`, {
       params: {
         nickname,
       },
     })
     .then((res) => {
-      return res.data.data;
+      if (res.data) {
+        return res.data.data;
+      }
     });
+
   if (!response) {
     setNicknameErrorMessage(
       "이미 가입된 닉네임입니다. 다른 닉네임를 입력해주세요."
@@ -119,13 +137,6 @@ export const fetchSignup = async ({
     });
 };
 
-type fetchLoginProps = {
-  email: string;
-  password: string;
-  setShowModal(value: boolean): void;
-  setIsSuccess(value: boolean): void;
-};
-
 // 로그인 api
 export const fetchLogin = async ({
   email,
@@ -144,7 +155,7 @@ export const fetchLogin = async ({
       sessionStorage.setItem("accessToken", accessToken);
       return res.data;
     });
-    
+
   if (!response) {
     setShowModal(true);
     setIsSuccess(response);

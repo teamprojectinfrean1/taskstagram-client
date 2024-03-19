@@ -47,7 +47,7 @@ const IdInput = ({
   }, [id]);
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data !== undefined && data !== null) {
       setIdDuplicateFlag(data)
     }
   }, [data])

@@ -20,6 +20,10 @@ const LoginForm = () => {
     { enabled: false, cacheTime: 0 }
   );
 
+  useEffect(() => { 
+    console.log('버튼 클릭', data)
+  }, [refetch])
+
   return (
     <Box className="base-layout">
       <Typography variant="h5" sx={{ fontWeight: "bold", mt: 8 }}>

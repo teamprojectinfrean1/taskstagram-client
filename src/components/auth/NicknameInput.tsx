@@ -40,7 +40,7 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
   }, [nickname]);
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (data !== undefined && data !== null) {
       setNicknameDuplicateFlag(data)
     }
   }, [data])

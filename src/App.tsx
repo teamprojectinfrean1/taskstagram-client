@@ -1,6 +1,11 @@
 import "@/App.css";
 import { useEffect } from "react";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  RouterProvider,
+  useNavigate,
+  BrowserRouter,
+} from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
 import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
@@ -17,6 +22,7 @@ import FindPasswdSuccess from "@/components/auth/FindPasswordSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
+import ProtectedRouter from "./components/ProtectedRouter";
 
 const router = createBrowserRouter([
   {
@@ -91,13 +97,6 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  
-  // const logged = sessionStorage.getItem("accessToken")
-
-  // 로그인 유무
-  // useEffect(() => {
-  //   logged ? router.navigate("/") : router.navigate("/auth/login");
-  // }, [logged]);
 
   return (
     <>
