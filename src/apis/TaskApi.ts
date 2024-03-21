@@ -1,9 +1,10 @@
 import axios from "axios";
 import { BASE_URL } from "./domainSettings";
+import TaskObj from "@/models/TaskObj";
 
 const taskUrl = `${BASE_URL}/task`;
 
-type getTaskListProps = {
+type getTaskListParams = {
   page: number;
   size: number;
   projectId: string | null;
@@ -14,7 +15,7 @@ export const getTaskList = async ({
   page,
   size,
   projectId,
-}: getTaskListProps) => {
+}: getTaskListParams): Promise<TaskObj[]> => {
   let response = [];
 
   if (page && size && projectId !== null) {

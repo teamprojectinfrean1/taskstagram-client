@@ -5,19 +5,17 @@ import { useState, useEffect } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
 import TaskObj from "@/models/TaskObj";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { taskListState, selectedProjectState } from "@/stores/Store";
+import { selectedProjectState } from "@/stores/Store";
 import { useQuery } from "react-query";
 import { getTaskList } from "@/apis/TaskApi";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const TaskPage = () => {
-  const [taskList, setTaskList] = useRecoilState(taskListState);
   const [showModal, setShowModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<TaskObj | null>();
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
-  const [isBackDropOpen, setIsBackDropOpen] = useState(false);
 
   const { data, isLoading } = useQuery(
     ["getTaskList", selectedProject],
@@ -29,7 +27,6 @@ const TaskPage = () => {
       }),
     {
       enabled: !!selectedProject && !!selectedProject.projectId,
-      onSuccess: (taskList) => setTaskList(taskList),
     }
     //추후 실패시 동작되는 로직도 추가 예정
   );
@@ -49,28 +46,27 @@ const TaskPage = () => {
   };
 
   const addTask = (task: TaskObj) => {
-    setTaskList((oldTaskList) => [...oldTaskList, task]);
+    //setTaskList((oldTaskList) => [...oldTaskList, task]);
     //해당 task create하는 api 호출로 대체 예정
     //setCurrentPage();
   };
 
   const replaceTask = (previousTask: TaskObj, newTask: TaskObj) => {
-    const index = taskList.findIndex((listItem) => listItem === previousTask);
-    const newList = replaceItemAtIndex(taskList, index, newTask);
-    setTaskList(newList);
+    //onst index = taskList.findIndex((listItem) => listItem === previousTask);
+    //const newList = replaceItemAtIndex(taskList, index, newTask);
+    //setTaskList(newList);
     //해당 task update하는 api 호출로 대체 예정
   };
 
   const deleteTask = (task: TaskObj) => {
-    const index = taskList.findIndex((listItem) => listItem === task);
-    const newList = removeItemAtIndex(taskList, index);
-
-    setTaskList(newList);
+    //const index = taskList.findIndex((listItem) => listItem === task);
+    //const newList = removeItemAtIndex(taskList, index);
+    //setTaskList(newList);
     //해당 task delete하는 api 호출로 대체 예정
     //전체 task select하는 api호출 후 setTaskList();
   };
 
-  const hanldeCloseTaskModal = () => {
+  const handleCloseTaskModal = () => {
     setShowModal(false);
     //전체 task select하는 api 호출 후 setTaskList();
   };
@@ -118,8 +114,8 @@ const TaskPage = () => {
               onShowTaskModal={setShowModal}
             ></NewTask>
           </Grid>
-          {taskList && taskList.length > 0
-            ? taskList.map((task) => (
+          {data && data.length > 0
+            ? data.map((task) => (
                 <Grid item xs={12} md={3} key={task.taskId}>
                   <Task
                     key={task.taskId}
@@ -147,7 +143,7 @@ const TaskPage = () => {
         onAdd={addTask}
         onReplace={replaceTask}
         onDelete={deleteTask}
-        onCloseModal={hanldeCloseTaskModal}
+        onCloseModal={handleCloseTaskModal}
       ></TaskModal>
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
