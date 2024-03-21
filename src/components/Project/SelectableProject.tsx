@@ -6,19 +6,19 @@ import StarIcon from "@mui/icons-material/Star";
 import React, { useState } from "react";
 import theme from "@/theme/theme";
 
-type ProjectAutoCompleteProps = {
+type SelectableProjectProps = {
   projects: ProjectObj[];
   selectedProject: ProjectObj | null;
   onClickCheckBox(selectedProject: ProjectObj | null): void;
   onSelectedProjectChanged(value: ProjectObj | null): void;
 };
 
-const ProjectAutoComplete = ({
+const SelectableProject = ({
   projects,
   selectedProject,
   onSelectedProjectChanged,
   onClickCheckBox,
-}: ProjectAutoCompleteProps) => {
+}: SelectableProjectProps) => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
@@ -102,4 +102,4 @@ const ProjectAutoComplete = ({
   );
 };
 
-export default ProjectAutoComplete;
+export default SelectableProject;

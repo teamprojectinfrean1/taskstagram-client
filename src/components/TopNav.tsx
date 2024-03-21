@@ -1,9 +1,9 @@
 import { AppBar, IconButton, Toolbar } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import ProjectAutoComplete from "./Project/ProjectAutoComplete";
+import SelectableProject from "./Project/SelectableProject";
 import ProjectObj from "@/models/ProjectObj";
 import { useRecoilState } from "recoil";
-import { projectListState, selectedProjectState } from "@/stores/Store";
+import { selectedProjectState } from "@/stores/Store";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { getProjectList } from "@/apis/ProjectApi";
@@ -13,16 +13,12 @@ type TopNavProps = {
 };
 
 function TopNav({ onMenuClick }: TopNavProps) {
-  const [projectList, setProjectList] = useRecoilState(projectListState);
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
 
-  useQuery(
+  const { data } = useQuery(
     "getProjectList",
-    () => getProjectList("c00dc5dc-2aef-4579-b3fe-cb08b6d6825d"),
-    {
-      onSuccess: (projectList) => setProjectList(projectList),
-    }
+    () => getProjectList("c00dc5dc-2aef-4579-b3fe-cb08b6d6825d")
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
@@ -47,8 +43,8 @@ function TopNav({ onMenuClick }: TopNavProps) {
         >
           <MenuIcon />
         </IconButton>
-        <ProjectAutoComplete
-          projects={projectList}
+        <SelectableProject
+          projects={data ?? []}
           selectedProject={selectedProject}
           onSelectedProjectChanged={handleChangeSelectedProject}
           onClickCheckBox={handleChangeMainProject}
