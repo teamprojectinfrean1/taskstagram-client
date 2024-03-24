@@ -1,4 +1,4 @@
-export type SignupInfoType = {
+export type SignupInfoTypes = {
   email: string;
   id: string;
   password: string;
@@ -6,12 +6,12 @@ export type SignupInfoType = {
   profileImage: string;
 };
 
-export type AuthInputValidityType = {
+export type AuthInputValidityTypes = {
   type: string;
   authValue: string;
 };
 
-export type SignupInfoTypes = {
+export type SignupInputValueTypes = {
   key: string;
   value: string;
 }

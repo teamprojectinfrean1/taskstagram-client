@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./domainSettings";
-import { SignupInfoType } from "@/models/Auth";
+import { SignupInfoTypes } from "@/models/Auth";
 
 const authURL = `${BASE_URL}/auth`;
 
@@ -121,7 +121,7 @@ export const fetchSignup = async ({
   password,
   nickname,
   profileImage,
-}: SignupInfoType) => {
+}: SignupInfoTypes) => {
   return await axios
     // api -> `${authURL}/join` 로 변경 예정
     .post(`${BASE_URL}/users/join`, {

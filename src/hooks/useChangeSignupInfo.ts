@@ -1,6 +1,6 @@
 import { useRecoilState } from "recoil";
 import { signupInfoState } from "@/stores/AuthStore";
-import { SignupInfoTypes } from "@/models/Auth";
+import { SignupInputValueTypes } from "@/models/Auth";
 
 export const useChangeSignupInfo = () => {
   const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
@@ -13,13 +13,13 @@ export const useChangeSignupInfo = () => {
     profileImage: "",
   };
 
-  const changeSignupInfo = ({ key, value }: SignupInfoTypes) => {
+  const changeSignupInfo = ({ key, value }: SignupInputValueTypes) => {
     setSignupInfo({
       ...signupInfo,
       [key]: value,
     });
   };
-
+  {/*헬로*/}
   const resetSignupInfo = () => {
     setSignupInfo(initalSignupInfo);
   };
