@@ -1,16 +1,12 @@
 import { RawDraftContentState } from "draft-js";
 
-export type Duration = {
-  startDate: string | null;
-  endDate: string | null;
-};
-
-export type IssueFormData = {
+type IssueFormData = {
   title: string | null;
   content: RawDraftContentState | null;
   assignee: string[] | null;
   task: string | null;
-  duration: Duration;
+  startDate: string | null;
+  endDate: string | null;
   type: string | null;
   status: string | null;
 };

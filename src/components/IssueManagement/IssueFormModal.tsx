@@ -19,7 +19,7 @@ import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
-import { Duration, IssueFormData } from "@/models/Issue";
+import { IssueFormData } from "@/models/Issue";
 
 type IssueFormModalProps = {
   currentIssueId: string;
@@ -35,14 +35,15 @@ const IssueFormModal = ({
     content: null,
     assignee: null,
     task: null,
-    duration: { startDate: null, endDate: null },
+    startDate: null,
+    endDate: null,
     type: null,
     status: null,
   });
 
   const handleInputChange = (
     field: keyof IssueFormData,
-    value: string | string[] | RawDraftContentState | Duration | null
+    value: string | string[] | RawDraftContentState | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -140,9 +141,13 @@ const IssueFormModal = ({
               기간
             </InputLabel>
             <DurationPicker
-              selectedOptions={formData.duration}
-              onSelectionChange={(value) =>
-                handleInputChange("duration", value)
+              selectedStartDate={formData.startDate}
+              selectedEndDate={formData.endDate}
+              onStartDateSelectionChange={(value) =>
+                handleInputChange("startDate", value)
+              }
+              onEndDateSelectionChange={(value) =>
+                handleInputChange("endDate", value)
               }
             />
             <SearchableSelect
