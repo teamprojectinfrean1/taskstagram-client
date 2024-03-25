@@ -125,6 +125,8 @@ const ProjectPage = () => {
           <Grid item xs={9}>
             <TextField
               fullWidth
+              multiline
+              rows={4}
               color="secondary"
               value={formData.projectContent}
               onChange={(e) =>
