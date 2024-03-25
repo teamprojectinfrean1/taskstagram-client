@@ -1,7 +1,7 @@
-import { useState, Fragment, useEffect } from "react";
+import { useState, Fragment } from "react";
 import TopNav from "@/components/TopNav";
 import SideNav from "@/components/SideNav";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
 
 const PageLayout = () => {
