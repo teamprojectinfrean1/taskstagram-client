@@ -1,6 +1,6 @@
 import { atom } from 'recoil';
 
-export const currentIssueIdToShowInModal = atom({
-  key: 'currentIssueIdToShowInModal',
+export const issueIdToShowInModalState = atom({
+  key: 'issueIdToShowInModalState',
   default: '',
 });

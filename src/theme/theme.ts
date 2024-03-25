@@ -12,12 +12,30 @@ const theme = createTheme({
     },
     background: {
       paper: "rgba(228, 230, 237)",
+      default: "#FFFFFF"
     },
     text: {
       secondary: "#121923",
     },
     error: {
       main: "#ff1744",
+    },
+  },
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        arrow: {
+          color: "#F7F5FF",
+          "&::before": {
+            border: "1px solid #6D53F3",
+          },
+        },
+        tooltip: {
+          fontSize: "14px",
+          fontWeight: 600,
+          padding: 5,
+        },
+      },
     },
   },
 });
