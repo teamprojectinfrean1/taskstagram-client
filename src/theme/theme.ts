@@ -12,6 +12,7 @@ const theme = createTheme({
     },
     background: {
       paper: "rgba(228, 230, 237)",
+      default: "#FFFFFF"
     },
     text: {
       secondary: "#121923",
@@ -33,13 +34,6 @@ const theme = createTheme({
           fontSize: "14px",
           fontWeight: 600,
           padding: 5,
-        },
-      },
-    },
-    MuiAutocomplete: {
-      styleOverrides: {
-        paper: {
-          backgroundColor: 'white', 
         },
       },
     },

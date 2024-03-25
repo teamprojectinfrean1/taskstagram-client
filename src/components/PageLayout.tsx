@@ -10,6 +10,7 @@ const PageLayout = () => {
   const handleClose = () => {
     setIsSideNavOpen(false);
   };
+
   return (
     <Fragment>
       <TopNav onMenuClick={() => setIsSideNavOpen((prev) => !prev)} />

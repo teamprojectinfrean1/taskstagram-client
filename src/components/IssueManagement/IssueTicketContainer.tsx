@@ -12,6 +12,7 @@ import IssueTicket from "@/components/IssueManagement/IssueTicket";
 import { useDroppable } from "@dnd-kit/core";
 import { IssueSummary } from "@/models/Issue";
 import SearchIcon from "@mui/icons-material/Search";
+import theme from "@/theme/theme";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
@@ -100,7 +101,7 @@ const IssueTicketContainer = ({
             }}
             sx={{
               "& .MuiOutlinedInput-root": {
-                backgroundColor: "white",
+                backgroundColor: theme.palette.background.default,
               },
               "& .MuiOutlinedInput-input": {
                 py: 1.5,

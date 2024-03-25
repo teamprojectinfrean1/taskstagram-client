@@ -75,7 +75,6 @@ const IssueStoryContainer = ({
           }}
           alignSelf="center"
         >
-          <IssueStory key={0} name="아주 긴 사용자 이름"/>
           {Array.from({ length: 20 }, (_, index) => (
             <IssueStory key={index} name="성이름"/>
           ))}

@@ -62,9 +62,9 @@ const IssuePage = () => {
   };
 
   const onDragOver = (event: DragOverEvent) => {
-    const targetContainer = event.over?.id;
-    if (typeof targetContainer === "string" || targetContainer === null) {
-      setHoveredContainerId(targetContainer);
+    const targetContainerId = event.over?.id;
+    if (typeof targetContainerId === "string" || targetContainerId === null) {
+      setHoveredContainerId(targetContainerId);
     }
   };
 
@@ -72,34 +72,29 @@ const IssuePage = () => {
     const { active, over } = event;
     const currentDraggable = active.data.current;
 
-    const targetContainer = over?.id;
+    const targetContainerId = over?.id;
     const issueTicket: IssueSummary = currentDraggable?.issue;
     const index = currentDraggable?.index;
     const originContainer = currentDraggable?.parent;
 
-    if (originContainer !== targetContainer) {
-      if (targetContainer === "toDo") {
+    if (originContainer !== targetContainerId) {
+      if (targetContainerId === "toDo") {
         setTodoItems([issueTicket, ...todoItems]);
-      } else if (targetContainer === "inProgress") {
+      } else if (targetContainerId === "inProgress") {
         setInProgressItems([issueTicket, ...inProgressItems]);
-      } else if (targetContainer === "done") {
+      } else if (targetContainerId === "done") {
         setDoneItems([issueTicket, ...doneItems]);
       }
+
+      const removeFromList = (list: IssueSummary[]) =>
+        list.filter((_, i) => i !== index);
+
       if (originContainer === "toDo") {
-        setTodoItems([
-          ...todoItems.slice(0, index),
-          ...todoItems.slice(index + 1),
-        ]);
+        setTodoItems(removeFromList(todoItems));
       } else if (originContainer === "inProgress") {
-        setInProgressItems([
-          ...inProgressItems.slice(0, index),
-          ...inProgressItems.slice(index + 1),
-        ]);
+        setInProgressItems(removeFromList(inProgressItems));
       } else if (originContainer === "done") {
-        setDoneItems([
-          ...doneItems.slice(0, index),
-          ...doneItems.slice(index + 1),
-        ]);
+        setDoneItems(removeFromList(doneItems));
       }
     }
     setHoveredContainerId(null);
@@ -152,11 +147,9 @@ const IssuePage = () => {
             IconComponent={AddCircleIcon}
             onIconComponentClick={() => setShowIssueTicketMaker(true)}
           >
-            {/* <Fade in={showIssueTicketMaker} timeout={500} unmountOnExit> */}
             {showIssueTicketMaker && (
               <IssueTicketMaker handleAddIssue={handleAddIssue} />
             )}
-            {/* </Fade> */}
           </IssueTicketContainer>
           <IssueTicketContainer
             ariaLabel="create issue"
@@ -172,22 +165,22 @@ const IssuePage = () => {
             issueTicketList={doneItems}
             title="완료"
           />
-          {createPortal(
-            <DragOverlay>
-              {draggedIssue && (
-                <IssueTicket
-                  issue={draggedIssue}
-                  sx={{
-                    backgroundColor: "#F3F3F7",
-                    border: "1px solid #313449",
-                  }}
-                />
-              )}
-            </DragOverlay>,
-            document.body
-          )}
         </Box>
       </Stack>
+      {createPortal(
+        <DragOverlay>
+          {draggedIssue && (
+            <IssueTicket
+              issue={draggedIssue}
+              sx={{
+                backgroundColor: "#F3F3F7",
+                border: "1px solid #313449",
+              }}
+            />
+          )}
+        </DragOverlay>,
+        document.body
+      )}
       <IssueFormModal
         currentIssueId={issueIdToShowInModal}
         handleClose={() => setIssueIdToShowInModal("")}

@@ -64,7 +64,7 @@ const IssueTicketMaker = ({ handleAddIssue }: IssueTicketMakerProps) => {
               className="custom-scrollbar"
               sx={{
                 "& .MuiOutlinedInput-root": {
-                  backgroundColor: "white",
+                  backgroundColor: theme.palette.background.default,
                   "& fieldset": {
                     borderColor: "transparent",
                   },
