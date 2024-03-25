@@ -3,13 +3,13 @@ import { Button, Box } from "@mui/material";
 import NicknameInput from "./NicknameInput";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
-import { useRecoilValue} from "recoil";
+import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/AuthStore";
 import { fetchSignup } from "@/apis/auth";
 import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
-import { useQuery } from "react-query";
-import { useEffect } from "react";
+import { useMutation, useQuery } from "react-query";
+import { SignupInfo } from "@/models/Auth";
 
 const SingupFormOptional = () => {
   const navigate = useNavigate();
@@ -17,19 +17,12 @@ const SingupFormOptional = () => {
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   const signupInfo = useRecoilValue(signupInfoState);
-
-  const { data, refetch } = useQuery(
-    "signup",
-    () => fetchSignup({ ...signupInfo }),
-    { enabled: false, cacheTime: 0 }
-  );
   
-  useEffect(() => {
-    // api response 값 변경 되면, data.isSuccess로 변경 예정
-    if (data) {
-      navigate("/auth/signup/success", {state : data.userNickname})
+  const signupMutation = useMutation((signupInfo: SignupInfo) => fetchSignup(signupInfo), {
+    onSuccess: (data) => {
+      navigate("/auth/signup/success", {state: data.userNickname })
     }
-  }, [data])
+  })
 
   return (
     <>
@@ -62,7 +55,7 @@ const SingupFormOptional = () => {
               borderRadius: "7px",
             }}
             onClick={() => {
-              refetch()
+              signupMutation.mutate(signupInfo)
             }}
           >
             가입하기

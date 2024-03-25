@@ -1,10 +1,7 @@
 import "@/App.css";
-import { useEffect } from "react";
 import {
   createBrowserRouter,
   RouterProvider,
-  useNavigate,
-  BrowserRouter,
 } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
 import AuthPage from "@/pages/AuthPage";
@@ -22,7 +19,6 @@ import FindPasswdSuccess from "@/components/auth/FindPasswordSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
-import ProtectedRouter from "./components/ProtectedRouter";
 
 const router = createBrowserRouter([
   {

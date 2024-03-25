@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchNicknameDupicate } from "@/apis/auth";
+import { checkNicknameExistence } from "@/apis/auth";
 import { useQuery } from "react-query";
 
 type NicknameInputProps = {
@@ -21,29 +21,28 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
   const nicknameValidityState = !!(nickname && !nicknameValidityFlag);
   const nicknameIsDisabled = !!(!nicknameValidityFlag || nicknameDuplicateFlag);
 
-
   const { data, refetch } = useQuery(
     "checkNickname",
-    () => fetchNicknameDupicate({ nickname, setNicknameErrorMessage, setNicknameErrorState }),
-    { enabled: false, cacheTime: 0 }
+    () => checkNicknameExistence(nickname),
+    {
+      enabled: false,
+      cacheTime: 0,
+      onSuccess: (data) => {
+        if (data !== null) {
+          setNicknameDuplicateFlag(data);
+        }
+        if (!data) {
+          setNicknameErrorMessage(
+            "이미 가입된 닉네임입니다. 다른 닉네임을 입력해주세요."
+          );
+          setNicknameErrorState(true);
+        } else {
+          setNicknameErrorMessage("");
+          setNicknameErrorState(false);
+        }
+      },
+    }
   );
-
-  useEffect(() => {
-    setIsClickNicknameButton(false);
-    if (nicknameValidityState) {
-      setNicknameErrorMessage("닉네임은 초성 제외, 2 ~ 20자만 사용 가능합니다.");
-      setNicknameErrorState(true);
-    } else {
-      setNicknameErrorMessage("");
-      setNicknameErrorState(false);
-    }
-  }, [nickname]);
-
-  useEffect(() => {
-    if (data !== undefined && data !== null) {
-      setNicknameDuplicateFlag(data)
-    }
-  }, [data])
 
   return (
     <>
@@ -67,18 +66,18 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
               );
             }}
           />
-            <Typography
-              sx={{
-                position: "absolute",
-                mt: 0.1,
-                ml: 1,
-                fontWeight: "bold",
-                fontSize: "11px",
-                color: theme.palette.error.main,
-              }}
-            >
-              {nicknameErrorMessage}
-            </Typography>
+          <Typography
+            sx={{
+              position: "absolute",
+              mt: 0.1,
+              ml: 1,
+              fontWeight: "bold",
+              fontSize: "11px",
+              color: theme.palette.error.main,
+            }}
+          >
+            {nicknameErrorMessage}
+          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -92,7 +91,7 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
             disabled={nicknameIsDisabled}
             onClick={() => {
               refetch();
-              setIsClickNicknameButton(true)
+              setIsClickNicknameButton(true);
             }}
           >
             {nicknameDuplicateFlag ? "확인 완료" : "중복 확인"}

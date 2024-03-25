@@ -16,13 +16,18 @@ const LoginForm = () => {
 
   const { data, refetch } = useQuery(
     "login",
-    () => fetchLogin({ email, password, setShowModal, setIsSuccess }),
-    { enabled: false, cacheTime: 0 }
+    () => fetchLogin({ email, password }),
+    {
+      enabled: false,
+      cacheTime: 0,
+      onSuccess: (data) => {
+        if (!data) {
+          setShowModal(true);
+          setIsSuccess(false)
+        }
+      },
+    }
   );
-
-  useEffect(() => { 
-    console.log('버튼 클릭', data)
-  }, [refetch])
 
   return (
     <Box className="base-layout">
@@ -63,7 +68,7 @@ const LoginForm = () => {
           borderRadius: "7px",
         }}
         onClick={() => {
-          refetch()
+          refetch();
         }}
       >
         로그인

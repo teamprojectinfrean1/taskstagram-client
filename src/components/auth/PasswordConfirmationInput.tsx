@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import { Typography, OutlinedInput } from "@mui/material";
+import { TextField } from "@mui/material";
 import { passwordDoubleCheck } from "@/utils/authCheck";
 import { useState } from "react";
 
@@ -14,19 +14,31 @@ const PasswordDoubleInput = ({
   passwordDoubleValidityFlag,
   setPasswordDoubleValidityFlag,
 }: PasswordDoubleInputProps) => {
-
-  const [passwordDouble, setPasswordDouble] = useState("")
-  const passwordDoubleFlagState = !!(passwordDouble && !passwordDoubleValidityFlag);
+  const [passwordDouble, setPasswordDouble] = useState("");
+  const arePasswordsInSync = !!(
+    passwordDouble && !passwordDoubleValidityFlag
+  );
 
   return (
     <>
-      <OutlinedInput
-        sx={{mt:3}}
+      <TextField
+        sx={{
+          mt: 3,
+          "& .MuiFormHelperText-root": {
+            position: "absolute",
+            mt: 5,
+            ml: 1,
+            fontSize: "11px",
+            fontWeight: "bold",
+            color: theme.palette.error.main,
+          },
+        }}
         type="password"
         fullWidth
         size="small"
         placeholder={"비밀번호 확인"}
-        error={passwordDoubleFlagState}
+        error={arePasswordsInSync}
+        helperText={arePasswordsInSync && "비밀번호가 일치하지 않습니다."}
         value={passwordDouble}
         onChange={(e) => {
           setPasswordDouble(e.target.value);
@@ -38,20 +50,6 @@ const PasswordDoubleInput = ({
           );
         }}
       />
-      {passwordDoubleFlagState && (
-        <Typography
-          sx={{
-            position: "absolute",
-            mt: 0.1,
-            ml: 1,
-            fontWeight: "bold",
-            fontSize: "11px",
-            color: theme.palette.error.main,
-          }}
-        >
-          비밀번호가 일치하지 않습니다.
-        </Typography>
-      )}
     </>
   );
 };

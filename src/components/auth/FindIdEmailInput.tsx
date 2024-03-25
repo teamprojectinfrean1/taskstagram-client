@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import { Grid, Typography, Button, OutlinedInput } from "@mui/material";
+import { Grid, Typography, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 
@@ -12,25 +12,24 @@ const FindIdEmailInput = ({
   findIdEmailButtonState,
   setFindIdEmailButtonState,
 }: FindIdEmailInputProps) => {
-  const [findIdEmailInput, setFindIdEmailInput] = useState("");
-  const [findIdEmailValidityFlag, setFindIdEmailValidityFlag] = useState(false);
-  const [findIdEmailButtonName, setFindIdEmailButtonName] = useState("인증요청")
+  const [email, setEmail] = useState("");
+  const [isEmailValidity, setIsEmailValidity] = useState(false);
+  const [certifyRequestButtonLabel, setCertifyRequestButtonLabel] =
+    useState("인증요청");
 
-  const findIdEmailValidityState = !!(
-    findIdEmailInput && !findIdEmailValidityFlag
-  );
-  
+  const showErrorMessage = !!(email && !isEmailValidity);
+
   useEffect(() => {
-    if (findIdEmailValidityFlag && findIdEmailButtonState) {
-      setFindIdEmailButtonName("재전송")
+    if (isEmailValidity && findIdEmailButtonState) {
+      setCertifyRequestButtonLabel("재전송");
     } else {
-      setFindIdEmailButtonState(false)
-      setFindIdEmailButtonName("인증요청")
+      setFindIdEmailButtonState(false);
+      setCertifyRequestButtonLabel("인증요청");
     }
-  }, [findIdEmailValidityFlag, findIdEmailButtonState])
+  }, [isEmailValidity, findIdEmailButtonState]);
 
   const changeViewEmailValidity = () => {
-    if (findIdEmailValidityState ) {
+    if (showErrorMessage) {
       return (
         <Typography
           sx={{
@@ -45,7 +44,7 @@ const FindIdEmailInput = ({
           이메일 형식이 올바르지 않습니다.
         </Typography>
       );
-    } else if (findIdEmailValidityFlag && findIdEmailButtonState) {
+    } else if (isEmailValidity && findIdEmailButtonState) {
       return (
         <Typography
           sx={{
@@ -67,16 +66,16 @@ const FindIdEmailInput = ({
       <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
       <Grid container spacing={3}>
         <Grid item xs={8}>
-          <OutlinedInput
+          <TextField
             type="email"
             fullWidth
             size="small"
             placeholder={"example@email.com"}
-            value={findIdEmailInput}
-            error={findIdEmailValidityState}
+            value={email}
+            error={showErrorMessage}
             onChange={(e) => {
-              setFindIdEmailInput(e.target.value);
-              setFindIdEmailValidityFlag(
+              setEmail(e.target.value);
+              setIsEmailValidity(
                 checkAuthInputValidity({
                   type: "email",
                   authValue: e.target.value,
@@ -94,22 +93,16 @@ const FindIdEmailInput = ({
               height: "41px",
               borderRadius: "7px",
             }}
-            disabled={!findIdEmailValidityFlag}
+            disabled={!isEmailValidity}
             onClick={() => {
               // refetch();
-              setFindIdEmailButtonState(true)
+              setFindIdEmailButtonState(true);
             }}
           >
-            {findIdEmailButtonName}
+            {certifyRequestButtonLabel}
           </Button>
         </Grid>
       </Grid>
-      {/* <AuthResultModal
-        type="email"
-        showModal={showModal}
-        isSuccess={emailDuplicateFlag}
-        handleClose={() => setShowModal(false)}
-      /> */}
       {changeViewEmailValidity()}
     </>
   );

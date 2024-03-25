@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "./SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
-import PasswordDoubleInput from "./PasswordDoubleInput";
+import PasswordDoubleInput from "./PasswordConfirmationInput";
 import { Box, Button, Divider, Typography, Grid } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";

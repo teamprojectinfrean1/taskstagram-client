@@ -8,7 +8,7 @@ type FindIdEmailCertifiInputProps = {
   findIdEmailButtonState: boolean;
 };
 
-const FindIdEmailCertifiInput = ({
+const EmailVerificationCodeInput = ({
   findIdEmailButtonState,
 }: FindIdEmailCertifiInputProps) => {
   const navigate = useNavigate();
@@ -83,4 +83,4 @@ const FindIdEmailCertifiInput = ({
   );
 };
 
-export default FindIdEmailCertifiInput;
+export default EmailVerificationCodeInput;

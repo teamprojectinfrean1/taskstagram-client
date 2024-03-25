@@ -2,7 +2,7 @@ import { Link, Outlet } from "react-router-dom";
 import { Box, Typography, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
-const FindEmailLayout = () => {
+const FindIdLayout = () => {
   return (
     <>
       <Link to="/auth/login">
@@ -21,4 +21,4 @@ const FindEmailLayout = () => {
   );
 };
 
-export default FindEmailLayout;
+export default FindIdLayout;

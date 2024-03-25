@@ -3,7 +3,7 @@ import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import { fetchEmailDupicate } from "@/apis/auth";
+import { checkEmailExistence } from "@/apis/auth";
 
 type EmailInputProps = {
   email: string;
@@ -25,14 +25,32 @@ const EmailInput = ({
   const [isClickEmailButton, setIsClickEmailButton] = useState(false);
   const [emailErrorState, setEmailErrorState] = useState(false);
   const [emailErrorMessage, setEmailErrorMessage] = useState("");
-  
+
   const emailValidityState = !!(email && !emailValidityFlag);
   const emailIsDisabled = !!(!emailValidityFlag || emailDuplicateFlag);
 
   const { data, refetch } = useQuery(
     "checkMail",
-    () => fetchEmailDupicate({ email, setEmailErrorMessage, setEmailErrorState }),
-    { enabled: false, cacheTime: 0 }
+    () =>
+      checkEmailExistence(email),
+    {
+      enabled: false,
+      cacheTime: 0,
+      onSuccess: (data) => {
+        if (data !== null) {
+          setEmailDuplicateFlag(data);
+          if (!data) {
+            setEmailErrorMessage(
+              "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
+            );
+            setEmailErrorState(true);
+          } else {
+            setEmailErrorMessage("");
+            setEmailErrorState(false);
+          }
+        }
+      },
+    }
   );
 
   useEffect(() => {
@@ -45,13 +63,7 @@ const EmailInput = ({
       setEmailErrorState(false);
     }
   }, [email]);
-
-  useEffect(() => {
-    if (data !== undefined && data !== null) {
-      setEmailDuplicateFlag(data)
-    }
-  }, [data])
-
+  
   return (
     <>
       <Grid container spacing={2} sx={{ mt: 2 }}>

@@ -1,8 +1,7 @@
 import theme from "@/theme/theme";
 import LogoAndName from "../components/auth/LogoAndName";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Box } from "@mui/material";
-import { useEffect } from "react";
 
 const AuthPage = () => {
   return (
@@ -19,7 +18,7 @@ const AuthPage = () => {
           <LogoAndName />
           <Box
             sx={{
-              backgroundColor: "#FFFFFF",
+              backgroundColor: `${theme.palette.primary.light}`,
               borderRadius: "5%",
               minWidth: "550px",
               height: "570px",

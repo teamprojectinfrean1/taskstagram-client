@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, OutlinedInput, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { fetchIdDupicate } from "@/apis/auth";
+import { checkIdExistence } from "@/apis/auth";
 import { useQuery } from "react-query";
 
 type IdInputProps = {
@@ -31,8 +31,23 @@ const IdInput = ({
 
   const { data, refetch } = useQuery(
     "checkId",
-    () => fetchIdDupicate({ id, setIdErrorMessage, setIdErrorState }),
-    { enabled: false, cacheTime: 0 }
+    () => checkIdExistence(id),
+    {
+      enabled: false,
+      cacheTime: 0,
+      onSuccess: (data) => {
+        if (data !== null) {
+          setIdDuplicateFlag(data)
+          if (!data) {
+            setIdErrorMessage("이미 가입된 아이디입니다. 다른 아이디를 입력해주세요.")
+            setIdErrorState(true)
+          } else  {
+            setIdErrorMessage("")
+            setIdErrorState(false)
+          }
+        }
+      },
+    }
   );
 
   useEffect(() => {
@@ -45,12 +60,6 @@ const IdInput = ({
       setIdErrorState(false);
     }
   }, [id]);
-
-  useEffect(() => {
-    if (data !== undefined && data !== null) {
-      setIdDuplicateFlag(data)
-    }
-  }, [data])
 
   return (
     <>

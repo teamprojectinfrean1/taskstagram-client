@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import FindIdEmailInput from "./FindIdEmailInput";
-import FindIdEmailCertifiInput from "./FindIdEmailCertifiInput";
+import FindIdEmailCertifiInput from "./EmailVerificationCodeInput";
 
 const FindIdForm = () => {
   const [findIdEmailButtonState, setFindIdEmailButtonState] = useState(false)
