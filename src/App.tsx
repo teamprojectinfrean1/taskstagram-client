@@ -1,8 +1,5 @@
 import "@/App.css";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
 import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
@@ -20,6 +17,7 @@ import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
 import ProjectPage from "./pages/ProjectPage";
+import ProtectedRouter from "./components/ProtectedRouter";
 
 const router = createBrowserRouter([
   {
@@ -74,7 +72,11 @@ const router = createBrowserRouter([
   },
   {
     path: "/",
-    element: <PageLayout /> ,
+    element: (
+      <ProtectedRouter>
+        <PageLayout />
+      </ProtectedRouter>
+    ),
     errorElement: <NotFoundPage />,
     children: [
       {
@@ -98,7 +100,6 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-
   // const logged = useRecoilValue(loggedState);
 
   // 로그인 유무

@@ -30,7 +30,7 @@ export const checkIdExistence = async (id: string) => {
   try {
     let response = null;
     response = await axios.get(`${authURL}/checkId`, {
-      params: id,
+      params: { id },
     });
     if (response.data) {
       console.log(response.data.data);
@@ -46,7 +46,7 @@ export const checkNicknameExistence = async (nickname: string) => {
   try {
     let response = null;
     response = await axios.get(`${authURL}/checkNickname`, {
-      params: nickname,
+      params: { nickname },
     });
     if (response.data) {
       console.log(response.data.data);
@@ -75,25 +75,12 @@ export const fetchSignup = async ({
       profileImage,
     });
     if (response) {
+      // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
       return response.data;
-
     }
   } catch (err) {
     console.error(err);
   }
-
-  return await axios
-    .post(`${authURL}/join`, {
-      email,
-      id,
-      password,
-      nickname: nickname ? nickname : id,
-      profileImage,
-    })
-    .then((res) => {
-      // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
-      return res.data;
-    });
 };
 
 // 로그인 api

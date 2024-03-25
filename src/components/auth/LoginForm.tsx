@@ -14,6 +14,7 @@ const LoginForm = () => {
   const [showModal, setShowModal] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
+  const navigate = useNavigate()
   const { data, refetch } = useQuery(
     "login",
     () => fetchLogin({ email, password }),
@@ -24,6 +25,8 @@ const LoginForm = () => {
         if (!data) {
           setShowModal(true);
           setIsSuccess(false)
+        } else {
+          navigate("/")
         }
       },
     }

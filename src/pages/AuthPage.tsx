@@ -1,9 +1,18 @@
 import theme from "@/theme/theme";
 import LogoAndName from "../components/auth/LogoAndName";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 
 const AuthPage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("accessToken");
+    if (isLogin) {
+      navigate("/");
+    }
+  });
+
   return (
     <Box
       sx={{

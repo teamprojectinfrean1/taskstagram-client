@@ -1,16 +1,17 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import TopNav from "@/components/TopNav";
 import SideNav from "@/components/SideNav";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 
 const PageLayout = () => {
+  
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
-
+  
   const handleClose = () => {
     setIsSideNavOpen(false);
   };
-
+  
   return (
     <Fragment>
       <TopNav onMenuClick={() => setIsSideNavOpen((prev) => !prev)} />
