@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Toolbar } from "@mui/material";
+import { AppBar, IconButton, Toolbar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
 import ProjectObj from "@/models/ProjectObj";
