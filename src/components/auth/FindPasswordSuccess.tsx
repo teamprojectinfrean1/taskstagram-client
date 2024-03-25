@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 
-const FindPasswdSuccess = () => {
+const FindPasswordSuccess = () => {
   const navigate = useNavigate();
 
   return (
@@ -34,4 +34,4 @@ const FindPasswdSuccess = () => {
   );
 };
 
-export default FindPasswdSuccess;
+export default FindPasswordSuccess;

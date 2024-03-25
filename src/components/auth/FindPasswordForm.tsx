@@ -1,13 +1,11 @@
 import theme from "@/theme/theme";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import EmailInput from "./EmailInput";
 import { Box, Button, Typography } from "@mui/material";
 
 const FindPasswordForm = () => {
   const navigate = useNavigate();
-  const [findPasswdEmail, setFindPasswdEmail] = useState("");
-  const [findPasswdEmailFlag, setFindPasswdEmailFlag] = useState(false);
+  const [findPasswordEmailFlag, setFindPasswordEmailFlag] = useState(false);
 
   return (
     <>
@@ -18,12 +16,6 @@ const FindPasswordForm = () => {
         </Typography>
         <Typography>이메일을 통해 비밀번호 변경 링크가 전송됩니다.</Typography>
       </Box>
-      <EmailInput
-        email={findPasswdEmail}
-        emailFlag={findPasswdEmailFlag}
-        setEmail={setFindPasswdEmail}
-        setEmailFlag={setFindPasswdEmailFlag}
-      />
       <Button
         fullWidth
         variant="contained"
@@ -33,7 +25,7 @@ const FindPasswordForm = () => {
           bgcolor: `${theme.palette.secondary.main}`,
           borderRadius: "7px",
         }}
-        disabled={!findPasswdEmailFlag}
+        disabled={!findPasswordEmailFlag}
         onClick={() => {
           navigate("/auth/find/password/success");
         }}
