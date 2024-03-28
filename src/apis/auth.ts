@@ -17,7 +17,7 @@ export const checkEmailExistence = async (email: string) => {
       params: { email },
     });
     if (response.data) {
-      console.log(response.data.data);
+      console.log(response.data);
       return response.data.data;
     }
   } catch (err) {
@@ -94,7 +94,6 @@ export const fetchLogin = async ({ email, password }: fetchLoginParams) => {
     if (response.data) {
       const accessToken = response.data;
       sessionStorage.setItem("accessToken", accessToken);
-      console.log(response.data);
       return response.data;
     }
   } catch (err) {

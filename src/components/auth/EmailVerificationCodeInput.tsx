@@ -31,7 +31,6 @@ const EmailVerificationCodeInput = ({
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid item xs={8}>
           <OutlinedInput
-            type="number"
             fullWidth
             size="small"
             placeholder={"인증번호 입력"}
@@ -39,10 +38,6 @@ const EmailVerificationCodeInput = ({
             error={emailCertifiState}
             onChange={(e) => {
               setEmailCertifi(e.target.value);
-            }}
-            sx={{
-              "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                { "-webkit-appearance": "none", margin: 0 },
             }}
           />
         </Grid>
@@ -76,7 +71,7 @@ const EmailVerificationCodeInput = ({
             color: theme.palette.error.main,
           }}
         >
-          이메일 인증을 완료해주세요.
+          인증 번호를 확인해주세요.
         </Typography>
       )}
     </>

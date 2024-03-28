@@ -100,13 +100,6 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  // const logged = useRecoilValue(loggedState);
-
-  // 로그인 유무
-  // useEffect(() => {
-  //   logged ? router.navigate("/") : router.navigate("/auth/login");
-  // }, [logged]);
-
   return (
     <>
       <RouterProvider router={router} />

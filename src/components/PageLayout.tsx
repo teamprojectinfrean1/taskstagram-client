@@ -1,17 +1,30 @@
-import { useState, Fragment, useEffect } from "react";
+import { useState, Fragment } from "react";
 import TopNav from "@/components/TopNav";
 import SideNav from "@/components/SideNav";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
+import { useQuery } from "react-query";
+import { getUserInfo } from "@/apis/user";
+import { useSetRecoilState } from "recoil";
+import { userInfoState } from "@/stores/userStore";
 
 const PageLayout = () => {
-  
+  const setUserInfo = useSetRecoilState(userInfoState);
+
+  const { data } = useQuery("userInfo", () => getUserInfo(), {
+    onSuccess: (data) => {
+      if (data) {
+        setUserInfo(data);
+      }
+    },
+  });
+
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
-  
+
   const handleClose = () => {
     setIsSideNavOpen(false);
   };
-  
+
   return (
     <Fragment>
       <TopNav onMenuClick={() => setIsSideNavOpen((prev) => !prev)} />
@@ -30,7 +43,7 @@ const PageLayout = () => {
           height: "calc(100% - var(--top-nav-height))",
           marginLeft: isSideNavOpen ? "var(--side-nav-width)" : "0",
           transition: "margin-left 0.5s ease-out",
-          justifyContent: 'center',
+          justifyContent: "center",
           m: "auto",
           p: 4,
         }}
