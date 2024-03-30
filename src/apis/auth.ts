@@ -2,7 +2,8 @@ import axios from "axios";
 import { BASE_URL } from "./domainSettings";
 import { SignupInfo } from "@/models/Auth";
 
-const authURL = `${BASE_URL}/auth`;
+// const authURL = `${BASE_URL}/auth`;
+const authURL = 'http://124.61.74.148:8080/api/v1/auth'
 
 type fetchLoginParams = {
   email: string;
@@ -101,13 +102,40 @@ export const fetchLogin = async ({ email, password }: fetchLoginParams) => {
   }
 };
 
-// 아이디 찾기 api (추후 구현할 예정)
-// export const fetchEmailRegistered = async () => {
-//   return await axios.get(`${authURL}/email/registered`, {
-//     params: {
-//       email: "aaa@naver.com"
-//     }
-//   }).then(res => {
-//     console.log(res.data)
-//   })
-// }
+// 아이디 찾기 이메일 인증 코드 요청 api 
+export const requestEmailVerification = async (email: string) => {
+  try {
+    let isSuccess = null
+    const response = await axios.post(`${authURL}/findId/verification/request`, {
+      email
+    })
+    if (response.data.data) {
+      // 추후 아래로 바뀔 예정
+      // verificationCode = response.data.data
+      isSuccess = response.data.data.isSuccess
+    }
+    console.log(isSuccess)
+    return isSuccess
+  } catch(err) {
+    console.error(err)
+  }
+}
+
+// 패스워드 찾기 이메일 인증 코드 확인 api
+export const checkEmailVerification = async ({email, verificationCode}: any) => {
+  console.log(email, verificationCode)
+  try {
+    let data = null
+    const response = await axios.post(`${authURL}/findId/verification/check`, {
+      email,
+      verificationCode
+    })
+    if (response.data) {
+      data = response.data.data
+      // userId = response.data.data
+    }
+    return data
+  } catch(err) {
+    console.log(err)
+  }
+}

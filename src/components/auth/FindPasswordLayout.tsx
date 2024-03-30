@@ -11,7 +11,7 @@ const FindPasswordLayout = () => {
       <Box sx={{ m: "auto", width: "70%" }}>
         <Box sx={{ textAlign: "center", mt: 5 }}>
           <Typography variant="h5" sx={{ fontWeight: "bold" }}>
-            비밀번호 찾기
+            비밀번호 재설정
           </Typography>
           <Divider sx={{ mt: 4, mb: 3 }} />
         </Box>

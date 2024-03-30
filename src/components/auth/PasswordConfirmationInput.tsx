@@ -9,7 +9,7 @@ type PasswordDoubleInputProps = {
   setPasswordDoubleValidityFlag(passwordDoubleFlag: boolean): void;
 };
 
-const PasswordDoubleInput = ({
+const PasswordConfirmationInput = ({
   password,
   passwordDoubleValidityFlag,
   setPasswordDoubleValidityFlag,
@@ -54,4 +54,4 @@ const PasswordDoubleInput = ({
   );
 };
 
-export default PasswordDoubleInput;
+export default PasswordConfirmationInput;

@@ -12,7 +12,7 @@ import FindIdLayout from "@/components/auth/FindIdLayout";
 import FindIdSuccess from "@/components/auth/FindIdSuccess";
 import FindPasswdLayout from "@/components/auth/FindPasswordLayout";
 import FindPasswordForm from "@/components/auth/FindPasswordForm";
-import FindPasswdSuccess from "@/components/auth/FindPasswordSuccess";
+import FindPasswdSuccess from "@/components/auth/ResetPassword";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
@@ -63,7 +63,7 @@ const router = createBrowserRouter([
             element: <FindPasswordForm />,
           },
           {
-            path: "success",
+            path: "reset",
             element: <FindPasswdSuccess />,
           },
         ],

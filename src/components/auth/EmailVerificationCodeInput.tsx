@@ -1,6 +1,8 @@
+import { checkEmailVerification } from "@/apis/auth";
 import theme from "@/theme/theme";
-import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
-import { useState } from "react";
+import { Typography, OutlinedInput, Grid, Button, Box } from "@mui/material";
+import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 // import { handleEmailCertifiNumber } from "@/utils/authCheck";
 import { useNavigate } from "react-router-dom";
 
@@ -8,23 +10,29 @@ type FindIdEmailCertifiInputProps = {
   findIdEmailButtonState: boolean;
 };
 
-const EmailVerificationCodeInput = ({
-  findIdEmailButtonState,
-}: FindIdEmailCertifiInputProps) => {
+const EmailVerificationCodeInput = ({ isSuccess, email }: any) => {
+  const [verificationCode, setVerificationCode] = useState("");
+  const [emailCertifiFlag, setEmailCertifiFlag] = useState(false);
+  const emailCertifiState = !!(verificationCode && !emailCertifiFlag);
+
   const navigate = useNavigate();
 
-  // 이메일 인증 api 구현 완료 시 활용할 예정
-  // const checkEmailCertifiNumber = (emailCertifi : string) => {
-  //   const response = handleEmailCertifiNumber(emailCertifi);
-  //   setEmailCertifiFlag(response);
-  //   if (response) {
-  //     navigate("/auth/find/id/success");
-  //   }
-  // };
-
-  const [emailCertifi, setEmailCertifi] = useState("");
-  const [emailCertifiFlag, setEmailCertifiFlag] = useState(false);
-  const emailCertifiState = !!(emailCertifi && !emailCertifiFlag);
+  const { data, refetch } = useQuery(
+    "checkEmailVerification",
+    () => checkEmailVerification({ email, verificationCode }),
+    {
+      enabled: false,
+      cacheTime: 0,
+      onSuccess: (data) => {
+        if (data) {
+          navigate("/auth/find/id/success", {state: {
+            id: data.id,
+            nickname: data.nickname
+          }})
+        }
+      },
+    }
+  );
 
   return (
     <>
@@ -34,10 +42,10 @@ const EmailVerificationCodeInput = ({
             fullWidth
             size="small"
             placeholder={"인증번호 입력"}
-            value={emailCertifi}
+            value={verificationCode}
             error={emailCertifiState}
             onChange={(e) => {
-              setEmailCertifi(e.target.value);
+              setVerificationCode(e.target.value);
             }}
           />
         </Grid>
@@ -50,10 +58,9 @@ const EmailVerificationCodeInput = ({
               height: "41px",
               borderRadius: "7px",
             }}
-            disabled={!findIdEmailButtonState}
+            disabled={!isSuccess}
             onClick={() => {
-              // 이메일 인증 api 구현 완료 시 활용할 예정
-              // checkEmailCertifiNumber(emailCertifi);
+              refetch();
             }}
           >
             인증
@@ -73,6 +80,14 @@ const EmailVerificationCodeInput = ({
         >
           인증 번호를 확인해주세요.
         </Typography>
+      )}
+
+      {isSuccess !== undefined && (
+        <Box sx={{ mt: 5, textAlign: "center" }}>
+          <Typography variant="body2" sx={{ color: "red" }}>
+            인증 번호가 오지 않나요? 작성하신 이메일을 다시 확인해주세요.
+          </Typography>
+        </Box>
       )}
     </>
   );

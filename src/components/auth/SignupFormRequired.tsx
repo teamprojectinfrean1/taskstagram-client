@@ -4,13 +4,13 @@ import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "./SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
-import PasswordDoubleInput from "./PasswordConfirmationInput";
 import { Box, Button, Divider, Typography, Grid } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/authStore";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
+import PasswordConfirmationInput from "./PasswordConfirmationInput";
 
 type SignupInfoFlagTypes = {
   key: string;
@@ -119,7 +119,7 @@ const SignupFormRequired = () => {
           }
         />
 
-        <PasswordDoubleInput
+        <PasswordConfirmationInput
           password={signupInfo.password}
           passwordDoubleValidityFlag={signupValidityFlag.passwordDoubleValidityFlag}
           setPasswordDoubleValidityFlag={(value) =>

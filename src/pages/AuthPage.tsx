@@ -8,9 +8,7 @@ const AuthPage = () => {
   const navigate = useNavigate();
   useEffect(() => {
     const isLogin = sessionStorage.getItem("accessToken");
-    if (isLogin) {
-      navigate("/");
-    }
+    isLogin && navigate("/");
   });
 
   return (
