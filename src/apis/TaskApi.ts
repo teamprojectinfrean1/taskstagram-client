@@ -16,38 +16,43 @@ export const getTaskList = async ({
   size,
   projectId,
 }: getTaskListParams): Promise<TaskObj[]> => {
-  let response = [];
-
   if (page && size && projectId !== null) {
-    response = await axios
-      .get(`${taskUrl}`, {
+    try {
+      let taskList = [];
+      const response = await axios.get(`${taskUrl}`, {
         params: {
           page: page,
           size: size,
           projectId: projectId,
         },
-      })
-      .then((res) => {
-        if (res.data && res.data.data) {
-          return res.data.data.dataList;
-        }
       });
-  }
 
-  return response;
+      if (response.data && response.data.data) {
+        taskList = response.data.data.dataList;
+      }
+      return taskList;
+    } catch {
+      return [];
+    }
+  } else {
+    return [];
+  }
 };
 
 //task 상세조회
-export const getTaskDetail = async (taskId: string) => {
-  let response = null;
-
+export const getTaskDetail = async (taskId: string): Promise<any> => {
   if (taskId) {
-    response = await axios.get(`${taskUrl}/${taskId}`).then((res) => {
-      if (res.data) {
-        return res.data.data;
+    try {
+      let taskDetail = null;
+      const response = await axios.get(`${taskUrl}/${taskId}`);
+      if (response.data) {
+        taskDetail = response.data.data;
       }
-    });
+      return taskDetail;
+    } catch {
+      return null;
+    }
+  } else {
+    return null;
   }
-
-  return response;
 };

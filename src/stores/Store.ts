@@ -6,8 +6,3 @@ export const selectedProjectState = atom<ProjectObj | null>({
   key: "selectedProjectState",
   default: null,
 });
-
-export const loggedState = atom({
-  key: "loggedState",
-  default: false,
-});

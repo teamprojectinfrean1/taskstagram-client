@@ -5,14 +5,18 @@ import ProjectObj from "@/models/ProjectObj";
 const projectUrl = `${BASE_URL}/project`;
 
 export const getProjectList = async (userId: string): Promise<ProjectObj[]> => {
-  let response = [];
-
   if (userId) {
-    response = await axios.get(`${projectUrl}/list/${userId}`).then((res) => {
-      if (res.data) {
-        return res.data.data;
+    try {
+      let projectList = [];
+      const response = await axios.get(`${projectUrl}/list/${userId}`);
+      if (response.data) {
+        projectList = response.data.data;
       }
-    });
+      return projectList;
+    } catch {
+      return [];
+    }
+  } else {
+    return [];
   }
-  return response;
 };

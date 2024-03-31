@@ -8,6 +8,7 @@ import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/theme/theme";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -17,13 +18,13 @@ const queryClient = new QueryClient();
 
 root.render(
   // <React.StrictMode>
-    <RecoilRoot>
-      <QueryClientProvider client={queryClient}>
-        <ThemeProvider theme={theme}>
-          <App />
-        </ThemeProvider>
-      </QueryClientProvider>
-    </RecoilRoot>
+  <RecoilRoot>
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider theme={theme}>
+        <App />
+      </ThemeProvider>
+    </QueryClientProvider>
+  </RecoilRoot>
   // </React.StrictMode>
 );
 

@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useRef } from "react";
 import {
   Box,
   Card,
@@ -9,84 +9,105 @@ import {
 } from "@mui/material";
 import WorkIcon from "@mui/icons-material/Work";
 import UserAvatar from "@/components/UserAvatar";
-import IssueFormModal from "@/components/IssueManagement/IssueFormModal";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import theme from "@/theme/theme";
-import { currentIssueIdToShowInModal } from '@/stores/issueStore';
-import { useRecoilState } from 'recoil';
+import { issueIdToShowInModalState } from "@/stores/issueStore";
+import { useRecoilState } from "recoil";
+import { useDraggable } from "@dnd-kit/core";
+import { CSS } from "@dnd-kit/utilities";
+import { IssueSummary } from "@/models/Issue";
+import { SxProps } from "@mui/material";
+
 
 type IssueTicketProps = {
-  id: string;
-  testText: string;
+  issue: IssueSummary;
+  index?: number;
+  parent?: string;
+  sx?: SxProps;
 };
 
-const IssueTicket = ({ id, testText }: IssueTicketProps) => {
+const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
+  const {
+    issueId,
+    issueName,
+    taskId,
+    taskName,
+    userUuid,
+    userNickname,
+    userImageUrl,
+  } = issue;
   const taskNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(taskNameRef, "vertical");
 
-  const [currentIssueId, setCurrentIssueId] = useRecoilState(currentIssueIdToShowInModal);
+  const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
+    issueIdToShowInModalState
+  );
+
+  const { attributes, listeners, setNodeRef, transform } = useDraggable({
+    id: issueId,
+    data: {
+      index,
+      issue,
+      parent,
+    },
+  });
 
   return (
     <>
       <Card
+        ref={setNodeRef}
+        {...listeners}
+        {...attributes}
         variant="outlined"
         onClick={() => {
-          setCurrentIssueId(id);
+          setIssueIdToShowInModal(issueId);
         }}
         sx={{
           flexShrink: 0,
           height: "110px",
           backgroundColor: theme.palette.background.default,
+          transform: CSS.Translate.toString(transform),
+          ...sx,
         }}
       >
         <CardActionArea sx={{ height: "100%" }}>
-          <Box
-            display="flex"
-            justifyContent="space-between"
-            sx={{
-              height: "100%",
-              py: 2,
-              px: 3,
-            }}
+          <Stack
+            spacing={1}
+            justifyContent="flex-start"
+            sx={{ height: "100%", py: 1.5, px: 2 }}
           >
-            <Stack
-              spacing={1}
-              sx={{
-                "& > *": {
-                  display: "flex",
-                  alignItems: "center",
-                  gap: 1,
-                  wordBreak: "break-all",
-                },
-              }}
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="start"
             >
-              <Box>
-                <WorkIcon aria-label="Task Icon" />
+              <Box display="flex" alignItems="center" gap={1}>
+                <WorkIcon aria-label="Task Icon" sx={{ fontSize: "20px" }} />
                 <Typography
                   variant="body2"
                   className="textClamping lineClampOne"
+                  sx={{ wordBreak: "break-all" }}
                 >
                   taskName
                 </Typography>
               </Box>
-              <Box>
-                <Tooltip
-                  title={textIsOverflowing ? testText : ""}
-                  placement="top-end"
-                >
-                  <Typography
-                    ref={taskNameRef}
-                    className="textClamping lineClampTwo"
-                  >
-                    {testText}
-                  </Typography>
-                </Tooltip>
-              </Box>
-            </Stack>
-            <UserAvatar
-              sx={{ width: 50, height: 50, alignSelf: "center", ml: 4 }}
-            />
-          </Box>
+              <Tooltip title={userNickname} placement="top" sx={{ zIndex: 10 }}>
+                <UserAvatar sx={{ width: 28, height: 28 }} />
+              </Tooltip>
+            </Box>
+            <Tooltip
+              title={textIsOverflowing ? issueName : ""}
+              placement="top-end"
+            >
+              <Typography
+                ref={taskNameRef}
+                className="textClamping lineClampTwo"
+                sx={{ wordBreak: "break-all" }}
+              >
+                {issueName}
+              </Typography>
+            </Tooltip>
+          </Stack>
         </CardActionArea>
       </Card>
     </>

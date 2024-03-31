@@ -1,4 +1,4 @@
-import { AppBar, IconButton, Toolbar } from "@mui/material";
+import { AppBar, IconButton, Toolbar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
 import ProjectObj from "@/models/ProjectObj";
@@ -18,7 +18,7 @@ function TopNav({ onMenuClick }: TopNavProps) {
 
   const { data } = useQuery(
     "getProjectList",
-    () => getProjectList("c00dc5dc-2aef-4579-b3fe-cb08b6d6825d")
+    () => getProjectList("07c7ac1c-e1a9-4b54-9ef5-5f13884c8077")
     //추후 실패시 동작되는 로직도 추가 예정
   );
 

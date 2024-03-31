@@ -1,12 +1,36 @@
-import { Modal, Button, Box, Typography } from "@mui/material";
 import HighlightOffIcon from "@mui/icons-material/HighlightOff";
+import { Modal, Button, Box, Typography } from "@mui/material";
 
 type LoginErrorModalProps = {
   showModal: boolean;
+  isSuccess: boolean;
   handleClose(): void;
 };
 
-const LoginErrorModal = ({ showModal, handleClose }: LoginErrorModalProps) => {
+type successTypes = {
+  isSuccess: boolean;
+};
+
+const AuthResultModal = ({
+  showModal,
+  isSuccess,
+  handleClose,
+}: LoginErrorModalProps) => {
+  const handleIsSuccessText = ({ isSuccess }: successTypes) => {
+    return (
+      !isSuccess && (
+        <>
+          <Typography sx={{ fontWeight: "bold" }}>
+            로그인에 실패했습니다.
+          </Typography>
+          <Typography sx={{ mt: 1 }}>
+            이메일이나 비밀번호를 확인해 주세요.
+          </Typography>
+        </>
+      )
+    );
+  };
+
   return (
     <Modal open={showModal}>
       <Box
@@ -15,23 +39,23 @@ const LoginErrorModal = ({ showModal, handleClose }: LoginErrorModalProps) => {
           position: "absolute",
           top: "20%",
           left: "40%",
-          width: "400px",
+          width: "410px",
           p: 1,
           backgroundColor: "white",
         }}
       >
-        <HighlightOffIcon
-          sx={{ position: "absolute", mt: 2, ml: 0.8, color: "red" }}
-        />
+        <Box sx={{ position: "absolute", mt: 2, ml: 0.8 }}>
+          <HighlightOffIcon
+            sx={{
+              color: "white",
+              bgcolor: "#F30C0C",
+              borderRadius: "50%",
+              p: 0.2,
+            }}
+          />
+        </Box>
         <Box className="base-layout">
-          <Box sx={{ mt: 2 }}>
-            <Typography sx={{ fontWeight: "bold" }}>
-              로그인에 실패했습니다.
-            </Typography>
-            <Typography sx={{ mt: 1 }}>
-              이메일이나 비밀번호를 확인해 주세요.
-            </Typography>
-          </Box>
+          <Box sx={{ mt: 2 }}>{handleIsSuccessText({ isSuccess })}</Box>
           <Button
             variant="contained"
             fullWidth
@@ -53,4 +77,4 @@ const LoginErrorModal = ({ showModal, handleClose }: LoginErrorModalProps) => {
   );
 };
 
-export default LoginErrorModal;
+export default AuthResultModal;

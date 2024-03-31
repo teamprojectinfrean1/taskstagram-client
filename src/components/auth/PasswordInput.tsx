@@ -2,42 +2,42 @@ import theme from "@/theme/theme";
 import { Typography, OutlinedInput } from "@mui/material";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 
-type PasswdInputProps = {
-  passwd: string;
-  passwdFlag: boolean;
-  setPasswd(passwd: string): void;
-  setPasswdFlag(passwdFlag: boolean): void;
+type PasswordInputProps = {
+  password: string;
+  passwordValidityFlag: boolean;
+  setPassword(password: string): void;
+  setPasswordValidityFlag(passwordFlag: boolean): void;
 };
 
-const PasswdInput = ({
-  passwd,
-  passwdFlag,
-  setPasswd,
-  setPasswdFlag,
-}: PasswdInputProps) => {
-  const passwdFlagState = !!(passwd && !passwdFlag);
+const PasswordInput = ({
+  password,
+  setPassword,
+  passwordValidityFlag,
+  setPasswordValidityFlag,
+}: PasswordInputProps) => {
+  const passwordFlagState = !!(password && !passwordValidityFlag);
 
   return (
     <>
-      <Typography sx={{ mt: 2.5, ml: 0.5 }}>Password</Typography>
       <OutlinedInput
+        sx={{mt:3}}
         type="password"
         fullWidth
         size="small"
         placeholder={"비밀번호"}
-        value={passwd}
-        error={passwdFlagState}
+        value={password}
+        error={passwordFlagState}
         onChange={(e) => {
-          setPasswd(e.target.value);
-          setPasswdFlag(
+          setPassword(e.target.value);
+          setPasswordValidityFlag(
             checkAuthInputValidity({
-              type: "passwd",
+              type: "password",
               authValue: e.target.value,
             })
           );
         }}
       />
-      {passwdFlagState && (
+      {passwordFlagState && (
         <Typography
           sx={{
             position: "absolute",
@@ -55,4 +55,4 @@ const PasswdInput = ({
   );
 };
 
-export default PasswdInput;
+export default PasswordInput;
