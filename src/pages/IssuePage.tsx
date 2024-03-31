@@ -1,7 +1,11 @@
 import { useState } from "react";
-import IssueFormModal from "@/components/IssueManagement/IssueFormModal";
-import IssueTicketContainer from "@/components/IssueManagement/IssueTicketContainer";
-import IssueStoryContainer from "@/components/IssueManagement/IssueStoryContainer";
+import {
+  IssueFormModal,
+  IssueStoryContainer,
+  IssueTicket,
+  IssueTicketContainer,
+  IssueTicketMaker
+} from "@/components/IssueManagement";
 import { Box, Fade, Stack } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
@@ -23,9 +27,7 @@ import {
   mockToDoIssueSummaryList,
 } from "@/mock/issueMock";
 import { IssueSummary } from "@/models/Issue";
-import IssueTicket from "@/components/IssueManagement/IssueTicket";
 import { createPortal } from "react-dom";
-import IssueTicketMaker from "@/components/IssueManagement/IssueTicketMaker";
 
 const IssuePage = () => {
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(

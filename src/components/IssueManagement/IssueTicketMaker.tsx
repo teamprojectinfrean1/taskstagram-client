@@ -17,13 +17,14 @@ const IssueTicketMaker = ({ handleAddIssue }: IssueTicketMakerProps) => {
 
     if (issueName.trim() !== "") {
       newIssue = {
-        issueId: uuidv4(),
-        issueName,
+        projectId: "",
         taskId: "",
         taskName: "",
-        userUuid: "",
-        userNickname: "",
-        userImageUrl: "",
+        issueId: uuidv4(),
+        issueName,
+        assigneeId: "",
+        assigneeNickname: "",
+        assigneeProfileImage: "",
       };
     }
 

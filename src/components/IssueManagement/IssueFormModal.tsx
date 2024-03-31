@@ -124,7 +124,21 @@ const IssueFormModal = ({
             </Typography>
             <SearchableSelect
               label="담당자"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
+              possibleOptions={[
+                "Option 1",
+                "Option 2",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+                "Option 3",
+              ]}
               selectedOptions={formData.assignee}
               multiselect
               onSelectionChange={(value) =>

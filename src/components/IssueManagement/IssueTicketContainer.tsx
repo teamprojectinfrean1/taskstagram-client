@@ -7,12 +7,17 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import { Fragment } from "react";
 import { SvgIconProps } from "@mui/material/SvgIcon";
-import IssueTicket from "@/components/IssueManagement/IssueTicket";
+import { IssueTicket, SkeletonIssueTicket } from "@/components/IssueManagement";
 import { useDroppable } from "@dnd-kit/core";
 import { IssueSummary } from "@/models/Issue";
 import SearchIcon from "@mui/icons-material/Search";
 import theme from "@/theme/theme";
+import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import useGetIssueListQuery from "@/hooks/useGetIssueListQuery";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
@@ -34,13 +39,39 @@ const IssueTicketContainer = ({
   title,
   children,
   showIssueTicketMaker = false,
-
   IconComponent,
   onIconComponentClick,
 }: IssueTicketContainerProps) => {
   const { setNodeRef } = useDroppable({
     id: containerId,
   });
+
+  const { projectId } = useParams();
+
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetIssueListQuery({ projectId: projectId!, issueStatus: containerId });
+
+  const lastIssueRef = useInfiniteScroll({
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
+
+  const [testLoading, setTestLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setTestLoading(false), 5000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  // 다양한 에러 헨들링 케이스 구현 예정
 
   return (
     <Paper
@@ -109,14 +140,35 @@ const IssueTicketContainer = ({
             }}
           />
           {children}
-          {issueTicketList.map((issue, index) => (
-            <IssueTicket
-              key={issue.issueId}
-              index={index}
-              issue={issue}
-              parent={containerId}
-            />
+          {data?.pages.map((group, i) => (
+            <Fragment key={i}>
+              {group.map((issue, index) => (
+                <IssueTicket
+                  key={issue.issueId}
+                  index={index}
+                  issue={issue}
+                  parent={containerId}
+                />
+              ))}
+            </Fragment>
           ))}
+          {!testLoading &&
+            issueTicketList.map((issue, index) => (
+              <IssueTicket
+                key={issue.issueId}
+                index={index}
+                issue={issue}
+                parent={containerId}
+              />
+            ))} 
+          <div
+            ref={hasNextPage ? lastIssueRef : undefined}
+            style={{ margin: 0 }}
+          />
+          {(isFetchingNextPage || testLoading) &&
+            Array.from({ length: 3 }, (_, i) => (
+              <SkeletonIssueTicket key={i} />
+            ))}
         </Stack>
       </Stack>
     </Paper>
