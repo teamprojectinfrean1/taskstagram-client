@@ -11,6 +11,7 @@ import {
   Box,
   Button,
   InputBase,
+  InputLabel,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
@@ -137,17 +138,52 @@ const SelectableProject = ({
   const open = Boolean(anchorEl);
   const id = open ? "github-label" : undefined;
 
+  //임시 테스트
+  if (projects.length === 0) {
+    projects.push({
+      projectId: projects.length.toString(),
+      projectName:
+        "hellohellohellohellohellohellohellohellohellohellohellohellohellohello",
+      projectContent: "eee",
+      projectStartDate: "ss",
+      projectEndDate: "33",
+      projectMemberUuidList: null,
+      projectTags: null,
+      isMainProject: true,
+    });
+  }
+
   return (
     <>
-      <Box sx={{ width: 302, fontSize: 13, border: "1px solid white" }}>
+      <Box
+        sx={{
+          width: 300,
+          fontSize: 13,
+          border: "1px solid white",
+          display: "flex",
+        }}
+        onClick={handleClick}
+        aria-describedby={id}
+      >
+        <InputLabel
+          htmlFor={`input-${selectedProject?.projectName}`}
+          sx={{
+            color: theme.palette.background.default,
+            width: "80%",
+            fontWeight: "bold",
+            mb: 0,
+            mt: 1,
+            ml: 1,
+          }}
+        >
+          {selectedProject?.projectName}
+        </InputLabel>
         <Button
           disableRipple
-          aria-describedby={id}
-          onClick={handleClick}
           sx={{
             fontSize: 13,
-            width: "100%",
-            textAlign: "left",
+            width: "20%",
+            textAlign: "right",
             color: theme.palette.background.default,
             fontWeight: 600,
           }}
@@ -162,7 +198,7 @@ const SelectableProject = ({
         placement="bottom-start"
       >
         <ClickAwayListener onClickAway={handleClose}>
-          <>
+          <div>
             <Autocomplete
               open
               disableClearable
@@ -203,6 +239,8 @@ const SelectableProject = ({
                   <Box
                     sx={{
                       flexGrow: 1,
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
                     }}
                   >
                     {option.projectName}
@@ -262,9 +300,9 @@ const SelectableProject = ({
               }}
               onClick={handleCreateProjectBtnClick}
             >
-              프로젝트 추가
+              새 프로젝트 추가
             </Box>
-          </>
+          </div>
         </ClickAwayListener>
       </StyledPopper>
     </>
