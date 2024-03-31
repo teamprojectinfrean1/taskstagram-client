@@ -14,7 +14,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { IssueSummary } from "@/models/Issue";
 import SearchIcon from "@mui/icons-material/Search";
 import theme from "@/theme/theme";
-import useInfiniteScroll from "@/hooks/useInfiniteScroll";
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import useGetIssueListQuery from "@/hooks/useGetIssueListQuery";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -23,7 +23,6 @@ type IssueTicketContainerProps = {
   ariaLabel: string;
   containerId: string;
   isHovered: boolean;
-  issueTicketList: IssueSummary[];
   title: string;
   children?: React.ReactNode;
   showIssueTicketMaker?: boolean;
@@ -35,7 +34,6 @@ const IssueTicketContainer = ({
   ariaLabel,
   containerId,
   isHovered,
-  issueTicketList,
   title,
   children,
   showIssueTicketMaker = false,
@@ -57,7 +55,8 @@ const IssueTicketContainer = ({
     isFetchingNextPage,
   } = useGetIssueListQuery({ projectId: projectId!, issueStatus: containerId });
 
-  const lastIssueRef = useInfiniteScroll({
+  const lastIssueRef = useIntersectionObserver({
+    containerId,
     isLoading,
     hasNextPage,
     isFetchingNextPage,
@@ -76,6 +75,7 @@ const IssueTicketContainer = ({
   return (
     <Paper
       ref={setNodeRef}
+      id={containerId}
       elevation={2}
       sx={{
         borderRadius: 3,
@@ -140,9 +140,9 @@ const IssueTicketContainer = ({
             }}
           />
           {children}
-          {data?.pages.map((group, i) => (
+          {data?.pages.map((page, i) => (
             <Fragment key={i}>
-              {group.map((issue, index) => (
+              {page.issueList.map((issue, index) => (
                 <IssueTicket
                   key={issue.issueId}
                   index={index}
@@ -152,7 +152,7 @@ const IssueTicketContainer = ({
               ))}
             </Fragment>
           ))}
-          {!testLoading &&
+          {/* {!testLoading &&
             issueTicketList.map((issue, index) => (
               <IssueTicket
                 key={issue.issueId}
@@ -160,7 +160,7 @@ const IssueTicketContainer = ({
                 issue={issue}
                 parent={containerId}
               />
-            ))} 
+            ))}  */}
           <div
             ref={hasNextPage ? lastIssueRef : undefined}
             style={{ margin: 0 }}

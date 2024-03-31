@@ -1,18 +1,17 @@
-import { Alert, Backdrop, Snackbar } from "@mui/material";
+import { useRecoilState } from 'recoil';
+import { snackbarState } from '@/stores/snackbarStore';
+import { Alert, Backdrop, Snackbar as MuiSnackbar } from "@mui/material";
 
-type CustomSnackbarProps = {
-  handleClose: () => void;
-  message: string;
-  severity: "info" | "success" | "warning" | "error";
-  show: boolean;
-};
+const Snackbar = () => {
+  const [{ show, message, severity }, setSnackbar] = useRecoilState(snackbarState);
 
-const CustomSnackbar = ({
-  handleClose,
-  message,
-  severity,
-  show,
-}: CustomSnackbarProps) => {
+  const handleClose = () => {
+    setSnackbar((prev) => ({
+      ...prev,
+      show: false
+    }));
+  };
+
   return (
     <>
       <Backdrop
@@ -23,7 +22,7 @@ const CustomSnackbar = ({
           pointerEvents: "none",
         }}
       />
-      <Snackbar
+      <MuiSnackbar
         open={show}
         autoHideDuration={6000}
         onClose={handleClose}
@@ -31,14 +30,15 @@ const CustomSnackbar = ({
           vertical: "top",
           horizontal: "center",
         }}
-        color="error"
       >
         <Alert severity={severity} onClose={handleClose}>
           {message}
         </Alert>
-      </Snackbar>
+      </MuiSnackbar>
     </>
   );
 };
 
-export default CustomSnackbar;
+export default Snackbar;
+
+

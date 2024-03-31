@@ -10,8 +10,9 @@ const getAccessToken = () => {
 const baseAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Authorization': `Bearer ${getAccessToken()}`,
+    'Authorization': `${getAccessToken()}`,
   },
 });
 
-export default baseAxios
+
+export default baseAxios;

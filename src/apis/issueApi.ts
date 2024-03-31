@@ -1,6 +1,12 @@
 import axios from "axios";
 import baseAxios from "./domainSettings";
-import { IssueDetails, IssueSummary, NewIssue } from "@/models/Issue";
+import {
+  IssueDetails,
+  IssueSummary,
+  NewIssue,
+  IssueStatus,
+  UpdateIssuePayload,
+} from "@/models/Issue";
 
 const issueUrl = "/issue";
 
@@ -17,20 +23,37 @@ export const createNewIssue = async (issue: NewIssue): Promise<boolean> => {
   }
 };
 
-export const getIssueList = async (
-  projectId: string,
-  issueStatus: string,
-  page: number,
-): Promise<IssueSummary[]> => {
+export const updateIssueStatus = async (payload: UpdateIssuePayload) => {};
+
+type IssueListRequest = {
+  projectId: string;
+  issueStatus: string;
+  page: number;
+};
+
+type IssueListResponse = {
+  issueList: IssueSummary[];
+  hasMore: boolean;
+};
+
+export const getIssueList = async ({
+  projectId,
+  issueStatus,
+  page,
+}: IssueListRequest): Promise<IssueListResponse> => {
   const ISSUE_PER_PAGE = 15;
 
   try {
-    const response = await baseAxios.post(`${issueUrl}/allTickets/${issueStatus}`, {
-      projectId,
-      ISSUE_PER_PAGE,
-      page
-    });
-    return response.data.data;
+    const response = await baseAxios.post(
+      `${issueUrl}/allTickets/${issueStatus}`,
+      {
+        projectId,
+        ISSUE_PER_PAGE,
+        page,
+      }
+    );
+    const data = response.data;
+    return { issueList: data.data, hasMore: data.hasMore };
   } catch (error) {
     if (axios.isAxiosError(error)) {
       throw new Error(error.response?.data?.message);

@@ -1,13 +1,15 @@
 import { useCallback, useEffect, useRef } from "react";
 
 type UseScrollBasedDataLoaderProps = {
+  containerId: string;
   isLoading: boolean;
   hasNextPage: boolean | undefined;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
 };
 
-const useInfiniteScroll = ({
+const useIntersectionObserver = ({
+  containerId,
   isLoading,
   hasNextPage,
   isFetchingNextPage,
@@ -30,18 +32,22 @@ const useInfiniteScroll = ({
             fetchNextPage();
           }
         },
-        { threshold: 1.0 }
+        {
+          root: document.getElementById(containerId),
+          rootMargin: "-100px",
+          threshold: 0,
+        }
       );
       observer.current.observe(targetElementRef.current);
     }
-  }, [isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [containerId, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     observeElement();
-    return () => observer.current?.disconnect(); 
+    return () => observer.current?.disconnect();
   }, [observeElement]);
 
   return targetElementRef;
 };
 
-export default useInfiniteScroll;
+export default useIntersectionObserver;

@@ -4,7 +4,7 @@ import {
   IssueStoryContainer,
   IssueTicket,
   IssueTicketContainer,
-  IssueTicketMaker
+  IssueTicketMaker,
 } from "@/components/IssueManagement";
 import { Box, Fade, Stack } from "@mui/material";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
@@ -21,15 +21,15 @@ import {
   useSensors,
   rectIntersection,
 } from "@dnd-kit/core";
-import {
-  mockDoneIssueSummaryList,
-  mockInProgressIssueSummaryList,
-  mockToDoIssueSummaryList,
-} from "@/mock/issueMock";
-import { IssueSummary } from "@/models/Issue";
+import { IssueSummary, IssueStatus } from "@/models/Issue";
 import { createPortal } from "react-dom";
+import { useParams } from "react-router-dom";
+import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
 
 const IssuePage = () => {
+  const { projectId } = useParams();
+  // 추후 api 요청 보낸 후 존재하지 않는 projectId면 Not Found 페이지로 리다이렉트
+
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
   );
@@ -39,16 +39,7 @@ const IssuePage = () => {
   );
   const [showIssueTicketMaker, setShowIssueTicketMaker] = useState(false);
 
-  /* 추후 useState말고 useQuery 사용 예정 */
-  const [todoItems, setTodoItems] = useState<Array<IssueSummary>>(
-    mockToDoIssueSummaryList
-  );
-  const [doneItems, setDoneItems] = useState<Array<IssueSummary>>(
-    mockDoneIssueSummaryList
-  );
-  const [inProgressItems, setInProgressItems] = useState<Array<IssueSummary>>(
-    mockInProgressIssueSummaryList
-  );
+  const mutation = useUpdateIssueStatusMutation(projectId!);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -74,40 +65,32 @@ const IssuePage = () => {
     const { active, over } = event;
     const currentDraggable = active.data.current;
 
-    const targetContainerId = over?.id;
     const issueTicket: IssueSummary = currentDraggable?.issue;
-    const index = currentDraggable?.index;
-    const originContainer = currentDraggable?.parent;
+    const targetContainerId = over?.id;
+    const originContainerId = currentDraggable?.parent;
 
-    if (originContainer !== targetContainerId) {
-      if (targetContainerId === "toDo") {
-        setTodoItems([issueTicket, ...todoItems]);
-      } else if (targetContainerId === "inProgress") {
-        setInProgressItems([issueTicket, ...inProgressItems]);
-      } else if (targetContainerId === "done") {
-        setDoneItems([issueTicket, ...doneItems]);
-      }
-
-      const removeFromList = (list: IssueSummary[]) =>
-        list.filter((_, i) => i !== index);
-
-      if (originContainer === "toDo") {
-        setTodoItems(removeFromList(todoItems));
-      } else if (originContainer === "inProgress") {
-        setInProgressItems(removeFromList(inProgressItems));
-      } else if (originContainer === "done") {
-        setDoneItems(removeFromList(doneItems));
-      }
+    if (
+      issueTicket &&
+      originContainerId &&
+      targetContainerId &&
+      originContainerId !== targetContainerId
+    ) {
+      mutation.mutate({
+        issue: issueTicket,
+        oldStatus: originContainerId as IssueStatus,
+        newStatus: targetContainerId as IssueStatus,
+      });
     }
+
     setHoveredContainerId(null);
   };
 
-  const handleAddIssue = (newIssue: IssueSummary | null) => {
-    if (!!newIssue) {
-      setTodoItems([newIssue, ...todoItems]);
-    }
-    setShowIssueTicketMaker(false);
-  };
+  // const handleAddIssue = (newIssue: IssueSummary | null) => {
+  //   if (!!newIssue) {
+  //     setTodoItems([newIssue, ...todoItems]);
+  //   }
+  //   setShowIssueTicketMaker(false);
+  // };
 
   return (
     <DndContext
@@ -143,28 +126,25 @@ const IssuePage = () => {
             ariaLabel="create issue"
             containerId="toDo"
             isHovered={hoveredContainerId === "toDo"}
-            issueTicketList={todoItems}
             showIssueTicketMaker={showIssueTicketMaker}
             title="할 일"
             IconComponent={AddCircleIcon}
             onIconComponentClick={() => setShowIssueTicketMaker(true)}
           >
-            {showIssueTicketMaker && (
+            {/* {showIssueTicketMaker && (
               <IssueTicketMaker handleAddIssue={handleAddIssue} />
-            )}
+            )} */}
           </IssueTicketContainer>
           <IssueTicketContainer
             ariaLabel="create issue"
             containerId="inProgress"
             isHovered={hoveredContainerId === "inProgress"}
-            issueTicketList={inProgressItems}
             title="진행 중"
           />
           <IssueTicketContainer
             ariaLabel="delete issue"
             containerId="done"
             isHovered={hoveredContainerId === "done"}
-            issueTicketList={doneItems}
             title="완료"
           />
         </Box>

@@ -56,3 +56,9 @@ export type NewIssue = {
   startDate: string | null;
   endDate: string | null;
 };
+
+type UpdateIssuePayload = {
+  issue: IssueSummary;
+  oldStatus: IssueStatus;
+  newStatus: IssueStatus;
+};
