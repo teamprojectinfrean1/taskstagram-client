@@ -84,7 +84,6 @@ function PopperComponent(props: PopperComponentProps) {
 const StyledPopper = styled(Popper)(({ theme }) => ({
   border: "1px solid white",
   borderRadius: 6,
-  width: 300,
   fontSize: 13,
   color: "white",
   backgroundColor: theme.palette.primary.main,
@@ -124,6 +123,7 @@ const SelectableProject = ({
 
   const handleCreateProjectBtnClick = () => {
     setIsOpen(false);
+    handleClose();
     navigate("/project");
   };
 
@@ -139,7 +139,7 @@ const SelectableProject = ({
 
   return (
     <>
-      <Box sx={{ width: 300, fontSize: 13, border: "1px solid white" }}>
+      <Box sx={{ width: 302, fontSize: 13, border: "1px solid white" }}>
         <Button
           disableRipple
           aria-describedby={id}
@@ -162,14 +162,18 @@ const SelectableProject = ({
         placement="bottom-start"
       >
         <ClickAwayListener onClickAway={handleClose}>
-          <div>
+          <>
             <Autocomplete
               open
               disableClearable
               disableCloseOnSelect
               options={projects}
               isOptionEqualToValue={(option, value) => option === value}
-              noOptionsText="일치하는 옵션이 없습니다"
+              noOptionsText={
+                projects && projects.length > 0
+                  ? "일치하는 옵션이 없습니다"
+                  : "프로젝트가 없습니다"
+              }
               PopperComponent={PopperComponent}
               onChange={handleOptionChange}
               onOpen={() => setIsOpen(true)}
@@ -229,6 +233,10 @@ const SelectableProject = ({
                       color: theme.palette.background.default,
                       p: 0,
                     },
+                    "& .MuiAutocomplete-noOptions": {
+                      backgroundColor: theme.palette.primary.main,
+                      color: theme.palette.background.default,
+                    },
                   }}
                 />
               )}
@@ -247,13 +255,16 @@ const SelectableProject = ({
             <Box
               sx={{
                 borderBottom: "1px solid white",
+                borderTop: "1px solid gray",
                 padding: "10px 10px",
                 fontWeight: 600,
+                "&:hover": { cursor: "pointer" },
               }}
+              onClick={handleCreateProjectBtnClick}
             >
               프로젝트 추가
             </Box>
-          </div>
+          </>
         </ClickAwayListener>
       </StyledPopper>
     </>
