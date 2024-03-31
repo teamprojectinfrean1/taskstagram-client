@@ -27,8 +27,6 @@ type IssueTicketContainerProps = {
   title: string;
   children?: React.ReactNode;
   showIssueTicketMaker?: boolean;
-  IconComponent?: React.ElementType<SvgIconProps>;
-  onIconComponentClick?: () => void;
 };
 
 const IssueTicketContainer = ({
@@ -38,8 +36,6 @@ const IssueTicketContainer = ({
   title,
   children,
   showIssueTicketMaker = false,
-  IconComponent,
-  onIconComponentClick,
 }: IssueTicketContainerProps) => {
   const { setNodeRef } = useDroppable({
     id: containerId,
@@ -93,26 +89,11 @@ const IssueTicketContainer = ({
       >
         <Box
           display="flex"
-          justifyContent="space-between"
-          alignItems="center"
           sx={{ px: 2 }}
         >
           <Typography noWrap sx={{ borderBottom: "1px solid black", p: 1 }}>
             {title}
           </Typography>
-          {IconComponent && (
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label={ariaLabel}
-              onClick={() =>
-                onIconComponentClick ? onIconComponentClick() : {}
-              }
-              sx={{ p: 1, mr: "1px" }}
-            >
-              <IconComponent />
-            </IconButton>
-          )}
         </Box>
         <TextField
           variant="outlined"
@@ -142,15 +123,7 @@ const IssueTicketContainer = ({
           sx={{ overflowY: "auto", overflowX: "hidden", px: 2, pb: 2 }}
         >
           {children}
-          {mockDoneIssueSummaryList.map((issue, index) => (
-            <IssueTicket
-              key={issue.issueId}
-              index={index}
-              issue={issue}
-              parent={containerId}
-            />
-          ))}
-          {/* {data?.pages.map((page, i) => (
+          {data?.pages.map((page, i) => (
             <Fragment key={i}>
               {page.issueList.map((issue, index) => (
                 <IssueTicket
@@ -161,7 +134,7 @@ const IssueTicketContainer = ({
                 />
               ))}
             </Fragment>
-          ))} */}
+          ))}
           {/* {!testLoading &&
             issueTicketList.map((issue, index) => (
               <IssueTicket

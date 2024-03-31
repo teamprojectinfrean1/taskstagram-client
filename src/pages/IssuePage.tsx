@@ -4,10 +4,9 @@ import {
   IssueStoryContainer,
   IssueTicket,
   IssueTicketContainer,
-  IssueTicketMaker,
 } from "@/components/IssueManagement";
-import { Box, Fade, Stack } from "@mui/material";
-import AddCircleIcon from "@mui/icons-material/AddCircle";
+import { Box, Fade, IconButton, Stack } from "@mui/material";
+import AddIcon from "@mui/icons-material/Add";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
 import {
@@ -25,6 +24,7 @@ import { IssueSummary, IssueStatus } from "@/models/Issue";
 import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
+import theme from "@/theme/theme";
 
 const IssuePage = () => {
   const { projectId } = useParams();
@@ -85,13 +85,6 @@ const IssuePage = () => {
     setHoveredContainerId(null);
   };
 
-  // const handleAddIssue = (newIssue: IssueSummary | null) => {
-  //   if (!!newIssue) {
-  //     setTodoItems([newIssue, ...todoItems]);
-  //   }
-  //   setShowIssueTicketMaker(false);
-  // };
-
   return (
     <DndContext
       collisionDetection={rectIntersection}
@@ -128,12 +121,7 @@ const IssuePage = () => {
             isHovered={hoveredContainerId === "toDo"}
             showIssueTicketMaker={showIssueTicketMaker}
             title="할 일"
-            IconComponent={AddCircleIcon}
-            onIconComponentClick={() => setShowIssueTicketMaker(true)}
           >
-            {/* {showIssueTicketMaker && (
-              <IssueTicketMaker handleAddIssue={handleAddIssue} />
-            )} */}
           </IssueTicketContainer>
           <IssueTicketContainer
             ariaLabel="create issue"
@@ -163,6 +151,28 @@ const IssuePage = () => {
         </DragOverlay>,
         document.body
       )}
+      <IconButton
+        size="large"
+        edge="end"
+        aria-label="Create New Issue"
+        onClick={() => setShowIssueTicketMaker(true)}
+        sx={{
+          p: 0.5,
+          backgroundColor: theme.palette.primary.main,
+          "&:hover": {
+            backgroundColor: theme.palette.primary.light,
+          },
+          color: theme.palette.background.default,
+          position: "fixed",
+          bottom: 30,
+          right: 60,
+          boxShadow: 4,
+          zIndex: 1000,
+          alignSelf: "flex-end",
+        }}
+      >
+        <AddIcon />
+      </IconButton>
       <IssueFormModal
         currentIssueId={issueIdToShowInModal}
         handleClose={() => setIssueIdToShowInModal("")}
