@@ -18,6 +18,7 @@ import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import useGetIssueListQuery from "@/hooks/useGetIssueListQuery";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { mockDoneIssueSummaryList } from "@/mock/issueMock";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
@@ -113,34 +114,43 @@ const IssueTicketContainer = ({
             </IconButton>
           )}
         </Box>
+        <TextField
+          variant="outlined"
+          onChange={() => {}}
+          InputProps={{
+            endAdornment: (
+              <InputAdornment position="end">
+                <IconButton onClick={() => {}}>
+                  <SearchIcon />
+                </IconButton>
+              </InputAdornment>
+            ),
+          }}
+          sx={{
+            "& .MuiOutlinedInput-root": {
+              backgroundColor: theme.palette.background.default,
+              mx: 2,
+            },
+            "& .MuiOutlinedInput-input": {
+              py: 1.5,
+            },
+          }}
+        />
         <Stack
           spacing={2}
           className="custom-scrollbar"
           sx={{ overflowY: "auto", overflowX: "hidden", px: 2, pb: 2 }}
         >
-          <TextField
-            variant="outlined"
-            onChange={() => {}}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => {}}>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: theme.palette.background.default,
-              },
-              "& .MuiOutlinedInput-input": {
-                py: 1.5,
-              },
-            }}
-          />
           {children}
-          {data?.pages.map((page, i) => (
+          {mockDoneIssueSummaryList.map((issue, index) => (
+            <IssueTicket
+              key={issue.issueId}
+              index={index}
+              issue={issue}
+              parent={containerId}
+            />
+          ))}
+          {/* {data?.pages.map((page, i) => (
             <Fragment key={i}>
               {page.issueList.map((issue, index) => (
                 <IssueTicket
@@ -151,7 +161,7 @@ const IssueTicketContainer = ({
                 />
               ))}
             </Fragment>
-          ))}
+          ))} */}
           {/* {!testLoading &&
             issueTicketList.map((issue, index) => (
               <IssueTicket
