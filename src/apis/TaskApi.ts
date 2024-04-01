@@ -4,10 +4,15 @@ import TaskObj from "@/models/TaskObj";
 
 const taskUrl = `${BASE_URL}/task`;
 
-type getTaskListParams = {
+type getTaskListRequest = {
   page: number;
   size: number;
   projectId: string | null;
+};
+
+type getTaskListResponse = {
+  taskList: TaskObj[];
+  toalTaskpage: number;
 };
 
 //프로젝트에 생성된 테스크들 조회
@@ -15,10 +20,10 @@ export const getTaskList = async ({
   page,
   size,
   projectId,
-}: getTaskListParams): Promise<TaskObj[]> => {
+}: getTaskListRequest): Promise<getTaskListResponse | null> => {
   if (page && size && projectId !== null) {
     try {
-      let taskList = [];
+      let taskListResponse = null;
       const response = await axios.get(`${taskUrl}`, {
         params: {
           page: page,
@@ -28,14 +33,17 @@ export const getTaskList = async ({
       });
 
       if (response.data && response.data.data) {
-        taskList = response.data.data.dataList;
+        taskListResponse = {
+          taskList: response.data.data.dataList,
+          toalTaskpage: response.data.data.totalPage,
+        };
       }
-      return taskList;
+      return taskListResponse;
     } catch {
-      return [];
+      return null;
     }
   } else {
-    return [];
+    return null;
   }
 };
 

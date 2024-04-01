@@ -18,11 +18,11 @@ const TaskPage = () => {
   const selectedProject = useRecoilValue(selectedProjectState);
 
   const { data, isLoading } = useQuery(
-    ["getTaskList", selectedProject],
+    ["getTaskList", selectedProject, currentPage],
     () =>
       getTaskList({
-        page: 1,
-        size: 7,
+        page: currentPage,
+        size: currentPage === 1 ? 7 : 8,
         projectId: selectedProject !== null ? selectedProject.projectId : null,
       }),
     {
@@ -108,14 +108,16 @@ const TaskPage = () => {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           sx={{ height: "100%", minHeight: "450px", m: 1 }}
         >
-          <Grid item xs={12} md={3}>
-            <NewTask
-              onClick={setSelectedTask}
-              onShowTaskModal={setShowModal}
-            ></NewTask>
-          </Grid>
-          {data && data.length > 0
-            ? data.map((task) => (
+          {currentPage === 1 && (
+            <Grid item xs={12} md={3}>
+              <NewTask
+                onClick={setSelectedTask}
+                onShowTaskModal={setShowModal}
+              ></NewTask>
+            </Grid>
+          )}
+          {data?.taskList && data.taskList.length > 0
+            ? data.taskList.map((task) => (
                 <Grid item xs={12} md={3} key={task.taskId}>
                   <Task
                     key={task.taskId}
@@ -130,7 +132,7 @@ const TaskPage = () => {
         </Grid>
         <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
           <Pagination
-            // count={Math.ceil((taskList.length + 1) / 8)}
+            count={data?.toalTaskpage}
             page={currentPage}
             onChange={handlePaginationChange}
             shape="rounded"
