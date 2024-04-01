@@ -1,24 +1,14 @@
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
+import { Box, Paper, Stack, Typography } from "@mui/material";
 import { Fragment } from "react";
-import { SvgIconProps } from "@mui/material/SvgIcon";
 import { IssueTicket, SkeletonIssueTicket } from "@/components/IssueManagement";
 import { useDroppable } from "@dnd-kit/core";
 import { IssueSummary } from "@/models/Issue";
-import SearchIcon from "@mui/icons-material/Search";
-import theme from "@/theme/theme";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 import useGetIssueTicketListQuery from "@/hooks/useGetIssueTicketListQuery";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
+import SearchWithDropdownFilter from "@/components/SearchWithDropdownFilter";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
@@ -69,6 +59,21 @@ const IssueTicketContainer = ({
     return () => clearTimeout(timeout);
   }, []);
 
+  const [searchParams, setSearchParams] = useState<IssueSearchParams>({
+    filter: "Issue",
+    keyword: "",
+  });
+
+  const handleSearchParamsChange = <T extends keyof IssueSearchParams>(
+    key: T,
+    value: IssueSearchParams[T]
+  ) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
+
   return (
     <Paper
       ref={setNodeRef}
@@ -91,28 +96,12 @@ const IssueTicketContainer = ({
             {title}
           </Typography>
         </Box>
-        <TextField
-          variant="outlined"
-          onChange={() => {}}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                <IconButton onClick={() => {}}>
-                  <SearchIcon />
-                </IconButton>
-              </InputAdornment>
-            ),
-          }}
-          sx={{
-            "& .MuiOutlinedInput-root": {
-              backgroundColor: theme.palette.background.default,
-              mx: 2,
-            },
-            "& .MuiOutlinedInput-input": {
-              py: 1.5,
-            },
-          }}
-        />
+        <Box sx={{ px: 2 }}>
+          <SearchWithDropdownFilter
+            handleSearchParamsChange={handleSearchParamsChange}
+            searchParams={searchParams}
+          />
+        </Box>
         <Stack
           id={containerId}
           spacing={2}

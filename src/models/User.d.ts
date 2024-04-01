@@ -1,4 +1,4 @@
-export type UserStory = {
+type UserStory = {
   userId: string;
   userNickname: string;
   profileImage: string;

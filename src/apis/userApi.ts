@@ -1,6 +1,5 @@
 import axios from "axios";
 import baseAxios from "./domainSettings";
-import { UserStory } from "@/models/User";
 
 const userUrl = "/users";
 
