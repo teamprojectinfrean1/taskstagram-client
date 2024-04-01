@@ -17,7 +17,7 @@ const FindPasswordForm = () => {
         </Typography>
         <Typography>이메일을 통해 비밀번호 변경 링크가 전송됩니다.</Typography>
       </Box>
-      <EmailCertificationInput />
+      <EmailCertificationInput findUserInfo = "findPassword" />
     </>
   );
 };

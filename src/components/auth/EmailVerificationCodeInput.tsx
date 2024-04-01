@@ -10,7 +10,7 @@ type FindIdEmailCertifiInputProps = {
   findIdEmailButtonState: boolean;
 };
 
-const EmailVerificationCodeInput = ({ isSuccess, email }: any) => {
+const EmailVerificationCodeInput = ({ isSuccess, email, findUserInfo }: any) => {
   const [verificationCode, setVerificationCode] = useState("");
   const [emailCertifiFlag, setEmailCertifiFlag] = useState(false);
   const emailCertifiState = !!(verificationCode && !emailCertifiFlag);
@@ -19,15 +19,20 @@ const EmailVerificationCodeInput = ({ isSuccess, email }: any) => {
 
   const { data, refetch } = useQuery(
     "checkEmailVerification",
-    () => checkEmailVerification({ email, verificationCode }),
+    () => checkEmailVerification({ findUserInfo, email, verificationCode }),
     {
       enabled: false,
       cacheTime: 0,
       onSuccess: (data) => {
-        if (data) {
+        if (findUserInfo === 'findId' && data) {
           navigate("/auth/find/id/success", {state: {
             id: data.id,
             nickname: data.nickname
+          }})
+        } else if (findUserInfo === 'findPassword' && data) {
+          console.log(data)
+          navigate("/auth/find/password/reset", { state: {
+            userId : data.uuid
           }})
         }
       },

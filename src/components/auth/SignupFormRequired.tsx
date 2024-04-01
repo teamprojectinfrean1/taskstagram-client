@@ -24,7 +24,8 @@ const SignupFormRequired = () => {
 
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
-  const [signupValidityFlag, setSignupValidityFlag] = useState({
+  // 회원가입 필수 input 유효성 변수
+  const [isValid, setIsValid] = useState({
     emailValidityFlag: false,
     idValidityFlag: false,
     passwordValidityFlag: false,
@@ -38,19 +39,16 @@ const SignupFormRequired = () => {
 
   const requiredSignupField = {
     emailField: !!(
-      signupValidityFlag.emailValidityFlag &&
-      signupDuplicateFlag.emailDuplicateFlag
+      isValid.emailValidityFlag && signupDuplicateFlag.emailDuplicateFlag
     ),
-    idField: !!(
-      signupValidityFlag.idValidityFlag && signupDuplicateFlag.idDuplicateFlag
-    ),
-    passwordField: !!signupValidityFlag.passwordValidityFlag,
-    passwordDoubleField: !!signupValidityFlag.passwordDoubleValidityFlag,
+    idField: !!(isValid.idValidityFlag && signupDuplicateFlag.idDuplicateFlag),
+    passwordField: !!isValid.passwordValidityFlag,
+    passwordDoubleField: !!isValid.passwordDoubleValidityFlag,
   };
 
   const changeSignupValidityFlag = ({ key, value }: SignupInfoFlagTypes) => {
-    setSignupValidityFlag({
-      ...signupValidityFlag,
+    setIsValid({
+      ...isValid,
       [key]: value,
     });
   };
@@ -83,7 +81,7 @@ const SignupFormRequired = () => {
         <EmailInput
           email={signupInfo.email}
           setEmail={(value) => changeSignupInfo({ key: "email", value })}
-          emailValidityFlag={signupValidityFlag.emailValidityFlag}
+          emailValidityFlag={isValid.emailValidityFlag}
           setEmailValidityFlag={(value) =>
             changeSignupValidityFlag({ key: "emailValidityFlag", value })
           }
@@ -98,7 +96,7 @@ const SignupFormRequired = () => {
         <IdInput
           id={signupInfo.id}
           setId={(value) => changeSignupInfo({ key: "id", value })}
-          idValidityFlag={signupValidityFlag.idValidityFlag}
+          idValidityFlag={isValid.idValidityFlag}
           setIdValidityFlag={(value) => {
             changeSignupValidityFlag({ key: "idValidityFlag", value });
           }}
@@ -113,7 +111,7 @@ const SignupFormRequired = () => {
         <PasswordInput
           password={signupInfo.password}
           setPassword={(value) => changeSignupInfo({ key: "password", value })}
-          passwordValidityFlag={signupValidityFlag.passwordValidityFlag}
+          passwordValidityFlag={isValid.passwordValidityFlag}
           setPasswordValidityFlag={(value) =>
             changeSignupValidityFlag({ key: "passwordValidityFlag", value })
           }
@@ -121,9 +119,12 @@ const SignupFormRequired = () => {
 
         <PasswordConfirmationInput
           password={signupInfo.password}
-          passwordDoubleValidityFlag={signupValidityFlag.passwordDoubleValidityFlag}
+          passwordDoubleValidityFlag={isValid.passwordDoubleValidityFlag}
           setPasswordDoubleValidityFlag={(value) =>
-            changeSignupValidityFlag({ key: "passwordDoubleValidityFlag", value })
+            changeSignupValidityFlag({
+              key: "passwordDoubleValidityFlag",
+              value,
+            })
           }
         />
         <Box sx={{ textAlign: "center", mt: 3 }}>

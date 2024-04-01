@@ -12,12 +12,13 @@ import FindIdLayout from "@/components/auth/FindIdLayout";
 import FindIdSuccess from "@/components/auth/FindIdSuccess";
 import FindPasswdLayout from "@/components/auth/FindPasswordLayout";
 import FindPasswordForm from "@/components/auth/FindPasswordForm";
-import FindPasswdSuccess from "@/components/auth/ResetPassword";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
 import ProjectPage from "./pages/ProjectPage";
 import ProtectedRouter from "./components/ProtectedRouter";
+import ResetPassword from "@/components/auth/ResetPassword";
+import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
 
 const router = createBrowserRouter([
   {
@@ -41,7 +42,7 @@ const router = createBrowserRouter([
         element: <SignupSuccess />,
       },
       {
-        path: "find/id",
+        path: 'find/id',
         element: <FindIdLayout />,
         children: [
           {
@@ -64,8 +65,12 @@ const router = createBrowserRouter([
           },
           {
             path: "reset",
-            element: <FindPasswdSuccess />,
+            element: <ResetPassword />,
           },
+          {
+            path: "success",
+            element: <FindPasswordSuccess />
+          }
         ],
       },
     ],

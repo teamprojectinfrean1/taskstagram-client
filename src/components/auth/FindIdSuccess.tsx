@@ -9,8 +9,6 @@ const FindEmailSuccess = () => {
   const id = location.state.id
   const nickname = location.state.nickname
 
-  console.log(id, nickname)
-
   return (
     <>
       <Box sx={{ textAlign: "center" }}>

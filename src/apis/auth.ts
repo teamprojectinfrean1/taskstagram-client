@@ -3,7 +3,7 @@ import { BASE_URL } from "./domainSettings";
 import { SignupInfo } from "@/models/Auth";
 
 // const authURL = `${BASE_URL}/auth`;
-const authURL = 'http://124.61.74.148:8080/api/v1/auth'
+const authURL = "http://124.61.74.148:8080/api/v1/auth";
 
 type fetchLoginParams = {
   email: string;
@@ -102,40 +102,64 @@ export const fetchLogin = async ({ email, password }: fetchLoginParams) => {
   }
 };
 
-// 아이디 찾기 이메일 인증 코드 요청 api 
-export const requestEmailVerification = async (email: string) => {
+// 아이디 찾기 이메일 인증 코드 요청 api
+export const requestEmailVerification = async ({
+  findUserInfo,
+  email,
+}: any) => {
   try {
-    let isSuccess = null
-    const response = await axios.post(`${authURL}/findId/verification/request`, {
-      email
-    })
+    let isSuccess = null;
+    const response = await axios.post(
+      `${authURL}/${findUserInfo}/verification/request`,
+      {
+        email,
+      }
+    );
     if (response.data.data) {
-      // 추후 아래로 바뀔 예정
-      // verificationCode = response.data.data
-      isSuccess = response.data.data.isSuccess
+      isSuccess = response.data.data.isSuccess;
     }
-    console.log(isSuccess)
-    return isSuccess
-  } catch(err) {
-    console.error(err)
+    return isSuccess;
+  } catch (err) {
+    console.error(err);
   }
-}
+};
 
 // 패스워드 찾기 이메일 인증 코드 확인 api
-export const checkEmailVerification = async ({email, verificationCode}: any) => {
-  console.log(email, verificationCode)
+export const checkEmailVerification = async ({
+  findUserInfo,
+  email,
+  verificationCode,
+}: any) => {
+  console.log(findUserInfo, email, verificationCode);
   try {
-    let data = null
-    const response = await axios.post(`${authURL}/findId/verification/check`, {
+    let data = null;
+    const response = await axios.post(`${authURL}/${findUserInfo}/verification/check`, {
       email,
-      verificationCode
-    })
+      verificationCode,
+    });
     if (response.data) {
-      data = response.data.data
+      data = response.data.data;
       // userId = response.data.data
     }
-    return data
+    return data;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const resetPassword = async ({userId, password}: any) => {
+  try {
+    let isSuccess = null
+    const response = await axios.put(`${authURL}/findPassword/verification/update`, {
+      uuid : userId,
+      password
+    })
+    if (response.data) {
+      isSuccess = true
+    }
+    return isSuccess
   } catch(err) {
-    console.log(err)
+    console.error(err);
+    
   }
 }

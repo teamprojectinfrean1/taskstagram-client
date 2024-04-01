@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
 import LoginErrorModal from "./LoginErrorModal";
@@ -14,7 +14,7 @@ const LoginForm = () => {
   const [showModal, setShowModal] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const { data, refetch } = useQuery(
     "login",
     () => fetchLogin({ email, password }),
@@ -24,9 +24,9 @@ const LoginForm = () => {
       onSuccess: (data) => {
         if (!data) {
           setShowModal(true);
-          setIsSuccess(false)
+          setIsSuccess(false);
         } else {
-          navigate("/")
+          navigate("/");
         }
       },
     }
@@ -76,6 +76,7 @@ const LoginForm = () => {
       >
         로그인
       </Button>
+
       <Box sx={{ mt: 2 }}>
         <AuthMenuOptions />
       </Box>

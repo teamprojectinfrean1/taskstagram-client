@@ -1,6 +1,6 @@
 // import { useState } from "react";
 import { Box, Typography } from "@mui/material";
-import FindIdEmailInput from "./EmailCertificationInput";
+import EmailCertificationInput from "./EmailCertificationInput";
 // import FindIdEmailCertifiInput from "./EmailVerificationCodeInput";
 
 const FindIdForm = () => {
@@ -14,7 +14,7 @@ const FindIdForm = () => {
           사용 중인 계정의 아이디를 알려드립니다.
         </Typography>
       </Box>
-      <FindIdEmailInput />
+      <EmailCertificationInput findUserInfo = "findId"/>
     </>
   );
 };

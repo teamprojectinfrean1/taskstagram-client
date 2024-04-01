@@ -6,7 +6,11 @@ import { useQuery } from "react-query";
 import { requestEmailVerification } from "@/apis/auth";
 import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
 
-const EmailCertificationInput = () => {
+type EmailCertificationInputProps = {
+  findUserInfo : "findId" | "findPassword"
+}
+
+const EmailCertificationInput = ({findUserInfo}: EmailCertificationInputProps) => {
   const [email, setEmail] = useState("");
   const [isEmailValidity, setIsEmailValidity] = useState(false);
   const showErrorMessage = !!(email && !isEmailValidity);
@@ -14,7 +18,7 @@ const EmailCertificationInput = () => {
   // 이메일 인증 useQuery
   const { data, refetch } = useQuery(
     "emailVerification",
-    () => requestEmailVerification(email),
+    () => requestEmailVerification({findUserInfo, email}),
     {
       enabled: false,
       cacheTime: 0,
@@ -77,7 +81,7 @@ const EmailCertificationInput = () => {
           </Button>
         </Grid>
       </Grid>
-      <EmailVerificationCodeInput isSuccess={data} email={email} />
+      <EmailVerificationCodeInput isSuccess={data} email={email} findUserInfo={findUserInfo} />
     </>
   );
 };

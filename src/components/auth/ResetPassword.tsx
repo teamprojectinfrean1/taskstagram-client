@@ -1,10 +1,12 @@
 import theme from "@/theme/theme";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import { useState } from "react";
 import { SignupInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
+import { useMutation, useQuery } from "react-query";
+import { resetPassword } from "@/apis/auth";
 
 type PasswordInfoFlagTypes = {
   key: string;
@@ -13,6 +15,8 @@ type PasswordInfoFlagTypes = {
 
 const ResetPassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const userId = location.state.userId
 
   const [passwordInfo, setPasswordInfo] = useState({
     password: "",
@@ -38,6 +42,15 @@ const ResetPassword = () => {
     });
   };
 
+  const resetPasswordMutation = useMutation(({userId, password}: any) => resetPassword({userId, password}), {
+    onSuccess: (data) => {
+      console.log(data)
+      if (data) {
+        navigate('/auth/find/password/success')
+      }
+    }
+  })
+
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
@@ -50,8 +63,8 @@ const ResetPassword = () => {
       password={passwordInfo.password}
       setPassword={(value: string) => changePasswordInfo({key: "password", value})}
       passwordValidityFlag = {passwordValidityFlag.isPasswordValidity}
-      setPasswordValidityFlag={(value: boolean) => {
-        changePasswordValidityFlag({key: "passwordValidityFlag", value})
+      setPasswordValidityFlag={(value) => {
+        changePasswordValidityFlag({key: "isPasswordValidity", value})
       }}
       />
       <PasswordConfirmationInput 
@@ -72,10 +85,10 @@ const ResetPassword = () => {
           borderRadius: "7px",
         }}
         onClick={() => {
-          navigate("/auth/login");
+          resetPasswordMutation.mutate({userId, password: passwordInfo.password})
         }}
       >
-        확인
+        변경
       </Button>
     </>
   );
