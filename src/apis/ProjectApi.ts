@@ -20,3 +20,22 @@ export const getProjectList = async (userId: string): Promise<ProjectObj[]> => {
     return [];
   }
 };
+
+export const getProjectDetail = async (
+  projectId: string | null
+): Promise<any> => {
+  if (projectId) {
+    try {
+      let projectDetail = null;
+      const response = await axios.get(`${projectUrl}/${projectId}`);
+      if (response.data) {
+        projectDetail = response.data.data;
+      }
+      return projectDetail;
+    } catch {
+      return null;
+    }
+  } else {
+    return null;
+  }
+};

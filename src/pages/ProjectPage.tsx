@@ -15,6 +15,10 @@ import ProjectMemberAutocomplete from "@/components/Project/ProjectMemberAutocom
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { grey } from "@mui/material/colors";
 import theme from "@/theme/theme";
+import { useQuery } from "react-query";
+import { getProjectDetail } from "@/apis/ProjectApi";
+import { useRecoilValue } from "recoil";
+import { selectedProjectState } from "@/stores/Store";
 
 const ProjectPage = () => {
   const [formData, setFormData] = useState<ProjectObj>({
@@ -28,6 +32,32 @@ const ProjectPage = () => {
     isMainProject: false,
   });
   const userUuidList = ["user1", "user2"];
+  const selectedProject = useRecoilValue(selectedProjectState);
+
+  const { data } = useQuery(
+    ["getProjectDetail", selectedProject],
+    () =>
+      getProjectDetail(
+        selectedProject !== null ? selectedProject.projectId : null
+      ),
+    { enabled: !!selectedProject && !!selectedProject.projectId }
+  );
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        projectId: data.projectId,
+        projectName: data.projectName,
+        projectContent: data.projectContent,
+        projectStartDate: data.startDate,
+        projectEndDate: data.endDate,
+        projectMemberUuidList: null,
+        projectTags: data.projectTagList,
+        isMainProject: data.isMainProject,
+      });
+    }
+  }, [data]);
+
   //각 입력란 change 이벤트
   const handleInputChange = (
     field: keyof ProjectObj,
