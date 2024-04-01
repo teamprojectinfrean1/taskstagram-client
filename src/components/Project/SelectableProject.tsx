@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Checkbox,
-  TextField,
   Paper,
   autocompleteClasses,
   Popper,
@@ -77,16 +76,16 @@ const StyledInput = styled(InputBase)(({ theme }) => ({
   },
 }));
 
-function PopperComponent(props: PopperComponentProps) {
+const PopperComponent = (props: PopperComponentProps) => {
   const { disablePortal, anchorEl, open, ...other } = props;
   return <StyledAutocompletePopper {...other} />;
-}
+};
 
 const StyledPopper = styled(Popper)(({ theme }) => ({
   border: "1px solid white",
   borderRadius: 6,
   fontSize: 13,
-  color: "white",
+  color: theme.palette.background.default,
   backgroundColor: theme.palette.primary.main,
 }));
 
@@ -97,7 +96,6 @@ const SelectableProject = ({
   onClickCheckBox,
 }: SelectableProjectProps) => {
   const navigate = useNavigate();
-  const [isOpen, setIsOpen] = useState(false);
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
   const handleCheckBoxClick = (
@@ -110,12 +108,10 @@ const SelectableProject = ({
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
-    //setPendingValue(value);
     setAnchorEl(event.currentTarget);
   };
 
   const handleClose = () => {
-    //setValue(pendingValue);
     if (anchorEl) {
       anchorEl.focus();
     }
@@ -123,7 +119,6 @@ const SelectableProject = ({
   };
 
   const handleCreateProjectBtnClick = () => {
-    setIsOpen(false);
     handleClose();
     navigate("/project");
   };
@@ -133,27 +128,11 @@ const SelectableProject = ({
     value: Project | null
   ) => {
     onSelectedProjectChanged(value);
-    setIsOpen(false);
     handleClose();
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "github-label" : undefined;
-
-  //임시 테스트
-  // if (projects.length === 0) {
-  //   projects.push({
-  //     projectId: projects.length.toString(),
-  //     projectName:
-  //       "hellohellohellohellohellohellohellohellohellohellohellohellohellohello",
-  //     projectContent: "eee",
-  //     projectStartDate: "ss",
-  //     projectEndDate: "33",
-  //     projectMemberUuidList: null,
-  //     projectTags: null,
-  //     isMainProject: true,
-  //   });
-  // }
+  const id = open ? "projectLabel" : undefined;
 
   return (
     <>
@@ -214,8 +193,6 @@ const SelectableProject = ({
               }
               PopperComponent={PopperComponent}
               onChange={handleOptionChange}
-              onOpen={() => setIsOpen(true)}
-              onClose={() => setIsOpen(false)}
               getOptionLabel={(option) => option.projectName}
               renderOption={(props, option, { selected }) => (
                 <li {...props} key={option.projectId}>
