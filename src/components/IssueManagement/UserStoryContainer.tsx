@@ -35,7 +35,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
   const [testLoading, setTestLoading] = useState(true);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setTestLoading(false), 5000);
+    const timeout = setTimeout(() => setTestLoading(false), 3000);
     return () => clearTimeout(timeout);
   }, []);
 

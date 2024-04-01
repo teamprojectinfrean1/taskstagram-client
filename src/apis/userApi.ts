@@ -1,5 +1,5 @@
 import axios from "axios";
-import baseAxios from "./domainSettings";
+import { authorizedAxios } from "./domainSettings";
 
 const userUrl = "/users";
 
@@ -20,11 +20,14 @@ export const getUserStoryList = async ({
   const USER_PER_PAGE = 15;
 
   try {
-    const response = await baseAxios.post(`${userUrl}/project/user-list`, {
-      projectId,
-      USER_PER_PAGE,
-      page,
-    });
+    const response = await authorizedAxios.post(
+      `${userUrl}/project/user-list`,
+      {
+        projectId,
+        USER_PER_PAGE,
+        page,
+      }
+    );
     const data = response.data;
     return { dataList: data.data, hasMore: data.hasMore };
   } catch (error) {

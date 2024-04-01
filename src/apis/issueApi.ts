@@ -1,5 +1,5 @@
 import axios from "axios";
-import baseAxios from "./domainSettings";
+import { authorizedAxios } from "./domainSettings";
 import {
   IssueDetails,
   IssueSummary,
@@ -12,7 +12,7 @@ const issueUrl = "/issue";
 
 export const createNewIssue = async (issue: NewIssue): Promise<boolean> => {
   try {
-    const response = await baseAxios.post(issueUrl, issue);
+    const response = await authorizedAxios.post(issueUrl, issue);
     return response.data.success;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -44,7 +44,7 @@ export const getIssueList = async ({
   const ISSUE_PER_PAGE = 15;
 
   try {
-    const response = await baseAxios.post(
+    const response = await authorizedAxios.post(
       `${issueUrl}/allTickets/${issueStatus}`,
       {
         projectId,
@@ -67,7 +67,7 @@ export const getIssueDetails = async (
   issueId: string
 ): Promise<IssueDetails> => {
   try {
-    const response = await baseAxios.get(`${issueUrl}/${issueId}`);
+    const response = await authorizedAxios.get(`${issueUrl}/${issueId}`);
     return response.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -84,7 +84,7 @@ export const searchIssue = async (
   word: string
 ): Promise<IssueSummary[]> => {
   try {
-    const response = await baseAxios.get(
+    const response = await authorizedAxios.get(
       `${issueUrl}/search/${status}?filter=${filter}&word=${word}`
     );
     return response.data.data;

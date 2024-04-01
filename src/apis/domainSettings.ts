@@ -1,18 +1,20 @@
 import axios from "axios";
 
-const BASE_URL = "http://1.246.104.170:8080/api/v1"
+const BASE_URL = "http://1.246.104.170:8080/api/v1";
+
+const unauthorizedAxios = axios.create({
+  baseURL: BASE_URL,
+});
 
 const getAccessToken = () => {
-// 세션 스토리지에서 access token 가져오기
-  return ; 
-}
+  return sessionStorage.getItem("accessToken");
+};
 
-const baseAxios = axios.create({
+const authorizedAxios = axios.create({
   baseURL: BASE_URL,
   headers: {
-    'Authorization': `${getAccessToken()}`,
+    Authorization: getAccessToken(),
   },
 });
 
-
-export default baseAxios;
+export { authorizedAxios, unauthorizedAxios };

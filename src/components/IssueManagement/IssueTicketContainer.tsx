@@ -9,6 +9,7 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 import SearchWithDropdownFilter from "@/components/SearchWithDropdownFilter";
+import { mockToDoIssueSummaryList } from "@/mock/issueMock";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
@@ -55,7 +56,7 @@ const IssueTicketContainer = ({
   const [testLoading, setTestLoading] = useState(true);
 
   useEffect(() => {
-    const timeout = setTimeout(() => setTestLoading(false), 5000);
+    const timeout = setTimeout(() => setTestLoading(false), 3000);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -128,22 +129,22 @@ const IssueTicketContainer = ({
             </Fragment>
           ))}
           {/* {!testLoading &&
-            issueTicketList.map((issue, index) => (
+            mockToDoIssueSummaryList.map((issue, index) => (
               <IssueTicket
                 key={issue.issueId}
                 index={index}
                 issue={issue}
                 parent={containerId}
               />
-            ))}  */}
-          <div
-            ref={hasNextPage ? lastIssueRef : undefined}
-            style={{ margin: 0 }}
-          />
+            ))} */}
           {(isFetchingNextPage || testLoading) &&
             Array.from({ length: 3 }, (_, i) => (
               <SkeletonIssueTicket key={i} />
             ))}
+          <div
+            ref={hasNextPage ? lastIssueRef : undefined}
+            style={{ display: hasNextPage ? "inline" : "none" }}
+          />
         </Stack>
       </Stack>
     </Paper>

@@ -1,6 +1,7 @@
 import { RawDraftContentState } from "draft-js";
 import { StringLiteral } from "typescript";
 
+/* IssueFormData 추후 제거 예정 */
 type IssueFormData = {
   title: string | null;
   content: RawDraftContentState | null;
@@ -14,7 +15,7 @@ type IssueFormData = {
 
 type IssueStatus = "toDo" | "inProgress" | "done";
 
-export type IssueDetails = {
+type IssueDetails = {
   projectId: string;
   taskId: string;
   taskName: string;
@@ -34,7 +35,7 @@ export type IssueDetails = {
   };
 };
 
-export type IssueSummary = {
+type IssueSummary = {
   projectId: string;
   taskId: string;
   taskName: string;
@@ -45,7 +46,7 @@ export type IssueSummary = {
   assigneeProfileImage: string | null;
 };
 
-export type NewIssue = {
+type NewIssue = {
   projectId: string;
   taskId: string | null;
   creatorId: string;

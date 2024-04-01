@@ -100,7 +100,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          <IssueStoryContainer projectId={projectId!}/>
+          <IssueStoryContainer projectId={projectId!} />
         </Box>
         <Box
           display="flex"
@@ -155,7 +155,7 @@ const IssuePage = () => {
         size="large"
         edge="end"
         aria-label="Create New Issue"
-        onClick={() => {}}
+        onClick={() => setIssueIdToShowInModal("new-issue")}
         sx={{
           p: 0.5,
           backgroundColor: theme.palette.primary.main,
