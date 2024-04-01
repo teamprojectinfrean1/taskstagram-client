@@ -2,47 +2,75 @@ import { useEffect, useState, useRef } from "react";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import IssueStory from "@/components/IssueManagement/IssueStory";
+import { SkeletonUserStory, UserStory } from "@/components/IssueManagement";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
+import useGetUserStoryListQuery from "@/hooks/useGetIssueStoryListQuery";
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 
 const SCROLL_AMOUNT_ON_ARROW_CLICK = 500;
 const SCROLL_POSITION_TOLERANCE = 5;
 
-type IssueStoryContainerProps = {
+type UserStoryContainerProps = {
+  projectId: string;
 };
 
-const IssueStoryContainer = ({
-}: IssueStoryContainerProps) => {
-  const issueStoryListRef = useRef<HTMLDivElement>(null);
+const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetUserStoryListQuery({ projectId: projectId! });
+
+  const lastIssueRef = useIntersectionObserver({
+    containerId: "userStory",
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
+
+  const [testLoading, setTestLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setTestLoading(false), 5000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const userStoryListRef = useRef<HTMLDivElement>(null);
   const storyIsOverflowing = useOverflowDetection(
-    issueStoryListRef,
+    userStoryListRef,
     "horizontal"
   );
+
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScrollButtons = () => {
-    if (issueStoryListRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } =
-        issueStoryListRef.current;
+    if (userStoryListRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = userStoryListRef.current;
       setCanScrollLeft(scrollLeft > 0);
-      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - SCROLL_POSITION_TOLERANCE);
+      setCanScrollRight(
+        scrollLeft < scrollWidth - clientWidth - SCROLL_POSITION_TOLERANCE
+      );
     }
   };
 
   useEffect(() => {
-    const currentContainer = issueStoryListRef.current;
+    const currentContainer = userStoryListRef.current;
     currentContainer?.addEventListener("scroll", checkScrollButtons);
     checkScrollButtons();
 
     return () => {
       currentContainer?.removeEventListener("scroll", checkScrollButtons);
     };
-  }, []);
+  }, [storyIsOverflowing]);
 
   const handleScroll = (direction: number) => {
-    if (issueStoryListRef.current) {
-      issueStoryListRef.current.scrollLeft +=
+    if (userStoryListRef.current) {
+      userStoryListRef.current.scrollLeft +=
         direction * SCROLL_AMOUNT_ON_ARROW_CLICK;
     }
   };
@@ -53,7 +81,7 @@ const IssueStoryContainer = ({
         display="flex"
         alignItems="center"
         sx={{ height: "100%", px: 1, py: 2 }}
-      >   
+      >
         <IconButton
           size="large"
           aria-label="scroll leftwards"
@@ -66,18 +94,26 @@ const IssueStoryContainer = ({
           <KeyboardDoubleArrowLeftIcon />
         </IconButton>
         <Box
+          id="userStory"
           overflow="auto"
           display="flex"
-          ref={issueStoryListRef}
+          ref={userStoryListRef}
           className="custom-scrollbar"
           sx={{
             scrollBehavior: "smooth",
           }}
           alignSelf="center"
         >
-          {Array.from({ length: 20 }, (_, index) => (
-            <IssueStory key={index} name="성이름"/>
-          ))}
+          {!testLoading &&
+            Array.from({ length: 10 }, (_, index) => (
+              <UserStory key={index} name="성이름" />
+            ))}
+          <div
+            ref={hasNextPage ? lastIssueRef : undefined}
+            style={{ margin: 0 }}
+          />
+          {(isFetchingNextPage || testLoading) &&
+            Array.from({ length: 8 }, (_, i) => <SkeletonUserStory key={i} />)}
         </Box>
         <IconButton
           size="large"
@@ -95,4 +131,4 @@ const IssueStoryContainer = ({
   );
 };
 
-export default IssueStoryContainer;
+export default UserStoryContainer;

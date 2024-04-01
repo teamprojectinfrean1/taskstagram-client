@@ -4,11 +4,11 @@ import UserAvatar from "@/components/UserAvatar";
 import { green } from "@mui/material/colors";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 
-type IssueStoryProps = {
+type UserStoryProps = {
   name: string;
 };
 
-const IssueStory = ({ name }: IssueStoryProps) => {
+const UserStory = ({ name }: UserStoryProps) => {
   const userNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(userNameRef, "vertical");
 
@@ -34,4 +34,4 @@ const IssueStory = ({ name }: IssueStoryProps) => {
   );
 };
 
-export default IssueStory;
+export default UserStory;

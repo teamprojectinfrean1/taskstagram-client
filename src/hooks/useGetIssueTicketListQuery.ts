@@ -6,12 +6,12 @@ type useGetIssueListQueryProps = {
   issueStatus: string;
 };
 
-const useGetIssueListQuery = ({
+const useGetIssueTicketListQuery = ({
   projectId,
   issueStatus,
 }: useGetIssueListQueryProps) => {
   return useInfiniteQuery(
-    ["issueList", projectId, issueStatus],
+    ["issueTicketList", projectId, issueStatus],
     ({ pageParam = 1 }) => getIssueList({projectId, issueStatus, page: pageParam}),
     {
       getNextPageParam: (lastPage, allPages) => {
@@ -25,4 +25,4 @@ const useGetIssueListQuery = ({
   );
 };
 
-export default useGetIssueListQuery;
+export default useGetIssueTicketListQuery;

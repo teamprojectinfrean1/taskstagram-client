@@ -37,7 +37,6 @@ const IssuePage = () => {
   const [hoveredContainerId, setHoveredContainerId] = useState<string | null>(
     null
   );
-  const [showIssueTicketMaker, setShowIssueTicketMaker] = useState(false);
 
   const mutation = useUpdateIssueStatusMutation(projectId!);
 
@@ -101,7 +100,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          <IssueStoryContainer />
+          <IssueStoryContainer projectId={projectId!}/>
         </Box>
         <Box
           display="flex"
@@ -119,20 +118,21 @@ const IssuePage = () => {
             ariaLabel="create issue"
             containerId="toDo"
             isHovered={hoveredContainerId === "toDo"}
-            showIssueTicketMaker={showIssueTicketMaker}
+            projectId={projectId!}
             title="할 일"
-          >
-          </IssueTicketContainer>
+          ></IssueTicketContainer>
           <IssueTicketContainer
             ariaLabel="create issue"
             containerId="inProgress"
             isHovered={hoveredContainerId === "inProgress"}
+            projectId={projectId!}
             title="진행 중"
           />
           <IssueTicketContainer
             ariaLabel="delete issue"
             containerId="done"
             isHovered={hoveredContainerId === "done"}
+            projectId={projectId!}
             title="완료"
           />
         </Box>
@@ -155,7 +155,7 @@ const IssuePage = () => {
         size="large"
         edge="end"
         aria-label="Create New Issue"
-        onClick={() => setShowIssueTicketMaker(true)}
+        onClick={() => {}}
         sx={{
           p: 0.5,
           backgroundColor: theme.palette.primary.main,

@@ -15,33 +15,31 @@ import { IssueSummary } from "@/models/Issue";
 import SearchIcon from "@mui/icons-material/Search";
 import theme from "@/theme/theme";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import useGetIssueListQuery from "@/hooks/useGetIssueListQuery";
+import useGetIssueTicketListQuery from "@/hooks/useGetIssueTicketListQuery";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { mockDoneIssueSummaryList } from "@/mock/issueMock";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
   containerId: string;
   isHovered: boolean;
+  projectId: string;
   title: string;
   children?: React.ReactNode;
-  showIssueTicketMaker?: boolean;
 };
 
 const IssueTicketContainer = ({
   ariaLabel,
   containerId,
   isHovered,
+  projectId,
   title,
   children,
-  showIssueTicketMaker = false,
 }: IssueTicketContainerProps) => {
   const { setNodeRef } = useDroppable({
     id: containerId,
   });
-
-  const { projectId } = useParams();
 
   const {
     data,
@@ -50,7 +48,10 @@ const IssueTicketContainer = ({
     hasNextPage,
     fetchNextPage,
     isFetchingNextPage,
-  } = useGetIssueListQuery({ projectId: projectId!, issueStatus: containerId });
+  } = useGetIssueTicketListQuery({
+    projectId: projectId!,
+    issueStatus: containerId,
+  });
 
   const lastIssueRef = useIntersectionObserver({
     containerId,
@@ -60,6 +61,7 @@ const IssueTicketContainer = ({
     fetchNextPage,
   });
 
+  /* 데이터 페칭 시 skeleton UI가 렌더링 되는지 테스트하기 위해 임시 구현; 추후 제거 예정 */
   const [testLoading, setTestLoading] = useState(true);
 
   useEffect(() => {
@@ -67,12 +69,9 @@ const IssueTicketContainer = ({
     return () => clearTimeout(timeout);
   }, []);
 
-  // 다양한 에러 헨들링 케이스 구현 예정
-
   return (
     <Paper
       ref={setNodeRef}
-      id={containerId}
       elevation={2}
       sx={{
         borderRadius: 3,
@@ -87,10 +86,7 @@ const IssueTicketContainer = ({
           height: "100%",
         }}
       >
-        <Box
-          display="flex"
-          sx={{ px: 2 }}
-        >
+        <Box display="flex" sx={{ px: 2 }}>
           <Typography noWrap sx={{ borderBottom: "1px solid black", p: 1 }}>
             {title}
           </Typography>
@@ -118,9 +114,16 @@ const IssueTicketContainer = ({
           }}
         />
         <Stack
+          id={containerId}
           spacing={2}
           className="custom-scrollbar"
-          sx={{ overflowY: "auto", overflowX: "hidden", px: 2, pb: 2 }}
+          sx={{
+            height: { xs: "500px", md: "auto" },
+            overflowY: "auto",
+            overflowX: "hidden",
+            px: 2,
+            pb: 2,
+          }}
         >
           {children}
           {data?.pages.map((page, i) => (

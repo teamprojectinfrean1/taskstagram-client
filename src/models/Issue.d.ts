@@ -28,11 +28,11 @@ export type IssueDetails = {
   startDate: string | null;
   endDate: string | null;
   lastUpdatedDetail: {
-    updaterId: string
+    updaterId: string;
     updaterNickname: string;
     updatedDate: string;
-  }
-}
+  };
+};
 
 export type IssueSummary = {
   projectId: string;
@@ -52,7 +52,7 @@ export type NewIssue = {
   assigneeId: string | null;
   issueName: string;
   issueContent: string;
-  issueStatus: IssueStatus
+  issueStatus: IssueStatus;
   startDate: string | null;
   endDate: string | null;
 };
