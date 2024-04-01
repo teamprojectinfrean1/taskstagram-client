@@ -133,25 +133,27 @@ const SelectableProject = ({
     value: ProjectObj | null
   ) => {
     onSelectedProjectChanged(value);
+    setIsOpen(false);
+    handleClose();
   };
 
   const open = Boolean(anchorEl);
   const id = open ? "github-label" : undefined;
 
   //임시 테스트
-  if (projects.length === 0) {
-    projects.push({
-      projectId: projects.length.toString(),
-      projectName:
-        "hellohellohellohellohellohellohellohellohellohellohellohellohellohello",
-      projectContent: "eee",
-      projectStartDate: "ss",
-      projectEndDate: "33",
-      projectMemberUuidList: null,
-      projectTags: null,
-      isMainProject: true,
-    });
-  }
+  // if (projects.length === 0) {
+  //   projects.push({
+  //     projectId: projects.length.toString(),
+  //     projectName:
+  //       "hellohellohellohellohellohellohellohellohellohellohellohellohellohello",
+  //     projectContent: "eee",
+  //     projectStartDate: "ss",
+  //     projectEndDate: "33",
+  //     projectMemberUuidList: null,
+  //     projectTags: null,
+  //     isMainProject: true,
+  //   });
+  // }
 
   return (
     <>
@@ -249,7 +251,10 @@ const SelectableProject = ({
                     component={DoneIcon}
                     sx={{ opacity: 0.6, width: 18, height: 18 }}
                     style={{
-                      visibility: selected ? "visible" : "hidden",
+                      visibility:
+                        selectedProject?.projectId === option.projectId
+                          ? "visible"
+                          : "hidden",
                     }}
                   />
                 </li>
