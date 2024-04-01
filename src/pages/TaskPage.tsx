@@ -1,9 +1,9 @@
-import Task from "@/components/TaskManagement/Task";
+import TaskTicket from "@/components/TaskManagement/TaskTicket";
 import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
 import { useState, useEffect } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
-import TaskObj from "@/models/TaskObj";
+import Task from "@/models/Task";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
 import { useQuery } from "react-query";
@@ -13,7 +13,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 
 const TaskPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<TaskObj | null>();
+  const [selectedTask, setSelectedTask] = useState<Task | null>();
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
 
@@ -32,33 +32,29 @@ const TaskPage = () => {
   );
 
   //util에 주입예정
-  const replaceItemAtIndex = (
-    arr: TaskObj[],
-    index: number,
-    newValue: TaskObj
-  ) => {
+  const replaceItemAtIndex = (arr: Task[], index: number, newValue: Task) => {
     return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
   };
 
   //util에 주입예정
-  const removeItemAtIndex = (arr: TaskObj[], index: number) => {
+  const removeItemAtIndex = (arr: Task[], index: number) => {
     return [...arr.slice(0, index), ...arr.slice(index + 1)];
   };
 
-  const addTask = (task: TaskObj) => {
+  const addTask = (task: Task) => {
     //setTaskList((oldTaskList) => [...oldTaskList, task]);
     //해당 task create하는 api 호출로 대체 예정
     //setCurrentPage();
   };
 
-  const replaceTask = (previousTask: TaskObj, newTask: TaskObj) => {
+  const replaceTask = (previousTask: Task, newTask: Task) => {
     //onst index = taskList.findIndex((listItem) => listItem === previousTask);
     //const newList = replaceItemAtIndex(taskList, index, newTask);
     //setTaskList(newList);
     //해당 task update하는 api 호출로 대체 예정
   };
 
-  const deleteTask = (task: TaskObj) => {
+  const deleteTask = (task: Task) => {
     //const index = taskList.findIndex((listItem) => listItem === task);
     //const newList = removeItemAtIndex(taskList, index);
     //setTaskList(newList);
@@ -79,7 +75,7 @@ const TaskPage = () => {
   };
 
   // useEffect(()=>{
-  //   const taskobjs:TaskObj[] = Array.from(Array(7)).map((_, index) =>
+  //   const taskobjs:Task[] = Array.from(Array(7)).map((_, index) =>
   //     {
   //       return {
   //       taskId: `TaskId${index+1}`,
@@ -119,7 +115,7 @@ const TaskPage = () => {
           {data?.taskList && data.taskList.length > 0
             ? data.taskList.map((task) => (
                 <Grid item xs={12} md={3} key={task.taskId}>
-                  <Task
+                  <TaskTicket
                     key={task.taskId}
                     selectedTask={task}
                     onDelete={deleteTask}
@@ -140,7 +136,7 @@ const TaskPage = () => {
         </Box>
       </Grid>
       <TaskModal
-        selectedTask={selectedTask as TaskObj}
+        selectedTask={selectedTask as Task}
         isOpen={showModal}
         onAdd={addTask}
         onReplace={replaceTask}

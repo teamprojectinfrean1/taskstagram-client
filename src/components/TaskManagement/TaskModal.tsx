@@ -11,7 +11,7 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import TaskObj from "@/models/TaskObj";
+import Task from "@/models/Task";
 import { Dayjs } from "dayjs";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
@@ -26,11 +26,11 @@ import { useQuery } from "react-query";
 import { getTaskDetail } from "@/apis/TaskApi";
 
 type TaskModalProps = {
-  selectedTask: TaskObj;
+  selectedTask: Task;
   isOpen: boolean;
-  onAdd(task: TaskObj): void;
-  onReplace(currentTask: TaskObj, newTask: TaskObj): void;
-  onDelete(task: TaskObj): void;
+  onAdd(task: Task): void;
+  onReplace(currentTask: Task, newTask: Task): void;
+  onDelete(task: Task): void;
   onCloseModal: () => void;
 };
 
@@ -57,7 +57,7 @@ const TaskModal = ({
   onDelete,
   onCloseModal,
 }: TaskModalProps) => {
-  const [formData, setFormData] = useState<TaskObj>({
+  const [formData, setFormData] = useState<Task>({
     taskId: "",
     taskTitle: "",
     taskContent: null,
@@ -80,10 +80,10 @@ const TaskModal = ({
         taskId: data.taskId,
         taskTitle: data.taskTitle,
         taskContent: data.taskContent,
-        taskTags: data.taskTags,
-        taskStartDate: data.taskStartDate,
-        taskEndDate: data.taskEndDate,
-        taskAuthorityType: data.taskAuthorityType,
+        taskTags: data.taskTagList,
+        taskStartDate: data.startDate,
+        taskEndDate: data.endDate,
+        taskAuthorityType: data.editDeletePermission,
         taskStatus: data.taskStatus,
       });
     }
@@ -91,7 +91,7 @@ const TaskModal = ({
 
   //각 입력란 change 이벤트
   const handleInputChange = (
-    field: keyof TaskObj,
+    field: keyof Task,
     value: string | string[] | Dayjs | RawDraftContentState | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));

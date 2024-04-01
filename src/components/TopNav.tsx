@@ -1,7 +1,7 @@
 import { AppBar, IconButton, Toolbar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
-import ProjectObj from "@/models/ProjectObj";
+import Project from "@/models/Project";
 import { useRecoilState } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
 import { useEffect } from "react";
@@ -22,11 +22,11 @@ function TopNav({ onMenuClick }: TopNavProps) {
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
-  const handleChangeMainProject = (selectedProject: ProjectObj | null) => {
+  const handleChangeMainProject = (selectedProject: Project | null) => {
     //메인 프로젝트 변경 api 호출
   };
 
-  const handleChangeSelectedProject = (selectedProject: ProjectObj | null) => {
+  const handleChangeSelectedProject = (selectedProject: Project | null) => {
     setSelectedProject(selectedProject);
   };
 

@@ -1,4 +1,4 @@
-import ProjectObj from "@/models/ProjectObj";
+import Project from "@/models/Project";
 import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
@@ -22,10 +22,10 @@ import theme from "@/theme/theme";
 import { styled } from "@mui/material/styles";
 
 type SelectableProjectProps = {
-  projects: ProjectObj[];
-  selectedProject: ProjectObj | null;
-  onClickCheckBox(selectedProject: ProjectObj | null): void;
-  onSelectedProjectChanged(value: ProjectObj | null): void;
+  projects: Project[];
+  selectedProject: Project | null;
+  onClickCheckBox(selectedProject: Project | null): void;
+  onSelectedProjectChanged(value: Project | null): void;
 };
 
 type PopperComponentProps = {
@@ -102,7 +102,7 @@ const SelectableProject = ({
 
   const handleCheckBoxClick = (
     e: React.MouseEvent<HTMLButtonElement>,
-    selectedProject: ProjectObj | null,
+    selectedProject: Project | null,
     selectedValue: boolean
   ) => {
     e.stopPropagation();
@@ -130,7 +130,7 @@ const SelectableProject = ({
 
   const handleOptionChange = (
     event: React.SyntheticEvent<Element, Event>,
-    value: ProjectObj | null
+    value: Project | null
   ) => {
     onSelectedProjectChanged(value);
     setIsOpen(false);

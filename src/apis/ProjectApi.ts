@@ -1,10 +1,26 @@
 import axios from "axios";
 import { BASE_URL } from "./domainSettings";
-import ProjectObj from "@/models/ProjectObj";
+import Project from "@/models/Project";
 
 const projectUrl = `${BASE_URL}/project`;
 
-export const getProjectList = async (userId: string): Promise<ProjectObj[]> => {
+type LastUpdateDetailType = {
+  userUuid: string;
+  userNickName: string;
+  updatedDate: string;
+};
+
+type ProjectDetailReponse = {
+  projectId: string;
+  projectName: string;
+  projectContent: string;
+  startDate: string;
+  endDate: string;
+  lastUpdateDetail: LastUpdateDetailType;
+  projectTagList: [] | null;
+};
+
+export const getProjectList = async (userId: string): Promise<Project[]> => {
   if (userId) {
     try {
       let projectList = [];
@@ -23,7 +39,7 @@ export const getProjectList = async (userId: string): Promise<ProjectObj[]> => {
 
 export const getProjectDetail = async (
   projectId: string | null
-): Promise<any> => {
+): Promise<ProjectDetailReponse | null> => {
   if (projectId) {
     try {
       let projectDetail = null;

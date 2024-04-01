@@ -1,4 +1,4 @@
-type ProjectObj = {
+type Project = {
   projectId: string;
   projectName: string;
   projectContent: string;
@@ -9,4 +9,4 @@ type ProjectObj = {
   isMainProject: bool;
 };
 
-export default ProjectObj;
+export default Project;

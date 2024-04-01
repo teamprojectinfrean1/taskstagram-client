@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./domainSettings";
-import TaskObj from "@/models/TaskObj";
+import Task from "@/models/Task";
 
 const taskUrl = `${BASE_URL}/task`;
 
@@ -10,9 +10,27 @@ type getTaskListRequest = {
   projectId: string | null;
 };
 
-type getTaskListResponse = {
-  taskList: TaskObj[];
+type TaskListResponse = {
+  taskList: Task[];
   toalTaskpage: number;
+};
+
+type LastUpdateDetailType = {
+  userUuid: string;
+  userNickName: string;
+  updatedDate: string;
+};
+
+type TaskDetailReponse = {
+  taskId: string;
+  taskTitle: string;
+  taskContent: string;
+  startDate: string;
+  endDate: string;
+  lastUpdateDetail: LastUpdateDetailType;
+  taskTagList: [] | null;
+  editDeletePermission: "allProjectMember" | "allProjectMember";
+  taskStatus: string;
 };
 
 //프로젝트에 생성된 테스크들 조회
@@ -20,7 +38,7 @@ export const getTaskList = async ({
   page,
   size,
   projectId,
-}: getTaskListRequest): Promise<getTaskListResponse | null> => {
+}: getTaskListRequest): Promise<TaskListResponse | null> => {
   if (page && size && projectId !== null) {
     try {
       let taskListResponse = null;
@@ -48,7 +66,9 @@ export const getTaskList = async ({
 };
 
 //task 상세조회
-export const getTaskDetail = async (taskId: string): Promise<any> => {
+export const getTaskDetail = async (
+  taskId: string
+): Promise<TaskDetailReponse | null> => {
   if (taskId) {
     try {
       let taskDetail = null;

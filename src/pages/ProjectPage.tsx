@@ -1,6 +1,6 @@
 import TagChipMaker from "@/components/TagChipMaker";
 import { useState, useEffect } from "react";
-import ProjectObj from "@/models/ProjectObj";
+import Project from "@/models/Project";
 import {
   Grid,
   TextField,
@@ -21,7 +21,7 @@ import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
 
 const ProjectPage = () => {
-  const [formData, setFormData] = useState<ProjectObj>({
+  const [formData, setFormData] = useState<Project>({
     projectId: "",
     projectName: "",
     projectContent: "",
@@ -53,14 +53,14 @@ const ProjectPage = () => {
         projectEndDate: data.endDate,
         projectMemberUuidList: null,
         projectTags: data.projectTagList,
-        isMainProject: data.isMainProject,
+        isMainProject: selectedProject?.isMainProject,
       });
     }
   }, [data]);
 
   //각 입력란 change 이벤트
   const handleInputChange = (
-    field: keyof ProjectObj,
+    field: keyof Project,
     value: string | string[] | null
   ) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
