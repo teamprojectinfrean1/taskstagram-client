@@ -1,11 +1,11 @@
 import { useRecoilState, useResetRecoilState } from "recoil";
 import { signupInfoState } from "@/stores/authStore";
-import { SignupInputValue } from "@/models/Auth";
+import { AuthInputValue } from "@/models/Auth";
 
 export const useChangeSignupInfo = () => {
   const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);
 
-  const changeSignupInfo = ({ key, value }: SignupInputValue) => {
+  const changeSignupInfo = ({ key, value }: AuthInputValue) => {
     setSignupInfo({
       ...signupInfo,
       [key]: value,

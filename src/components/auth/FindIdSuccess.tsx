@@ -7,7 +7,6 @@ const FindEmailSuccess = () => {
 
   const location = useLocation()
   const id = location.state.id
-  const nickname = location.state.nickname
 
   return (
     <>

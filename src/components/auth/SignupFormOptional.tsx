@@ -17,12 +17,21 @@ const SingupFormOptional = () => {
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   const signupInfo = useRecoilValue(signupInfoState);
-  
-  const signupMutation = useMutation((signupInfo: SignupInfo) => fetchSignup(signupInfo), {
-    onSuccess: (data) => {
-      navigate("/auth/signup/success", {state: data.userNickname })
+
+  const signupMutation = useMutation(
+    (signupInfo: SignupInfo) => fetchSignup(signupInfo),
+    {
+      onSuccess: (data) => {
+        if (data) {
+          navigate("/auth/signup/success", {
+            state: {
+              nickname: data,
+            },
+          });
+        }
+      },
     }
-  })
+  );
 
   return (
     <>
@@ -55,7 +64,7 @@ const SingupFormOptional = () => {
               borderRadius: "7px",
             }}
             onClick={() => {
-              signupMutation.mutate(signupInfo)
+              signupMutation.mutate(signupInfo);
             }}
           >
             가입하기

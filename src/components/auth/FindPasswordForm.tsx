@@ -1,12 +1,7 @@
-import theme from "@/theme/theme";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import EmailCertificationInput from "./EmailCertificationInput";
 
 const FindPasswordForm = () => {
-  // const navigate = useNavigate();
-  // const [findPasswordEmailFlag, setFindPasswordEmailFlag] = useState(false);
 
   return (
     <>

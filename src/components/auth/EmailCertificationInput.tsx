@@ -1,24 +1,27 @@
 import theme from "@/theme/theme";
 import { Grid, Typography, Button, TextField } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useQuery } from "react-query";
 import { requestEmailVerification } from "@/apis/auth";
 import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
 
 type EmailCertificationInputProps = {
-  findUserInfo : "findId" | "findPassword"
-}
+  findUserInfo: "findId" | "findPassword";
+};
 
-const EmailCertificationInput = ({findUserInfo}: EmailCertificationInputProps) => {
+const EmailCertificationInput = ({
+  findUserInfo,
+}: EmailCertificationInputProps) => {
   const [email, setEmail] = useState("");
-  const [isEmailValidity, setIsEmailValidity] = useState(false);
-  const showErrorMessage = !!(email && !isEmailValidity);
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  // 이메일 유효성 검사 상태
+  const validState = !!(email && !isEmailValid);
 
   // 이메일 인증 useQuery
   const { data, refetch } = useQuery(
     "emailVerification",
-    () => requestEmailVerification({findUserInfo, email}),
+    () => requestEmailVerification({ findUserInfo, email }),
     {
       enabled: false,
       cacheTime: 0,
@@ -46,15 +49,15 @@ const EmailCertificationInput = ({findUserInfo}: EmailCertificationInputProps) =
             size="small"
             placeholder={"example@email.com"}
             value={email}
-            error={showErrorMessage || data}
+            error={validState || data}
             helperText={
-              showErrorMessage
+              validState
                 ? "이메일 형식이 올바르지 않습니다."
                 : data !== undefined && "인증 번호가 전송되었습니다."
             }
             onChange={(e) => {
               setEmail(e.target.value);
-              setIsEmailValidity(
+              setIsEmailValid(
                 checkAuthInputValidity({
                   type: "email",
                   authValue: e.target.value,
@@ -72,7 +75,7 @@ const EmailCertificationInput = ({findUserInfo}: EmailCertificationInputProps) =
               height: "41px",
               borderRadius: "7px",
             }}
-            disabled={!isEmailValidity}
+            disabled={!isEmailValid}
             onClick={() => {
               refetch();
             }}
@@ -81,7 +84,11 @@ const EmailCertificationInput = ({findUserInfo}: EmailCertificationInputProps) =
           </Button>
         </Grid>
       </Grid>
-      <EmailVerificationCodeInput isSuccess={data} email={email} findUserInfo={findUserInfo} />
+      <EmailVerificationCodeInput
+        isSuccess={data}
+        email={email}
+        findUserInfo={findUserInfo}
+      />
     </>
   );
 };

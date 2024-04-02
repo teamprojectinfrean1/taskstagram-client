@@ -5,18 +5,18 @@ import { useState } from "react";
 
 type PasswordDoubleInputProps = {
   password: string;
-  passwordDoubleValidityFlag: boolean;
-  setPasswordDoubleValidityFlag(passwordDoubleFlag: boolean): void;
+  isPasswordConfirmValid: boolean;
+  setIsPasswordConfirmValid(passwordDoubleFlag: boolean): void;
 };
 
 const PasswordConfirmationInput = ({
   password,
-  passwordDoubleValidityFlag,
-  setPasswordDoubleValidityFlag,
+  isPasswordConfirmValid,
+  setIsPasswordConfirmValid,
 }: PasswordDoubleInputProps) => {
-  const [passwordDouble, setPasswordDouble] = useState("");
+  const [passwordConfirm, setPasswordConfirm] = useState("");
   const arePasswordsInSync = !!(
-    passwordDouble && !passwordDoubleValidityFlag
+    passwordConfirm && !isPasswordConfirmValid
   );
 
   return (
@@ -39,10 +39,10 @@ const PasswordConfirmationInput = ({
         placeholder={"비밀번호 확인"}
         error={arePasswordsInSync}
         helperText={arePasswordsInSync && "비밀번호가 일치하지 않습니다."}
-        value={passwordDouble}
+        value={passwordConfirm}
         onChange={(e) => {
-          setPasswordDouble(e.target.value);
-          setPasswordDoubleValidityFlag(
+          setPasswordConfirm(e.target.value);
+          setIsPasswordConfirmValid(
             passwordDoubleCheck({
               password,
               passwordDouble: e.target.value,

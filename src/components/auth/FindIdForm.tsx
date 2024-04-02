@@ -1,7 +1,5 @@
-// import { useState } from "react";
 import { Box, Typography } from "@mui/material";
 import EmailCertificationInput from "./EmailCertificationInput";
-// import FindIdEmailCertifiInput from "./EmailVerificationCodeInput";
 
 const FindIdForm = () => {
   return (

@@ -1,6 +1,6 @@
 import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
-import { Grid, OutlinedInput, Typography, Button } from "@mui/material";
+import { Grid, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { checkIdExistence } from "@/apis/auth";
 import { useQuery } from "react-query";
@@ -8,56 +8,52 @@ import { useQuery } from "react-query";
 type IdInputProps = {
   id: string;
   setId(id: string): void;
-  idValidityFlag: boolean;
-  setIdValidityFlag(value: boolean): void;
-  idDuplicateFlag: boolean;
-  setIdDuplicateFlag(value: boolean): void;
+  isIdValid: boolean;
+  setIsIdValid(value: boolean): void;
+  isIdDuplicate: boolean;
+  setIsIdDuplicate(value: boolean): void;
 };
 
 const IdInput = ({
   id,
   setId,
-  idValidityFlag,
-  setIdValidityFlag,
-  idDuplicateFlag,
-  setIdDuplicateFlag,
+  isIdValid,
+  setIsIdValid,
+  isIdDuplicate,
+  setIsIdDuplicate,
 }: IdInputProps) => {
-  const [isClickIdButton, setIsClickIdButton] = useState(false);
-  const [idErrorState, setIdErrorState] = useState(false);
-  const [idErrorMessage, setIdErrorMessage] = useState("");
+  const [errorState, setErrorState] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState("");
 
-  const idValidityState = !!(id && !idValidityFlag);
-  const idIsDisabled = !!(!idValidityFlag || idDuplicateFlag);
+  // 아이디 유효성 검사 상태
+  const validState = !!(id && !isIdValid);
+  // 아이디 중복 검사 상태
+  const disabledState = !!(!isIdValid || isIdDuplicate);
 
-  const { data, refetch } = useQuery(
-    "checkId",
-    () => checkIdExistence(id),
-    {
-      enabled: false,
-      cacheTime: 0,
-      onSuccess: (data) => {
-        if (data !== null) {
-          setIdDuplicateFlag(data)
-          if (!data) {
-            setIdErrorMessage("이미 가입된 아이디입니다. 다른 아이디를 입력해주세요.")
-            setIdErrorState(true)
-          } else  {
-            setIdErrorMessage("")
-            setIdErrorState(false)
-          }
-        }
-      },
-    }
-  );
+  const { data, refetch } = useQuery("checkId", () => checkIdExistence(id), {
+    enabled: false,
+    cacheTime: 0,
+    onSuccess: (data) => {
+      setIsIdDuplicate(data);
+      if (!data) {
+        setShowErrorMessage(
+          "이미 가입된 아이디입니다. 다른 아이디를 입력해주세요."
+        );
+        setErrorState(true);
+      } else {
+        setShowErrorMessage("");
+        setErrorState(false);
+      }
+    },
+  });
 
   useEffect(() => {
-    setIsClickIdButton(false);
-    if (idValidityState) {
-      setIdErrorMessage("아이디는 5 ~ 20자만 사용 가능합니다.");
-      setIdErrorState(true);
+    if (validState) {
+      setShowErrorMessage("아이디는 5 ~ 20자만 사용 가능합니다.");
+      setErrorState(true);
     } else {
-      setIdErrorMessage("");
-      setIdErrorState(false);
+      setShowErrorMessage("");
+      setErrorState(false);
     }
   }, [id]);
 
@@ -65,16 +61,28 @@ const IdInput = ({
     <>
       <Grid container spacing={2} sx={{ mt: 1 }}>
         <Grid item xs={9}>
-          <OutlinedInput
+          <TextField
+            sx={{
+              "& .MuiFormHelperText-root": {
+                position: "absolute",
+                mt: 5,
+                ml: 1,
+                fontSize: "11px",
+                fontWeight: "bold",
+                color: theme.palette.error.main,
+              },
+            }}
             type="text"
             fullWidth
             size="small"
             placeholder={"아이디"}
             value={id}
-            error={idErrorState}
+            error={errorState}
+            helperText={showErrorMessage}
+            disabled={isIdDuplicate}
             onChange={(e) => {
               setId(e.target.value);
-              setIdValidityFlag(
+              setIsIdValid(
                 checkAuthInputValidity({
                   type: "id",
                   authValue: e.target.value,
@@ -82,18 +90,6 @@ const IdInput = ({
               );
             }}
           />
-          <Typography
-            sx={{
-              position: "absolute",
-              mt: 0.1,
-              ml: 1,
-              fontWeight: "bold",
-              fontSize: "11px",
-              color: theme.palette.error.main,
-            }}
-          >
-            {idErrorMessage}
-          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -104,13 +100,12 @@ const IdInput = ({
               height: "41px",
               borderRadius: "7px",
             }}
-            disabled={idIsDisabled}
+            disabled={disabledState}
             onClick={() => {
               refetch();
-              setIsClickIdButton(true);
             }}
           >
-            {idDuplicateFlag ? "확인 완료" : "중복 확인"}
+            {isIdDuplicate ? "확인 완료" : "중복 확인"}
           </Button>
         </Grid>
       </Grid>

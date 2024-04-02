@@ -2,54 +2,54 @@ import theme from "@/theme/theme";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import { useState } from "react";
-import { SignupInputValue } from "@/models/Auth";
+import { AuthInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 import { useMutation, useQuery } from "react-query";
 import { resetPassword } from "@/apis/auth";
-
-type PasswordInfoFlagTypes = {
-  key: string;
-  value: boolean;
-};
+import { AuthisValid } from "@/models/Auth";
+import { resetPasswordRequest } from "@/apis/auth";
 
 const ResetPassword = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = location.state.userId
+  const userId = location.state.userId;
 
   const [passwordInfo, setPasswordInfo] = useState({
     password: "",
-    passwordDouble: ""
-  })
+  });
 
-  const [passwordValidityFlag, setPasswordValidityFlag] = useState({
-    isPasswordValidity: false,
-    ispasswordDoubleValidity: false
-  }) 
+  const [isValid, setIsValid] = useState({
+    isPasswordValid: false,
+    ispasswordConfirmValid: false,
+  });
 
-  const changePasswordInfo = ({key, value}: SignupInputValue) => {
+  const changePasswordInfo = ({ key, value }: AuthInputValue) => {
     setPasswordInfo({
       ...passwordInfo,
-      [key]: value
-    })
-  }
-
-  const changePasswordValidityFlag = ({ key, value }: PasswordInfoFlagTypes) => {
-    setPasswordValidityFlag({
-      ...passwordValidityFlag,
       [key]: value,
     });
   };
 
-  const resetPasswordMutation = useMutation(({userId, password}: any) => resetPassword({userId, password}), {
-    onSuccess: (data) => {
-      console.log(data)
-      if (data) {
-        navigate('/auth/find/password/success')
-      }
+  const changeIsPasswordValid = ({ key, value }: AuthisValid) => {
+    setIsValid({
+      ...isValid,
+      [key]: value,
+    });
+  };
+
+  const resetPasswordMutation = useMutation(
+    ({ userId, password }: resetPasswordRequest) =>
+      resetPassword({ userId, password }),
+    {
+      onSuccess: (data) => {
+        console.log(data);
+        if (data) {
+          navigate("/auth/find/password/success");
+        }
+      },
     }
-  })
+  );
 
   return (
     <>
@@ -59,19 +59,19 @@ const ResetPassword = () => {
         </Typography>
       </Box>
 
-      <PasswordInput 
-      password={passwordInfo.password}
-      setPassword={(value: string) => changePasswordInfo({key: "password", value})}
-      passwordValidityFlag = {passwordValidityFlag.isPasswordValidity}
-      setPasswordValidityFlag={(value) => {
-        changePasswordValidityFlag({key: "isPasswordValidity", value})
-      }}
+      <PasswordInput
+        password={passwordInfo.password}
+        setPassword={(value) => changePasswordInfo({ key: "password", value })}
+        isPasswordValid={isValid.isPasswordValid}
+        setIsPasswordValid={(value) => {
+          changeIsPasswordValid({ key: "isPasswordValid", value });
+        }}
       />
-      <PasswordConfirmationInput 
-        password = {passwordInfo.password}
-        passwordDoubleValidityFlag = {passwordValidityFlag.ispasswordDoubleValidity}
-        setPasswordDoubleValidityFlag={(value) => {
-          changePasswordValidityFlag({key: "ispasswordDoubleValidity", value})
+      <PasswordConfirmationInput
+        password={passwordInfo.password}
+        isPasswordConfirmValid={isValid.ispasswordConfirmValid}
+        setIsPasswordConfirmValid={(value) => {
+          changeIsPasswordValid({ key: "isPasswordConfirmValid", value });
         }}
       />
 
@@ -85,7 +85,10 @@ const ResetPassword = () => {
           borderRadius: "7px",
         }}
         onClick={() => {
-          resetPasswordMutation.mutate({userId, password: passwordInfo.password})
+          resetPasswordMutation.mutate({
+            userId,
+            password: passwordInfo.password,
+          });
         }}
       >
         변경

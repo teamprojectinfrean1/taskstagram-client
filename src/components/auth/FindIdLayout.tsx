@@ -1,9 +1,8 @@
-import { Link, Outlet, useParams } from "react-router-dom";
+import { Link, Outlet } from "react-router-dom";
 import { Box, Typography, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const FindIdLayout = () => {
-
   return (
     <>
       <Link to="/auth/login">
