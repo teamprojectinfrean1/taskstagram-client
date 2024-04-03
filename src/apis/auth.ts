@@ -4,6 +4,7 @@ import { SignupInfo } from "@/models/Auth";
 
 // const authURL = `${BASE_URL}/auth`;
 const authURL = "http://124.61.74.148:8080/api/v1/auth";
+// const authURL = "http://127.0.0.1:8080/api/v1/auth"
 
 type fetchLoginRequest = {
   email: string;
@@ -134,6 +135,7 @@ export const checkEmailVerification = async ({
         verificationCode,
       }
     );
+    console.log(response.data)
     return response.data.data;
   } catch (err) {
     console.log(err);

@@ -1,7 +1,7 @@
 import theme from "@/theme/theme";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { AuthInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
@@ -21,7 +21,7 @@ const ResetPassword = () => {
 
   const [isValid, setIsValid] = useState({
     isPasswordValid: false,
-    ispasswordConfirmValid: false,
+    isPasswordConfirmValid: false,
   });
 
   const changePasswordInfo = ({ key, value }: AuthInputValue) => {
@@ -51,6 +51,12 @@ const ResetPassword = () => {
     }
   );
 
+  const [isPasswordRequiredInput, setIsPasswordRequiredInput] = useState(false)
+  useEffect(() => {
+    const requiredInputCheck = Object.values(isValid).every((flag) =>  flag === true)
+    setIsPasswordRequiredInput(requiredInputCheck)
+  }, [isValid])
+
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
@@ -69,7 +75,7 @@ const ResetPassword = () => {
       />
       <PasswordConfirmationInput
         password={passwordInfo.password}
-        isPasswordConfirmValid={isValid.ispasswordConfirmValid}
+        isPasswordConfirmValid={isValid.isPasswordConfirmValid}
         setIsPasswordConfirmValid={(value) => {
           changeIsPasswordValid({ key: "isPasswordConfirmValid", value });
         }}
@@ -84,6 +90,7 @@ const ResetPassword = () => {
           bgcolor: `${theme.palette.secondary.main}`,
           borderRadius: "7px",
         }}
+        disabled={!isPasswordRequiredInput}
         onClick={() => {
           resetPasswordMutation.mutate({
             userId,

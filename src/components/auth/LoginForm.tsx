@@ -54,6 +54,9 @@ const LoginForm = () => {
         onChange={(e) => {
           setPassword(e.target.value);
         }}
+        onKeyDown={(e) => {
+          e.key === "Enter" && refetch();
+        }}
       />
 
       {data !== undefined && !data && (
