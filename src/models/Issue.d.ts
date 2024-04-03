@@ -1,11 +1,23 @@
-export type IssueFormData = {
+import { RawDraftContentState } from "draft-js";
+
+type IssueFormData = {
   title: string | null;
-  content: ContentState | null;
+  content: RawDraftContentState | null;
   assignee: string[] | null;
   task: string | null;
-  dateRange: [string, string] | null;
+  startDate: string | null;
+  endDate: string | null;
   type: string | null;
   status: string | null;
 };
 
-export type Issue = {};
+export type IssueSummary = {
+  issueId: string;
+  issueName: string;
+  taskId: string;
+  taskName: string;
+  userUuid: string;
+  userNickname: string;
+  userImageUrl: string;
+};
+

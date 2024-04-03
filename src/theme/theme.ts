@@ -4,25 +4,39 @@ const theme = createTheme({
   palette: {
     mode: "light",
     primary: {
-      main: "#445c6f",
-      dark: "#121923",
-      contrastText: "rgba(255,255,255,0.87)",
-      light: "#bfbfc9",
+      main: "#121923",
+      light: "white"
     },
     secondary: {
       main: "#173665",
-      dark: "#293737",
-      light: "#bbc7c7",
-    },
-    text: {
-      primary: "#000000",
-      secondary: "#20315C",
+      dark: "rgb(69, 94, 131)",
     },
     background: {
-      default: "#E5E8ED",
+      default: "#e5e8ed",
+      paper: "rgba(228, 230, 237)"
+    },
+    text: {
+      secondary: "#121923",
     },
     error: {
       main: "#ff1744",
+    },
+  },
+  components: {
+    MuiTooltip: {
+      styleOverrides: {
+        arrow: {
+          color: "#F7F5FF",
+          "&::before": {
+            border: "1px solid #6D53F3",
+          },
+        },
+        tooltip: {
+          fontSize: "14px",
+          fontWeight: 600,
+          padding: 5,
+        },
+      },
     },
   },
 });

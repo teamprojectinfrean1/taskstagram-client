@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Autocomplete, Box, InputLabel, TextField } from "@mui/material";
+import { Autocomplete, Box, InputLabel, Paper, TextField } from "@mui/material";
+import theme from "@/theme/theme";
 
 type SearchableSelectProps = {
   label: string;
@@ -24,7 +25,6 @@ const SearchableSelect = ({
     onSelectionChange(value);
   };
 
-
   return (
     <Box>
       <InputLabel htmlFor={`input-${label}`} sx={{ fontWeight: "bold", mb: 1 }}>
@@ -37,6 +37,9 @@ const SearchableSelect = ({
         isOptionEqualToValue={(option, value) => option === value}
         multiple={multiselect}
         noOptionsText="일치하는 옵션이 없습니다"
+        PaperComponent={({ children }) => (
+          <Paper style={{ backgroundColor: theme.palette.background.default }}>{children}</Paper>
+        )}
         renderInput={(params) => (
           <TextField
             {...params}
@@ -48,7 +51,13 @@ const SearchableSelect = ({
             }}
           />
         )}
-        renderOption={(props, option) => <li {...props}>{option}</li>}
+        renderOption={(props, option) => (
+          <li
+            {...props}
+          >
+            {option}
+          </li>
+        )}
       />
     </Box>
   );

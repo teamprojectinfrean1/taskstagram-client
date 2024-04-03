@@ -1,23 +1,28 @@
-import { Avatar } from "@mui/material";
-import { SxProps } from "@mui/material/styles";
+import React, { forwardRef } from 'react';
+import { Avatar, AvatarProps } from '@mui/material';
+import { SxProps } from '@mui/system';
 
-type UserAvatarProps = {
+interface UserAvatarProps extends AvatarProps {
   sx?: SxProps;
-};
+}
 
-const UserAvatar = ({ sx }: UserAvatarProps) => {
-  return (
-    <Avatar
-      alt="user avatar"
-      /* src="" 나중에 추가 */
-      sizes="140px"
-      sx={{
-        ...sx,
-        width: 60,
-        height: 60,
-      }}
-    />
-  );
-};
+const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
+  ({ sx, ...props }, ref) => {
+    return (
+      <Avatar
+        ref={ref}
+        alt="user avatar"
+        // src=""
+        sizes="140px"
+        sx={{
+          width: 50,
+          height: 50,
+          ...sx,
+        }}
+        {...props}
+      />
+    );
+  }
+);
 
 export default UserAvatar;
