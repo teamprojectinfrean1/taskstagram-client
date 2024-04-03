@@ -9,6 +9,7 @@ const ProfilePage = () => {
           backgroundColor: "#173665",
           minHeight: "10rem",
           borderRadius: "7px 7px 0 0",
+          minWidth:'800px',
         }}
       >
         <Typography variant="h5" sx={{ pl: 3, pt: 2, color: "white" }}>
@@ -23,6 +24,7 @@ const ProfilePage = () => {
           justifyContent: "center",
           alignItems: "center",
           borderRadius: "0 0 7px 7px",
+          minWidth:'800px',
         }}
       >
         <Box
@@ -31,7 +33,7 @@ const ProfilePage = () => {
             backgroundColor: "white",
             width: "60%",
             height: "90%",
-            borderRadius: "7px",
+            borderRadius: "7px"
           }}
         >
           <Box sx={{ p: 5, height: "100%" }}>
