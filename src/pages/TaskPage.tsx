@@ -6,8 +6,8 @@ import { Grid, Box, Typography, Pagination } from "@mui/material";
 import Task from "@/models/Task";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
-import { useQuery } from "react-query";
-import { getTaskList } from "@/apis/TaskApi";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getTaskList, deleteOneTask } from "@/apis/TaskApi";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -16,6 +16,7 @@ const TaskPage = () => {
   const [selectedTask, setSelectedTask] = useState<Task | null>();
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery(
     ["getTaskList", selectedProject, currentPage],
@@ -30,6 +31,14 @@ const TaskPage = () => {
     }
     //추후 실패시 동작되는 로직도 추가 예정
   );
+
+  const deleteMutation = useMutation({
+    mutationFn: deleteOneTask,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
 
   //util에 주입예정
   const replaceItemAtIndex = (arr: Task[], index: number, newValue: Task) => {
@@ -55,11 +64,9 @@ const TaskPage = () => {
   };
 
   const deleteTask = (task: Task) => {
-    //const index = taskList.findIndex((listItem) => listItem === task);
-    //const newList = removeItemAtIndex(taskList, index);
-    //setTaskList(newList);
-    //해당 task delete하는 api 호출로 대체 예정
-    //전체 task select하는 api호출 후 setTaskList();
+    if (task !== null && task.taskId) {
+      deleteMutation.mutate(task.taskId);
+    }
   };
 
   const handleCloseTaskModal = () => {

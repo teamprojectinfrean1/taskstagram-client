@@ -84,3 +84,24 @@ export const getTaskDetail = async (
     return null;
   }
 };
+
+//task 삭제
+export const deleteOneTask = async (taskId: string): Promise<boolean> => {
+  if (taskId) {
+    try {
+      const response = await axios.delete(`${taskUrl}`, {
+        params: {
+          taskId: taskId,
+        },
+      });
+      if (response.data && response.data.isSuccess) {
+        return response.data.isSuccess;
+      }
+      return false;
+    } catch {
+      return false;
+    }
+  } else {
+    return false;
+  }
+};
