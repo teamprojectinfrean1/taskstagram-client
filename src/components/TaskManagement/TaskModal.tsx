@@ -21,14 +21,15 @@ import { RawDraftContentState, convertToRaw } from "draft-js";
 import theme from "@/theme/theme";
 import TaskTagChipMaker from "@/components/TagChipMaker";
 import DurationPicker from "@/components/DurationPicker";
-import uuid from "react-uuid";
 import { useQuery } from "react-query";
-import { getTaskDetail } from "@/apis/TaskApi";
+import { getTaskDetail, CreateTaskRequest } from "@/apis/TaskApi";
+import { selectedProjectState } from "@/stores/Store";
+import { useRecoilValue } from "recoil";
 
 type TaskModalProps = {
   selectedTask: Task;
   isOpen: boolean;
-  onAdd(task: Task): void;
+  onAdd(task: CreateTaskRequest): void;
   onReplace(currentTask: Task, newTask: Task): void;
   onDelete(task: Task): void;
   onCloseModal: () => void;
@@ -67,6 +68,8 @@ const TaskModal = ({
     taskAuthorityType: "",
     taskStatus: null,
   });
+
+  const selectedProject = useRecoilValue(selectedProjectState);
 
   const { data } = useQuery(
     ["getTaskDetail", selectedTask],
@@ -115,17 +118,18 @@ const TaskModal = ({
 
   //저장버튼 이벤트
   const onClickSaveBtn = () => {
-    if (!selectedTask) {
+    if (selectedProject !== null && !selectedTask) {
       //새로운 task 생성시
+      //필수값 체크 로직 추가해야함.
       onAdd({
-        taskId: uuid(), //taskId 주입
+        projectId: selectedProject.projectId,
+        writerUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
         taskTitle: formData.taskTitle,
-        taskContent: formData.taskContent,
-        taskTags: formData.taskTags,
-        taskStartDate: formData.taskStartDate,
-        taskEndDate: formData.taskEndDate,
-        taskAuthorityType: formData.taskAuthorityType,
-        taskStatus: formData.taskStatus,
+        taskContent: formData.taskContent !== null ? formData.taskContent : "",
+        taskTagList: formData.taskTags,
+        startDate: formData.taskStartDate !== null ? new Date(formData.taskStartDate).toISOString() : null,
+        endDate: formData.taskEndDate !== null ? new Date(formData.taskEndDate).toISOString() : null,
+        editDeletePermission: formData.taskAuthorityType,
       });
     } else {
       //이미 생성된 Task

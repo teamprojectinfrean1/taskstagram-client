@@ -1,13 +1,18 @@
 import TaskTicket from "@/components/TaskManagement/TaskTicket";
 import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
 import Task from "@/models/Task";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { getTaskList, deleteOneTask } from "@/apis/TaskApi";
+import {
+  getTaskList,
+  deleteOneTask,
+  createOneTask,
+  CreateTaskRequest,
+} from "@/apis/TaskApi";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
@@ -40,6 +45,14 @@ const TaskPage = () => {
     //추후 실패시 동작되는 로직도 추가 예정
   });
 
+  const createMutation = useMutation({
+    mutationFn: createOneTask,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
+
   //util에 주입예정
   const replaceItemAtIndex = (arr: Task[], index: number, newValue: Task) => {
     return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
@@ -50,10 +63,10 @@ const TaskPage = () => {
     return [...arr.slice(0, index), ...arr.slice(index + 1)];
   };
 
-  const addTask = (task: Task) => {
-    //setTaskList((oldTaskList) => [...oldTaskList, task]);
-    //해당 task create하는 api 호출로 대체 예정
-    //setCurrentPage();
+  const addTask = (request: CreateTaskRequest) => {
+    if (request !== null) {
+      createMutation.mutate(request);
+    }
   };
 
   const replaceTask = (previousTask: Task, newTask: Task) => {

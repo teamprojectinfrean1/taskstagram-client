@@ -4,7 +4,7 @@ import Task from "@/models/Task";
 
 const taskUrl = `${BASE_URL}/task`;
 
-type getTaskListRequest = {
+type GetTaskListRequest = {
   page: number;
   size: number;
   projectId: string | null;
@@ -33,12 +33,23 @@ type TaskDetailReponse = {
   taskStatus: string;
 };
 
+export type CreateTaskRequest = {
+  projectId: string | null;
+  writerUuid: string | null;
+  taskTitle: string;
+  taskContent: string | null;
+  taskTagList: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  editDeletePermission: string;
+};
+
 //프로젝트에 생성된 테스크들 조회
 export const getTaskList = async ({
   page,
   size,
   projectId,
-}: getTaskListRequest): Promise<TaskListResponse | null> => {
+}: GetTaskListRequest): Promise<TaskListResponse | null> => {
   if (page && size && projectId !== null) {
     try {
       let taskListResponse = null;
@@ -77,6 +88,50 @@ export const getTaskDetail = async (
         taskDetail = response.data.data;
       }
       return taskDetail;
+    } catch {
+      return null;
+    }
+  } else {
+    return null;
+  }
+};
+
+//task 생성
+export const createOneTask = async ({
+  projectId,
+  writerUuid,
+  taskTitle,
+  taskContent,
+  taskTagList,
+  startDate,
+  endDate,
+  editDeletePermission,
+}: CreateTaskRequest): Promise<string | null> => {
+  if (
+    projectId !== null &&
+    writerUuid !== null &&
+    taskTitle !== null &&
+    startDate !== null &&
+    endDate !== null &&
+    editDeletePermission !== null
+  ) {
+    try {
+      let taskListResponse = null;
+      const response = await axios.post(`${taskUrl}`, {
+        projectId: projectId,
+        writerUuid: writerUuid,
+        taskTitle: taskTitle,
+        taskContent: taskContent,
+        taskTagList: taskTagList,
+        startDate: startDate,
+        endDate: endDate,
+        editDeletePermission: editDeletePermission,
+      });
+
+      if (response.data && response.data.data) {
+        taskListResponse = response.data.dataList;
+      }
+      return taskListResponse;
     } catch {
       return null;
     }
