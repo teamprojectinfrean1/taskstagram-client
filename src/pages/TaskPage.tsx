@@ -11,7 +11,9 @@ import {
   getTaskList,
   deleteOneTask,
   createOneTask,
+  replaceOneTask,
   CreateTaskRequest,
+  ReplaceTaskRequest,
 } from "@/apis/TaskApi";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
@@ -53,15 +55,13 @@ const TaskPage = () => {
     //추후 실패시 동작되는 로직도 추가 예정
   });
 
-  //util에 주입예정
-  const replaceItemAtIndex = (arr: Task[], index: number, newValue: Task) => {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
-  };
-
-  //util에 주입예정
-  const removeItemAtIndex = (arr: Task[], index: number) => {
-    return [...arr.slice(0, index), ...arr.slice(index + 1)];
-  };
+  const replaceMutation = useMutation({
+    mutationFn: replaceOneTask,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
 
   const addTask = (request: CreateTaskRequest) => {
     if (request !== null) {
@@ -69,11 +69,10 @@ const TaskPage = () => {
     }
   };
 
-  const replaceTask = (previousTask: Task, newTask: Task) => {
-    //onst index = taskList.findIndex((listItem) => listItem === previousTask);
-    //const newList = replaceItemAtIndex(taskList, index, newTask);
-    //setTaskList(newList);
-    //해당 task update하는 api 호출로 대체 예정
+  const replaceTask = (request: ReplaceTaskRequest) => {
+    if (request !== null) {
+      replaceMutation.mutate(request);
+    }
   };
 
   const deleteTask = (task: Task) => {
@@ -93,17 +92,6 @@ const TaskPage = () => {
   ) => {
     setCurrentPage(value);
   };
-
-  // useEffect(()=>{
-  //   const taskobjs:Task[] = Array.from(Array(7)).map((_, index) =>
-  //     {
-  //       return {
-  //       taskId: `TaskId${index+1}`,
-  //       taskName: `Task${index+1}`,
-  //       taskExplanation: `Task${index+1}에 대한 설명을 간단하게 적어주세요.`}
-  //     });
-  //   setTaskList([...taskobjs]);
-  // }, []);
 
   return (
     <div>

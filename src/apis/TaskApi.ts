@@ -44,6 +44,17 @@ export type CreateTaskRequest = {
   editDeletePermission: string;
 };
 
+export type ReplaceTaskRequest = {
+  selectedTaskId: string | null;
+  updaterUuid: string | null;
+  taskTitle: string;
+  taskContent: string | null;
+  taskTagList: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  editDeletePermission: string;
+};
+
 //프로젝트에 생성된 테스크들 조회
 export const getTaskList = async ({
   page,
@@ -127,6 +138,56 @@ export const createOneTask = async ({
         endDate: endDate,
         editDeletePermission: editDeletePermission,
       });
+
+      if (response.data && response.data.data) {
+        taskListResponse = response.data.dataList;
+      }
+      return taskListResponse;
+    } catch {
+      return null;
+    }
+  } else {
+    return null;
+  }
+};
+
+export const replaceOneTask = async ({
+  selectedTaskId,
+  updaterUuid,
+  taskTitle,
+  taskContent,
+  taskTagList,
+  startDate,
+  endDate,
+  editDeletePermission,
+}: ReplaceTaskRequest): Promise<string | null> => {
+  if (
+    selectedTaskId !== null &&
+    updaterUuid !== null &&
+    taskTitle !== null &&
+    startDate !== null &&
+    endDate !== null &&
+    editDeletePermission !== null
+  ) {
+    try {
+      let taskListResponse = null;
+      const response = await axios.put(
+        `${taskUrl}`,
+        {
+          updaterUuid: updaterUuid,
+          taskTitle: taskTitle,
+          taskContent: taskContent,
+          taskTagList: taskTagList,
+          startDate: startDate,
+          endDate: endDate,
+          editDeletePermission: editDeletePermission,
+        },
+        {
+          params: {
+            taskId: selectedTaskId,
+          },
+        }
+      );
 
       if (response.data && response.data.data) {
         taskListResponse = response.data.dataList;

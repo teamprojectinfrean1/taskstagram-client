@@ -22,15 +22,19 @@ import theme from "@/theme/theme";
 import TaskTagChipMaker from "@/components/TagChipMaker";
 import DurationPicker from "@/components/DurationPicker";
 import { useQuery } from "react-query";
-import { getTaskDetail, CreateTaskRequest } from "@/apis/TaskApi";
+import {
+  getTaskDetail,
+  CreateTaskRequest,
+  ReplaceTaskRequest,
+} from "@/apis/TaskApi";
 import { selectedProjectState } from "@/stores/Store";
 import { useRecoilValue } from "recoil";
 
 type TaskModalProps = {
   selectedTask: Task;
   isOpen: boolean;
-  onAdd(task: CreateTaskRequest): void;
-  onReplace(currentTask: Task, newTask: Task): void;
+  onAdd(request: CreateTaskRequest): void;
+  onReplace(request: ReplaceTaskRequest): void;
   onDelete(task: Task): void;
   onCloseModal: () => void;
 };
@@ -127,21 +131,33 @@ const TaskModal = ({
         taskTitle: formData.taskTitle,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
-        startDate: formData.taskStartDate !== null ? new Date(formData.taskStartDate).toISOString() : null,
-        endDate: formData.taskEndDate !== null ? new Date(formData.taskEndDate).toISOString() : null,
+        startDate:
+          formData.taskStartDate !== null
+            ? new Date(formData.taskStartDate).toISOString()
+            : null,
+        endDate:
+          formData.taskEndDate !== null
+            ? new Date(formData.taskEndDate).toISOString()
+            : null,
         editDeletePermission: formData.taskAuthorityType,
       });
     } else {
       //이미 생성된 Task
-      onReplace(selectedTask, {
-        ...selectedTask,
+      onReplace({
+        selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
+        updaterUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
         taskTitle: formData.taskTitle,
-        taskContent: formData.taskContent,
-        taskTags: formData.taskTags,
-        taskStartDate: formData.taskStartDate,
-        taskEndDate: formData.taskEndDate,
-        taskAuthorityType: formData.taskAuthorityType,
-        taskStatus: formData.taskStatus,
+        taskContent: formData.taskContent !== null ? formData.taskContent : "",
+        taskTagList: formData.taskTags,
+        startDate:
+          formData.taskStartDate !== null
+            ? new Date(formData.taskStartDate).toISOString()
+            : null,
+        endDate:
+          formData.taskEndDate !== null
+            ? new Date(formData.taskEndDate).toISOString()
+            : null,
+        editDeletePermission: formData.taskAuthorityType,
       });
     }
     handleModalClose();
@@ -261,12 +277,12 @@ const TaskModal = ({
                   }
                 >
                   <FormControlLabel
-                    value="allUsers"
+                    value="allProjectMember"
                     control={<Radio />}
                     label="모든 구성원"
                   />
                   <FormControlLabel
-                    value="onlyLeader"
+                    value="projectLeader"
                     control={<Radio />}
                     label="리더만"
                   />
