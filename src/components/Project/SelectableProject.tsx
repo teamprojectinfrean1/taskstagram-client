@@ -23,7 +23,7 @@ import { styled } from "@mui/material/styles";
 type SelectableProjectProps = {
   projects: Project[];
   selectedProject: Project | null;
-  onClickCheckBox(selectedProject: Project | null): void;
+  onClickCheckBox(selectedProjectId: string | null): void;
   onSelectedProjectChanged(value: Project | null): void;
 };
 
@@ -100,11 +100,17 @@ const SelectableProject = ({
 
   const handleCheckBoxClick = (
     e: React.MouseEvent<HTMLButtonElement>,
-    selectedProject: Project | null,
-    selectedValue: boolean
+    selectedProject: Project | null
   ) => {
     e.stopPropagation();
-    onClickCheckBox(selectedProject);
+    //메인 프로젝트가 아닌 프로젝트만 변경되도록
+    if (
+      selectedProject !== null &&
+      selectedProject.projectId !== null &&
+      selectedProject.isMainProject === false
+    ) {
+      onClickCheckBox(selectedProject.projectId);
+    }
   };
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -200,7 +206,7 @@ const SelectableProject = ({
                     <Checkbox
                       disableRipple
                       onClick={(e) => {
-                        handleCheckBoxClick(e, option, selected);
+                        handleCheckBoxClick(e, option);
                       }}
                       checked={option.isMainProject}
                       icon={

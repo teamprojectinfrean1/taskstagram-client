@@ -5,8 +5,8 @@ import Project from "@/models/Project";
 import { useRecoilState } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
 import { useEffect } from "react";
-import { useQuery } from "react-query";
-import { getProjectList } from "@/apis/ProjectApi";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -15,6 +15,7 @@ type TopNavProps = {
 function TopNav({ onMenuClick }: TopNavProps) {
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
+  const queryClient = useQueryClient();
 
   const { data } = useQuery(
     "getProjectList",
@@ -22,8 +23,16 @@ function TopNav({ onMenuClick }: TopNavProps) {
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
-  const handleChangeMainProject = (selectedProject: Project | null) => {
-    //메인 프로젝트 변경 api 호출
+  const changeMainprojectMuation = useMutation({
+    mutationFn: changeMainProject,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
+
+  const handleChangeMainProject = (selectedProjectId: string | null) => {
+    changeMainprojectMuation.mutate(selectedProjectId);
   };
 
   const handleChangeSelectedProject = (selectedProject: Project | null) => {

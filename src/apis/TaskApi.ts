@@ -117,7 +117,7 @@ export const createOneTask = async ({
   startDate,
   endDate,
   editDeletePermission,
-}: CreateTaskRequest): Promise<string | null> => {
+}: CreateTaskRequest): Promise<boolean> => {
   if (
     projectId !== null &&
     writerUuid !== null &&
@@ -127,7 +127,6 @@ export const createOneTask = async ({
     editDeletePermission !== null
   ) {
     try {
-      let taskListResponse = null;
       const response = await axios.post(`${taskUrl}`, {
         projectId: projectId,
         writerUuid: writerUuid,
@@ -139,15 +138,15 @@ export const createOneTask = async ({
         editDeletePermission: editDeletePermission,
       });
 
-      if (response.data && response.data.data) {
-        taskListResponse = response.data.dataList;
+      if (response.data && response.data.isSuccess) {
+        return response.data.isSuccess;
       }
-      return taskListResponse;
+      return false;
     } catch {
-      return null;
+      return false;
     }
   } else {
-    return null;
+    return false;
   }
 };
 
@@ -160,7 +159,7 @@ export const replaceOneTask = async ({
   startDate,
   endDate,
   editDeletePermission,
-}: ReplaceTaskRequest): Promise<string | null> => {
+}: ReplaceTaskRequest): Promise<boolean> => {
   if (
     selectedTaskId !== null &&
     updaterUuid !== null &&
@@ -170,7 +169,6 @@ export const replaceOneTask = async ({
     editDeletePermission !== null
   ) {
     try {
-      let taskListResponse = null;
       const response = await axios.put(
         `${taskUrl}`,
         {
@@ -189,15 +187,15 @@ export const replaceOneTask = async ({
         }
       );
 
-      if (response.data && response.data.data) {
-        taskListResponse = response.data.dataList;
+      if (response.data && response.data.isSuccess) {
+        return response.data.isSuccess;
       }
-      return taskListResponse;
+      return false;
     } catch {
-      return null;
+      return false;
     }
   } else {
-    return null;
+    return false;
   }
 };
 
