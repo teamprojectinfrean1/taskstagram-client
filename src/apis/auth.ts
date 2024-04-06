@@ -3,11 +3,11 @@ import { BASE_URL } from "./domainSettings";
 import { SignupInfo } from "@/models/Auth";
 
 // const authURL = `${BASE_URL}/auth`;
-const authURL = "http://124.61.74.148:8080/api/v1/auth";
-// const authURL = "http://127.0.0.1:8080/api/v1/auth"
+// const authURL = "http://124.61.74.148:8080/api/v1/auth";
+const authURL = "http://127.0.0.1:8080/api/v1/auth"
 
 type fetchLoginRequest = {
-  email: string;
+  id: string;
   password: string;
 };
 
@@ -80,6 +80,7 @@ export const fetchSignup = async ({
       profileImage,
     });
     // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
+    console.log(response.data)
     return response.data.nickname;
   } catch (err) {
     return false;
@@ -87,10 +88,10 @@ export const fetchSignup = async ({
 };
 
 // 로그인 api
-export const fetchLogin = async ({ email, password }: fetchLoginRequest) => {
+export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
   try {
     const response = await axios.post(`${authURL}/login`, {
-      email,
+      id,
       password,
     });
     const accessToken = response.data;
@@ -165,3 +166,13 @@ export const resetPassword = async ({
     console.error(err);
   }
 };
+
+export const KakaoLogin = async () => {
+  const oauthServerType = 'KAKAO'
+  try {
+    const response = await axios.get(`http://124.61.74.148:8080/api/v1/oauth/${oauthServerType}`)
+    console.log(response.data)
+  } catch(err) {
+    console.log(err);
+  }
+}

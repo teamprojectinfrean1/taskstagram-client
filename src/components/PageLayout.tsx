@@ -13,13 +13,13 @@ const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드  
   const setUserInfo = useSetRecoilState(userInfoState);
   const { data } = useQuery("userInfo", () => getUserInfo(), {
-    onSuccess: (data) => {
-      if (data) {
-        setUserInfo(data);
-      }
-    },
+    // onSuccess: (data) => {
+    //   if (data) {
+    //     setUserInfo(data);
+    //   }
+    // },
   });
-
+    
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
   const handleClose = () => {

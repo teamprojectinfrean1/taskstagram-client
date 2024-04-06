@@ -5,7 +5,6 @@ import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
-import ProfilePage from "@/pages/ProfilePage";
 import FindIdForm from "@/components/auth/FindIdForm";
 import LoginForm from "@/components/auth/LoginForm";
 import FindIdLayout from "@/components/auth/FindIdLayout";
@@ -19,6 +18,10 @@ import ProjectPage from "./pages/ProjectPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import ResetPassword from "@/components/auth/ResetPassword";
 import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
+import MyPage from "./pages/MyPage";
+import ChangePassword from "./components/MyPage/ChangePassword";
+import ChangeNickname from "./components/MyPage/ChangeNickname";
+import UserInfo from "./components/MyPage/UserInfo";
 
 const router = createBrowserRouter([
   {
@@ -78,9 +81,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRouter>
+      // <ProtectedRouter>
         <PageLayout />
-      </ProtectedRouter>
+      // </ProtectedRouter>
     ),
     errorElement: <NotFoundPage />,
     children: [
@@ -94,7 +97,21 @@ const router = createBrowserRouter([
       },
       {
         path: "/mypage",
-        element: <ProfilePage />,
+        element: <MyPage />,
+        children: [
+          {
+            index: true,
+            element: <UserInfo />
+          },
+          {
+            path : "change/nickname",
+            element: <ChangeNickname />
+          },
+          {
+            path: "change/password",
+            element: <ChangePassword />
+          }
+        ]
       },
       {
         path: "/project",

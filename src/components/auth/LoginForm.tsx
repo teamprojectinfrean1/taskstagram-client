@@ -8,13 +8,13 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
   const { data, refetch } = useQuery(
     "login",
-    () => fetchLogin({ email, password }),
+    () => fetchLogin({ id, password }),
     {
       enabled: false,
       cacheTime: 0,
@@ -31,16 +31,16 @@ const LoginForm = () => {
       <Typography variant="h5" sx={{ fontWeight: "bold", mt: 8 }}>
         로그인
       </Typography>
-      <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
+      <Typography sx={{ mt: 5, ml: 0.5 }}>ID</Typography>
       <OutlinedInput
-        type="email"
+        type="text"
         fullWidth
         size="small"
-        placeholder={"example@email.com"}
+        placeholder={"아이디"}
         sx={{ mt: 1 }}
-        value={email}
+        value={id}
         onChange={(e) => {
-          setEmail(e.target.value);
+          setId(e.target.value);
         }}
       />
       <Typography sx={{ mt: 3, ml: 0.5 }}>Password</Typography>
