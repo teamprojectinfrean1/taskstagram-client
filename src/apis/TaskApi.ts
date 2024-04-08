@@ -66,9 +66,9 @@ export const getTaskList = async ({
       let taskListResponse = null;
       const response = await axios.get(`${taskUrl}`, {
         params: {
-          page: page,
-          size: size,
-          projectId: projectId,
+          page,
+          size,
+          projectId,
         },
       });
 
@@ -128,14 +128,14 @@ export const createOneTask = async ({
   ) {
     try {
       const response = await axios.post(`${taskUrl}`, {
-        projectId: projectId,
-        writerUuid: writerUuid,
-        taskTitle: taskTitle,
-        taskContent: taskContent,
-        taskTagList: taskTagList,
-        startDate: startDate,
-        endDate: endDate,
-        editDeletePermission: editDeletePermission,
+        projectId,
+        writerUuid,
+        taskTitle,
+        taskContent,
+        taskTagList,
+        startDate,
+        endDate,
+        editDeletePermission,
       });
 
       if (response.data && response.data.isSuccess) {
@@ -172,13 +172,13 @@ export const replaceOneTask = async ({
       const response = await axios.put(
         `${taskUrl}`,
         {
-          updaterUuid: updaterUuid,
-          taskTitle: taskTitle,
-          taskContent: taskContent,
-          taskTagList: taskTagList,
-          startDate: startDate,
-          endDate: endDate,
-          editDeletePermission: editDeletePermission,
+          updaterUuid,
+          taskTitle,
+          taskContent,
+          taskTagList,
+          startDate,
+          endDate,
+          editDeletePermission,
         },
         {
           params: {

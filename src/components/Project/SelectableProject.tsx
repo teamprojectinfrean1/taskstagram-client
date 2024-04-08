@@ -1,4 +1,4 @@
-import Project from "@/models/Project";
+import { ProjectSummary } from "@/models/Project";
 import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
@@ -19,12 +19,13 @@ import DoneIcon from "@mui/icons-material/Done";
 import React, { useState } from "react";
 import theme from "@/theme/theme";
 import { styled } from "@mui/material/styles";
+import { useRecoilValue } from "recoil";
+import { selectedProjectState } from "@/stores/Store";
 
 type SelectableProjectProps = {
-  projects: Project[];
-  selectedProject: Project | null;
+  projects: ProjectSummary[];
   onClickCheckBox(selectedProjectId: string | null): void;
-  onSelectedProjectChanged(value: Project | null): void;
+  onSelectedProjectChanged(value: ProjectSummary | null): void;
 };
 
 type PopperComponentProps = {
@@ -91,16 +92,16 @@ const StyledPopper = styled(Popper)(({ theme }) => ({
 
 const SelectableProject = ({
   projects,
-  selectedProject,
   onSelectedProjectChanged,
   onClickCheckBox,
 }: SelectableProjectProps) => {
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const selectedProject = useRecoilValue(selectedProjectState);
 
   const handleCheckBoxClick = (
     e: React.MouseEvent<HTMLButtonElement>,
-    selectedProject: Project | null
+    selectedProject: ProjectSummary | null
   ) => {
     e.stopPropagation();
     //메인 프로젝트가 아닌 프로젝트만 변경되도록
@@ -131,7 +132,7 @@ const SelectableProject = ({
 
   const handleOptionChange = (
     event: React.SyntheticEvent<Element, Event>,
-    value: Project | null
+    value: ProjectSummary | null
   ) => {
     onSelectedProjectChanged(value);
     handleClose();

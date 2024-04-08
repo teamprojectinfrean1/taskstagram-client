@@ -1,7 +1,7 @@
 import { AppBar, IconButton, Toolbar, useTheme } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
-import Project from "@/models/Project";
+import { ProjectSummary } from "@/models/Project";
 import { useRecoilState } from "recoil";
 import { selectedProjectState } from "@/stores/Store";
 import { useEffect } from "react";
@@ -35,7 +35,9 @@ function TopNav({ onMenuClick }: TopNavProps) {
     changeMainprojectMuation.mutate(selectedProjectId);
   };
 
-  const handleChangeSelectedProject = (selectedProject: Project | null) => {
+  const handleChangeSelectedProject = (
+    selectedProject: ProjectSummary | null
+  ) => {
     setSelectedProject(selectedProject);
   };
 
@@ -54,7 +56,6 @@ function TopNav({ onMenuClick }: TopNavProps) {
         </IconButton>
         <SelectableProject
           projects={data ?? []}
-          selectedProject={selectedProject}
           onSelectedProjectChanged={handleChangeSelectedProject}
           onClickCheckBox={handleChangeMainProject}
         />

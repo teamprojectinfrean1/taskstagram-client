@@ -1,4 +1,4 @@
-type Project = {
+export type ProjectFormData = {
   projectId: string;
   projectName: string;
   projectContent: string;
@@ -9,4 +9,8 @@ type Project = {
   isMainProject: bool;
 };
 
-export default Project;
+export type ProjectSummary = {
+  projectId: string;
+  projectName: string;
+  isMainProject: bool;
+};

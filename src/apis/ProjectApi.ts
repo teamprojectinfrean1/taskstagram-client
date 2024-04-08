@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BASE_URL } from "./domainSettings";
-import Project from "@/models/Project";
+import { ProjectSummary } from "@/models/Project";
 
 const projectUrl = `${BASE_URL}/project`;
 
@@ -21,7 +21,9 @@ type ProjectDetailReponse = {
 };
 
 // 프로젝트 리스트 조회
-export const getProjectList = async (userId: string): Promise<Project[]> => {
+export const getProjectList = async (
+  userId: string
+): Promise<ProjectSummary[]> => {
   if (userId) {
     try {
       let projectList = [];
