@@ -26,12 +26,8 @@ export const getProjectList = async (
 ): Promise<ProjectSummary[]> => {
   if (userId) {
     try {
-      let projectList = [];
       const response = await axios.get(`${projectUrl}/list/${userId}`);
-      if (response.data) {
-        projectList = response.data.data;
-      }
-      return projectList;
+      return response.data.data;
     } catch {
       return [];
     }
@@ -46,12 +42,8 @@ export const getProjectDetail = async (
 ): Promise<ProjectDetailReponse | null> => {
   if (projectId) {
     try {
-      let projectDetail = null;
       const response = await axios.get(`${projectUrl}/${projectId}`);
-      if (response.data) {
-        projectDetail = response.data.data;
-      }
-      return projectDetail;
+      return response.data.data;
     } catch {
       return null;
     }
@@ -69,10 +61,7 @@ export const changeMainProject = async (
       const response = await axios.put(
         `${projectUrl}/main-project/${projectId}`
       );
-      if (response.data && response.data.isSuccess) {
-        return response.data.isSuccess;
-      }
-      return false;
+      return response.data.isSuccess;
     } catch {
       return false;
     }
