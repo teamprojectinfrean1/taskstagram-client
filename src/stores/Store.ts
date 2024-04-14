@@ -1,8 +1,7 @@
-import ProjectObj from "@/models/ProjectObj";
-import TaskObj from "@/models/TaskObj";
+import { ProjectSummary } from "@/models/Project";
 import { atom } from "recoil";
 
-export const selectedProjectState = atom<ProjectObj | null>({
+export const selectedProjectState = atom<ProjectSummary | null>({
   key: "selectedProjectState",
   default: null,
 });

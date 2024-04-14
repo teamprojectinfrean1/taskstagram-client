@@ -7,17 +7,17 @@ import {
 } from "@mui/material";
 import theme from "@/theme/theme";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import TaskObj from "@/models/TaskObj";
+import Task from "@/models/Task";
 import { RawDraftContentState, convertFromRaw } from "draft-js";
 
 type TaskProps = {
-  selectedTask: TaskObj;
-  onDelete(task: TaskObj): void;
+  selectedTask: Task;
+  onDelete(task: Task): void;
   onShowTaskModal(isModalOpen: boolean): void;
-  onSelectedTask(selectedTask: TaskObj): void;
+  onSelectedTask(selectedTask: Task): void;
 };
 
-const Task = ({
+const TaskTicket = ({
   selectedTask,
   onDelete,
   onShowTaskModal,
@@ -99,4 +99,4 @@ const Task = ({
   );
 };
 
-export default Task;
+export default TaskTicket;
