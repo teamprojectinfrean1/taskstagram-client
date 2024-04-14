@@ -1,8 +1,7 @@
 import theme from "@/theme/theme";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import LoginErrorModal from "./LoginErrorModal";
 import { fetchLogin } from "@/apis/auth";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
@@ -11,9 +10,8 @@ import { useNavigate } from "react-router-dom";
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const [isSuccess, setIsSuccess] = useState(false);
 
+  const navigate = useNavigate();
   const { data, refetch } = useQuery(
     "login",
     () => fetchLogin({ email, password }),
@@ -21,9 +19,8 @@ const LoginForm = () => {
       enabled: false,
       cacheTime: 0,
       onSuccess: (data) => {
-        if (!data) {
-          setShowModal(true);
-          setIsSuccess(false)
+        if (data) {
+          navigate("/");
         }
       },
     }
@@ -57,7 +54,28 @@ const LoginForm = () => {
         onChange={(e) => {
           setPassword(e.target.value);
         }}
+        onKeyDown={(e) => {
+          e.key === "Enter" && refetch();
+        }}
       />
+
+      {data !== undefined && !data && (
+        <Box
+          sx={{
+            mt: 2,
+            color: `${theme.palette.error.main}`,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontSize="11px">
+            아이디 또는 비밀번호를 잘못 입력했습니다.
+          </Typography>
+          <Typography fontSize="11px">
+            입력하신 내용을 다시 확인해주세요.
+          </Typography>
+        </Box>
+      )}
+
       <Button
         variant="contained"
         fullWidth
@@ -73,16 +91,12 @@ const LoginForm = () => {
       >
         로그인
       </Button>
+
       <Box sx={{ mt: 2 }}>
         <AuthMenuOptions />
       </Box>
       <Divider sx={{ mt: 3 }}>간편 로그인</Divider>
       <SocialIcons authPage="login" />
-      <LoginErrorModal
-        showModal={showModal}
-        isSuccess={isSuccess}
-        handleClose={() => setShowModal(false)}
-      />
     </Box>
   );
 };

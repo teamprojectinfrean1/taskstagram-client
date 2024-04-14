@@ -5,7 +5,7 @@ import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 
 const SignupSuccess = () => {
   const navigate = useNavigate();
-  const id = useLocation().state;
+  const nickname = useLocation().state.nickname;
 
   const { resetSignupInfo } = useChangeSignupInfo();
 
@@ -24,7 +24,7 @@ const SignupSuccess = () => {
         </Typography>
       </Typography>
       <Box sx={{ my: 5 }}>
-        <Typography>{id}님, 가입이 완료되었습니다.</Typography>
+        <Typography>{nickname}님, 가입이 완료되었습니다.</Typography>
       </Box>
       <Typography>확인 버튼을 누르면</Typography>
       <Typography>로그인 화면으로 이동합니다.</Typography>

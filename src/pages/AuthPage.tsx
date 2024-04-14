@@ -1,9 +1,16 @@
 import theme from "@/theme/theme";
 import LogoAndName from "../components/auth/LogoAndName";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 
 const AuthPage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("accessToken");
+    isLogin && navigate("/");
+  });
+
   return (
     <Box
       sx={{
@@ -14,7 +21,7 @@ const AuthPage = () => {
       }}
     >
       <Box sx={{ m: "auto", width: "70%" }}>
-        <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", minWidth:'1050px' }}>
           <LogoAndName />
           <Box
             sx={{

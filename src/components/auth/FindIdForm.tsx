@@ -1,11 +1,7 @@
-import { useState } from "react";
 import { Box, Typography } from "@mui/material";
-import FindIdEmailInput from "./FindIdEmailInput";
-import FindIdEmailCertifiInput from "./EmailVerificationCodeInput";
+import EmailCertificationInput from "./EmailCertificationInput";
 
 const FindIdForm = () => {
-  const [findIdEmailButtonState, setFindIdEmailButtonState] = useState(false)
-  
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
@@ -16,16 +12,7 @@ const FindIdForm = () => {
           사용 중인 계정의 아이디를 알려드립니다.
         </Typography>
       </Box>
-
-      <Box>
-        <FindIdEmailInput 
-        findIdEmailButtonState = {findIdEmailButtonState}
-        setFindIdEmailButtonState = {(value) => setFindIdEmailButtonState(value)}
-        />
-        <FindIdEmailCertifiInput 
-        findIdEmailButtonState = {findIdEmailButtonState}
-        />
-      </Box>
+      <EmailCertificationInput findUserInfo = "findId"/>
     </>
   );
 };

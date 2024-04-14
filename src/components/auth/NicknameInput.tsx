@@ -1,7 +1,7 @@
 import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
-import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Typography, Grid, Button, TextField } from "@mui/material";
+import { useState } from "react";
 import { checkNicknameExistence } from "@/apis/auth";
 import { useQuery } from "react-query";
 
@@ -11,15 +11,17 @@ type NicknameInputProps = {
 };
 
 const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
-  const [isClickNicknameButton, setIsClickNicknameButton] = useState(false);
-  const [nicknameErrorState, setNicknameErrorState] = useState(false);
-  const [nicknameErrorMessage, setNicknameErrorMessage] = useState("");
+  const [errorState, setErrorState] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState("");
 
-  const [nicknameValidityFlag, setNicknameValidityFlag] = useState(false);
-  const [nicknameDuplicateFlag, setNicknameDuplicateFlag] = useState(false);
-
-  const nicknameValidityState = !!(nickname && !nicknameValidityFlag);
-  const nicknameIsDisabled = !!(!nicknameValidityFlag || nicknameDuplicateFlag);
+  // 닉네임 유효성 검사 변수
+  const [isNicknameValid, setIsNicknameValid] = useState(false);
+  // 닉네임 중복 검사 변수
+  const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
+  // 닉네임 유효성 검사 상태
+  const validState = !!(nickname && !isNicknameValid);
+  // 닉네임 중복 검사 상태
+  const disabledState = !!(!isNicknameValid || isNicknameDuplicate);
 
   const { data, refetch } = useQuery(
     "checkNickname",
@@ -28,17 +30,15 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
       enabled: false,
       cacheTime: 0,
       onSuccess: (data) => {
-        if (data !== null) {
-          setNicknameDuplicateFlag(data);
-        }
+        setIsNicknameDuplicate(data);
         if (!data) {
-          setNicknameErrorMessage(
+          setShowErrorMessage(
             "이미 가입된 닉네임입니다. 다른 닉네임을 입력해주세요."
           );
-          setNicknameErrorState(true);
+          setErrorState(true);
         } else {
-          setNicknameErrorMessage("");
-          setNicknameErrorState(false);
+          setShowErrorMessage("");
+          setErrorState(false);
         }
       },
     }
@@ -49,16 +49,28 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
       <Typography sx={{ mt: 4, ml: 0.5 }}>Nickname</Typography>
       <Grid container spacing={2}>
         <Grid item xs={9}>
-          <OutlinedInput
+          <TextField
+            sx={{
+              "& .MuiFormHelperText-root": {
+                position: "absolute",
+                mt: 5,
+                ml: 1,
+                fontSize: "11px",
+                fontWeight: "bold",
+                color: theme.palette.error.main,
+              },
+            }}
             type="text"
             fullWidth
             size="small"
             placeholder={"닉네임"}
             value={nickname}
-            error={nicknameErrorState}
+            error={errorState}
+            helperText={showErrorMessage}
+            disabled={isNicknameDuplicate}
             onChange={(e) => {
               setNickname(e.target.value);
-              setNicknameValidityFlag(
+              setIsNicknameValid(
                 checkAuthInputValidity({
                   type: "nickname",
                   authValue: e.target.value,
@@ -66,18 +78,6 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
               );
             }}
           />
-          <Typography
-            sx={{
-              position: "absolute",
-              mt: 0.1,
-              ml: 1,
-              fontWeight: "bold",
-              fontSize: "11px",
-              color: theme.palette.error.main,
-            }}
-          >
-            {nicknameErrorMessage}
-          </Typography>
         </Grid>
         <Grid item xs={3}>
           <Button
@@ -88,13 +88,12 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
               height: "41px",
               borderRadius: "7px",
             }}
-            disabled={nicknameIsDisabled}
+            disabled={disabledState}
             onClick={() => {
               refetch();
-              setIsClickNicknameButton(true);
             }}
           >
-            {nicknameDuplicateFlag ? "확인 완료" : "중복 확인"}
+            {isNicknameDuplicate ? "확인 완료" : "중복 확인"}
           </Button>
         </Grid>
       </Grid>
