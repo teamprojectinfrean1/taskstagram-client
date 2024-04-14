@@ -4,6 +4,8 @@ import { Typography, Grid, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { checkNicknameExistence } from "@/apis/auth";
 import { useQuery } from "react-query";
+import { useRecoilValue } from "recoil";
+import { signupInfoState } from "@/stores/authStore";
 
 type NicknameInputProps = {
   nickname: string;
@@ -44,6 +46,8 @@ const NicknameInput = ({ nickname, setNickname }: NicknameInputProps) => {
     }
   );
 
+  const signupInfo = useRecoilValue(signupInfoState)
+    
   return (
     <>
       <Typography sx={{ mt: 4, ml: 0.5 }}>Nickname</Typography>

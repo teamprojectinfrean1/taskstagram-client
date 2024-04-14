@@ -51,35 +51,45 @@ const ResetPassword = () => {
     }
   );
 
-  const [isPasswordRequiredInput, setIsPasswordRequiredInput] = useState(false)
+  const [isPasswordRequiredInput, setIsPasswordRequiredInput] = useState(false);
   useEffect(() => {
-    const requiredInputCheck = Object.values(isValid).every((flag) =>  flag === true)
-    setIsPasswordRequiredInput(requiredInputCheck)
-  }, [isValid])
+    const requiredInputCheck = Object.values(isValid).every(
+      (flag) => flag === true
+    );
+    setIsPasswordRequiredInput(requiredInputCheck);
+  }, [isValid]);
 
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
-        <Typography sx={{ my: 3 }}>
+        <Typography sx={{ my: 4 }}>
           사용하실 비밀번호를 입력해주세요.
         </Typography>
       </Box>
 
-      <PasswordInput
-        password={passwordInfo.password}
-        setPassword={(value) => changePasswordInfo({ key: "password", value })}
-        isPasswordValid={isValid.isPasswordValid}
-        setIsPasswordValid={(value) => {
-          changeIsPasswordValid({ key: "isPasswordValid", value });
-        }}
-      />
-      <PasswordConfirmationInput
-        password={passwordInfo.password}
-        isPasswordConfirmValid={isValid.isPasswordConfirmValid}
-        setIsPasswordConfirmValid={(value) => {
-          changeIsPasswordValid({ key: "isPasswordConfirmValid", value });
-        }}
-      />
+      <Box sx={{ mt: 3 }}>
+        <Typography>신규 비밀번호</Typography>
+        <PasswordInput
+          password={passwordInfo.password}
+          setPassword={(value) =>
+            changePasswordInfo({ key: "password", value })
+          }
+          isPasswordValid={isValid.isPasswordValid}
+          setIsPasswordValid={(value) => {
+            changeIsPasswordValid({ key: "isPasswordValid", value });
+          }}
+        />
+      </Box>
+      <Box sx={{ mt: 3 }}>
+        <Typography>신규 비밀번호 확인</Typography>
+        <PasswordConfirmationInput
+          password={passwordInfo.password}
+          isPasswordConfirmValid={isValid.isPasswordConfirmValid}
+          setIsPasswordConfirmValid={(value) => {
+            changeIsPasswordValid({ key: "isPasswordConfirmValid", value });
+          }}
+        />
+      </Box>
 
       <Button
         fullWidth

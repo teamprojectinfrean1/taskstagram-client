@@ -4,7 +4,8 @@ import { SignupInfo } from "@/models/Auth";
 
 // const authURL = `${BASE_URL}/auth`;
 // const authURL = "http://124.61.74.148:8080/api/v1/auth";
-const authURL = "http://127.0.0.1:8080/api/v1/auth"
+// const authURL = "http://127.0.0.1:8080/api/v1/auth"
+const authURL = "http://14.33.239.204:8080/api/v1/auth";
 
 type fetchLoginRequest = {
   id: string;
@@ -33,6 +34,7 @@ export const checkEmailExistence = async (email: string) => {
     const response = await axios.get(`${authURL}/checkMail`, {
       params: { email },
     });
+    console.log(response.data);
     return response.data.data;
   } catch (err) {
     console.error(err);
@@ -71,17 +73,22 @@ export const fetchSignup = async ({
   nickname,
   profileImage,
 }: SignupInfo) => {
+  const formData = new FormData();
+  formData.append("id", id);
+  formData.append("nickname", nickname);
+  formData.append("email", email);
+  formData.append("password", password);
+  if (profileImage) {
+    formData.append("profileImage", profileImage);
+  }
+
+  console.log(formData.get("profileImage"));
+
   try {
-    const response = await axios.post(`${authURL}/join`, {
-      email,
-      id,
-      password,
-      nickname: nickname ? nickname : id,
-      profileImage,
-    });
+    const response = await axios.post(`${authURL}/join`, formData);
     // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
-    console.log(response.data)
-    return response.data.nickname;
+    console.log(response.data);
+    return response.data.data.nickname;
   } catch (err) {
     return false;
   }
@@ -94,9 +101,9 @@ export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
       id,
       password,
     });
-    const accessToken = response.data;
+    const accessToken = response.data.data.Authorization;
     sessionStorage.setItem("accessToken", accessToken);
-    return response.data;
+    return response.data.Authorization;
   } catch (err) {
     return false;
   }
@@ -136,7 +143,7 @@ export const checkEmailVerification = async ({
         verificationCode,
       }
     );
-    console.log(response.data)
+    console.log(response.data);
     return response.data.data;
   } catch (err) {
     console.log(err);
@@ -144,6 +151,7 @@ export const checkEmailVerification = async ({
   }
 };
 
+// 비밀번호 찾기(재설정) api
 export const resetPassword = async ({
   userId,
   password,
@@ -167,12 +175,29 @@ export const resetPassword = async ({
   }
 };
 
+// 카카오 소셜 로그인 api
 export const KakaoLogin = async () => {
-  const oauthServerType = 'KAKAO'
+  console.log("test");
+  const oauthServerType = "KAKAO";
   try {
-    const response = await axios.get(`http://124.61.74.148:8080/api/v1/oauth/${oauthServerType}`)
-    console.log(response.data)
-  } catch(err) {
+    const response = await axios.get(
+      `http://124.61.74.148:8080/api/v1/oauth/${oauthServerType}`,
+      {
+        headers: {
+          "Access-Control-Allow-Origin": "http://localhost:3000",
+        },
+      }
+    );
+    console.log(response.data);
+  } catch (err) {
     console.log(err);
+  }
+};
+
+export const KakaoToken = async (code: string) => {
+  try {
+    const response = await axios.get(`http://124.61.74.148:8080/api/v1/oauth/KAKAO?code=${code}`)
+  } catch(err) {
+
   }
 }

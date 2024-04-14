@@ -22,7 +22,7 @@ const PasswordInput = ({
     <>
       <TextField
         sx={{
-          mt: 3,
+          borderRadius: "50%",
           "& .MuiFormHelperText-root": {
             position: "absolute",
             mt: 5,

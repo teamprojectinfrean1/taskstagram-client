@@ -22,8 +22,14 @@ import MyPage from "./pages/MyPage";
 import ChangePassword from "./components/MyPage/ChangePassword";
 import ChangeNickname from "./components/MyPage/ChangeNickname";
 import UserInfo from "./components/MyPage/UserInfo";
+import MyPageTest from "./components/MyPage/MyPageTest";
+import RedirectPage from "./components/auth/RedirectPage";
 
 const router = createBrowserRouter([
+  {
+    path: "/oauth/redirected/kakao",
+    element: <RedirectPage />
+  },
   {
     path: "/auth",
     element: <AuthPage />,
@@ -110,6 +116,10 @@ const router = createBrowserRouter([
           {
             path: "change/password",
             element: <ChangePassword />
+          },
+          {
+            path: "test",
+            element: <MyPageTest />
           }
         ]
       },

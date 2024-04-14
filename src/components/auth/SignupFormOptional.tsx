@@ -21,7 +21,7 @@ const SingupFormOptional = () => {
   const signupMutation = useMutation(
     (signupInfo: SignupInfo) => fetchSignup(signupInfo),
     {
-      onSuccess: (data) => {
+      onSuccess: (data) => {        
         if (data) {
           navigate("/auth/signup/success", {
             state: {

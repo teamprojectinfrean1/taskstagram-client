@@ -105,25 +105,31 @@ const SignupFormRequired = () => {
             });
           }}
         />
-        <PasswordInput
-          password={signupInfo.password}
-          setPassword={(value) => changeSignupInfo({ key: "password", value })}
-          isPasswordValid={isValid.isPasswordValid}
-          setIsPasswordValid={(value) =>
-            changeIsValid({ key: "isPasswordValid", value })
-          }
-        />
+        <Box sx={{ mt: 3 }}>
+          <PasswordInput
+            password={signupInfo.password}
+            setPassword={(value) =>
+              changeSignupInfo({ key: "password", value })
+            }
+            isPasswordValid={isValid.isPasswordValid}
+            setIsPasswordValid={(value) =>
+              changeIsValid({ key: "isPasswordValid", value })
+            }
+          />
+        </Box>
 
-        <PasswordConfirmationInput
-          password={signupInfo.password}
-          isPasswordConfirmValid={isValid.isPasswordConfirmValid}
-          setIsPasswordConfirmValid={(value) =>
-            changeIsValid({
-              key: "isPasswordConfirmValid",
-              value,
-            })
-          }
-        />
+        <Box sx={{mt:3}}>
+          <PasswordConfirmationInput
+            password={signupInfo.password}
+            isPasswordConfirmValid={isValid.isPasswordConfirmValid}
+            setIsPasswordConfirmValid={(value) =>
+              changeIsValid({
+                key: "isPasswordConfirmValid",
+                value,
+              })
+            }
+          />
+        </Box>
         <Box sx={{ textAlign: "center", mt: 3 }}>
           <Button
             variant="contained"
