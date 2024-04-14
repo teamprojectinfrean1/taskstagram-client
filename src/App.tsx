@@ -12,11 +12,13 @@ import FindIdLayout from "@/components/auth/FindIdLayout";
 import FindIdSuccess from "@/components/auth/FindIdSuccess";
 import FindPasswdLayout from "@/components/auth/FindPasswordLayout";
 import FindPasswordForm from "@/components/auth/FindPasswordForm";
-import FindPasswdSuccess from "@/components/auth/FindPasswordSuccess";
 import SignupSuccess from "@/components/auth/SignupSuccess";
 import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
 import ProjectPage from "./pages/ProjectPage";
+import ProtectedRouter from "./components/ProtectedRouter";
+import ResetPassword from "@/components/auth/ResetPassword";
+import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
 
 const router = createBrowserRouter([
   {
@@ -40,7 +42,7 @@ const router = createBrowserRouter([
         element: <SignupSuccess />,
       },
       {
-        path: "find/id",
+        path: 'find/id',
         element: <FindIdLayout />,
         children: [
           {
@@ -62,16 +64,24 @@ const router = createBrowserRouter([
             element: <FindPasswordForm />,
           },
           {
-            path: "success",
-            element: <FindPasswdSuccess />,
+            path: "reset",
+            element: <ResetPassword />,
           },
+          {
+            path: "success",
+            element: <FindPasswordSuccess />
+          }
         ],
       },
     ],
   },
   {
     path: "/",
-    element: <PageLayout />,
+    element: (
+      <ProtectedRouter>
+        <PageLayout />
+      </ProtectedRouter>
+    ),
     errorElement: <NotFoundPage />,
     children: [
       {
@@ -95,13 +105,6 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  // const logged = useRecoilValue(loggedState);
-
-  // 로그인 유무
-  // useEffect(() => {
-  //   logged ? router.navigate("/") : router.navigate("/auth/login");
-  // }, [logged]);
-
   return (
     <>
       <RouterProvider router={router} />

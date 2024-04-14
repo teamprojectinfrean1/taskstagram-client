@@ -4,11 +4,11 @@ import NicknameInput from "./NicknameInput";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
-import { signupInfoState } from "@/stores/AuthStore";
+import { signupInfoState } from "@/stores/authStore";
 import { fetchSignup } from "@/apis/auth";
 import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { SignupInfo } from "@/models/Auth";
 
 const SingupFormOptional = () => {
@@ -17,12 +17,21 @@ const SingupFormOptional = () => {
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   const signupInfo = useRecoilValue(signupInfoState);
-  
-  const signupMutation = useMutation((signupInfo: SignupInfo) => fetchSignup(signupInfo), {
-    onSuccess: (data) => {
-      navigate("/auth/signup/success", {state: data.userNickname })
+
+  const signupMutation = useMutation(
+    (signupInfo: SignupInfo) => fetchSignup(signupInfo),
+    {
+      onSuccess: (data) => {
+        if (data) {
+          navigate("/auth/signup/success", {
+            state: {
+              nickname: data,
+            },
+          });
+        }
+      },
     }
-  })
+  );
 
   return (
     <>
@@ -55,7 +64,7 @@ const SingupFormOptional = () => {
               borderRadius: "7px",
             }}
             onClick={() => {
-              signupMutation.mutate(signupInfo)
+              signupMutation.mutate(signupInfo);
             }}
           >
             가입하기

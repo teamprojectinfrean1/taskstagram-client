@@ -1,48 +1,77 @@
+import { checkEmailVerification } from "@/apis/auth";
 import theme from "@/theme/theme";
-import { Typography, OutlinedInput, Grid, Button } from "@mui/material";
+import { Typography, Grid, Button, Box, TextField } from "@mui/material";
 import { useState } from "react";
-// import { handleEmailCertifiNumber } from "@/utils/authCheck";
+import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 
-type FindIdEmailCertifiInputProps = {
-  findIdEmailButtonState: boolean;
+type EmailVerificationCodeInputpProps = {
+  isSuccess: boolean;
+  email: string;
+  findUserInfo: string;
 };
 
 const EmailVerificationCodeInput = ({
-  findIdEmailButtonState,
-}: FindIdEmailCertifiInputProps) => {
+  isSuccess,
+  email,
+  findUserInfo,
+}: EmailVerificationCodeInputpProps) => {
+  const [verificationCode, setVerificationCode] = useState("");
+
   const navigate = useNavigate();
 
-  // 이메일 인증 api 구현 완료 시 활용할 예정
-  // const checkEmailCertifiNumber = (emailCertifi : string) => {
-  //   const response = handleEmailCertifiNumber(emailCertifi);
-  //   setEmailCertifiFlag(response);
-  //   if (response) {
-  //     navigate("/auth/find/id/success");
-  //   }
-  // };
-
-  const [emailCertifi, setEmailCertifi] = useState("");
-  const [emailCertifiFlag, setEmailCertifiFlag] = useState(false);
-  const emailCertifiState = !!(emailCertifi && !emailCertifiFlag);
+  const { data, refetch } = useQuery(
+    "checkEmailVerification",
+    () => checkEmailVerification({ findUserInfo, email, verificationCode }),
+    {
+      enabled: false,
+      cacheTime: 0,
+      onSuccess: (data) => {
+        if (findUserInfo === "findId" && data) {
+          navigate("/auth/find/id/success", {
+            state: {
+              id: data.id,
+            },
+          });
+        } else if (findUserInfo === "findPassword" && data) {
+          navigate("/auth/find/password/reset", {
+            state: {
+              userId: data.uuid,
+            },
+          });
+        }
+      },
+    }
+  );
 
   return (
     <>
       <Grid container spacing={3} sx={{ mt: 1 }}>
         <Grid item xs={8}>
-          <OutlinedInput
-            type="number"
+          <TextField
+            sx={{
+              "& .MuiFormHelperText-root": {
+                position: "absolute",
+                mt: 5,
+                ml: 1,
+                fontSize: "11px",
+                fontWeight: "bold",
+                color: theme.palette.error.main,
+              },
+            }}
             fullWidth
             size="small"
             placeholder={"인증번호 입력"}
-            value={emailCertifi}
-            error={emailCertifiState}
+            value={verificationCode}
+            error={isSuccess}
+            helperText={
+              isSuccess &&
+              (data === false
+                ? "인증번호를 다시 확인해주세요."
+                : "인증번호를 확인해주세요.")
+            }
             onChange={(e) => {
-              setEmailCertifi(e.target.value);
-            }}
-            sx={{
-              "& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button":
-                { "-webkit-appearance": "none", margin: 0 },
+              setVerificationCode(e.target.value);
             }}
           />
         </Grid>
@@ -55,29 +84,24 @@ const EmailVerificationCodeInput = ({
               height: "41px",
               borderRadius: "7px",
             }}
-            disabled={!findIdEmailButtonState}
+            disabled={!isSuccess}
             onClick={() => {
-              // 이메일 인증 api 구현 완료 시 활용할 예정
-              // checkEmailCertifiNumber(emailCertifi);
+              refetch();
             }}
           >
             인증
           </Button>
         </Grid>
       </Grid>
-      {emailCertifiState && (
-        <Typography
-          sx={{
-            position: "absolute",
-            mt: 0.1,
-            ml: 1,
-            fontWeight: "bold",
-            fontSize: "11px",
-            color: theme.palette.error.main,
-          }}
-        >
-          이메일 인증을 완료해주세요.
-        </Typography>
+
+      {isSuccess !== undefined && (
+        <Box sx={{ mt: 7, textAlign: "center" }}>
+          <Typography
+            sx={{ color: `${theme.palette.error.main}`, fontSize: "12px" }}
+          >
+            인증 번호가 오지 않나요? 작성하신 이메일을 다시 확인해주세요.
+          </Typography>
+        </Box>
       )}
     </>
   );

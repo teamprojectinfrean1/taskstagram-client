@@ -1,4 +1,4 @@
-import { AuthInputValidity } from "@/models/Auth";
+import { CheckAuthInputValidity } from "@/models/Auth";
 
 // 이메일 유효성 검사
 const emailRegEx =
@@ -20,7 +20,7 @@ type PasswordType = {
 export const checkAuthInputValidity = ({
   type,
   authValue,
-}: AuthInputValidity) => {
+}: CheckAuthInputValidity) => {
   switch (type) {
     case "email":
       return emailRegEx.test(authValue || "");

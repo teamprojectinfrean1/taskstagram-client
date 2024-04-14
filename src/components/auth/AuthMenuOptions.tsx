@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-
 import { Box, Stack, Divider } from "@mui/material";
 
 const AuthMenuOptions = () => {

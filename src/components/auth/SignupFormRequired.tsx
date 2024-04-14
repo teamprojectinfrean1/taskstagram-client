@@ -4,18 +4,14 @@ import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "./SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
-import PasswordDoubleInput from "./PasswordConfirmationInput";
 import { Box, Button, Divider, Typography, Grid } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilValue } from "recoil";
-import { signupInfoState } from "@/stores/AuthStore";
+import { signupInfoState } from "@/stores/authStore";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
-
-type SignupInfoFlagTypes = {
-  key: string;
-  value: boolean;
-};
+import PasswordConfirmationInput from "./PasswordConfirmationInput";
+import { AuthisValid } from "@/models/Auth";
 
 const SignupFormRequired = () => {
   const navigate = useNavigate();
@@ -24,45 +20,44 @@ const SignupFormRequired = () => {
 
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
-  const [signupValidityFlag, setSignupValidityFlag] = useState({
-    emailValidityFlag: false,
-    idValidityFlag: false,
-    passwordValidityFlag: false,
-    passwordDoubleValidityFlag: false,
+  // 회원가입 필수 input(이메일, 아이디, 비밀번호) 유효성 확인 변수
+  const [isValid, setIsValid] = useState({
+    isEmailValid: false,
+    isIdValid: false,
+    isPasswordValid: false,
+    isPasswordConfirmValid: false,
   });
 
-  const [signupDuplicateFlag, setSignupDuplicateFlag] = useState({
-    emailDuplicateFlag: false,
-    idDuplicateFlag: false,
+  // 회원가입 필수 input 중복 확인 변수
+  const [isDuplicate, setIsDuplicate] = useState({
+    isEmailDuplicate: false,
+    isIdDuplicate: false,
   });
 
-  const requiredSignupField = {
-    emailField: !!(
-      signupValidityFlag.emailValidityFlag &&
-      signupDuplicateFlag.emailDuplicateFlag
-    ),
-    idField: !!(
-      signupValidityFlag.idValidityFlag && signupDuplicateFlag.idDuplicateFlag
-    ),
-    passwordField: !!signupValidityFlag.passwordValidityFlag,
-    passwordDoubleField: !!signupValidityFlag.passwordDoubleValidityFlag,
+  // 회원가입 필수 input 작성 확인 변수
+  const requiredField = {
+    emailField: !!(isValid.isEmailValid && isDuplicate.isEmailDuplicate),
+    idField: !!(isValid.isIdValid && isDuplicate.isIdDuplicate),
+    passwordField: !!isValid.isPasswordValid,
+    passwordConfirmField: !!isValid.isPasswordConfirmValid,
   };
 
-  const changeSignupValidityFlag = ({ key, value }: SignupInfoFlagTypes) => {
-    setSignupValidityFlag({
-      ...signupValidityFlag,
+  const changeIsValid = ({ key, value }: AuthisValid) => {
+    setIsValid({
+      ...isValid,
       [key]: value,
     });
   };
 
-  const [totalRequiredInputFlag, setTotalRequiredInputFlag] = useState(false);
+  // 회원가입 필수 input 체크 변수
+  const [isTotalRequiredInput, setIsTotalRequiredInput] = useState(false);
 
   useEffect(() => {
-    const requiredInputCheck = Object.values(requiredSignupField).every(
+    const requiredInputCheck = Object.values(requiredField).every(
       (flag) => flag === true
     );
-    setTotalRequiredInputFlag(requiredInputCheck);
-  }, [requiredSignupField]);
+    setIsTotalRequiredInput(requiredInputCheck);
+  }, [requiredField]);
 
   return (
     <>
@@ -83,47 +78,50 @@ const SignupFormRequired = () => {
         <EmailInput
           email={signupInfo.email}
           setEmail={(value) => changeSignupInfo({ key: "email", value })}
-          emailValidityFlag={signupValidityFlag.emailValidityFlag}
-          setEmailValidityFlag={(value) =>
-            changeSignupValidityFlag({ key: "emailValidityFlag", value })
+          isEmailValid={isValid.isEmailValid}
+          setIsEmailValid={(value) =>
+            changeIsValid({ key: "isEmailValid", value })
           }
-          emailDuplicateFlag={signupDuplicateFlag.emailDuplicateFlag}
-          setEmailDuplicateFlag={(value) =>
-            setSignupDuplicateFlag({
-              ...signupDuplicateFlag,
-              emailDuplicateFlag: value,
+          isEmailDuplicate={isDuplicate.isEmailDuplicate}
+          setIsEmailDuplicate={(value) =>
+            setIsDuplicate({
+              ...isDuplicate,
+              isEmailDuplicate: value,
             })
           }
         />
         <IdInput
           id={signupInfo.id}
           setId={(value) => changeSignupInfo({ key: "id", value })}
-          idValidityFlag={signupValidityFlag.idValidityFlag}
-          setIdValidityFlag={(value) => {
-            changeSignupValidityFlag({ key: "idValidityFlag", value });
+          isIdValid={isValid.isIdValid}
+          setIsIdValid={(value) => {
+            changeIsValid({ key: "isIdValid", value });
           }}
-          idDuplicateFlag={signupDuplicateFlag.idDuplicateFlag}
-          setIdDuplicateFlag={(value) => {
-            setSignupDuplicateFlag({
-              ...signupDuplicateFlag,
-              idDuplicateFlag: value,
+          isIdDuplicate={isDuplicate.isIdDuplicate}
+          setIsIdDuplicate={(value) => {
+            setIsDuplicate({
+              ...isDuplicate,
+              isIdDuplicate: value,
             });
           }}
         />
         <PasswordInput
           password={signupInfo.password}
           setPassword={(value) => changeSignupInfo({ key: "password", value })}
-          passwordValidityFlag={signupValidityFlag.passwordValidityFlag}
-          setPasswordValidityFlag={(value) =>
-            changeSignupValidityFlag({ key: "passwordValidityFlag", value })
+          isPasswordValid={isValid.isPasswordValid}
+          setIsPasswordValid={(value) =>
+            changeIsValid({ key: "isPasswordValid", value })
           }
         />
 
-        <PasswordDoubleInput
+        <PasswordConfirmationInput
           password={signupInfo.password}
-          passwordDoubleValidityFlag={signupValidityFlag.passwordDoubleValidityFlag}
-          setPasswordDoubleValidityFlag={(value) =>
-            changeSignupValidityFlag({ key: "passwordDoubleValidityFlag", value })
+          isPasswordConfirmValid={isValid.isPasswordConfirmValid}
+          setIsPasswordConfirmValid={(value) =>
+            changeIsValid({
+              key: "isPasswordConfirmValid",
+              value,
+            })
           }
         />
         <Box sx={{ textAlign: "center", mt: 3 }}>
@@ -135,7 +133,7 @@ const SignupFormRequired = () => {
               bgcolor: `${theme.palette.secondary.main}`,
               borderRadius: "7px",
             }}
-            disabled={!totalRequiredInputFlag}
+            disabled={!isTotalRequiredInput}
             onClick={() => {
               navigate("/auth/signup/optional");
             }}

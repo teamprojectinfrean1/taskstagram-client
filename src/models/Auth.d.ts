@@ -6,12 +6,20 @@ export type SignupInfo = {
   profileImage: string;
 };
 
-export type AuthInputValidity = {
+// auth 유효성 검사 확인 type
+export type CheckAuthInputValidity = {
   type: string;
   authValue: string;
 };
 
-export type SignupInputValue = {
+// auth input value 변경 type
+export type AuthInputValue = {
   key: string;
   value: string;
-}
+};
+
+// auth input 유효성 변경 type
+export type AuthisValid = {
+  key: string;
+  value: boolean;
+};
