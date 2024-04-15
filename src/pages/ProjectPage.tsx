@@ -19,8 +19,13 @@ import { useQuery } from "react-query";
 import { getProjectDetail } from "@/apis/ProjectApi";
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
+import { useLocation } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
+  const location = useLocation(); // 2번 라인
+  const navigate = useNavigate();
+  const type = location.state !== null ? location.state.type : "";
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
     projectName: "",
@@ -55,8 +60,22 @@ const ProjectPage = () => {
         projectTags: data.projectTagList,
         isMainProject: selectedProject?.isMainProject,
       });
+      //선택된 프로젝트 변경될 때마다 location.state 초기화
+      navigate(location.pathname, { replace: true });
     }
-  }, [data]);
+    if (type === "new") {
+      setFormData({
+        projectId: "",
+        projectName: "",
+        projectContent: "",
+        projectStartDate: null,
+        projectEndDate: null,
+        projectMemberUuidList: null,
+        projectTags: null,
+        isMainProject: false,
+      });
+    }
+  }, [type, data]);
 
   //각 입력란 change 이벤트
   const handleInputChange = (

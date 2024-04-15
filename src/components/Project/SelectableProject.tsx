@@ -126,8 +126,9 @@ const SelectableProject = ({
   };
 
   const handleCreateProjectBtnClick = () => {
+    onSelectedProjectChanged(null);
     handleClose();
-    navigate("/project");
+    navigate("/project", { state: { type: "new" } });
   };
 
   const handleOptionChange = (
@@ -164,7 +165,7 @@ const SelectableProject = ({
             ml: 1,
           }}
         >
-          {selectedProject?.projectName}
+          {selectedProject?.projectName ?? "새 프로젝트 추가"}
         </InputLabel>
         <Button
           disableRipple
