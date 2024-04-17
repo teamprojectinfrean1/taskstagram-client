@@ -3,11 +3,11 @@ import { BASE_URL } from "./domainSettings";
 import { SignupInfo } from "@/models/Auth";
 
 // const authURL = `${BASE_URL}/auth`;
-const authURL = "http://124.61.74.148:8080/api/v1/auth";
+const authURL = "http://124.61.74.148:8080/api/v1/users";
 // const authURL = "http://127.0.0.1:8080/api/v1/auth"
 
 type fetchLoginRequest = {
-  email: string;
+  id: string;
   password: string;
 };
 
@@ -33,6 +33,7 @@ export const checkEmailExistence = async (email: string) => {
     const response = await axios.get(`${authURL}/checkMail`, {
       params: { email },
     });
+    console.log(response.data);
     return response.data.data;
   } catch (err) {
     console.error(err);
@@ -87,10 +88,10 @@ export const fetchSignup = async ({
 };
 
 // 로그인 api
-export const fetchLogin = async ({ email, password }: fetchLoginRequest) => {
+export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
   try {
     const response = await axios.post(`${authURL}/login`, {
-      email,
+      id,
       password,
     });
     const accessToken = response.data;
