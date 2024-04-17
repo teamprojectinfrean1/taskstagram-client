@@ -1,46 +1,79 @@
-import {
-  Box,
-  IconButton,
-  InputAdornment,
-  Paper,
-  Stack,
-  TextField,
-  Typography,
-} from "@mui/material";
-import { SvgIconProps } from "@mui/material/SvgIcon";
-import IssueTicket from "@/components/IssueManagement/IssueTicket";
+import { Box, Paper, Stack, Typography } from "@mui/material";
+import { Fragment } from "react";
+import { IssueTicket, SkeletonIssueTicket } from "@/components/IssueManagement";
 import { useDroppable } from "@dnd-kit/core";
 import { IssueSummary } from "@/models/Issue";
-import SearchIcon from "@mui/icons-material/Search";
-import theme from "@/theme/theme";
+import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import useGetIssueTicketListQuery from "@/hooks/useGetIssueTicketListQuery";
+import { useParams } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
+import SearchWithDropdownFilter from "@/components/SearchWithDropdownFilter";
+import { mockToDoIssueSummaryList } from "@/mock/issueMock";
 
 type IssueTicketContainerProps = {
   ariaLabel: string;
   containerId: string;
   isHovered: boolean;
-  issueTicketList: IssueSummary[];
+  projectId: string;
   title: string;
   children?: React.ReactNode;
-  showIssueTicketMaker?: boolean;
-  IconComponent?: React.ElementType<SvgIconProps>;
-  onIconComponentClick?: () => void;
 };
 
 const IssueTicketContainer = ({
   ariaLabel,
   containerId,
   isHovered,
-  issueTicketList,
+  projectId,
   title,
   children,
-  showIssueTicketMaker = false,
-
-  IconComponent,
-  onIconComponentClick,
 }: IssueTicketContainerProps) => {
   const { setNodeRef } = useDroppable({
     id: containerId,
   });
+
+  const {
+    data,
+    isLoading,
+    isError,
+    hasNextPage,
+    fetchNextPage,
+    isFetchingNextPage,
+  } = useGetIssueTicketListQuery({
+    projectId: projectId!,
+    issueStatus: containerId,
+  });
+
+  const lastIssueRef = useIntersectionObserver({
+    containerId,
+    isLoading,
+    hasNextPage,
+    isFetchingNextPage,
+    fetchNextPage,
+  });
+
+  /* 데이터 페칭 시 skeleton UI가 렌더링 되는지 테스트하기 위해 임시 구현; 추후 제거 예정 */
+  const [testLoading, setTestLoading] = useState(true);
+
+  useEffect(() => {
+    const timeout = setTimeout(() => setTestLoading(false), 3000);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  const [searchParams, setSearchParams] = useState<IssueSearchParams>({
+    filter: "Issue",
+    keyword: "",
+  });
+
+  const handleSearchParamsChange = <T extends keyof IssueSearchParams>(
+    key: T,
+    value: IssueSearchParams[T]
+  ) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      [key]: value,
+    }));
+  };
 
   return (
     <Paper
@@ -59,64 +92,59 @@ const IssueTicketContainer = ({
           height: "100%",
         }}
       >
-        <Box
-          display="flex"
-          justifyContent="space-between"
-          alignItems="center"
-          sx={{ px: 2 }}
-        >
+        <Box display="flex" sx={{ px: 2 }}>
           <Typography noWrap sx={{ borderBottom: "1px solid black", p: 1 }}>
             {title}
           </Typography>
-          {IconComponent && (
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label={ariaLabel}
-              onClick={() =>
-                onIconComponentClick ? onIconComponentClick() : {}
-              }
-              sx={{ p: 1, mr: "1px" }}
-            >
-              <IconComponent />
-            </IconButton>
-          )}
+        </Box>
+        <Box sx={{ px: 2 }}>
+          <SearchWithDropdownFilter
+            handleSearchParamsChange={handleSearchParamsChange}
+            searchParams={searchParams}
+          />
         </Box>
         <Stack
+          id={containerId}
           spacing={2}
           className="custom-scrollbar"
-          sx={{ overflowY: "auto", overflowX: "hidden", px: 2, pb: 2 }}
+          sx={{
+            height: { xs: "500px", md: "auto" },
+            overflowY: "auto",
+            overflowX: "hidden",
+            px: 2,
+            pb: 2,
+          }}
         >
-          <TextField
-            variant="outlined"
-            onChange={() => {}}
-            InputProps={{
-              endAdornment: (
-                <InputAdornment position="end">
-                  <IconButton onClick={() => {}}>
-                    <SearchIcon />
-                  </IconButton>
-                </InputAdornment>
-              ),
-            }}
-            sx={{
-              "& .MuiOutlinedInput-root": {
-                backgroundColor: theme.palette.background.default,
-              },
-              "& .MuiOutlinedInput-input": {
-                py: 1.5,
-              },
-            }}
-          />
           {children}
-          {issueTicketList.map((issue, index) => (
-            <IssueTicket
-              key={issue.issueId}
-              index={index}
-              issue={issue}
-              parent={containerId}
-            />
+          {data?.pages.map((page, i) => (
+            <Fragment key={i}>
+              {page.issueList.map((issue, index) => (
+                <IssueTicket
+                  key={issue.issueId}
+                  index={index}
+                  issue={issue}
+                  parent={containerId}
+                />
+              ))}
+            </Fragment>
           ))}
+          {/* {!testLoading &&
+            mockToDoIssueSummaryList.map((issue, index) => (
+              <IssueTicket
+                key={issue.issueId}
+                index={index}
+                issue={issue}
+                parent={containerId}
+              />
+            ))} */}
+          {(isFetchingNextPage || testLoading) &&
+            Array.from({ length: 3 }, (_, i) => (
+              <SkeletonIssueTicket key={i} />
+            ))}
+          <div
+            ref={hasNextPage ? lastIssueRef : undefined}
+            style={{ display: hasNextPage ? "inline" : "none" }}
+          />
         </Stack>
       </Stack>
     </Paper>
