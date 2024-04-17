@@ -63,3 +63,10 @@ type UpdateIssuePayload = {
   oldStatus: IssueStatus;
   newStatus: IssueStatus;
 };
+
+type IssueStory = {
+  userId: string;
+  userNickname: string;
+  profileImage: string;
+  hasIssueInProgress: booelan;
+};

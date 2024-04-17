@@ -1,7 +1,8 @@
 import axios from "axios";
 import { authorizedAxios } from "./domainSettings";
+import { IssueStory } from "@/models/Issue";
 
-const userUrl = "/users";
+const userPath = "/users";
 
 type UserStoryListRequest = {
   projectId: string;
@@ -9,7 +10,7 @@ type UserStoryListRequest = {
 };
 
 type UserStoryListResponse = {
-  dataList: UserStory[];
+  dataList: IssueStory[];
   hasMore: boolean;
 };
 
@@ -21,7 +22,7 @@ export const getUserStoryList = async ({
 
   try {
     const response = await authorizedAxios.post(
-      `${userUrl}/project/user-list`,
+      `${userPath}/project/user-list`,
       {
         projectId,
         USER_PER_PAGE,

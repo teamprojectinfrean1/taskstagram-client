@@ -8,7 +8,7 @@ type UserStoryProps = {
   name: string;
 };
 
-const UserStory = ({ name }: UserStoryProps) => {
+const IssueStory = ({ name }: UserStoryProps) => {
   const userNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(userNameRef, "vertical");
 
@@ -34,4 +34,4 @@ const UserStory = ({ name }: UserStoryProps) => {
   );
 };
 
-export default UserStory;
+export default IssueStory;

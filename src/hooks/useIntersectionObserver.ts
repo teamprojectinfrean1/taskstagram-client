@@ -33,7 +33,6 @@ const useIntersectionObserver = ({
           }
         },
         {
-          root: document.getElementById(containerId),
           rootMargin: "-100px",
           threshold: 0,
         }

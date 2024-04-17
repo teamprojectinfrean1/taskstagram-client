@@ -1,7 +1,7 @@
 import { authorizedAxios } from "./domainSettings";
 import TaskObj from "@/models/TaskObj";
 
-const taskUrl = "task";
+const taskPath = "task";
 
 type getTaskListParams = {
   page: number;
@@ -18,7 +18,7 @@ export const getTaskList = async ({
   if (page && size && projectId !== null) {
     try {
       let taskList = [];
-      const response = await authorizedAxios.get(taskUrl, {
+      const response = await authorizedAxios.get(taskPath, {
         params: {
           page: page,
           size: size,
@@ -43,7 +43,7 @@ export const getTaskDetail = async (taskId: string): Promise<any> => {
   if (taskId) {
     try {
       let taskDetail = null;
-      const response = await authorizedAxios.get(`${taskUrl}/${taskId}`);
+      const response = await authorizedAxios.get(`${taskPath}/${taskId}`);
       if (response.data) {
         taskDetail = response.data.data;
       }

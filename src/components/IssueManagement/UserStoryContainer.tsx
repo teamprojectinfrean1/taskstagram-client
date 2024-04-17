@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Box, IconButton, Paper, Typography } from "@mui/material";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import { SkeletonUserStory, UserStory } from "@/components/IssueManagement";
+import { SkeletonUserStory, IssueStory } from "@/components/IssueManagement";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import useGetUserStoryListQuery from "@/hooks/useGetIssueStoryListQuery";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
@@ -25,7 +25,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
   } = useGetUserStoryListQuery({ projectId: projectId! });
 
   const lastIssueRef = useIntersectionObserver({
-    containerId: "userStory",
+    containerId: "IssueStory",
     isLoading,
     hasNextPage,
     isFetchingNextPage,
@@ -94,7 +94,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
           <KeyboardDoubleArrowLeftIcon />
         </IconButton>
         <Box
-          id="userStory"
+          id="IssueStory"
           overflow="auto"
           display="flex"
           ref={userStoryListRef}
@@ -106,7 +106,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
         >
           {!testLoading &&
             Array.from({ length: 10 }, (_, index) => (
-              <UserStory key={index} name="성이름" />
+              <IssueStory key={index} name="성이름" />
             ))}
           <div
             ref={hasNextPage ? lastIssueRef : undefined}

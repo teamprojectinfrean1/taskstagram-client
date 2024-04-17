@@ -8,11 +8,11 @@ import {
   UpdateIssuePayload,
 } from "@/models/Issue";
 
-const issueUrl = "/issue";
+const issuePath = "/issue";
 
 export const createNewIssue = async (issue: NewIssue): Promise<boolean> => {
   try {
-    const response = await authorizedAxios.post(issueUrl, issue);
+    const response = await authorizedAxios.post(issuePath, issue);
     return response.data.success;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -45,12 +45,12 @@ export const getIssueList = async ({
 
   try {
     const response = await authorizedAxios.post(
-      `${issueUrl}/allTickets/${issueStatus}`,
+      `${issuePath}/allTickets/${issueStatus}`,
       {
         projectId,
         ISSUE_PER_PAGE,
         page,
-      }
+      },
     );
     const data = response.data;
     return { issueList: data.data, hasMore: data.hasMore };
@@ -67,7 +67,7 @@ export const getIssueDetails = async (
   issueId: string
 ): Promise<IssueDetails> => {
   try {
-    const response = await authorizedAxios.get(`${issueUrl}/${issueId}`);
+    const response = await authorizedAxios.get(`${issuePath}/${issueId}`);
     return response.data.data;
   } catch (error) {
     if (axios.isAxiosError(error)) {
@@ -85,7 +85,7 @@ export const searchIssue = async (
 ): Promise<IssueSummary[]> => {
   try {
     const response = await authorizedAxios.get(
-      `${issueUrl}/search/${status}?filter=${filter}&word=${word}`
+      `${issuePath}/search/${status}?filter=${filter}&word=${word}`
     );
     return response.data.data;
   } catch (error) {
@@ -96,3 +96,5 @@ export const searchIssue = async (
     }
   }
 };
+
+
