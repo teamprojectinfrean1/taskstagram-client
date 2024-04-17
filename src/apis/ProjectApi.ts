@@ -19,6 +19,28 @@ type ProjectDetailReponse = {
   projectTagList: [] | null;
 };
 
+export type CreateProjectRequest = {
+  projectName: string | null;
+  writerUuid: string | null;
+  projectContent: string | null;
+  projectTagList: string[] | null;
+  memberUuidList: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  createDate: string | null;
+};
+
+export type ReplaceProjectRequest = {
+  projectId: string;
+  projectName: string | null;
+  projectContent: string | null;
+  updaterUuid: string;
+  projectTagList: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  memberUuidList: string[] | null;
+};
+
 // 프로젝트 리스트 조회
 export const getProjectList = async (
   userId: string
@@ -48,6 +70,61 @@ export const getProjectDetail = async (
     }
   } else {
     return null;
+  }
+};
+
+//프로젝트 생성
+export const createOneProject = async ({
+  projectName,
+  writerUuid,
+  projectContent,
+  projectTagList,
+  memberUuidList,
+  startDate,
+  endDate,
+  createDate,
+}: CreateProjectRequest): Promise<boolean> => {
+  try {
+    const response = await axios.post(`${projectUrl}`, {
+      projectName,
+      writerUuid,
+      projectContent,
+      projectTagList,
+      memberUuidList,
+      startDate,
+      endDate,
+      createDate,
+    });
+    return response.data.isSuccess;
+  } catch {
+    return false;
+  }
+};
+
+//프로젝트 수정
+export const replaceOneProject = async ({
+  projectId,
+  projectName,
+  updaterUuid,
+  projectContent,
+  projectTagList,
+  memberUuidList,
+  startDate,
+  endDate,
+}: ReplaceProjectRequest): Promise<boolean> => {
+  try {
+    const response = await axios.put(`${projectUrl}/${projectId}`, {
+      projectName,
+      updaterUuid,
+      projectContent,
+      projectTagList,
+      memberUuidList,
+      startDate,
+      endDate,
+    });
+    return response.data.isSuccess;
+  } catch {
+    return false;
   }
 };
 

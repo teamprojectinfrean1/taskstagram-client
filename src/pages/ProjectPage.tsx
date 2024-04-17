@@ -15,16 +15,21 @@ import ProjectMemberAutocomplete from "@/components/Project/ProjectMemberAutocom
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { grey } from "@mui/material/colors";
 import theme from "@/theme/theme";
-import { useQuery } from "react-query";
-import { getProjectDetail } from "@/apis/ProjectApi";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  createOneProject,
+  replaceOneProject,
+  getProjectDetail,
+} from "@/apis/ProjectApi";
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
-import { useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ProjectPage = () => {
-  const location = useLocation(); // 2번 라인
+  const location = useLocation();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+
   const type = location.state !== null ? location.state.type : "";
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
@@ -47,6 +52,20 @@ const ProjectPage = () => {
       ),
     { enabled: !!selectedProject && !!selectedProject.projectId }
   );
+
+  const createMutation = useMutation({
+    mutationFn: createOneProject,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getProjectDetail"] });
+    },
+  });
+
+  const replaceMutation = useMutation({
+    mutationFn: replaceOneProject,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getProjectDetail"] });
+    },
+  });
 
   useEffect(() => {
     if (data) {
@@ -77,6 +96,50 @@ const ProjectPage = () => {
     }
   }, [type, data]);
 
+  //저장 버튼
+  const handleSaveProjectBtnClicked = () => {
+    if (type === "new") {
+      createMutation.mutate({
+        projectName: formData.projectName,
+        writerUuid: "8017b5fb-7b36-414c-b859-6606739a7497", //임시 고정
+        projectContent:
+          formData.projectContent !== null ? formData.projectContent : "",
+        projectTagList: formData.projectTags,
+        startDate:
+          formData.projectStartDate !== null
+            ? new Date(formData.projectStartDate).toISOString()
+            : null,
+        endDate:
+          formData.projectEndDate !== null
+            ? new Date(formData.projectEndDate).toISOString()
+            : null,
+        createDate:
+          formData.projectStartDate !== null
+            ? new Date(formData.projectStartDate).toISOString()
+            : null,
+        memberUuidList: formData.projectMemberUuidList,
+      });
+    } else if (selectedProject !== null) {
+      replaceMutation.mutate({
+        projectId: selectedProject.projectId,
+        projectName: formData.projectName,
+        updaterUuid: "8017b5fb-7b36-414c-b859-6606739a7497", //임시 고정
+        projectContent:
+          formData.projectContent !== null ? formData.projectContent : "",
+        projectTagList: formData.projectTags,
+        startDate:
+          formData.projectStartDate !== null
+            ? new Date(formData.projectStartDate).toISOString()
+            : null,
+        endDate:
+          formData.projectEndDate !== null
+            ? new Date(formData.projectEndDate).toISOString()
+            : null,
+        memberUuidList: formData.projectMemberUuidList,
+      });
+    }
+  };
+
   //각 입력란 change 이벤트
   const handleInputChange = (
     field: keyof ProjectFormData,
@@ -106,6 +169,7 @@ const ProjectPage = () => {
                 backgroundColor: theme.palette.primary.main,
                 color: theme.palette.background.default,
               }}
+              onClick={handleSaveProjectBtnClicked}
             >
               저장
             </Button>
