@@ -1,22 +1,16 @@
 import basicProfileImage from "@/assets/basicProfileImage.png";
-import {
-  Button,
-  OutlinedInput,
-  TextField,
-  Typography,
-  Box,
-} from "@mui/material";
-import styled from "@emotion/styled";
+import { Button, Typography, Avatar } from "@mui/material";
+// import styled from "@emotion/styled";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { useQuery } from "react-query";
 import { changeProfileImage } from "@/apis/user";
 
 const ChangeProfileImage = () => {
-  const VisuallyHiddenInput = styled("input")({
-    clip: "rect(0 0 0 0)",
-    overflow: "hidden",
-    position: "absolute",
-  });
+  // const VisuallyHiddenInput = styled("input")({
+  //   clip: "rect(0 0 0 0)",
+  //   overflow: "hidden",
+  //   position: "absolute",
+  // });
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -59,10 +53,10 @@ const ChangeProfileImage = () => {
 
   return (
     <>
-      <img
+      <Avatar
         src={basicProfileImage}
         alt=""
-        style={{
+        sx={{
           backgroundColor: "#B2B4B8",
           borderRadius: "50%",
           width: "80px",
@@ -74,7 +68,7 @@ const ChangeProfileImage = () => {
           backgroundColor: "#F0EFFA",
           borderRadius: "30px",
           height: "40px",
-          width: "150px"
+          width: "150px",
         }}
         onClick={handleClick}
       >
@@ -82,11 +76,10 @@ const ChangeProfileImage = () => {
           sx={{
             fontWeight: "bold",
             fontFamily: "Outfit",
-            color: "#1F1F1F",
-            fontSize: '11px'
+            fontSize: "11px",
           }}
         >
-          Upload Photo  +
+          Upload Photo +
         </Typography>
         <input
           accept="image/png, image/jpeg, image/jpg"

@@ -21,9 +21,9 @@ import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
 import MyPage from "./pages/MyPage";
 import ChangePassword from "./components/MyPage/ChangePassword";
 import ChangeNickname from "./components/MyPage/ChangeNickname";
-import UserInfo from "./components/MyPage/UserInfo";
-import MyPageTest from "./components/MyPage/MyPageTest";
+import UserInfo from "./components/MyPage/UserProfileLayout";
 import RedirectPage from "./components/auth/RedirectPage";
+import UserProfileLayout from "./components/MyPage/UserProfileLayout";
 
 const router = createBrowserRouter([
   {
@@ -107,7 +107,7 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <UserInfo />
+            element: <UserProfileLayout />
           },
           {
             path : "change/nickname",
@@ -117,10 +117,6 @@ const router = createBrowserRouter([
             path: "change/password",
             element: <ChangePassword />
           },
-          {
-            path: "test",
-            element: <MyPageTest />
-          }
         ]
       },
       {

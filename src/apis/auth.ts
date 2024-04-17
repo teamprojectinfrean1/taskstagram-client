@@ -1,11 +1,15 @@
-import axios from "axios";
+import axios, { AxiosHeaders } from "axios";
 import { BASE_URL } from "./domainSettings";
 import { SignupInfo } from "@/models/Auth";
+import { setDefaultResultOrder } from "dns";
+import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
+import { PictureAsPdf, PictureAsPdfSharp } from "@mui/icons-material";
+import { wrap } from "module";
 
 // const authURL = `${BASE_URL}/auth`;
 // const authURL = "http://124.61.74.148:8080/api/v1/auth";
-// const authURL = "http://127.0.0.1:8080/api/v1/auth"
-const authURL = "http://14.33.239.204:8080/api/v1/auth";
+const authURL = "http://127.0.0.1:8080/api/v1/auth"
+// const authURL = "http://14.33.239.204:8080/api/v1/auth";
 
 type fetchLoginRequest = {
   id: string;
@@ -101,10 +105,13 @@ export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
       id,
       password,
     });
-    const accessToken = response.data.data.Authorization;
+    // const accessToken = response.data.data.Authorization;
+    const accessToken = response.data
     sessionStorage.setItem("accessToken", accessToken);
-    return response.data.Authorization;
+    // return response.data.Authorization;
+    return response.data
   } catch (err) {
+    console.error(err);
     return false;
   }
 };

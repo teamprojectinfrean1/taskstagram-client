@@ -7,8 +7,9 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import theme from "@/theme/theme";
 
-const UserInfo = () => {
+const UserProfileLayout = () => {
   const [permissionClick, setPermissionClick] = useState(false);
 
   return (
@@ -18,9 +19,8 @@ const UserInfo = () => {
           boxShadow={10}
           sx={{
             p: 5,
-            height: "90%",
-            backgroundColor: "white",
-            minWidth: "600px",
+            backgroundColor: `${theme.palette.primary.light}`,
+            minWidth: "37rem",
             borderRadius: "7px",
           }}
         >
@@ -37,7 +37,7 @@ const UserInfo = () => {
           <PasswordForm />
           <Box
             sx={{
-              border: "1px solid #626262",
+              border: `1px solid ${theme.palette.text.primary}`,
               mt: 3,
               py: 2,
               borderRadius: "7px",
@@ -53,13 +53,14 @@ const UserInfo = () => {
                   <Typography variant="body1" sx={{ fontWeight: "bold" }}>
                     Permission
                   </Typography>
-                  <Typography variant="body2" sx={{ mt: 1, color: "#626262" }}>
-                    자신이 속한 프로젝트를 볼수 있습니다.
+                  <Typography
+                    variant="body2"
+                    sx={{ mt: 1, color: `${theme.palette.text.primary}` }}
+                  >
+                    자신이 속한 프로젝트를 확인할 수 있습니다.
                   </Typography>
                 </Box>
-                <Box
-                // sx={{ display: "flex", justifyContent: "flex-end" }}
-                >
+                <Box>
                   <Button
                     onClick={() => {
                       setPermissionClick(!permissionClick);
@@ -75,11 +76,13 @@ const UserInfo = () => {
               </Box>
             </Box>
           </Box>
-          <Box sx={{mt:2, mr:1}}>
+          <Box sx={{ mt: 2, mr: 1 }}>
             <Link to="/">
               <Typography
-                textAlign="right"
-                sx={{ textAlign: "right", color: "#626262" }}
+                sx={{
+                  textAlign: "right",
+                  color: `${theme.palette.text.primary}`,
+                }}
               >
                 회원탈퇴
               </Typography>
@@ -92,4 +95,4 @@ const UserInfo = () => {
   );
 };
 
-export default UserInfo;
+export default UserProfileLayout;

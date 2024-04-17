@@ -8,6 +8,8 @@ import { AuthInputValue } from "@/models/Auth";
 import { AuthisValid } from "@/models/Auth";
 import PresentPasswordInput from "./PresentPasswordInput";
 import PasswordConfirmationInput from "../auth/PasswordConfirmationInput";
+import { useMutation } from "react-query";
+import { changeUserInfo } from "@/apis/user";
 
 const ChangePassword = () => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -36,31 +38,35 @@ const ChangePassword = () => {
 
   const [isPasswordRequiredField, setIsPasswordRequiredField] = useState(false);
 
+  const changePasswordMutation = useMutation(({ type, value }: any) =>
+    changeUserInfo({ type, value })
+  );
+
   useEffect(() => {
     const passwordInputCheck = Object.values(isPasswordRequiredField).every(
       (flag) => flag === true
     );
-    setIsPasswordRequiredField(isPasswordRequiredField);
+    setIsPasswordRequiredField(passwordInputCheck);
   }, [isValid]);
 
   return (
     <>
-      {/* <Box
+      <Box
         boxShadow={10}
         sx={{
           height: "90%",
-          backgroundColor: "white",
-          minWidth: "600px",
+          backgroundColor: `${theme.palette.primary.light}`,
+          minWidth: "37rem",
           borderRadius: "7px",
         }}
-      > */}
+      >
         <Link to="/mypage">
           <ArrowBackIcon
             fontSize="large"
             sx={{ m: 3, color: "#5F6368", position: "absolute" }}
           />
         </Link>
-        <Box className="base-layout" sx={{ mt: 5 }}>
+        <Box sx={{ mt: 5 }}>
           <Typography
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center" }}
@@ -71,13 +77,13 @@ const ChangePassword = () => {
         <Box
           className="base-layout"
           sx={{
-            border: "1px solid #F0F0F0",
+            border: `1px solid ${theme.palette.primary.dark}`,
             borderRadius: "7px",
-            mt: 2,
+            mt: 6,
             p: 2,
           }}
         >
-          <Typography color="#626262" sx={{ mb: 1 }}>
+          <Typography sx={{ mb: 1, color: `${theme.palette.text.primary}` }}>
             현재 비밀번호
           </Typography>
           <PresentPasswordInput
@@ -93,13 +99,13 @@ const ChangePassword = () => {
         <Box
           className="base-layout"
           sx={{
-            border: "1px solid #F0F0F0",
+            border: `1px solid ${theme.palette.primary.dark}`,
             borderRadius: "7px",
             mt: 2,
             p: 2,
           }}
         >
-          <Typography color="#626262" sx={{ mb: 1 }}>
+          <Typography sx={{ mb: 1, color: `${theme.palette.text.primary}` }}>
             신규 비밀번호
           </Typography>
           <PasswordInput
@@ -113,7 +119,7 @@ const ChangePassword = () => {
             }}
           />
           <Box sx={{ mt: 3 }}>
-            <Typography color="#626262" sx={{ mb: 1 }}>
+            <Typography sx={{ mb: 1, color: `${theme.palette.text.primary}` }}>
               신규 비밀번호 확인
             </Typography>
             <PasswordConfirmationInput
@@ -135,17 +141,20 @@ const ChangePassword = () => {
               borderRadius: "7px",
             }}
             disabled={!isPasswordRequiredField}
-            // onClick={() => {
-            //   resetPasswordMutation.mutate({
-            //     userId,
-            //     password: passwordInfo.password,
-            //   });
-            // }}
+            onClick={() => {
+              changePasswordMutation.mutate({
+                type: "password",
+                value: {
+                  presentPassword: passwordInfo.presentPassword,
+                  password: passwordInfo.password,
+                },
+              });
+            }}
           >
             확인
           </Button>
         </Box>
-      {/* </Box> */}
+      </Box>
     </>
   );
 };

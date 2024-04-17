@@ -1,19 +1,17 @@
-import PasswordForm from "@/components/MyPage/PasswordForm";
-import PermissionForm from "@/components/MyPage/PermissionForm";
-import UserInfoForm from "@/components/MyPage/UserInfoForm";
-import { Box, Typography, Button } from "@mui/material";
+import theme from "@/theme/theme";
+import { Box, Typography } from "@mui/material";
 import { Outlet } from "react-router-dom";
 
 const MyPage = () => {
   return (
-    <Box sx={{ margin: "auto" }}>
+    <>
       <Box
         boxShadow={10}
         sx={{
-          backgroundColor: "#173665",
+          backgroundColor: `${theme.palette.secondary.main}`,
           minHeight: "10rem",
           borderRadius: "7px 7px 0 0",
-          minWidth: "1000px",
+          minWidth: "62rem",
         }}
       >
         <Typography variant="h5" sx={{ pl: 3, pt: 2, color: "white" }}>
@@ -21,19 +19,20 @@ const MyPage = () => {
         </Typography>
       </Box>
       <Box
+        boxShadow={10}
         sx={{
-          backgroundColor: "#F0F0F0",
+          backgroundColor: `${theme.palette.primary.dark}`,
           height: "40rem",
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           borderRadius: "0 0 7px 7px",
-          minWidth: "1000px",
+          minWidth: "62rem",
         }}
       >
         <Outlet />
       </Box>
-    </Box>
+    </>
   );
 };
 
