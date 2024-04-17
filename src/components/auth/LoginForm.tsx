@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import { fetchLogin } from "@/apis/auth";
+import { fetchLogin } from "@/apis/userApi";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";

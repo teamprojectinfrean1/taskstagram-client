@@ -70,16 +70,39 @@ export const fetchSignup = async ({
   nickname,
   profileImage,
 }: SignupInfo) => {
+  const formData = new FormData();
+  // formData.append("id", id);
+  // formData.append("nickname", nickname);
+  // formData.append("email", email);
+  // formData.append("password", password);
+  if (profileImage) {
+    formData.append("profileImage", profileImage);
+  }
+
+  console.log(formData);
+  // console.log(formData.get("profileImage"));
+
+  const body = {
+    id, 
+    nickname, 
+    email,
+    password,
+    formData
+  }
+
+  console.log(body);
+  
   try {
     const response = await axios.post(`${userPath}/join`, {
-      email,
       id,
+      nickname,
+      email,
       password,
-      nickname: nickname ? nickname : id,
-      profileImage,
+      formData,
     });
     // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
-    return response.data.nickname;
+    console.log(response.data);
+    return response.data.data.nickname;
   } catch (err) {
     return false;
   }
@@ -92,9 +115,9 @@ export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
       id,
       password,
     });
-    const accessToken = response.data;
+    const accessToken = response.data.data.Authorization;
     sessionStorage.setItem("accessToken", accessToken);
-    return response.data;
+    return response.data.data.Authorization;
   } catch (err) {
     return false;
   }
@@ -134,7 +157,7 @@ export const checkEmailVerification = async ({
         verificationCode,
       }
     );
-    console.log(response.data)
+    console.log(response.data);
     return response.data.data;
   } catch (err) {
     console.log(err);
@@ -160,23 +183,6 @@ export const resetPassword = async ({
       isSuccess = true;
     }
     return isSuccess;
-  } catch (err) {
-    console.error(err);
-  }
-};
-
-export const getUserInfo = async () => {
-  let userInfo = null;
-  try {
-    const response = await axios.get(`${userPath}/token`, {
-      headers: {
-        Authorization: sessionStorage.getItem('accessToken')
-      }
-    });
-    if (response.data) {
-      userInfo = response.data.data
-    }
-    return userInfo
   } catch (err) {
     console.error(err);
   }

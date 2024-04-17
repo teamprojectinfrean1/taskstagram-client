@@ -8,7 +8,7 @@ export const signupInfoState = atom<SignupInfo>({
     id: "",
     password: "",
     nickname: "",
-    profileImage: "",
+    profileImage: null,
   },
 });
 

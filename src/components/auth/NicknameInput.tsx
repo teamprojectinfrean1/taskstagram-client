@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Typography, Grid, Button, TextField } from "@mui/material";
 import { useState } from "react";
-import { checkNicknameExistence } from "@/apis/auth";
+import { checkNicknameExistence } from "@/apis/userApi";
 import { useQuery } from "react-query";
 
 type NicknameInputProps = {

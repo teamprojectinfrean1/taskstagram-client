@@ -8,6 +8,7 @@ export const userInfoState = atom<UserInfo>({
     email: "",
     id: "",
     nickname: "",
-    profileImage: ""
+    profileImage: "",
+    weaver: null
   }
 })

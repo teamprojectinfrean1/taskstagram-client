@@ -1,9 +1,9 @@
-import { checkEmailVerification } from "@/apis/auth";
+import { checkEmailVerification } from "@/apis/userApi";
 import theme from "@/theme/theme";
 import { Typography, Grid, Button, Box, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate } from "react-router-dom";
 
 type EmailVerificationCodeInputpProps = {
   isSuccess: boolean;
@@ -43,6 +43,7 @@ const EmailVerificationCodeInput = ({
       },
     }
   );
+
 
   return (
     <>
