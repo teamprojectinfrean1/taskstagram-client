@@ -3,7 +3,7 @@ import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 import { IssueStory } from "@/models/Issue";
 import { SignupInfo } from "@/models/Auth";
 
-const userPath = "/users";
+const userPath = "http://124.61.74.148:8080/api/v1/users";
 
 type UserStoryListRequest = {
   projectId: string;
@@ -13,24 +13,6 @@ type UserStoryListRequest = {
 type UserStoryListResponse = {
   dataList: IssueStory[];
   hasMore: boolean;
-};
-
-
-export const getUserInfo = async () => {
-  let userInfo = null;
-  try {
-    const response = await unauthorizedAxios.get(`${userPath}/token`, {
-      headers: {
-        Authorization: sessionStorage.getItem('accessToken')
-      }
-    });
-    if (response.data) {
-      userInfo = response.data.data
-    }
-    return userInfo
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 export const getUserStoryList = async ({
@@ -126,37 +108,18 @@ export const fetchSignup = async ({
   profileImage,
 }: SignupInfo) => {
   const formData = new FormData();
-  // formData.append("id", id);
-  // formData.append("nickname", nickname);
-  // formData.append("email", email);
-  // formData.append("password", password);
+  nickname = nickname ? nickname : id;
+  formData.append(
+    "requestCreateUser",
+    new Blob([JSON.stringify({ id, nickname, email, password })], {
+      type: "application/json",
+    })
+  );
   if (profileImage) {
-    formData.append("profileImage", profileImage);
+    formData.append("multipartFile", profileImage);
   }
-
-  console.log(formData);
-  // console.log(formData.get("profileImage"));
-
-  const body = {
-    id, 
-    nickname, 
-    email,
-    password,
-    formData
-  }
-
-  console.log(body);
-  
   try {
-    const response = await axios.post(`${userPath}/join`, {
-      id,
-      nickname,
-      email,
-      password,
-      formData,
-    });
-    // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
-    console.log(response.data);
+    const response = await axios.post(`${userPath}/join`, formData);
     return response.data.data.nickname;
   } catch (err) {
     return false;
@@ -238,6 +201,23 @@ export const resetPassword = async ({
       isSuccess = true;
     }
     return isSuccess;
+  } catch (err) {
+    console.error(err);
+  }
+};
+
+export const getUserInfo = async () => {
+  let userInfo = null;
+  try {
+    const response = await unauthorizedAxios.get(`${userPath}/token`, {
+      headers: {
+        Authorization: sessionStorage.getItem("accessToken"),
+      },
+    });
+    if (response.data) {
+      userInfo = response.data.data;
+    }
+    return userInfo;
   } catch (err) {
     console.error(err);
   }
