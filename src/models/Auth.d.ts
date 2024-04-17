@@ -3,7 +3,7 @@ export type SignupInfo = {
   id: string;
   password: string;
   nickname: string;
-  profileImage: File | null
+  profileImage: File | null;
 };
 
 // auth 유효성 검사 확인 type

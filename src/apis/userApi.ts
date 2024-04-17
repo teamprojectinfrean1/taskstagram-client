@@ -1,15 +1,45 @@
-import axios, { AxiosHeaders } from "axios";
-import { BASE_URL } from "./domainSettings";
+import axios from "axios";
+import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
+import { IssueStory } from "@/models/Issue";
 import { SignupInfo } from "@/models/Auth";
-import { setDefaultResultOrder } from "dns";
-import { defaultDropAnimationSideEffects } from "@dnd-kit/core";
-import { PictureAsPdf, PictureAsPdfSharp } from "@mui/icons-material";
-import { wrap } from "module";
 
-// const authURL = `${BASE_URL}/auth`;
-// const authURL = "http://124.61.74.148:8080/api/v1/auth";
-const authURL = "http://127.0.0.1:8080/api/v1/auth"
-// const authURL = "http://14.33.239.204:8080/api/v1/auth";
+const userPath = "http://124.61.74.148:8080/api/v1/users";
+
+type UserStoryListRequest = {
+  projectId: string;
+  page: number;
+};
+
+type UserStoryListResponse = {
+  dataList: IssueStory[];
+  hasMore: boolean;
+};
+
+export const getUserStoryList = async ({
+  projectId,
+  page,
+}: UserStoryListRequest): Promise<UserStoryListResponse> => {
+  const USER_PER_PAGE = 15;
+
+  try {
+    const response = await authorizedAxios.post(
+      `${userPath}/project/user-list`,
+      {
+        projectId,
+        USER_PER_PAGE,
+        page,
+      }
+    );
+    const data = response.data;
+    return { dataList: data.data, hasMore: data.hasMore };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
+  }
+};
 
 type fetchLoginRequest = {
   id: string;
@@ -35,7 +65,7 @@ export type resetPasswordRequest = {
 // 이메일 중복검사
 export const checkEmailExistence = async (email: string) => {
   try {
-    const response = await axios.get(`${authURL}/checkMail`, {
+    const response = await axios.get(`${userPath}/checkMail`, {
       params: { email },
     });
     console.log(response.data);
@@ -48,7 +78,7 @@ export const checkEmailExistence = async (email: string) => {
 // 아이디 중복검사
 export const checkIdExistence = async (id: string) => {
   try {
-    const response = await axios.get(`${authURL}/checkId`, {
+    const response = await axios.get(`${userPath}/checkId`, {
       params: { id },
     });
     return response.data.data;
@@ -60,7 +90,7 @@ export const checkIdExistence = async (id: string) => {
 // 닉네임 중복검사
 export const checkNicknameExistence = async (nickname: string) => {
   try {
-    const response = await axios.get(`${authURL}/checkNickname`, {
+    const response = await axios.get(`${userPath}/checkNickname`, {
       params: { nickname },
     });
     return response.data.data;
@@ -78,20 +108,18 @@ export const fetchSignup = async ({
   profileImage,
 }: SignupInfo) => {
   const formData = new FormData();
-  formData.append("id", id);
-  formData.append("nickname", nickname);
-  formData.append("email", email);
-  formData.append("password", password);
+  nickname = nickname ? nickname : id;
+  formData.append(
+    "requestCreateUser",
+    new Blob([JSON.stringify({ id, nickname, email, password })], {
+      type: "application/json",
+    })
+  );
   if (profileImage) {
-    formData.append("profileImage", profileImage);
+    formData.append("multipartFile", profileImage);
   }
-
-  console.log(formData.get("profileImage"));
-
   try {
-    const response = await axios.post(`${authURL}/join`, formData);
-    // 백엔드에서 response 수정되면, 추후 res.data.data 로 변경 예정
-    console.log(response.data);
+    const response = await axios.post(`${userPath}/join`, formData);
     return response.data.data.nickname;
   } catch (err) {
     return false;
@@ -101,17 +129,14 @@ export const fetchSignup = async ({
 // 로그인 api
 export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
   try {
-    const response = await axios.post(`${authURL}/login`, {
+    const response = await axios.post(`${userPath}/login`, {
       id,
       password,
     });
-    // const accessToken = response.data.data.Authorization;
-    const accessToken = response.data
+    const accessToken = response.data.data.Authorization;
     sessionStorage.setItem("accessToken", accessToken);
-    // return response.data.Authorization;
-    return response.data
+    return response.data.data.Authorization;
   } catch (err) {
-    console.error(err);
     return false;
   }
 };
@@ -124,7 +149,7 @@ export const requestEmailVerification = async ({
   try {
     // httpMethod get으로 변경할지 이야기 진행중
     const response = await axios.post(
-      `${authURL}/${findUserInfo}/verification/request`,
+      `${userPath}/${findUserInfo}/verification/request`,
       {
         email,
       }
@@ -144,7 +169,7 @@ export const checkEmailVerification = async ({
   try {
     // httpMethod get으로 변경할지 이야기 진행중
     const response = await axios.post(
-      `${authURL}/${findUserInfo}/verification/check`,
+      `${userPath}/${findUserInfo}/verification/check`,
       {
         email,
         verificationCode,
@@ -158,7 +183,6 @@ export const checkEmailVerification = async ({
   }
 };
 
-// 비밀번호 찾기(재설정) api
 export const resetPassword = async ({
   userId,
   password,
@@ -166,7 +190,7 @@ export const resetPassword = async ({
   try {
     let isSuccess = null;
     const response = await axios.put(
-      `${authURL}/findPassword/verification/update`,
+      `${userPath}/findPassword/verification/update`,
       {
         uuid: userId,
         password,
@@ -182,29 +206,19 @@ export const resetPassword = async ({
   }
 };
 
-// 카카오 소셜 로그인 api
-export const KakaoLogin = async () => {
-  console.log("test");
-  const oauthServerType = "KAKAO";
+export const getUserInfo = async () => {
+  let userInfo = null;
   try {
-    const response = await axios.get(
-      `http://124.61.74.148:8080/api/v1/oauth/${oauthServerType}`,
-      {
-        headers: {
-          "Access-Control-Allow-Origin": "http://localhost:3000",
-        },
-      }
-    );
-    console.log(response.data);
+    const response = await unauthorizedAxios.get(`${userPath}/token`, {
+      headers: {
+        Authorization: sessionStorage.getItem("accessToken"),
+      },
+    });
+    if (response.data) {
+      userInfo = response.data.data;
+    }
+    return userInfo;
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
-
-export const KakaoToken = async (code: string) => {
-  try {
-    const response = await axios.get(`http://124.61.74.148:8080/api/v1/oauth/KAKAO?code=${code}`)
-  } catch(err) {
-
-  }
-}

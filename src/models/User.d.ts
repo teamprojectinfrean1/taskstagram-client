@@ -3,5 +3,6 @@ export type UserInfo = {
   email: string;
   id: string;
   nickname: string;
-  profileImage: string;
+  profileImage: string | null;
+  weaver: boolean | null
 };

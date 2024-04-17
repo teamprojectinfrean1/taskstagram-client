@@ -3,7 +3,7 @@ import { Grid, Typography, Button, TextField } from "@mui/material";
 import { useState } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useQuery } from "react-query";
-import { requestEmailVerification } from "@/apis/auth";
+import { requestEmailVerification } from "@/apis/userApi";
 import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
 
 type EmailCertificationInputProps = {

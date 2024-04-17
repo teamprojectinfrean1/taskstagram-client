@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { useState } from "react";
 import SocialIcons from "./SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import { fetchLogin } from "@/apis/auth";
+import { fetchLogin } from "@/apis/userApi";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
@@ -33,8 +33,7 @@ const LoginForm = () => {
       </Typography>
       <Typography sx={{ mt: 5, ml: 0.5 }}>ID</Typography>
       <OutlinedInput
-        autoFocus
-        type="text"
+        type="email"
         fullWidth
         size="small"
         placeholder={"아이디"}

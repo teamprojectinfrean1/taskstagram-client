@@ -32,9 +32,9 @@ const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
     issueName,
     taskId,
     taskName,
-    userUuid,
-    userNickname,
-    userImageUrl,
+    assigneeId,
+    assigneeNickname,
+    assigneeProfileImage,
   } = issue;
   const taskNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(taskNameRef, "vertical");
@@ -88,10 +88,10 @@ const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
                   className="textClamping lineClampOne"
                   sx={{ wordBreak: "break-all" }}
                 >
-                  taskName
+                  taskTitle
                 </Typography>
               </Box>
-              <Tooltip title={userNickname} placement="top" sx={{ zIndex: 10 }}>
+              <Tooltip title={assigneeNickname} placement="top" sx={{ zIndex: 10 }}>
                 <UserAvatar sx={{ width: 28, height: 28 }} />
               </Tooltip>
             </Box>

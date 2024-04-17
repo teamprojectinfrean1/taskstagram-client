@@ -1,11 +1,11 @@
 import { Card, IconButton, Typography } from "@mui/material";
 import theme from "@/theme/theme";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import TaskObj from "@/models/TaskObj";
+import Task from "@/models/Task";
 
 type NewTaskProps = {
   onShowTaskModal(isModalOpen: boolean): void;
-  onClick(task: TaskObj | null): void;
+  onClick(task: Task | null): void;
 };
 
 const NewTask = ({ onClick, onShowTaskModal }: NewTaskProps) => {

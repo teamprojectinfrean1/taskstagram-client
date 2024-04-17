@@ -12,37 +12,52 @@ import {
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
-import ProjectObj from "@/models/ProjectObj";
+import { ProjectSummary } from "@/models/Project";
 import { useRecoilState } from "recoil";
-import { selectedProjectState } from "@/stores/Store";
-import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
-import { getProjectList } from "@/apis/ProjectApi";
-import basicProfileImage from "@/assets/basicProfileImage.png";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import { ArrowDropDown } from "@mui/icons-material";
-import Menu from "@mui/material/Menu";
-import { useNavigate } from "react-router-dom";
+import { selectedProjectState } from "@/stores/projectStore";
+import { useEffect, useMemo } from "react";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
 
 type TopNavProps = {
   onMenuClick: () => void;
 };
 
-function TopNav({ onMenuClick }: TopNavProps) {
+const TopNav = ({ onMenuClick }: TopNavProps) => {
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
+  const queryClient = useQueryClient();
 
   const { data } = useQuery(
     "getProjectList",
-    () => getProjectList("c00dc5dc-2aef-4579-b3fe-cb08b6d6825d")
+    () => getProjectList("07c7ac1c-e1a9-4b54-9ef5-5f13884c8077")
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
-  const handleChangeMainProject = (selectedProject: ProjectObj | null) => {
-    //메인 프로젝트 변경 api 호출
+  //첫 렌더링에만 호출되어 메인 프로젝트가 선택되도록
+  useEffect(() => {
+    if (data && data.length > 0) {
+      const mainProject =
+        data.find((item) => item.isMainProject === true) ?? null;
+      setSelectedProject(mainProject);
+    }
+  }, []);
+
+  const changeMainprojectMuation = useMutation({
+    mutationFn: changeMainProject,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
+
+  const handleChangeMainProject = (selectedProjectId: string | null) => {
+    changeMainprojectMuation.mutate(selectedProjectId);
   };
 
-  const handleChangeSelectedProject = (selectedProject: ProjectObj | null) => {
+  const handleChangeSelectedProject = (
+    selectedProject: ProjectSummary | null
+  ) => {
     setSelectedProject(selectedProject);
   };
 
@@ -66,63 +81,26 @@ function TopNav({ onMenuClick }: TopNavProps) {
   }
 
   return (
-    <>
-      <AppBar position="static">
-        <Toolbar sx={{ justifyContent: "space-between" }}>
-          <Box sx={{ display: "flex", alignItems: "center" }}>
-            <IconButton
-              size="large"
-              edge="start"
-              color="inherit"
-              aria-label="menu"
-              sx={{ mr: 2 }}
-              onClick={onMenuClick}
-            >
-              <MenuIcon />
-            </IconButton>
-            <SelectableProject
-              projects={data ?? []}
-              selectedProject={selectedProject}
-              onSelectedProjectChanged={handleChangeSelectedProject}
-              onClickCheckBox={handleChangeMainProject}
-            />
-          </Box>
-          <IconButton
-            size="large"
-            edge="end"
-            onClick={handleOpenUserMenu}
-            color="inherit"
-            sx={{ p: 0 }}
-          >
-            <Avatar src={basicProfileImage} alt="" />
-            <KeyboardArrowDownIcon sx={{ color: "#afbaca" }} />
-          </IconButton>
-          <Menu
-            sx={{ mt: "45px" }}
-            anchorEl={anchorElUser}
-            anchorOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            keepMounted
-            transformOrigin={{
-              vertical: "top",
-              horizontal: "right",
-            }}
-            open={!!anchorElUser}
-            onClose={handleCloseUserMenu}
-          >
-            {settings.map((setting) => (
-              <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                <Typography textAlign="center" onClick={() => {
-                  redirectGo(setting)
-                }}>{setting}</Typography>
-              </MenuItem>
-            ))}
-          </Menu>
-        </Toolbar>
-      </AppBar>
-    </>
+    <AppBar position="static">
+      <Toolbar>
+        <IconButton
+          size="large"
+          edge="start"
+          color="inherit"
+          aria-label="menu"
+          sx={{ mr: 2 }}
+          onClick={onMenuClick}
+        >
+          <MenuIcon />
+        </IconButton>
+        <SelectableProject
+          projects={data ?? []}
+          selectedProject={selectedProject}
+          onSelectedProjectChanged={handleChangeSelectedProject}
+          onClickCheckBox={handleChangeMainProject}
+        />
+      </Toolbar>
+    </AppBar>
   );
-}
+};
 export default TopNav;

@@ -5,7 +5,7 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/authStore";
-import { fetchSignup } from "@/apis/auth";
+import { fetchSignup } from "@/apis/userApi";
 import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import { useMutation } from "react-query";
