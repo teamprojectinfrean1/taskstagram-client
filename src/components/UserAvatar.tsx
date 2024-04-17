@@ -4,19 +4,20 @@ import { SxProps } from '@mui/system';
 
 interface UserAvatarProps extends AvatarProps {
   sx?: SxProps;
+  width?: number | string;  // Width can be a number (like 50) or a string (like '50px')
+  height?: number | string; // Same for height
 }
 
 const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(
-  ({ sx, ...props }, ref) => {
+  ({ sx, width = 50, height = 50, ...props }, ref) => {
     return (
       <Avatar
         ref={ref}
         alt="user avatar"
         // src=""
-        sizes="140px"
         sx={{
-          width: 50,
-          height: 50,
+          width: width, 
+          height: height,
           ...sx,
         }}
         {...props}

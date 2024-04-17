@@ -37,6 +37,9 @@ const SearchableSelect = ({
         isOptionEqualToValue={(option, value) => option === value}
         multiple={multiselect}
         noOptionsText="일치하는 옵션이 없습니다"
+        ListboxProps={{
+          className: "custom-scrollbar",
+        }}
         PaperComponent={({ children }) => (
           <Paper style={{ backgroundColor: theme.palette.background.default }}>{children}</Paper>
         )}

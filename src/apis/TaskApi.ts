@@ -1,8 +1,9 @@
 import axios from "axios";
-import { BASE_URL } from "./domainSettings";
 import Task from "@/models/Task";
+import { authorizedAxios } from "./domainSettings";
 
-const taskUrl = `${BASE_URL}/task`;
+
+const taskPath = "task";
 
 type GetTaskListRequest = {
   page: number;
@@ -63,7 +64,7 @@ export const getTaskList = async ({
 }: GetTaskListRequest): Promise<TaskListResponse | null> => {
   if (page && size && projectId !== null) {
     try {
-      const response = await axios.get(`${taskUrl}`, {
+      const response = await authorizedAxios.get(taskPath, {
         params: {
           page,
           size,
@@ -88,7 +89,7 @@ export const getTaskDetail = async (
 ): Promise<TaskDetailReponse | null> => {
   if (taskId) {
     try {
-      const response = await axios.get(`${taskUrl}/${taskId}`);
+      const response = await authorizedAxios.get(`${taskPath}/${taskId}`);
       return response.data.data;
     } catch {
       return null;
@@ -118,7 +119,7 @@ export const createOneTask = async ({
     editDeletePermission !== null
   ) {
     try {
-      const response = await axios.post(`${taskUrl}`, {
+      const response = await axios.post(`${taskPath}`, {
         projectId,
         writerUuid,
         taskTitle,
@@ -157,7 +158,7 @@ export const replaceOneTask = async ({
   ) {
     try {
       const response = await axios.put(
-        `${taskUrl}`,
+        `${taskPath}`,
         {
           updaterUuid,
           taskTitle,
@@ -186,7 +187,7 @@ export const replaceOneTask = async ({
 export const deleteOneTask = async (taskId: string): Promise<boolean> => {
   if (taskId) {
     try {
-      const response = await axios.delete(`${taskUrl}`, {
+      const response = await axios.delete(`${taskPath}`, {
         params: {
           taskId: taskId,
         },

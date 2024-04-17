@@ -1,8 +1,7 @@
-import axios from "axios";
-import { BASE_URL } from "./domainSettings";
+import { unauthorizedAxios } from "./domainSettings";
 import { ProjectSummary } from "@/models/Project";
 
-const projectUrl = `${BASE_URL}/project`;
+const projectPath = "project";
 
 type LastUpdateDetailType = {
   userUuid: string;
@@ -26,7 +25,7 @@ export const getProjectList = async (
 ): Promise<ProjectSummary[]> => {
   if (userId) {
     try {
-      const response = await axios.get(`${projectUrl}/list/${userId}`);
+      const response = await unauthorizedAxios.get(`${projectPath}/list/${userId}`);
       return response.data.data;
     } catch {
       return [];
@@ -42,7 +41,7 @@ export const getProjectDetail = async (
 ): Promise<ProjectDetailReponse | null> => {
   if (projectId) {
     try {
-      const response = await axios.get(`${projectUrl}/${projectId}`);
+      const response = await unauthorizedAxios.get(`${projectPath}/${projectId}`);
       return response.data.data;
     } catch {
       return null;
@@ -58,8 +57,8 @@ export const changeMainProject = async (
 ): Promise<boolean> => {
   if (projectId !== null) {
     try {
-      const response = await axios.put(
-        `${projectUrl}/main-project/${projectId}`
+      const response = await unauthorizedAxios.put(
+        `${projectPath}/main-project/${projectId}`
       );
       return response.data.isSuccess;
     } catch {

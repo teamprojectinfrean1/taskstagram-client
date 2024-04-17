@@ -20,7 +20,7 @@ import React, { useState } from "react";
 import theme from "@/theme/theme";
 import { styled } from "@mui/material/styles";
 import { useRecoilValue } from "recoil";
-import { selectedProjectState } from "@/stores/Store";
+import { selectedProjectState } from "@/stores/projectStore";
 
 type SelectableProjectProps = {
   projects: ProjectSummary[];

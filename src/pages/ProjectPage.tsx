@@ -18,7 +18,7 @@ import theme from "@/theme/theme";
 import { useQuery } from "react-query";
 import { getProjectDetail } from "@/apis/ProjectApi";
 import { useRecoilValue } from "recoil";
-import { selectedProjectState } from "@/stores/Store";
+import { selectedProjectState } from "@/stores/projectStore";
 
 const ProjectPage = () => {
   const [formData, setFormData] = useState<ProjectFormData>({

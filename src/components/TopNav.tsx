@@ -3,7 +3,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
 import { ProjectSummary } from "@/models/Project";
 import { useRecoilState } from "recoil";
-import { selectedProjectState } from "@/stores/Store";
+import { selectedProjectState } from "@/stores/projectStore";
 import { useEffect, useMemo } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProjectList, changeMainProject } from "@/apis/ProjectApi";

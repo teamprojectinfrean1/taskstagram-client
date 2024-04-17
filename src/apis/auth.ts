@@ -1,10 +1,8 @@
-import axios from "axios";
-import { BASE_URL } from "./domainSettings";
+import { unauthorizedAxios } from "./domainSettings";
 import { SignupInfo } from "@/models/Auth";
 
-// const authURL = `${BASE_URL}/auth`;
-const authURL = "http://124.61.74.148:8080/api/v1/auth";
-// const authURL = "http://127.0.0.1:8080/api/v1/auth"
+const authPath = "auth";
+// const authPath = "http://127.0.0.1:8080/api/v1/auth"
 
 type fetchLoginRequest = {
   email: string;
@@ -30,7 +28,7 @@ export type resetPasswordRequest = {
 // 이메일 중복검사
 export const checkEmailExistence = async (email: string) => {
   try {
-    const response = await axios.get(`${authURL}/checkMail`, {
+    const response = await unauthorizedAxios.get(`${authPath}/checkMail`, {
       params: { email },
     });
     return response.data.data;
@@ -42,7 +40,7 @@ export const checkEmailExistence = async (email: string) => {
 // 아이디 중복검사
 export const checkIdExistence = async (id: string) => {
   try {
-    const response = await axios.get(`${authURL}/checkId`, {
+    const response = await unauthorizedAxios.get(`${authPath}/checkId`, {
       params: { id },
     });
     return response.data.data;
@@ -54,7 +52,7 @@ export const checkIdExistence = async (id: string) => {
 // 닉네임 중복검사
 export const checkNicknameExistence = async (nickname: string) => {
   try {
-    const response = await axios.get(`${authURL}/checkNickname`, {
+    const response = await unauthorizedAxios.get(`${authPath}/checkNickname`, {
       params: { nickname },
     });
     return response.data.data;
@@ -72,7 +70,7 @@ export const fetchSignup = async ({
   profileImage,
 }: SignupInfo) => {
   try {
-    const response = await axios.post(`${authURL}/join`, {
+    const response = await unauthorizedAxios.post(`${authPath}/join`, {
       email,
       id,
       password,
@@ -89,7 +87,7 @@ export const fetchSignup = async ({
 // 로그인 api
 export const fetchLogin = async ({ email, password }: fetchLoginRequest) => {
   try {
-    const response = await axios.post(`${authURL}/login`, {
+    const response = await unauthorizedAxios.post(`${authPath}/login`, {
       email,
       password,
     });
@@ -108,8 +106,8 @@ export const requestEmailVerification = async ({
 }: requestEmailVerificationRequest) => {
   try {
     // httpMethod get으로 변경할지 이야기 진행중
-    const response = await axios.post(
-      `${authURL}/${findUserInfo}/verification/request`,
+    const response = await unauthorizedAxios.post(
+      `${authPath}/${findUserInfo}/verification/request`,
       {
         email,
       }
@@ -128,8 +126,8 @@ export const checkEmailVerification = async ({
 }: checkEmailVerificationRequest) => {
   try {
     // httpMethod get으로 변경할지 이야기 진행중
-    const response = await axios.post(
-      `${authURL}/${findUserInfo}/verification/check`,
+    const response = await unauthorizedAxios.post(
+      `${authPath}/${findUserInfo}/verification/check`,
       {
         email,
         verificationCode,
@@ -149,8 +147,8 @@ export const resetPassword = async ({
 }: resetPasswordRequest) => {
   try {
     let isSuccess = null;
-    const response = await axios.put(
-      `${authURL}/findPassword/verification/update`,
+    const response = await unauthorizedAxios.put(
+      `${authPath}/findPassword/verification/update`,
       {
         uuid: userId,
         password,

@@ -27,7 +27,7 @@ import {
   CreateTaskRequest,
   ReplaceTaskRequest,
 } from "@/apis/TaskApi";
-import { selectedProjectState } from "@/stores/Store";
+import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
 
 type TaskModalProps = {

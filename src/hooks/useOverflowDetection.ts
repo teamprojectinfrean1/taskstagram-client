@@ -1,35 +1,41 @@
-import { useState, useEffect, RefObject } from 'react';
-import debounce from 'lodash.debounce';
+import { useState, useEffect, RefObject } from "react";
+import debounce from "lodash.debounce";
 
-const useOverflowDetection = (ref: RefObject<HTMLElement>, overflowDirection: 'horizontal' | 'vertical') => {
+const useOverflowDetection = (
+  ref: RefObject<HTMLElement>,
+  overflowDirection: "horizontal" | "vertical"
+) => {
   const [isOverflowing, setIsOverflowing] = useState(false);
 
+  const checkOverflow = () => {
+    const current = ref.current;
+    if (current) {
+      const overflowCheck =
+        overflowDirection === "horizontal"
+          ? current.scrollWidth > current.clientWidth
+          : current.scrollHeight > current.clientHeight;
+
+      setIsOverflowing(overflowCheck);
+    }
+  };
+
   useEffect(() => {
-    const checkOverflow = () => {
-      const current = ref.current;
-      if (current) {
-        let overflowCheck = false;
-
-        if (overflowDirection === 'horizontal') {
-          overflowCheck = current.scrollWidth > current.clientWidth;
-        } else if (overflowDirection === 'vertical') {
-          overflowCheck = current.scrollHeight > current.clientHeight;
-        }
-
-        setIsOverflowing(overflowCheck);
-      }
-    };
+    const current = ref.current;
+    if (!current) return;
 
     const debouncedCheckOverflow = debounce(checkOverflow, 500);
-    checkOverflow();
 
-    window.addEventListener('resize', debouncedCheckOverflow);
+    const mutationObserver = new MutationObserver(debouncedCheckOverflow);
+    mutationObserver.observe(current, { childList: true, subtree: true });
+
+    const resizeObserver = new ResizeObserver(debouncedCheckOverflow);
+    resizeObserver.observe(current);
 
     return () => {
-      window.removeEventListener('resize', debouncedCheckOverflow);
-      debouncedCheckOverflow.cancel();
+      mutationObserver.disconnect();
+      resizeObserver.disconnect();
     };
-  }, [ref, overflowDirection]); 
+  }, [ref, overflowDirection]);
 
   return isOverflowing;
 };
