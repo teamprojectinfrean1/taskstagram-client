@@ -18,12 +18,7 @@ import ProjectPage from "./pages/ProjectPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import ResetPassword from "@/components/auth/ResetPassword";
 import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
-import MyPage from "./pages/MyPage";
-import ChangePassword from "./components/MyPage/ChangePassword";
-import ChangeNickname from "./components/MyPage/ChangeNickname";
-import UserInfo from "./components/MyPage/UserProfileLayout";
-import RedirectPage from "./components/auth/RedirectPage";
-import UserProfileLayout from "./components/MyPage/UserProfileLayout";
+import RedirectPage from "./components/OAuth/RedirectPage";
 
 const router = createBrowserRouter([
   {

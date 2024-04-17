@@ -1,7 +1,7 @@
 import theme from "@/theme/theme";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import SocialIcons from "./SocialIcons";
+import SocialIcons from "../OAuth/SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
 import { Box, Button, Divider, Typography, Grid } from "@mui/material";

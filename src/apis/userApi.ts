@@ -135,7 +135,7 @@ export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
     });
     const accessToken = response.data.data.Authorization;
     sessionStorage.setItem("accessToken", accessToken);
-    return response.data.data.Authorization;
+    return accessToken;
   } catch (err) {
     return false;
   }
