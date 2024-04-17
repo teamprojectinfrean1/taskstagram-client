@@ -1,6 +1,6 @@
 import theme from "@/theme/theme";
 import { useState } from "react";
-import SocialIcons from "./SocialIcons";
+import SocialIcons from "../OAuth/SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
 import { fetchLogin } from "@/apis/userApi";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";

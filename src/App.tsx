@@ -19,8 +19,13 @@ import ProjectPage from "./pages/ProjectPage";
 import ProtectedRouter from "./components/ProtectedRouter";
 import ResetPassword from "@/components/auth/ResetPassword";
 import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
+import RedirectPage from "./components/OAuth/RedirectPage";
 
 const router = createBrowserRouter([
+  {
+    path: "/oauth/redirected/kakao",
+    element: <RedirectPage />
+  },
   {
     path: "/auth",
     element: <AuthPage />,
