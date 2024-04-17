@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://1.246.104.170:8080/api/v1";
+const BASE_URL = "http://124.61.74.148:8080/api/v1";
 
 const unauthorizedAxios = axios.create({
   baseURL: BASE_URL,

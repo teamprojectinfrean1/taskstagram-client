@@ -1,28 +1,36 @@
-import Task from "@/components/TaskManagement/Task";
+import TaskTicket from "@/components/TaskManagement/TaskTicket";
 import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
-import TaskObj from "@/models/TaskObj";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedProjectState } from "@/stores/Store";
-import { useQuery } from "react-query";
-import { getTaskList } from "@/apis/TaskApi";
+import Task from "@/models/Task";
+import { useRecoilValue } from "recoil";
+import { selectedProjectState } from "@/stores/projectStore";
+import { useMutation, useQuery, useQueryClient } from "react-query";
+import {
+  getTaskList,
+  deleteOneTask,
+  createOneTask,
+  replaceOneTask,
+  CreateTaskRequest,
+  ReplaceTaskRequest,
+} from "@/apis/TaskApi";
 import Backdrop from "@mui/material/Backdrop";
 import CircularProgress from "@mui/material/CircularProgress";
 
 const TaskPage = () => {
   const [showModal, setShowModal] = useState(false);
-  const [selectedTask, setSelectedTask] = useState<TaskObj | null>();
+  const [selectedTask, setSelectedTask] = useState<Task | null>();
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
+  const queryClient = useQueryClient();
 
   const { data, isLoading } = useQuery(
-    ["getTaskList", selectedProject],
+    ["getTaskList", selectedProject, currentPage],
     () =>
       getTaskList({
-        page: 1,
-        size: 7,
+        page: currentPage,
+        size: currentPage === 1 ? 7 : 8,
         projectId: selectedProject !== null ? selectedProject.projectId : null,
       }),
     {
@@ -31,39 +39,46 @@ const TaskPage = () => {
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
-  //util에 주입예정
-  const replaceItemAtIndex = (
-    arr: TaskObj[],
-    index: number,
-    newValue: TaskObj
-  ) => {
-    return [...arr.slice(0, index), newValue, ...arr.slice(index + 1)];
+  const deleteMutation = useMutation({
+    mutationFn: deleteOneTask,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
+
+  const createMutation = useMutation({
+    mutationFn: createOneTask,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
+
+  const replaceMutation = useMutation({
+    mutationFn: replaceOneTask,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
+
+  const addTask = (request: CreateTaskRequest) => {
+    if (request !== null) {
+      createMutation.mutate(request);
+    }
   };
 
-  //util에 주입예정
-  const removeItemAtIndex = (arr: TaskObj[], index: number) => {
-    return [...arr.slice(0, index), ...arr.slice(index + 1)];
+  const replaceTask = (request: ReplaceTaskRequest) => {
+    if (request !== null) {
+      replaceMutation.mutate(request);
+    }
   };
 
-  const addTask = (task: TaskObj) => {
-    //setTaskList((oldTaskList) => [...oldTaskList, task]);
-    //해당 task create하는 api 호출로 대체 예정
-    //setCurrentPage();
-  };
-
-  const replaceTask = (previousTask: TaskObj, newTask: TaskObj) => {
-    //onst index = taskList.findIndex((listItem) => listItem === previousTask);
-    //const newList = replaceItemAtIndex(taskList, index, newTask);
-    //setTaskList(newList);
-    //해당 task update하는 api 호출로 대체 예정
-  };
-
-  const deleteTask = (task: TaskObj) => {
-    //const index = taskList.findIndex((listItem) => listItem === task);
-    //const newList = removeItemAtIndex(taskList, index);
-    //setTaskList(newList);
-    //해당 task delete하는 api 호출로 대체 예정
-    //전체 task select하는 api호출 후 setTaskList();
+  const deleteTask = (task: Task) => {
+    if (task !== null && task.taskId) {
+      deleteMutation.mutate(task.taskId);
+    }
   };
 
   const handleCloseTaskModal = () => {
@@ -77,17 +92,6 @@ const TaskPage = () => {
   ) => {
     setCurrentPage(value);
   };
-
-  // useEffect(()=>{
-  //   const taskobjs:TaskObj[] = Array.from(Array(7)).map((_, index) =>
-  //     {
-  //       return {
-  //       taskId: `TaskId${index+1}`,
-  //       taskName: `Task${index+1}`,
-  //       taskExplanation: `Task${index+1}에 대한 설명을 간단하게 적어주세요.`}
-  //     });
-  //   setTaskList([...taskobjs]);
-  // }, []);
 
   return (
     <div>
@@ -108,16 +112,18 @@ const TaskPage = () => {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           sx={{ height: "100%", minHeight: "450px", m: 1 }}
         >
-          <Grid item xs={12} md={3}>
-            <NewTask
-              onClick={setSelectedTask}
-              onShowTaskModal={setShowModal}
-            ></NewTask>
-          </Grid>
-          {data && data.length > 0
-            ? data.map((task) => (
+          {currentPage === 1 && (
+            <Grid item xs={12} md={3}>
+              <NewTask
+                onClick={setSelectedTask}
+                onShowTaskModal={setShowModal}
+              ></NewTask>
+            </Grid>
+          )}
+          {data?.taskList && data.taskList.length > 0
+            ? data.taskList.map((task) => (
                 <Grid item xs={12} md={3} key={task.taskId}>
-                  <Task
+                  <TaskTicket
                     key={task.taskId}
                     selectedTask={task}
                     onDelete={deleteTask}
@@ -130,7 +136,7 @@ const TaskPage = () => {
         </Grid>
         <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
           <Pagination
-            // count={Math.ceil((taskList.length + 1) / 8)}
+            count={data?.toalTaskpage}
             page={currentPage}
             onChange={handlePaginationChange}
             shape="rounded"
@@ -138,7 +144,7 @@ const TaskPage = () => {
         </Box>
       </Grid>
       <TaskModal
-        selectedTask={selectedTask as TaskObj}
+        selectedTask={selectedTask as Task}
         isOpen={showModal}
         onAdd={addTask}
         onReplace={replaceTask}

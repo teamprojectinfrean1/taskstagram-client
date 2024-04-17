@@ -1,24 +1,24 @@
 import "@/App.css";
-import { useEffect } from "react";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import NotFoundPage from "@/pages/NotFoundPage";
-import AuthPage from "./pages/AuthPage";
+import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
 import ProfilePage from "@/pages/ProfilePage";
-import { loggedState } from "./stores/Store";
-import { useRecoilValue } from "recoil";
-import FindEmailForm from "@/components/auth/FindEmailForm";
+import FindIdForm from "@/components/auth/FindIdForm";
 import LoginForm from "@/components/auth/LoginForm";
-import SignupForm from "@/components/auth/SignupForm";
-import FindEmailLayout from "@/components/auth/FindEmailLayout";
-import FindEmailSuccess from "@/components/auth/FindEmailSuccess";
-import FindPasswdLayout from "@/components/auth/FindPasswdLayout";
-import FindPasswordForm from "@/components/auth/FindPasswdForm";
-import FindPasswdSuccess from "@/components/auth/FindPasswdSuccess";
+import FindIdLayout from "@/components/auth/FindIdLayout";
+import FindIdSuccess from "@/components/auth/FindIdSuccess";
+import FindPasswdLayout from "@/components/auth/FindPasswordLayout";
+import FindPasswordForm from "@/components/auth/FindPasswordForm";
 import SignupSuccess from "@/components/auth/SignupSuccess";
+import SignupFormRequired from "@/components/auth/SignupFormRequired";
+import SignupFormOptional from "@/components/auth/SignupFormOptional";
 import ProjectPage from "./pages/ProjectPage";
+import ProtectedRouter from "./components/ProtectedRouter";
+import ResetPassword from "@/components/auth/ResetPassword";
+import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
 
 const router = createBrowserRouter([
   {
@@ -30,24 +30,28 @@ const router = createBrowserRouter([
         element: <LoginForm />,
       },
       {
-        path: "signup",
-        element: <SignupForm />,
+        path: "signup/required",
+        element: <SignupFormRequired />,
+      },
+      {
+        path: "signup/optional",
+        element: <SignupFormOptional />,
       },
       {
         path: "signup/success",
         element: <SignupSuccess />,
       },
       {
-        path: "find/email",
-        element: <FindEmailLayout />,
+        path: 'find/id',
+        element: <FindIdLayout />,
         children: [
           {
             index: true,
-            element: <FindEmailForm />,
+            element: <FindIdForm />,
           },
           {
             path: "success",
-            element: <FindEmailSuccess />,
+            element: <FindIdSuccess />,
           },
         ],
       },
@@ -60,16 +64,24 @@ const router = createBrowserRouter([
             element: <FindPasswordForm />,
           },
           {
-            path: "success",
-            element: <FindPasswdSuccess />,
+            path: "reset",
+            element: <ResetPassword />,
           },
+          {
+            path: "success",
+            element: <FindPasswordSuccess />
+          }
         ],
       },
     ],
   },
   {
     path: "/",
-    element: <PageLayout /> ,
+    element: (
+      <ProtectedRouter>
+        <PageLayout />
+      </ProtectedRouter>
+    ),
     errorElement: <NotFoundPage />,
     children: [
       {
@@ -93,13 +105,6 @@ const router = createBrowserRouter([
 ]);
 
 const App = () => {
-  // const logged = useRecoilValue(loggedState);
-
-  // 로그인 유무
-  // useEffect(() => {
-  //   logged ? router.navigate("/") : router.navigate("/auth/login");
-  // }, [logged]);
-
   return (
     <>
       <RouterProvider router={router} />

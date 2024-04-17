@@ -5,14 +5,15 @@ const theme = createTheme({
     mode: "light",
     primary: {
       main: "#121923",
+      light: "white"
     },
     secondary: {
       main: "#173665",
       dark: "rgb(69, 94, 131)",
     },
     background: {
-      paper: "rgba(228, 230, 237)",
-      default: "#FFFFFF"
+      default: "#e5e8ed",
+      paper: "rgba(228, 230, 237)"
     },
     text: {
       secondary: "#121923",

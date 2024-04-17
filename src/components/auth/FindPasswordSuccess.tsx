@@ -1,18 +1,16 @@
 import theme from "@/theme/theme";
-import { useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-const FindPasswdSuccess = () => {
+const FindPasswordSuccess = () => {
   const navigate = useNavigate();
 
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
-        <Typography sx={{ mt: 5, mb: 3 }}>
-          비밀번호 재설정이 완료되었습니다.
-        </Typography>
-        <Typography>로그인 화면으로 이동합니다.</Typography>
+        <Typography sx={{my:3}}>비밀번호 재설정이 완료되었습니다.</Typography>
         <Typography>확인 버튼을 누르면</Typography>
+        <Typography>로그인 화면으로 이동합니다.</Typography>
       </Box>
 
       <Button
@@ -20,7 +18,7 @@ const FindPasswdSuccess = () => {
         variant="contained"
         size="large"
         sx={{
-          mt: 5,
+          mt: 7,
           bgcolor: `${theme.palette.secondary.main}`,
           borderRadius: "7px",
         }}
@@ -28,10 +26,10 @@ const FindPasswdSuccess = () => {
           navigate("/auth/login");
         }}
       >
-        확인
+        로그인
       </Button>
     </>
   );
 };
 
-export default FindPasswdSuccess;
+export default FindPasswordSuccess;

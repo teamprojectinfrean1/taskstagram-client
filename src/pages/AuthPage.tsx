@@ -1,31 +1,36 @@
-import "./AuthPage.css";
 import theme from "@/theme/theme";
 import LogoAndName from "../components/auth/LogoAndName";
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
+import { useEffect } from "react";
 
 const AuthPage = () => {
-  const location = useLocation();
-
-  const routedSignup = location.pathname == "/auth/signup";
+  const navigate = useNavigate();
+  useEffect(() => {
+    const isLogin = sessionStorage.getItem("accessToken");
+    isLogin && navigate("/");
+  });
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
         bgcolor: `${theme.palette.background.default}`,
+        display: "flex",
+        alignItems: "center",
       }}
     >
-      <Box className="base-layout">
-        <Box
-          sx={
-            routedSignup
-              ? { display: "flex", justifyContent: "center" }
-              : { display: "grid", gridTemplateColumns: "1fr 1fr" }
-          }
-        >
-          {!routedSignup && <LogoAndName />}
-          <Box className={routedSignup ? "signup-form-size" : "form-size"}>
+      <Box sx={{ m: "auto", width: "70%" }}>
+        <Box sx={{ display: "flex", justifyContent: "space-between", minWidth:'1050px' }}>
+          <LogoAndName />
+          <Box
+            sx={{
+              backgroundColor: `${theme.palette.primary.light}`,
+              borderRadius: "5%",
+              minWidth: "550px",
+              height: "570px",
+            }}
+          >
             <Outlet />
           </Box>
         </Box>

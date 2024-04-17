@@ -1,10 +1,13 @@
 import theme from "@/theme/theme";
 import { Button, Box, Typography } from "@mui/material";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 
 const SignupSuccess = () => {
   const navigate = useNavigate();
-  const { email } = useLocation().state;
+  const nickname = useLocation().state.nickname;
+
+  const { resetSignupInfo } = useChangeSignupInfo();
 
   return (
     <Box className="base-layout text-center">
@@ -21,7 +24,7 @@ const SignupSuccess = () => {
         </Typography>
       </Typography>
       <Box sx={{ my: 5 }}>
-        <Typography>{email}님, 가입이 완료되었습니다.</Typography>
+        <Typography>{nickname}님, 가입이 완료되었습니다.</Typography>
       </Box>
       <Typography>확인 버튼을 누르면</Typography>
       <Typography>로그인 화면으로 이동합니다.</Typography>
@@ -35,6 +38,7 @@ const SignupSuccess = () => {
           borderRadius: "7px",
         }}
         onClick={() => {
+          resetSignupInfo();
           navigate("/auth/login");
         }}
       >
