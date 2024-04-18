@@ -35,6 +35,7 @@ const ProjectPage = () => {
     projectId: "",
     projectName: "",
     projectContent: "",
+    projectImage: "",
     projectStartDate: null,
     projectEndDate: null,
     projectMemberUuidList: null,
@@ -73,6 +74,7 @@ const ProjectPage = () => {
         projectId: data.projectId,
         projectName: data.projectName,
         projectContent: data.projectContent,
+        projectImage: data.projectImage,
         projectStartDate: data.startDate,
         projectEndDate: data.endDate,
         projectMemberUuidList: null,
@@ -87,6 +89,7 @@ const ProjectPage = () => {
         projectId: "",
         projectName: "",
         projectContent: "",
+        projectImage: "",
         projectStartDate: null,
         projectEndDate: null,
         projectMemberUuidList: null,
@@ -101,7 +104,7 @@ const ProjectPage = () => {
     if (type === "new") {
       createMutation.mutate({
         projectName: formData.projectName,
-        writerUuid: "8017b5fb-7b36-414c-b859-6606739a7497", //임시 고정
+        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
         projectTagList: formData.projectTags,
@@ -123,7 +126,7 @@ const ProjectPage = () => {
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
         projectName: formData.projectName,
-        updaterUuid: "8017b5fb-7b36-414c-b859-6606739a7497", //임시 고정
+        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
         projectTagList: formData.projectTags,
@@ -203,6 +206,9 @@ const ProjectPage = () => {
                 "&:hover": {
                   backgroundColor: "#c3cede",
                 },
+                backgroundImage: `url('${formData.projectImage}')`,
+                backgroundRepeat: "no-repeat",
+                backgroundSize: "100% 100%",
               }}
             >
               <input type="file" hidden />

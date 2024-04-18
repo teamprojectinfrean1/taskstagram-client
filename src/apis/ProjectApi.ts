@@ -4,7 +4,7 @@ import { ProjectSummary } from "@/models/Project";
 const projectPath = "project";
 
 type LastUpdateDetailType = {
-  userUuid: string;
+  memeberUuid: string;
   userNickName: string;
   updatedDate: string;
 };
@@ -13,6 +13,7 @@ type ProjectDetailReponse = {
   projectId: string;
   projectName: string;
   projectContent: string;
+  projectImage: string | null;
   startDate: string;
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;

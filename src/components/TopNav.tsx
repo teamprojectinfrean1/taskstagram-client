@@ -19,7 +19,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
 
   const { data } = useQuery(
     "getProjectList",
-    () => getProjectList("8017b5fb-7b36-414c-b859-6606739a7497")
+    () => getProjectList("3f0351b0-6141-4ed6-ac0c-47c3685045bf")
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
