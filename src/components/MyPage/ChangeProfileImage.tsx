@@ -2,8 +2,16 @@ import basicProfileImage from "@/assets/basicProfileImage.png";
 import { Button, Typography, Avatar } from "@mui/material";
 // import styled from "@emotion/styled";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
-import { useQuery } from "react-query";
-// import { changeProfileImage } from "@/apis/user";
+import { useMutation, useQuery } from "react-query";
+import { changeUserInfo } from "@/apis/userApi";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userInfoState } from "@/stores/userStore";
+import { changeUserInfoImage } from "@/apis/userApi";
+
+type imageType = {
+  profileImage: File | null;
+  memberId: string;
+};
 
 const ChangeProfileImage = () => {
   // const VisuallyHiddenInput = styled("input")({
@@ -36,26 +44,32 @@ const ChangeProfileImage = () => {
     }
   };
 
-  // const { data, refetch } = useQuery(
-  //   "ChangeProfileImage",
-  //   () => changeProfileImage(profileImage),
-  //   {
-  //     enabled: false,
-  //     cacheTime: 0,
-  //   }
-  // );
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const memberId = userInfo.memberId;
 
-  // useEffect(() => {
-  //   if (profileImage) {
-  //     refetch();
-  //   }
-  // }, [profileImage]);
+  // const changeProfileImage = useMutation<>(({profileImage, memberId}: imageType) => changeUserInfoImage({profileImage, memberId}))
+  const { data, refetch } = useQuery(
+    "changeProfileImage",
+    () => changeUserInfoImage({ profileImage, memberId }),
+    {
+      cacheTime: 0,
+      enabled: false,
+      onSuccess: (data) => {
+        setUserInfo({...userInfo, profileImage: data})
+      }
+    }
+  );
+
+  useEffect(() => {
+    if (profileImage) {
+      refetch();
+    }
+  }, [profileImage]);
 
   return (
     <>
       <Avatar
-        src={basicProfileImage}
-        alt=""
+        src={userInfo.profileImage ? userInfo.profileImage : basicProfileImage}
         sx={{
           backgroundColor: "#B2B4B8",
           borderRadius: "50%",

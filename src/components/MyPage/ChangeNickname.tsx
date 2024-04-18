@@ -5,16 +5,23 @@ import NicknameInput from "../auth/NicknameInput";
 import { useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
-// import { changeUserInfo } from "@/apis/user";
+import { changeUserInfo } from "@/apis/userApi";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { userInfoState } from "@/stores/userStore";
 
 const ChangeNickname = () => {
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const memberId = userInfo.memberId
   const [nickname, setNickname] = useState("");
 
-  // const changeNicknameMutation = useMutation(({ type, value }: any) =>
-  //   changeUserInfo({ type, value })
-  // );
-
-  console.log(nickname);
+  const changeNicknameMutation = useMutation(({ type, value, memberId }: any) =>
+    changeUserInfo({ type, value, memberId }), {
+      onSuccess: (data) => {
+        console.log(data);
+        setUserInfo({...userInfo, nickname: data})
+      }
+    }
+  );
 
   return (
     <>
@@ -65,12 +72,13 @@ const ChangeNickname = () => {
                 borderRadius: "7px",
                 mt: 5,
               }}
-              // onClick={() =>
-              //   changeNicknameMutation.mutate({
-              //     type: "nickname",
-              //     changeValue: nickname,
-              //   })
-              // }
+              onClick={() =>
+                changeNicknameMutation.mutate({
+                  type: "nickname",
+                  value: nickname,
+                  memberId
+                })
+              }
             >
               변경
             </Button>

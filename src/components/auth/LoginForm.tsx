@@ -6,8 +6,11 @@ import { fetchLogin } from "@/apis/userApi";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { userInfoState } from "@/stores/userStore";
 
 const LoginForm = () => {
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
@@ -20,6 +23,7 @@ const LoginForm = () => {
       cacheTime: 0,
       onSuccess: (data) => {
         if (data) {
+          setUserInfo({...userInfo, memberId: data})
           navigate("/");
         }
       },

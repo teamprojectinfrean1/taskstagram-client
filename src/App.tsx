@@ -20,6 +20,9 @@ import ResetPassword from "@/components/auth/ResetPassword";
 import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
 import RedirectPage from "./components/OAuth/RedirectPage";
 import MyPage from "./pages/MyPage";
+import UserProfileLayout from "./components/MyPage/UserProfileLayout";
+import ChangeNickname from "./components/MyPage/ChangeNickname";
+import ChangePassword from "./components/MyPage/ChangePassword";
 
 const router = createBrowserRouter([
   {
@@ -100,20 +103,20 @@ const router = createBrowserRouter([
       {
         path: "/mypage",
         element: <MyPage />,
-        // children: [
-        //   {
-        //     index: true,
-        //     element: <UserProfileLayout />
-        //   },
-        //   {
-        //     path : "change/nickname",
-        //     element: <ChangeNickname />
-        //   },
-        //   {
-        //     path: "change/password",
-        //     element: <ChangePassword />
-        //   },
-        // ]
+        children: [
+          {
+            index: true,
+            element: <UserProfileLayout />
+          },
+          {
+            path : "change/nickname",
+            element: <ChangeNickname />
+          },
+          {
+            path: "change/password",
+            element: <ChangePassword />
+          },
+        ]
       },
       {
         path: "/project",

@@ -33,8 +33,7 @@ const UserInfoForm = () => {
                 fontWeight: "bold",
               }}
             >
-              {/* {userInfo.nickname} */}
-              sukhofeel
+              {userInfo.nickname}
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -67,8 +66,7 @@ const UserInfoForm = () => {
                 fontWeight: "bold",
               }}
             >
-              {/* {userInfo.email} */}
-              tkdltprp0212@naver.com
+              {userInfo.email}
             </Typography>
           </Grid>
           <Grid item xs={2}>
@@ -96,8 +94,7 @@ const UserInfoForm = () => {
               fontWeight="bold"
               sx={{ color: `${theme.palette.text.primary}` }}
             >
-              {/* {userInfo.id} */}
-              sfdjsh@naver.com
+              {userInfo.id}
             </Typography>
           </Grid>
         </Grid>

@@ -5,21 +5,28 @@ import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { getUserInfo } from "@/apis/memberApi";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 
 const PageLayout = () => {
-  
-  // 사용자 정보 recoil에 담는 코드  
-  const setUserInfo = useSetRecoilState(userInfoState);
+  // 사용자 정보 recoil에 담는 코드
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const { data } = useQuery("userInfo", () => getUserInfo(), {
     onSuccess: (data) => {
       if (data) {
-        setUserInfo(data);
+        setUserInfo({
+          ...userInfo,
+          email: data.email,
+          id: data.id,
+          nickname: data.nickname,
+          profileImage: data.profileImage,
+          userId: data.userId,
+          weaver: data.weaver,
+        });
       }
     },
   });
-    
+
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
   const handleClose = () => {

@@ -9,9 +9,15 @@ import { AuthisValid } from "@/models/Auth";
 import PresentPasswordInput from "./PresentPasswordInput";
 import PasswordConfirmationInput from "../auth/PasswordConfirmationInput";
 import { useMutation } from "react-query";
-// import { changeUserInfo } from "@/apis/user";
+import { changeUserInfo } from "@/apis/userApi";
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "@/stores/userStore";
 
 const ChangePassword = () => {
+
+  const userInfo = useRecoilValue(userInfoState)
+  const memberId = userInfo.memberId
+
   const [passwordInfo, setPasswordInfo] = useState({
     presentPassword: "",
     password: "",
@@ -38,9 +44,9 @@ const ChangePassword = () => {
 
   const [isPasswordRequiredField, setIsPasswordRequiredField] = useState(false);
 
-  // const changePasswordMutation = useMutation(({ type, value }: any) =>
-  //   changeUserInfo({ type, value })
-  // );
+  const changePasswordMutation = useMutation(({ type, value, memberId }: any) =>
+    changeUserInfo({ type, value, memberId })
+  );
 
   useEffect(() => {
     const passwordInputCheck = Object.values(isPasswordRequiredField).every(
@@ -142,13 +148,14 @@ const ChangePassword = () => {
             }}
             disabled={!isPasswordRequiredField}
             onClick={() => {
-              // changePasswordMutation.mutate({
-              //   type: "password",
-              //   value: {
-              //     presentPassword: passwordInfo.presentPassword,
-              //     password: passwordInfo.password,
-              //   },
-              // });
+              changePasswordMutation.mutate({
+                type: "password",
+                value: {
+                  currentPassword: passwordInfo.presentPassword,
+                  updatePassword: passwordInfo.password,
+                },
+                memberId
+              });
             }}
           >
             확인

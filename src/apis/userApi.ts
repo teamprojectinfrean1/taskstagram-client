@@ -2,6 +2,7 @@ import axios from "axios";
 import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 import { IssueStory } from "@/models/Issue";
 import { SignupInfo } from "@/models/Auth";
+import { jwtDecode } from "jwt-decode";
 
 const userPath = "http://124.61.74.148:8080/api/v1/users";
 // const userPath = "http://127.0.0.1:8080/api/v1/users"
@@ -61,6 +62,12 @@ type checkEmailVerificationRequest = {
 export type resetPasswordRequest = {
   userId: string;
   password: string;
+};
+
+export type ChangeUserInfo = {
+  type: string;
+  value: File | string | Object | null;
+  memberId: string;
 };
 
 // 이메일 중복검사
@@ -134,10 +141,15 @@ export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
       id,
       password,
     });
-    const accessToken = response.data.data.Authorization;
+    const accessToken = response.data.data.Authorization[0];
+    const decodedToken = jwtDecode(accessToken)
+    console.log(decodedToken);
+    const memberId = decodedToken.sub
     sessionStorage.setItem("accessToken", accessToken);
-    return accessToken;
+    console.log(response.data.data);
+    return memberId;
   } catch (err) {
+    console.error(err);
     return false;
   }
 };
@@ -207,19 +219,59 @@ export const resetPassword = async ({
   }
 };
 
-export const getUserInfo = async () => {
-  let userInfo = null;
+// export const getUserInfo = async () => {
+//   let userInfo = null;
+//   try {
+//     const response = await unauthorizedAxios.get(`${userPath}/token`, {
+//       headers: {
+//         Authorization: sessionStorage.getItem("accessToken"),
+//       },
+//     });
+//     if (response.data) {
+//       userInfo = response.data.data;
+//     }
+//     return userInfo;
+//   } catch (err) {
+//     console.error(err);
+//   }
+// };
+
+export const changeUserInfo = async ({
+  type,
+  value,
+  memberId,
+}: ChangeUserInfo) => {
+  console.log(type, value, memberId);
+   
   try {
-    const response = await unauthorizedAxios.get(`${userPath}/token`, {
-      headers: {
-        Authorization: sessionStorage.getItem("accessToken"),
-      },
+    const response = await axios.put(`${userPath}/update?uuid=${memberId}`, {
+      type,
+      value
     });
-    if (response.data) {
-      userInfo = response.data.data;
-    }
-    return userInfo;
+    return response.data.data.nickname
   } catch (err) {
     console.error(err);
   }
 };
+
+type imageType = {
+  profileImage: File | null
+  memberId: string
+}
+
+export const changeUserInfoImage = async ({ profileImage, memberId }: imageType)  => {
+  const formData = new FormData()
+  if (profileImage) {
+    formData.append('multipartFile', profileImage)
+  }
+  try {
+    const response = await axios.put(`${userPath}/update/image?uuid=${memberId}`, formData)
+    console.log(response.data);
+    return response.data.data.updateURL
+  } catch(err) {
+    console.error(err);
+  }
+};
+
+
+// "4a3458c9-7c0b-4b4e-afb2-4a99b116e6ab"
