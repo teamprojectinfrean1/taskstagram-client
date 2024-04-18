@@ -9,7 +9,7 @@ import { AuthisValid } from "@/models/Auth";
 import PresentPasswordInput from "./PresentPasswordInput";
 import PasswordConfirmationInput from "../auth/PasswordConfirmationInput";
 import { useMutation } from "react-query";
-import { changeUserInfo } from "@/apis/user";
+// import { changeUserInfo } from "@/apis/user";
 
 const ChangePassword = () => {
   const [passwordInfo, setPasswordInfo] = useState({
@@ -38,9 +38,9 @@ const ChangePassword = () => {
 
   const [isPasswordRequiredField, setIsPasswordRequiredField] = useState(false);
 
-  const changePasswordMutation = useMutation(({ type, value }: any) =>
-    changeUserInfo({ type, value })
-  );
+  // const changePasswordMutation = useMutation(({ type, value }: any) =>
+  //   changeUserInfo({ type, value })
+  // );
 
   useEffect(() => {
     const passwordInputCheck = Object.values(isPasswordRequiredField).every(
@@ -142,13 +142,13 @@ const ChangePassword = () => {
             }}
             disabled={!isPasswordRequiredField}
             onClick={() => {
-              changePasswordMutation.mutate({
-                type: "password",
-                value: {
-                  presentPassword: passwordInfo.presentPassword,
-                  password: passwordInfo.password,
-                },
-              });
+              // changePasswordMutation.mutate({
+              //   type: "password",
+              //   value: {
+              //     presentPassword: passwordInfo.presentPassword,
+              //     password: passwordInfo.password,
+              //   },
+              // });
             }}
           >
             확인

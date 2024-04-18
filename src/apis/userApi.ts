@@ -4,6 +4,7 @@ import { IssueStory } from "@/models/Issue";
 import { SignupInfo } from "@/models/Auth";
 
 const userPath = "http://124.61.74.148:8080/api/v1/users";
+// const userPath = "http://127.0.0.1:8080/api/v1/users"
 
 type UserStoryListRequest = {
   projectId: string;

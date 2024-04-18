@@ -5,14 +5,14 @@ import NicknameInput from "../auth/NicknameInput";
 import { useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
-import { changeUserInfo } from "@/apis/user";
+// import { changeUserInfo } from "@/apis/user";
 
 const ChangeNickname = () => {
   const [nickname, setNickname] = useState("");
 
-  const changeNicknameMutation = useMutation(({ type, value }: any) =>
-    changeUserInfo({ type, value })
-  );
+  // const changeNicknameMutation = useMutation(({ type, value }: any) =>
+  //   changeUserInfo({ type, value })
+  // );
 
   console.log(nickname);
 
@@ -65,12 +65,12 @@ const ChangeNickname = () => {
                 borderRadius: "7px",
                 mt: 5,
               }}
-              onClick={() =>
-                changeNicknameMutation.mutate({
-                  type: "nickname",
-                  changeValue: nickname,
-                })
-              }
+              // onClick={() =>
+              //   changeNicknameMutation.mutate({
+              //     type: "nickname",
+              //     changeValue: nickname,
+              //   })
+              // }
             >
               변경
             </Button>

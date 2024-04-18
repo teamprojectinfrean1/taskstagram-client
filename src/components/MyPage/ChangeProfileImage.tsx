@@ -3,7 +3,7 @@ import { Button, Typography, Avatar } from "@mui/material";
 // import styled from "@emotion/styled";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { useQuery } from "react-query";
-import { changeProfileImage } from "@/apis/user";
+// import { changeProfileImage } from "@/apis/user";
 
 const ChangeProfileImage = () => {
   // const VisuallyHiddenInput = styled("input")({
@@ -36,20 +36,20 @@ const ChangeProfileImage = () => {
     }
   };
 
-  const { data, refetch } = useQuery(
-    "ChangeProfileImage",
-    () => changeProfileImage(profileImage),
-    {
-      enabled: false,
-      cacheTime: 0,
-    }
-  );
+  // const { data, refetch } = useQuery(
+  //   "ChangeProfileImage",
+  //   () => changeProfileImage(profileImage),
+  //   {
+  //     enabled: false,
+  //     cacheTime: 0,
+  //   }
+  // );
 
-  useEffect(() => {
-    if (profileImage) {
-      refetch();
-    }
-  }, [profileImage]);
+  // useEffect(() => {
+  //   if (profileImage) {
+  //     refetch();
+  //   }
+  // }, [profileImage]);
 
   return (
     <>

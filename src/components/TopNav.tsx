@@ -9,15 +9,20 @@ import {
   Avatar,
   MenuItem,
   Tooltip,
+  Menu,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
 import { ProjectSummary } from "@/models/Project";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
+import { useNavigate } from "react-router-dom";
+import basicProfileImage from "@/assets/basicProfileImage.png";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { userInfoState } from "@/stores/userStore";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -73,32 +78,75 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
 
   const settings = ["마이페이지", "로그아웃"];
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const redirectGo = (setting: string) => {
-    if (setting === '마이페이지') {
-      navigate('/mypage')
+    if (setting === "마이페이지") {
+      navigate("/mypage");
     }
-  }
+  };
+
+  const userInfo = useRecoilValue(userInfoState)
+  const profileImage = userInfo.profileImage
 
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={onMenuClick}
+          >
+            <MenuIcon />
+          </IconButton>
+          <SelectableProject
+            projects={data ?? []}
+            // selectedProject={selectedProject}
+            onSelectedProjectChanged={handleChangeSelectedProject}
+            onClickCheckBox={handleChangeMainProject}
+          />
+        </Box>
         <IconButton
           size="large"
-          edge="start"
+          edge="end"
+          onClick={handleOpenUserMenu}
           color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-          onClick={onMenuClick}
+          sx={{ p: 0 }}
         >
-          <MenuIcon />
+          <Avatar src={profileImage? profileImage : basicProfileImage} />
+          <KeyboardArrowDownIcon sx={{ color: "#afbaca" }} />
         </IconButton>
-        <SelectableProject
-          projects={data ?? []}
-          selectedProject={selectedProject}
-          onSelectedProjectChanged={handleChangeSelectedProject}
-          onClickCheckBox={handleChangeMainProject}
-        />
+        <Menu
+          sx={{ mt: "45px" }}
+          anchorEl={anchorElUser}
+          anchorOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+          open={!!anchorElUser}
+          onClose={handleCloseUserMenu}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  redirectGo(setting);
+                }}
+              >
+                {setting}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
       </Toolbar>
     </AppBar>
   );
