@@ -2,7 +2,8 @@ export type ProjectFormData = {
   projectId: string;
   projectName: string;
   projectContent: string;
-  projectImage: string | null;
+  projectImageUrl: string | null;
+  projectImageFile: File | null;
   projectStartDate: string | null;
   projectEndDate: string | null;
   projectMemberUuidList: string[] | null;

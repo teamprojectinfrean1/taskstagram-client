@@ -24,6 +24,7 @@ export type CreateProjectRequest = {
   projectName: string | null;
   writerUuid: string | null;
   projectContent: string | null;
+  projectImageFile: File | null;
   projectTagList: string[] | null;
   memberUuidList: string[] | null;
   startDate: string | null;
@@ -79,6 +80,7 @@ export const createOneProject = async ({
   projectName,
   writerUuid,
   projectContent,
+  projectImageFile,
   projectTagList,
   memberUuidList,
   startDate,
@@ -86,15 +88,32 @@ export const createOneProject = async ({
   createDate,
 }: CreateProjectRequest): Promise<boolean> => {
   try {
-    const response = await axios.post(`${projectUrl}`, {
-      projectName,
-      writerUuid,
-      projectContent,
-      projectTagList,
-      memberUuidList,
-      startDate,
-      endDate,
-      createDate,
+    const formData = new FormData();
+    formData.append(
+      "project",
+      new Blob(
+        [
+          JSON.stringify({
+            projectName,
+            writerUuid,
+            projectContent,
+            projectTagList,
+            memberUuidList,
+            startDate,
+            endDate,
+            createDate,
+          }),
+        ],
+        {
+          type: "application/json",
+        }
+      )
+    );
+    if (projectImageFile) {
+      formData.append("multipartFile", projectImageFile);
+    }
+    const response = await axios.post(`${projectUrl}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data.isSuccess;
   } catch {
