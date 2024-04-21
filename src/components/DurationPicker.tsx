@@ -33,6 +33,7 @@ const DurationPicker = ({
         <DatePicker
           label="Start"
           name="startDate"
+          format="YYYY/MM/DD"
           sx={{ flex: 1 }}
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
           onChange={(date) => handleStartDateChange(date)}
@@ -43,6 +44,7 @@ const DurationPicker = ({
         <DatePicker
           label="End"
           name="endDate"
+          format="YYYY/MM/DD"
           sx={{ flex: 1 }}
           value={selectedEndDate ? dayjs(selectedEndDate) : null}
           onChange={(date) => handleEndDateChange(date)}
