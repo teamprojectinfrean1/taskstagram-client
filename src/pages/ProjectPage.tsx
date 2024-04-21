@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import DurationPicker from "@/components/DurationPicker";
-import ProjectMemberAutocomplete from "@/components/Project/ProjectMemberAutocomplete";
+import SelectableProjectMember from "@/components/Project/SelectableProjectMember";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { grey } from "@mui/material/colors";
 import theme from "@/theme/theme";
@@ -26,6 +26,7 @@ import {
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
+import { UserSummary } from "@/models/User";
 
 const ProjectPage = () => {
   const location = useLocation();
@@ -41,11 +42,52 @@ const ProjectPage = () => {
     projectImageFile: null,
     projectStartDate: null,
     projectEndDate: null,
-    projectMemberUuidList: null,
+    projectMemberUuidList: [],
     projectTags: null,
     isMainProject: false,
   });
-  const userUuidList = ["user1", "user2"];
+  const userUuidList = [
+    {
+      id: "user1",
+      nickname: "user1",
+      //이미지 임시고정
+      profileImage:
+        "https://weaver-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/9609d257-e6dc-4e30-811c-a06d50bda686_save.jpeg",
+    } as UserSummary,
+    {
+      id: "user2",
+      nickname: "user2",
+      profileImage:
+        "https://weaver-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/39e4f374-2c99-4e93-98a7-893084709d95_cat.png",
+    } as UserSummary,
+    { id: "user3", nickname: "user3", profileImage: null } as UserSummary,
+    { id: "user4", nickname: "user4", profileImage: null } as UserSummary,
+    { id: "user5", nickname: "user5", profileImage: null } as UserSummary,
+    { id: "user6", nickname: "user6", profileImage: null } as UserSummary,
+    { id: "user7", nickname: "user7", profileImage: null } as UserSummary,
+    { id: "user8", nickname: "user8", profileImage: null } as UserSummary,
+    { id: "user9", nickname: "user9", profileImage: null } as UserSummary,
+    {
+      id: "user1000000000",
+      nickname: "user1000000000",
+      profileImage: null,
+    } as UserSummary,
+    {
+      id: "user111111111111111111111",
+      nickname: "user111111111111111111111",
+      profileImage: null,
+    } as UserSummary,
+    {
+      id: "user1222222222222222222222222222",
+      nickname: "user1222222222222222222222222222",
+      profileImage: null,
+    } as UserSummary,
+    {
+      id: "user133333333333333333333333333333333333",
+      nickname: "user133333333333333333333333333333333333",
+      profileImage: null,
+    } as UserSummary,
+  ];
   const selectedProject = useRecoilValue(selectedProjectState);
 
   const { data, isLoading } = useQuery(
@@ -81,7 +123,7 @@ const ProjectPage = () => {
         projectImageFile: null,
         projectStartDate: data.startDate,
         projectEndDate: data.endDate,
-        projectMemberUuidList: null,
+        projectMemberUuidList: [],
         projectTags: data.projectTagList,
         isMainProject: selectedProject?.isMainProject,
       });
@@ -97,7 +139,7 @@ const ProjectPage = () => {
         projectImageFile: null,
         projectStartDate: null,
         projectEndDate: null,
-        projectMemberUuidList: null,
+        projectMemberUuidList: [],
         projectTags: null,
         isMainProject: false,
       });
@@ -298,8 +340,9 @@ const ProjectPage = () => {
               </InputLabel>
             </Grid>
             <Grid item xs={9}>
-              <ProjectMemberAutocomplete
+              <SelectableProjectMember
                 memberUuidList={userUuidList}
+                selectedMemberUuidList={formData.projectMemberUuidList}
                 onSelectedMemberChanged={(value) =>
                   handleInputChange("projectMemberUuidList", value)
                 }
