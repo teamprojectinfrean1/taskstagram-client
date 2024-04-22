@@ -127,7 +127,7 @@ const TaskModal = ({
       //필수값 체크 로직 추가해야함.
       onAdd({
         projectId: selectedProject.projectId,
-        writerUuid: "8017b5fb-7b36-414c-b859-6606739a7497", //임시 고정
+        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
@@ -145,7 +145,7 @@ const TaskModal = ({
       //이미 생성된 Task
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
-        updaterUuid: "8017b5fb-7b36-414c-b859-6606739a7497", //임시 고정
+        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
