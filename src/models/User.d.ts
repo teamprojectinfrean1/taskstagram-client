@@ -1,7 +1,7 @@
-export type UserInfo = {
+type UserInfo = {
   userId: string;
   email: string;
   id: string;
-  nickname: string;
+  userNickname: string;
   profileImage: string;
 };

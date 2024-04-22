@@ -19,7 +19,6 @@ import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
-import { IssueFormData } from "@/models/Issue";
 
 type IssueFormModalProps = {
   currentIssueId: string;

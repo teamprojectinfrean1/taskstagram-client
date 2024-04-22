@@ -7,6 +7,7 @@ import { useQuery } from "react-query";
 import { getUserInfo } from "@/apis/userApi";
 import { useSetRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
+import Snackbar from "@/components/Snackbar";
 
 const PageLayout = () => {
   
@@ -30,13 +31,12 @@ const PageLayout = () => {
     <Fragment>
       <TopNav onMenuClick={() => setIsSideNavOpen((prev) => !prev)} />
       <SideNav open={isSideNavOpen} />
-
       <Backdrop
         open={isSideNavOpen}
         onClick={handleClose}
         sx={{ zIndex: (theme) => theme.zIndex.drawer - 1 }}
       />
-
+      <Snackbar />
       <Box
         component="main"
         sx={{

@@ -5,10 +5,16 @@ import { green } from "@mui/material/colors";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 
 type UserStoryProps = {
-  name: string;
+  userId: string;
+  userNickname: string;
+  userProfileImage: string;
 };
 
-const IssueStory = ({ name }: UserStoryProps) => {
+const IssueStory = ({
+  userId,
+  userNickname,
+  userProfileImage,
+}: UserStoryProps) => {
   const userNameRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(userNameRef, "vertical");
 
@@ -22,12 +28,9 @@ const IssueStory = ({ name }: UserStoryProps) => {
     >
       <UserAvatar sx={{ border: `4px solid ${green[400]}` }} />
       {/* 변경 필요: 사용자가 진행 중인 이슈가 있냐에 따라 색 동적으로 렌더링 */}
-      <Tooltip
-        title={textIsOverflowing ? name : ""}
-        placement="bottom"
-      >
+      <Tooltip title={textIsOverflowing ? userNickname : ""} placement="bottom">
         <Typography ref={userNameRef} className="textClamping lineClampOne">
-          {name}
+          {userNickname}
         </Typography>
       </Tooltip>
     </Box>

@@ -1,18 +1,7 @@
-import axios from "axios";
 import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
-import { IssueStory } from "@/models/Issue";
 
 const userPath = "/users";
 
-type UserStoryListRequest = {
-  projectId: string;
-  page: number;
-};
-
-type UserStoryListResponse = {
-  dataList: IssueStory[];
-  hasMore: boolean;
-};
 
 
 export const getUserInfo = async () => {
@@ -32,28 +21,28 @@ export const getUserInfo = async () => {
   }
 };
 
-export const getUserStoryList = async ({
-  projectId,
-  page,
-}: UserStoryListRequest): Promise<UserStoryListResponse> => {
-  const USER_PER_PAGE = 15;
+type UserStoryListRequest = {
+  page: number;
+  projectId: string;
+  size: number;
+};
 
+export const getUserStoryList = async ({
+  page,
+  projectId,
+  size
+}: UserStoryListRequest): Promise<PaginatedResponse<UserInfo>> => {
   try {
     const response = await authorizedAxios.post(
       `${userPath}/project/user-list`,
       {
-        projectId,
-        USER_PER_PAGE,
         page,
+        projectId,
+        size
       }
     );
-    const data = response.data;
-    return { dataList: data.data, hasMore: data.hasMore };
+    return response.data.data;
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message);
-    } else {
       throw new Error("An unknown error occurred");
-    }
   }
 };

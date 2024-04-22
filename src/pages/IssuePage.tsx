@@ -20,7 +20,6 @@ import {
   useSensors,
   rectIntersection,
 } from "@dnd-kit/core";
-import { IssueSummary, IssueStatus } from "@/models/Issue";
 import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
 import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
@@ -115,21 +114,18 @@ const IssuePage = () => {
           }}
         >
           <IssueTicketContainer
-            ariaLabel="create issue"
             containerId="toDo"
             isHovered={hoveredContainerId === "toDo"}
             projectId={projectId!}
             title="할 일"
-          ></IssueTicketContainer>
+          />
           <IssueTicketContainer
-            ariaLabel="create issue"
             containerId="inProgress"
             isHovered={hoveredContainerId === "inProgress"}
             projectId={projectId!}
             title="진행 중"
           />
           <IssueTicketContainer
-            ariaLabel="delete issue"
             containerId="done"
             isHovered={hoveredContainerId === "done"}
             projectId={projectId!}

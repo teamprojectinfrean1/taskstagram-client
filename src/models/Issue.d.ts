@@ -1,5 +1,4 @@
-import { RawDraftContentState } from "draft-js";
-import { StringLiteral } from "typescript";
+// import { RawDraftContentState } from "draft-js";
 
 /* IssueFormData 추후 제거 예정 */
 type IssueFormData = {
@@ -36,11 +35,10 @@ type IssueDetails = {
 };
 
 type IssueSummary = {
-  projectId: string;
   taskId: string;
-  taskName: string;
+  taskTitle: string;
   issueId: string;
-  issueName: string;
+  issueTitle: string;
   assigneeId: string;
   assigneeNickname: string;
   assigneeProfileImage: string | null;

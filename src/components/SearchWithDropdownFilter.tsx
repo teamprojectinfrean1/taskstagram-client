@@ -3,18 +3,22 @@ import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DropdownSelect from "@/components/DropdownSelect";
 import theme from "@/theme/theme";
+import { UseInfiniteQueryResult } from 'react-query';
+
 
 type SearchWithDropdownFilterProps = {
-  searchParams: IssueSearchParams;
   handleSearchParamsChange: (
     key: keyof IssueSearchParams,
     value: string
   ) => void;
+  triggerSearch: () => void;
+  searchParams: IssueSearchParams;
 };
 
 const SearchWithDropdownFilter = ({
-  searchParams,
   handleSearchParamsChange,
+  triggerSearch,
+  searchParams,
 }: SearchWithDropdownFilterProps) => {
   const handleKeywordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleSearchParamsChange("keyword", event.target.value);
@@ -24,11 +28,28 @@ const SearchWithDropdownFilter = ({
     handleSearchParamsChange("filter", value);
   };
 
+  const executeIssueSearch = (
+    event:
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (
+      (event as React.KeyboardEvent<HTMLDivElement>).key === "Enter" ||
+      event.type === "click"
+    ) {
+      event.preventDefault();
+      if (searchParams.keyword.trim().length > 0) {
+        triggerSearch();
+      }
+    }
+  };
+
   return (
     <TextField
       variant="outlined"
       value={searchParams.keyword}
       onChange={handleKeywordChange}
+      onKeyDown={executeIssueSearch}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -47,7 +68,12 @@ const SearchWithDropdownFilter = ({
         ),
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={() => {}}>
+            <IconButton
+              type="button"
+              aria-label="serach"
+              disabled={!searchParams.keyword}
+              onClick={executeIssueSearch}
+            >
               <SearchIcon />
             </IconButton>
           </InputAdornment>

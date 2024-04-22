@@ -1,12 +1,13 @@
 import { useEffect, useState, useRef } from "react";
-import { Box, IconButton, Paper, Typography } from "@mui/material";
+import { Box, IconButton, Paper } from "@mui/material";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { SkeletonUserStory, IssueStory } from "@/components/IssueManagement";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
-import useGetUserStoryListQuery from "@/hooks/useGetIssueStoryListQuery";
-import useIntersectionObserver from "@/hooks/useIntersectionObserver";
+import { getUserStoryList } from "@/apis/userApi";
+import InfiniteScroller from "@/components/InfiniteScroller";
 
+const USER_PER_PAGE = 15;
 const SCROLL_AMOUNT_ON_ARROW_CLICK = 500;
 const SCROLL_POSITION_TOLERANCE = 5;
 
@@ -15,42 +16,16 @@ type UserStoryContainerProps = {
 };
 
 const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
-  const {
-    data,
-    isLoading,
-    isError,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useGetUserStoryListQuery({ projectId: projectId! });
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const lastIssueRef = useIntersectionObserver({
-    containerId: "IssueStory",
-    isLoading,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  });
-
-  const [testLoading, setTestLoading] = useState(true);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setTestLoading(false), 3000);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  const userStoryListRef = useRef<HTMLDivElement>(null);
-  const storyIsOverflowing = useOverflowDetection(
-    userStoryListRef,
-    "horizontal"
-  );
+  const storyIsOverflowing = useOverflowDetection(containerRef, "horizontal");
 
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const checkScrollButtons = () => {
-    if (userStoryListRef.current) {
-      const { scrollLeft, scrollWidth, clientWidth } = userStoryListRef.current;
+    if (containerRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = containerRef.current;
       setCanScrollLeft(scrollLeft > 0);
       setCanScrollRight(
         scrollLeft < scrollWidth - clientWidth - SCROLL_POSITION_TOLERANCE
@@ -59,7 +34,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
   };
 
   useEffect(() => {
-    const currentContainer = userStoryListRef.current;
+    const currentContainer = containerRef.current;
     currentContainer?.addEventListener("scroll", checkScrollButtons);
     checkScrollButtons();
 
@@ -69,8 +44,8 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
   }, [storyIsOverflowing]);
 
   const handleScroll = (direction: number) => {
-    if (userStoryListRef.current) {
-      userStoryListRef.current.scrollLeft +=
+    if (containerRef.current) {
+      containerRef.current.scrollLeft +=
         direction * SCROLL_AMOUNT_ON_ARROW_CLICK;
     }
   };
@@ -97,23 +72,34 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
           id="IssueStory"
           overflow="auto"
           display="flex"
-          ref={userStoryListRef}
+          ref={containerRef}
           className="custom-scrollbar"
           sx={{
             scrollBehavior: "smooth",
           }}
           alignSelf="center"
         >
-          {!testLoading &&
-            Array.from({ length: 10 }, (_, index) => (
-              <IssueStory key={index} name="성이름" />
-            ))}
-          <div
-            ref={hasNextPage ? lastIssueRef : undefined}
-            style={{ margin: 0 }}
+          <InfiniteScroller<UserInfo>
+            queryFunction={getUserStoryList}
+            queryKey={["userStoryList", projectId]}
+            requestOptions={{
+              projectId,
+              size: USER_PER_PAGE,
+            }}
+            containerRef={containerRef}
+            firstPageErrorMessage="스토리 목록을 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오."
+            subsequentPageErrorMessage="스토리 목록을 추가로 불러오는 중 문제가 발생했습니다. 잠시 후에 다시 시도해 주십시오."
+            noDataToShowMessage="현재 표시할 스토리가 없습니다."
+            renderItem={(story, index) => (
+              <IssueStory
+                key={index}
+                userId={story.userId}
+                userNickname={story.userNickname}
+                userProfileImage=""
+              />
+            )}
+            renderSkeleton={(index) => <SkeletonUserStory key={index} />}
           />
-          {(isFetchingNextPage || testLoading) &&
-            Array.from({ length: 8 }, (_, i) => <SkeletonUserStory key={i} />)}
         </Box>
         <IconButton
           size="large"

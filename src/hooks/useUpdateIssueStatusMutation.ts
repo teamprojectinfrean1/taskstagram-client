@@ -1,6 +1,5 @@
 import { useMutation, useQueryClient, UseMutationOptions } from "react-query";
 import { updateIssueStatus } from "@/apis/issueApi";
-import { IssueSummary, UpdateIssuePayload } from "@/models/Issue";
 import { useRecoilState } from "recoil";
 import { snackbarState } from "@/stores/snackbarStore";
 
