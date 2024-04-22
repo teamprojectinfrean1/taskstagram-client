@@ -6,7 +6,7 @@ import { DefaultIssueList } from "@/components/IssueManagement/DefaultIssueList"
 import { IssueSearchResults } from "@/components/IssueManagement/IssueSearchResults";
 
 type IssueTicketContainerProps = {
-  containerId: string;
+  containerId: IssueStatus;
   isHovered: boolean;
   projectId: string;
   title: string;

@@ -2,38 +2,109 @@ import { authorizedAxios } from "./domainSettings";
 
 const issuePath = "/issue";
 
-export const createNewIssue = async (issue: NewIssue): Promise<boolean> => {
+
+
+
+type CreateIssueRequest = {
+  issue: NewIssue;
+};
+
+type CreateIssueResponse = {
+  isSuccess: boolean;
+};
+
+export const createIssue = async ({
+  issue,
+}: CreateIssueRequest): Promise<CreateIssueResponse> => {
   try {
     const response = await authorizedAxios.post(issuePath, issue);
-    return response.data.success;
+    return response.data.isSuccess;
   } catch (error) {
-    throw new Error("An unknown error occurred");
+    throw new Error("이슈를 생성하는 중 오류가 발생했습니다.");
   }
 };
 
-export const updateIssueStatus = async (payload: UpdateIssuePayload) => {};
 
-type IssueDetailsRequest = {
+
+
+type UpdateIssueStatusRequest = {
+  issueId: string;
+  newStatus: IssueStatus;
+};
+
+type UpdateIssueStatusResponse = {
+  isSuccess: boolean;
+};
+
+export const updateIssueStatus = async ({
+  issueId,
+  newStatus,
+}: UpdateIssueStatusRequest): Promise<UpdateIssueStatusResponse> => {
+  try {
+    const response = await authorizedAxios.get(
+      `${issuePath}/status/${issueId}?=status=${newStatus}`
+    );
+    return response.data.isSuccess;
+  } catch (error) {
+    throw new Error("이슈 상태를 업데이트하는 중 오류가 발생했습니다.");
+  }
+};
+
+
+
+
+type UpdateIssueDetailsRequest = {
+  issueId: string;
+  issue: UpdatedIssue;
+};
+
+type UpdateIssueDetailsResponse = {
+  isSuccess: boolean;
+};
+
+export const updateIssueDetails = async ({
+  issueId,
+  issue,
+}: UpdateIssueDetailsRequest): Promise<UpdateIssueDetailsResponse> => {
+  try {
+    const response = await authorizedAxios.put(
+      `${issuePath}/detail/${issueId}`,
+      issue
+    );
+    return response.data.isSuccess;
+  } catch (error) {
+    throw new Error("이슈 상세 정보를 업데이트하는 중 오류가 발생했습니다.");
+  }
+};
+
+
+
+
+
+type GetIssueDetailsRequest = {
   issueId: string;
 };
 
-type IssueDetailsResponse = {
+type GetIssueDetailsResponse = {
   issueDetails: IssueDetails;
 };
 
 export const getIssueDetails = async ({
-  issueId
-}: IssueDetailsRequest): Promise<IssueDetailsResponse> => {
+  issueId,
+}: GetIssueDetailsRequest): Promise<GetIssueDetailsResponse> => {
   try {
     const response = await authorizedAxios.get(`${issuePath}/${issueId}`);
-    return response.data.data;
+    return response.data;
   } catch (error) {
-    throw new Error("An unknown error occurred");
+    throw new Error("이슈 상세 정보를 가져오는 중 오류가 발생했습니다.");
   }
 };
 
-type IssueListRequest = {
-  issueStatus: string;
+
+
+
+type GetIssueListRequest = {
+  issueStatus: IssueStatus;
   page: number;
   projectId: string;
   size: number;
@@ -44,7 +115,7 @@ export const getIssueList = async ({
   page,
   projectId,
   size,
-}: IssueListRequest): Promise<PaginatedResponse<IssueSummary>> => {
+}: GetIssueListRequest): Promise<PaginatedResponse<IssueSummary>> => {
   try {
     const response = await authorizedAxios.post(
       `${issuePath}/allTickets/${issueStatus}`,
@@ -56,9 +127,12 @@ export const getIssueList = async ({
     );
     return response.data.data;
   } catch (error) {
-    throw new Error("An unknown error occurred");
+    throw new Error("이슈 목록을 가져오는 중 오류가 발생했습니다.");
   }
 };
+
+
+
 
 type SearchIssueRequest = {
   filter: string;
@@ -87,6 +161,30 @@ export const searchIssue = async ({
     );
     return response.data.data;
   } catch (error) {
-    throw new Error("An unknown error occurred");
+    throw new Error("이슈를 검색하는 중 오류가 발생했습니다.");
+  }
+};
+
+
+
+
+type DeleteIssueRequest = {
+  issueId: string;
+};
+
+type DeleteIssueResponse = {
+  isSuccess: boolean;
+};
+
+export const deleteIssue = async ({
+  issueId,
+}: DeleteIssueRequest): Promise<DeleteIssueResponse> => {
+  try {
+    const response = await authorizedAxios.get(
+      `${issuePath}/${issueId}`
+    );
+    return response.data.isSuccess;
+  } catch (error) {
+    throw new Error("이슈를 삭제하는 중 오류가 발생했습니다.");
   }
 };

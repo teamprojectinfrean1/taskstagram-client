@@ -17,19 +17,19 @@ type IssueStatus = "toDo" | "inProgress" | "done";
 type IssueDetails = {
   projectId: string;
   taskId: string;
-  taskName: string;
+  taskTitle: string;
   issueId: string;
-  issueName: string;
+  issueTitle: string;
   issueContent: string;
-  issueStatus: IssueStatus;
+  status: IssueStatus;
   assigneeId: string;
   assigneeNickname: string;
   assigneeProfileImage: string | null;
   startDate: string | null;
   endDate: string | null;
   lastUpdatedDetail: {
-    updaterId: string;
-    updaterNickname: string;
+    userUuid: string;
+    userNickname: string;
     updatedDate: string;
   };
 };
@@ -44,22 +44,22 @@ type IssueSummary = {
   assigneeProfileImage: string | null;
 };
 
-type NewIssue = {
-  projectId: string;
+type Issue = {
   taskId: string | null;
-  creatorId: string;
   assigneeId: string | null;
-  issueName: string;
+  issueTitle: string;
   issueContent: string;
-  issueStatus: IssueStatus;
+  status: IssueStatus;
   startDate: string | null;
   endDate: string | null;
 };
 
-type UpdateIssuePayload = {
-  issue: IssueSummary;
-  oldStatus: IssueStatus;
-  newStatus: IssueStatus;
+type NewIssue = Issue & {
+  creatorId: string;
+};
+
+type UpdatedIssue = Issue & {
+  modifierId: string;
 };
 
 type IssueStory = {

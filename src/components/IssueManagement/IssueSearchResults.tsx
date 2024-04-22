@@ -6,7 +6,7 @@ const SEARCH_RESULT_PER_PAGE = 15;
 
 type IssueSearchResultsProps = {
   projectId: string;
-  containerId: string;
+  containerId: IssueStatus;
   containerRef: React.RefObject<HTMLDivElement>;
   searchParams: IssueSearchParams;
 };

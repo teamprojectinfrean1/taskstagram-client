@@ -6,7 +6,7 @@ const ISSUE_PER_PAGE = 15;
 
 type DefaultIssueListProps = {
   projectId: string;
-  containerId: string;
+  containerId: IssueStatus;
   containerRef: React.RefObject<HTMLDivElement>;
 };
 
