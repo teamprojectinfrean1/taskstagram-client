@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import SocialIcons from "../OAuth/SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
 import { fetchLogin } from "@/apis/userApi";
@@ -8,22 +8,24 @@ import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
+import ErrorHandling from "../ErrorHandling";
 
 const LoginForm = () => {
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { data, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "login",
     () => fetchLogin({ id, password }),
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data) => {
-        if (data) {
-          setUserInfo({...userInfo, memberId: data})
+      onSuccess: (data: string) => {
+        console.log(data, "data");
+        if (data !== "Bad Request") {
+          setUserInfo({ ...userInfo, memberId: data });
           navigate("/");
         }
       },
@@ -62,8 +64,9 @@ const LoginForm = () => {
           e.key === "Enter" && refetch();
         }}
       />
-
-      {data !== undefined && !data && (
+      {/* Network Error */}
+      <ErrorHandling error={error} isLoading={isLoading} feature="로그인" />
+      {data === "Bad Request" && (
         <Box
           sx={{
             mt: 2,

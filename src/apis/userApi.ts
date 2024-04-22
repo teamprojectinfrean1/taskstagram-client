@@ -3,8 +3,15 @@ import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 import { IssueStory } from "@/models/Issue";
 import { SignupInfo } from "@/models/Auth";
 import { jwtDecode } from "jwt-decode";
+import { Cookies } from "react-cookie";
 
-const userPath = "http://124.61.74.148:8080/api/v1/users";
+// type ErrorRespone = {
+//   code: string;
+//   message: string;
+//   name: string;
+// };
+
+const userPath = "users";
 // const userPath = "http://127.0.0.1:8080/api/v1/users"
 
 type UserStoryListRequest = {
@@ -73,37 +80,43 @@ export type ChangeUserInfo = {
 // 이메일 중복검사
 export const checkEmailExistence = async (email: string) => {
   try {
-    const response = await axios.get(`${userPath}/checkMail`, {
+    const response = await unauthorizedAxios.get(`${userPath}/checkMail`, {
       params: { email },
     });
     console.log(response.data);
     return response.data.data;
   } catch (err) {
-    console.error(err);
+    if (err instanceof Error) {
+      throw err.message;
+    }
   }
 };
 
 // 아이디 중복검사
 export const checkIdExistence = async (id: string) => {
   try {
-    const response = await axios.get(`${userPath}/checkId`, {
+    const response = await unauthorizedAxios.get(`${userPath}/checkId`, {
       params: { id },
     });
     return response.data.data;
   } catch (err) {
-    console.error(err);
+    if (err instanceof Error) {
+      throw err.message;
+    }
   }
 };
 
 // 닉네임 중복검사
 export const checkNicknameExistence = async (nickname: string) => {
   try {
-    const response = await axios.get(`${userPath}/checkNickname`, {
+    const response = await unauthorizedAxios.get(`${userPath}/checkNickname`, {
       params: { nickname },
     });
     return response.data.data;
   } catch (err) {
-    console.error(err);
+    if (err instanceof Error) {
+      throw err.message;
+    }
   }
 };
 
@@ -127,30 +140,37 @@ export const fetchSignup = async ({
     formData.append("multipartFile", profileImage);
   }
   try {
-    const response = await axios.post(`${userPath}/join`, formData);
+    const response = await unauthorizedAxios.post(`${userPath}/join`, formData);
     return response.data.data.nickname;
   } catch (err) {
-    return false;
+    if (err instanceof Error) {
+      throw err.message;
+    }
   }
 };
 
 // 로그인 api
 export const fetchLogin = async ({ id, password }: fetchLoginRequest) => {
   try {
-    const response = await axios.post(`${userPath}/login`, {
+    const response = await unauthorizedAxios.post(`${userPath}/login`, {
       id,
       password,
     });
+
     const accessToken = response.data.data.Authorization[0];
-    const decodedToken = jwtDecode(accessToken)
-    console.log(decodedToken);
-    const memberId = decodedToken.sub
+    const decodedToken = jwtDecode(accessToken);
+    const memberId = decodedToken.sub;
     sessionStorage.setItem("accessToken", accessToken);
-    console.log(response.data.data);
+
     return memberId;
   } catch (err) {
-    console.error(err);
-    return false;
+    if (err instanceof Error) {
+      if (err.message === "Request failed with status code 400") {
+        return "Bad Request";
+      } else if (err.message === "Network Error") {
+        throw "Network Error";
+      }
+    }
   }
 };
 
@@ -161,7 +181,7 @@ export const requestEmailVerification = async ({
 }: requestEmailVerificationRequest) => {
   try {
     // httpMethod get으로 변경할지 이야기 진행중
-    const response = await axios.post(
+    const response = await unauthorizedAxios.post(
       `${userPath}/${findUserInfo}/verification/request`,
       {
         email,
@@ -169,7 +189,9 @@ export const requestEmailVerification = async ({
     );
     return response.data.data.isSuccess;
   } catch (err) {
-    console.error(err);
+    if (err instanceof Error) {
+      throw err.message;
+    }
   }
 };
 
@@ -180,8 +202,7 @@ export const checkEmailVerification = async ({
   verificationCode,
 }: checkEmailVerificationRequest) => {
   try {
-    // httpMethod get으로 변경할지 이야기 진행중
-    const response = await axios.post(
+    const response = await unauthorizedAxios.post(
       `${userPath}/${findUserInfo}/verification/check`,
       {
         email,
@@ -191,18 +212,20 @@ export const checkEmailVerification = async ({
     console.log(response.data);
     return response.data.data;
   } catch (err) {
-    console.log(err);
-    return false;
+    if (err instanceof Error) {
+      throw err.message;
+    }
   }
 };
 
+// 비밀번호 찾기(재설정) api
 export const resetPassword = async ({
   userId,
   password,
 }: resetPasswordRequest) => {
   try {
     let isSuccess = null;
-    const response = await axios.put(
+    const response = await unauthorizedAxios.put(
       `${userPath}/findPassword/verification/update`,
       {
         uuid: userId,
@@ -219,59 +242,57 @@ export const resetPassword = async ({
   }
 };
 
-// export const getUserInfo = async () => {
-//   let userInfo = null;
-//   try {
-//     const response = await unauthorizedAxios.get(`${userPath}/token`, {
-//       headers: {
-//         Authorization: sessionStorage.getItem("accessToken"),
-//       },
-//     });
-//     if (response.data) {
-//       userInfo = response.data.data;
-//     }
-//     return userInfo;
-//   } catch (err) {
-//     console.error(err);
-//   }
-// };
-
+// 사용자 정보(닉네임, 비밀번호, 이메일) 변경 api
 export const changeUserInfo = async ({
   type,
   value,
   memberId,
 }: ChangeUserInfo) => {
   console.log(type, value, memberId);
-   
+
   try {
-    const response = await axios.put(`${userPath}/update?uuid=${memberId}`, {
-      type,
-      value
-    });
-    return response.data.data.nickname
+    const response = await authorizedAxios.put(
+      `${userPath}/update?uuid=${memberId}`,
+      {
+        type,
+        value,
+      }
+    );
+    console.log(response.data);
+    return response.data.data.nickname;
   } catch (err) {
     console.error(err);
+    if (err instanceof Error) {
+      return err.message;
+    }
   }
 };
 
 type imageType = {
-  profileImage: File | null
-  memberId: string
-}
-
-export const changeUserInfoImage = async ({ profileImage, memberId }: imageType)  => {
-  const formData = new FormData()
-  if (profileImage) {
-    formData.append('multipartFile', profileImage)
-  }
-  try {
-    const response = await axios.put(`${userPath}/update/image?uuid=${memberId}`, formData)
-    console.log(response.data);
-    return response.data.data.updateURL
-  } catch(err) {
-    console.error(err);
-  }
+  profileImage: File | null;
+  memberId: string;
 };
 
-
-// "4a3458c9-7c0b-4b4e-afb2-4a99b116e6ab"
+// 사용자 프로필 이미지 변경 api
+export const changeUserInfoImage = async ({
+  profileImage,
+  memberId,
+}: imageType) => {
+  // console.log(profileImage, memberId);
+  const formData = new FormData();
+  if (profileImage) {
+    formData.append("multipartFile", profileImage);
+  }
+  try {
+    const response = await authorizedAxios.put(
+      `${userPath}/update/image?uuid=${memberId}`,
+      formData
+    );
+    console.log(response.data);
+    return response.data.data.updateURL;
+  } catch (err) {
+    if (err instanceof Error) {
+      throw err.message;
+    }
+  }
+};

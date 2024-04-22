@@ -8,9 +8,21 @@ import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import theme from "@/theme/theme";
+import { useQuery } from "react-query";
+import { reissueCheck } from "@/apis/memberApi";
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "@/stores/userStore";
 
 const UserProfileLayout = () => {
   const [permissionClick, setPermissionClick] = useState(false);
+
+  // const userInfo = useRecoilValue(userInfoState)
+  // const loginType = "WEAVER"
+
+  // const { data, refetch } = useQuery("reissue", () => reissueCheck(loginType), {
+  //   enabled: false,
+  //   cacheTime: 0,
+  // });
 
   return (
     <>
@@ -89,6 +101,13 @@ const UserProfileLayout = () => {
             </Link>
           </Box>
         </Box>
+        {/* <Button
+          onClick={() => {
+            refetch();
+          }}
+        >
+          reissue 체크
+        </Button> */}
         {permissionClick && <PermissionForm />}
       </Box>
     </>

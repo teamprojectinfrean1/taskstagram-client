@@ -18,7 +18,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-// import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
+import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
 import { useNavigate } from "react-router-dom";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
@@ -39,7 +39,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   //   //추후 실패시 동작되는 로직도 추가 예정
   // );
 
-  //첫 렌더링에만 호출되어 메인 프로젝트가 선택되도록
+  // 첫 렌더링에만 호출되어 메인 프로젝트가 선택되도록
   // useEffect(() => {
   //   if (data && data.length > 0) {
   //     const mainProject =
@@ -48,17 +48,17 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   //   }
   // }, []);
 
-  // const changeMainprojectMuation = useMutation({
-  //   mutationFn: changeMainProject,
-  //   onSuccess() {
-  //     queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
-  //   },
-  //   //추후 실패시 동작되는 로직도 추가 예정
-  // });
+  const changeMainprojectMuation = useMutation({
+    mutationFn: changeMainProject,
+    onSuccess() {
+      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
+    },
+    //추후 실패시 동작되는 로직도 추가 예정
+  });
 
-  // const handleChangeMainProject = (selectedProjectId: string | null) => {
-  //   changeMainprojectMuation.mutate(selectedProjectId);
-  // };
+  const handleChangeMainProject = (selectedProjectId: string | null) => {
+    changeMainprojectMuation.mutate(selectedProjectId);
+  };
 
   const handleChangeSelectedProject = (
     selectedProject: ProjectSummary | null
@@ -104,9 +104,8 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
           </IconButton>
           {/* <SelectableProject
             projects={data ?? []}
-            // selectedProject={selectedProject}
             onSelectedProjectChanged={handleChangeSelectedProject}
-            // onClickCheckBox={handleChangeMainProject}
+            onClickCheckBox={handleChangeMainProject}
           /> */}
         </Box>
         <IconButton

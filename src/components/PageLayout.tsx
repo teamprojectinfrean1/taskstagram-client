@@ -1,4 +1,4 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import TopNav from "@/components/TopNav";
 import SideNav from "@/components/SideNav";
 import { Outlet } from "react-router-dom";
@@ -11,7 +11,9 @@ import { userInfoState } from "@/stores/userStore";
 const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const { data } = useQuery("userInfo", () => getUserInfo(), {
+  const { data, refetch } = useQuery("userInfo", () => getUserInfo(), {
+    enabled: false,
+    cacheTime: 0,
     onSuccess: (data) => {
       if (data) {
         setUserInfo({
@@ -26,6 +28,10 @@ const PageLayout = () => {
       }
     },
   });
+
+  useEffect(() => {
+    refetch()
+  }, [data])
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 

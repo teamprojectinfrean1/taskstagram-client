@@ -34,29 +34,29 @@ const ProjectPage = () => {
   const userUuidList = ["user1", "user2"];
   const selectedProject = useRecoilValue(selectedProjectState);
 
-  const { data } = useQuery(
-    ["getProjectDetail", selectedProject],
-    () =>
-      getProjectDetail(
-        selectedProject !== null ? selectedProject.projectId : null
-      ),
-    { enabled: !!selectedProject && !!selectedProject.projectId }
-  );
+  // const { data } = useQuery(
+  //   ["getProjectDetail", selectedProject],
+  //   () =>
+  //     getProjectDetail(
+  //       selectedProject !== null ? selectedProject.projectId : null
+  //     ),
+  //   { enabled: !!selectedProject && !!selectedProject.projectId }
+  // );
 
-  useEffect(() => {
-    if (data) {
-      setFormData({
-        projectId: data.projectId,
-        projectName: data.projectName,
-        projectContent: data.projectContent,
-        projectStartDate: data.startDate,
-        projectEndDate: data.endDate,
-        projectMemberUuidList: null,
-        projectTags: data.projectTagList,
-        isMainProject: selectedProject?.isMainProject,
-      });
-    }
-  }, [data]);
+  // useEffect(() => {
+  //   if (data) {
+  //     setFormData({
+  //       projectId: data.projectId,
+  //       projectName: data.projectName,
+  //       projectContent: data.projectContent,
+  //       projectStartDate: data.startDate,
+  //       projectEndDate: data.endDate,
+  //       projectMemberUuidList: null,
+  //       projectTags: data.projectTagList,
+  //       isMainProject: selectedProject?.isMainProject,
+  //     });
+  //   }
+  // }, [data]);
 
   //각 입력란 change 이벤트
   const handleInputChange = (

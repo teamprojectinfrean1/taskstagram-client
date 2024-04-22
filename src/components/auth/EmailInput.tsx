@@ -30,22 +30,28 @@ const EmailInput = ({
   // 이메일 중복 검사 상태
   const disabledState = !!(!isEmailValid || isEmailDuplicate);
 
-  const { data, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "checkMail",
     () => checkEmailExistence(email),
     {
       enabled: false,
       cacheTime: 0,
       onSuccess: (data) => {
-        setIsEmailDuplicate(data);
-        if (!data) {
+        if (data === "Network Error") {
           setShowErrorMessage(
-            "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
+            "네트워크 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
           );
-          setErrorState(true);
         } else {
-          setShowErrorMessage("");
-          setErrorState(false);
+          setIsEmailDuplicate(data);
+          if (!data) {
+            setShowErrorMessage(
+              "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
+            );
+            setErrorState(true);
+          } else {
+            setShowErrorMessage("");
+            setErrorState(false);
+          }
         }
       },
     }
@@ -60,6 +66,22 @@ const EmailInput = ({
       setErrorState(false);
     }
   }, [email]);
+
+  useEffect(() => {
+    if (isLoading) {
+      setShowErrorMessage("요청 중입니다. 잠시만 기다려주세요...");
+      setErrorState(true);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (error === "Network Error") {
+      setShowErrorMessage(
+        "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
+      setErrorState(true);
+    }
+  }, [error]);
 
   return (
     <>

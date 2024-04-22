@@ -10,6 +10,8 @@ import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import { useMutation } from "react-query";
 import { SignupInfo } from "@/models/Auth";
+import { useEffect } from "react";
+import ErrorHandling from "../ErrorHandling";
 
 const SingupFormOptional = () => {
   const navigate = useNavigate();
@@ -21,7 +23,7 @@ const SingupFormOptional = () => {
   const signupMutation = useMutation(
     (signupInfo: SignupInfo) => fetchSignup(signupInfo),
     {
-      onSuccess: (data) => {        
+      onSuccess: (data) => {
         if (data) {
           navigate("/auth/signup/success", {
             state: {
@@ -70,6 +72,11 @@ const SingupFormOptional = () => {
             가입하기
           </Button>
         </Box>
+        <ErrorHandling
+          error={signupMutation.error}
+          isLoading={signupMutation.isLoading}
+          feature="회원가입"
+        />
       </Box>
     </>
   );

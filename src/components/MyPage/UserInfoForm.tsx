@@ -7,7 +7,6 @@ import theme from "@/theme/theme";
 const UserInfoForm = () => {
   const navigate = useNavigate();
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  console.log(userInfo);
 
   return (
     <Box

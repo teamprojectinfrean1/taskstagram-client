@@ -12,11 +12,11 @@ import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/userApi";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
+import ErrorHandling from "../ErrorHandling";
 
 const ChangePassword = () => {
-
-  const userInfo = useRecoilValue(userInfoState)
-  const memberId = userInfo.memberId
+  const userInfo = useRecoilValue(userInfoState);
+  const memberId = userInfo.memberId;
 
   const [passwordInfo, setPasswordInfo] = useState({
     presentPassword: "",
@@ -154,12 +154,17 @@ const ChangePassword = () => {
                   currentPassword: passwordInfo.presentPassword,
                   updatePassword: passwordInfo.password,
                 },
-                memberId
+                memberId,
               });
             }}
           >
             확인
           </Button>
+          <ErrorHandling
+            error={changePasswordMutation.error}
+            isLoading={changePasswordMutation.isLoading}
+            feature="비밀번호 변경"
+          />
         </Box>
       </Box>
     </>

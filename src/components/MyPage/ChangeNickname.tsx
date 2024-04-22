@@ -8,18 +8,21 @@ import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/userApi";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
+import ErrorHandling from "../ErrorHandling";
 
 const ChangeNickname = () => {
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
-  const memberId = userInfo.memberId
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const memberId = userInfo.memberId;
   const [nickname, setNickname] = useState("");
 
-  const changeNicknameMutation = useMutation(({ type, value, memberId }: any) =>
-    changeUserInfo({ type, value, memberId }), {
+  const changeNicknameMutation = useMutation(
+    ({ type, value, memberId }: any) =>
+      changeUserInfo({ type, value, memberId }),
+    {
       onSuccess: (data) => {
         console.log(data);
-        setUserInfo({...userInfo, nickname: data})
-      }
+        setUserInfo({ ...userInfo, nickname: data });
+      },
     }
   );
 
@@ -76,13 +79,18 @@ const ChangeNickname = () => {
                 changeNicknameMutation.mutate({
                   type: "nickname",
                   value: nickname,
-                  memberId
+                  memberId,
                 })
               }
             >
               변경
             </Button>
           </Box>
+          <ErrorHandling
+            error={changeNicknameMutation.error}
+            isLoading={changeNicknameMutation.isLoading}
+            feature="닉네임 변경"
+          />
         </Box>
       </Box>
     </>
