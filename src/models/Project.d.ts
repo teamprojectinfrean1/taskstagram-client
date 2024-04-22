@@ -8,6 +8,8 @@ export type ProjectFormData = {
   projectEndDate: string | null;
   projectMemberUuidList: string[] | null;
   projectTags: string[] | null;
+  lastUpdateUserNickname: string;
+  lastUpdateDate: string;
   isMainProject: bool;
 };
 

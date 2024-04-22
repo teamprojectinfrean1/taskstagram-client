@@ -44,6 +44,8 @@ const ProjectPage = () => {
     projectEndDate: null,
     projectMemberUuidList: [],
     projectTags: null,
+    lastUpdateUserNickname: "",
+    lastUpdateDate: "",
     isMainProject: false,
   });
   const userUuidList = [
@@ -115,6 +117,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     if (data) {
+      debugger;
       setFormData({
         projectId: data.projectId,
         projectName: data.projectName,
@@ -125,6 +128,10 @@ const ProjectPage = () => {
         projectEndDate: data.endDate,
         projectMemberUuidList: [],
         projectTags: data.projectTagList,
+        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
+        lastUpdateDate: data.lastUpdateDetail.updatedDate
+          .replace("T", " ")
+          .slice(0, -3),
         isMainProject: selectedProject?.isMainProject,
       });
       //선택된 프로젝트 변경될 때마다 location.state 초기화
@@ -141,6 +148,8 @@ const ProjectPage = () => {
         projectEndDate: null,
         projectMemberUuidList: [],
         projectTags: null,
+        lastUpdateUserNickname: "",
+        lastUpdateDate: "",
         isMainProject: false,
       });
     }
@@ -247,7 +256,14 @@ const ProjectPage = () => {
                 variant="body2"
                 sx={{ color: grey[600] }}
               >
-                날짜
+                {formData.lastUpdateDate}
+              </Typography>
+              <Typography
+                align="right"
+                variant="body2"
+                sx={{ color: grey[600] }}
+              >
+                {formData.lastUpdateUserNickname}
               </Typography>
             </Grid>
           </Grid>

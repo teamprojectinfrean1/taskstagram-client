@@ -5,7 +5,7 @@ const projectPath = "project";
 
 type LastUpdateDetailType = {
   memeberUuid: string;
-  userNickName: string;
+  userNickname: string;
   updatedDate: string;
 };
 
