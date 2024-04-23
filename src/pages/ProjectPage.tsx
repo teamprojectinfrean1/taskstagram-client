@@ -15,12 +15,14 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import DurationPicker from "@/components/DurationPicker";
 import SelectableProjectMember from "@/components/Project/SelectableProjectMember";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
+import DeleteIcon from "@mui/icons-material/Delete";
 import { grey } from "@mui/material/colors";
 import theme from "@/theme/theme";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import {
   createOneProject,
   replaceOneProject,
+  deleteOneProject,
   getProjectDetail,
 } from "@/apis/ProjectApi";
 import { useRecoilValue } from "recoil";
@@ -115,9 +117,12 @@ const ProjectPage = () => {
     },
   });
 
+  const deleteMutation = useMutation({
+    mutationFn: deleteOneProject,
+  });
+
   useEffect(() => {
     if (data) {
-      debugger;
       setFormData({
         projectId: data.projectId,
         projectName: data.projectName,
@@ -202,6 +207,13 @@ const ProjectPage = () => {
     }
   };
 
+  //삭제 버튼
+  const handleDeleteProjectBtnClicked = () => {
+    if (selectedProject !== null && selectedProject.projectId) {
+      deleteMutation.mutate(selectedProject.projectId);
+    }
+  };
+
   //각 입력란 change 이벤트
   const handleInputChange = (
     field: keyof ProjectFormData,
@@ -227,7 +239,7 @@ const ProjectPage = () => {
       <Box>
         <Grid container>
           <Grid item container xs={12} sx={{ marginBottom: "20px" }}>
-            <Grid item xs={8}>
+            <Grid item xs={6}>
               <InputLabel
                 htmlFor="프로젝트 세부 정보"
                 sx={{ fontSize: "23px", fontWeight: "bold", mb: 1 }}
@@ -235,22 +247,38 @@ const ProjectPage = () => {
                 프로젝트 세부 정보
               </InputLabel>
             </Grid>
-            <Grid item xs={2}>
-              <Button
-                type="submit"
-                startIcon={<SaveAsIcon />}
-                sx={{
-                  width: "120px",
-                  height: "30px",
-                  backgroundColor: theme.palette.primary.main,
-                  color: theme.palette.background.default,
-                }}
-                onClick={handleSaveProjectBtnClicked}
+            <Grid item xs={6}>
+              <Box
+                sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}
               >
-                저장
-              </Button>
-            </Grid>
-            <Grid item xs={2}>
+                <Button
+                  type="submit"
+                  startIcon={<SaveAsIcon />}
+                  sx={{
+                    width: "120px",
+                    height: "30px",
+                    backgroundColor: theme.palette.primary.main,
+                    color: theme.palette.background.default,
+                    marginRight: "10px",
+                  }}
+                  onClick={handleSaveProjectBtnClicked}
+                >
+                  저장
+                </Button>
+                <Button
+                  type="submit"
+                  startIcon={<DeleteIcon />}
+                  sx={{
+                    width: "120px",
+                    height: "30px",
+                    backgroundColor: "#dae0e8",
+                    color: theme.palette.primary.main,
+                  }}
+                  onClick={handleDeleteProjectBtnClicked}
+                >
+                  삭제
+                </Button>
+              </Box>
               <Typography
                 align="right"
                 variant="body2"

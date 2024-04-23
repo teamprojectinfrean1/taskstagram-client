@@ -66,7 +66,14 @@ const TaskTicket = ({
           variant: "h6",
           fontWeight: "bold",
         }}
-      ></CardHeader>
+      ><IconButton
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete(selectedTask);
+      }}
+    >
+      <DeleteOutlineIcon />
+    </IconButton></CardHeader>
       <CardContent
         sx={{
           height: "calc(100% - 70px)",

@@ -148,6 +148,16 @@ export const replaceOneProject = async ({
   }
 };
 
+//프로젝트 삭제
+export const deleteOneProject = async (projectId: string): Promise<boolean> => {
+  try {
+    const response = await axios.delete(`${projectUrl}/${projectId}`);
+    return response.data.isSuccess; //추후 변경 필요
+  } catch {
+    return false;
+  }
+};
+
 // 메인 프로젝트 변경
 export const changeMainProject = async (
   projectId: string | null
