@@ -17,11 +17,6 @@ const SocialIcons = ({ authPage }: SocialIconsProps) => {
         mt: 2,
       }}
     >
-      {/* {authPage === "login" ? (
-        <img src={kakaoLoginButton} alt="kakakoLoginButton" />
-      ) : (
-        <img src={kakaoSignupButton} alt="kakaoSignupButton" />
-      )} */}
       <Link to="http://124.61.74.148:8080/api/v1/oauth/KAKAO">
         <img src={kakaoLoginButton} alt="kakakoLoginButton" />
       </Link>
