@@ -9,6 +9,8 @@ type Task = {
   taskEndDate: string | null;
   taskAuthorityType: string;
   taskStatus: string | null;
+  lastUpdateUserNickname: string;
+  lastUpdateDate: string;
 };
 
 export default Task;
