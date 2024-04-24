@@ -9,22 +9,28 @@ import { changeUserInfo } from "@/apis/user/changeUserInfo";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
+import EmailInput from "../auth/EmailInput";
 
-const ChangeNickname = () => {
+const ChangeEmail = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const loginType = userInfo.weaver
   const memberId = userInfo.memberId;
-  const [nickname, setNickname] = useState("");
-  const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
+  const [email, setEmail] = useState("");
+  const [isEmailValid, setIsEmailValid] = useState(false);
+  const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
 
-  const changeNicknameMutation = useMutation(
+  const validState = !!(email && !isEmailValid);
+  const disabledState = !!(!isEmailValid || isEmailDuplicate);
+
+  const changeEmailMutation = useMutation(
     ({ type, value, memberId }: any) =>
       changeUserInfo({ type, value, memberId }),
     {
       onSuccess: (data) => {
         console.log(data);
-        setUserInfo({ ...userInfo, nickname: data });
+        setUserInfo({ ...userInfo, email: data });
         navigate('/mypage/change/success', {
           state: "닉네임"
         })
@@ -54,7 +60,7 @@ const ChangeNickname = () => {
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center" }}
           >
-            닉네임 변경
+            이메일 변경
           </Typography>
         </Box>
         <Box
@@ -69,13 +75,18 @@ const ChangeNickname = () => {
           <Box sx={{ width: "90%", margin: "auto" }}>
             <Box sx={{ my: 7, textAlign: "center" }}>
               <Typography variant="h6">일정타그램에서 사용할</Typography>
-              <Typography variant="h6">새로운 이름을 입력해주세요.</Typography>
+              <Typography variant="h6">
+                새로운 이메일을 입력해주세요.
+              </Typography>
             </Box>
-            <NicknameInput
-              nickname={nickname}
-              setNickname={setNickname}
-              isNicknameDuplicate={isNicknameDuplicate}
-              setIsNicknameDuplicate={(value) => setIsNicknameDuplicate(value)}
+            <Typography sx={{ml:0.5}}>Email</Typography>
+            <EmailInput
+              email={email}
+              setEmail={(value) => setEmail(value)}
+              isEmailValid={isEmailValid}
+              setIsEmailValid={(value) => setIsEmailValid(value)}
+              isEmailDuplicate={isEmailDuplicate}
+              setIsEmailDuplicate={(value) => setIsEmailDuplicate(value)}
             />
             <Button
               variant="contained"
@@ -86,11 +97,11 @@ const ChangeNickname = () => {
                 borderRadius: "7px",
                 mt: 5,
               }}
-              disabled={!isNicknameDuplicate}
+              disabled={!isEmailDuplicate}
               onClick={() =>
-                changeNicknameMutation.mutate({
-                  type: "nickname",
-                  value: nickname,
+                changeEmailMutation.mutate({
+                  type: "email",
+                  value: email,
                   memberId,
                 })
               }
@@ -99,9 +110,9 @@ const ChangeNickname = () => {
             </Button>
           </Box>
           <ErrorHandling
-            error={changeNicknameMutation.error}
-            isLoading={changeNicknameMutation.isLoading}
-            feature="닉네임 변경"
+            error={changeEmailMutation.error}
+            isLoading={changeEmailMutation.isLoading}
+            feature="이메일 변경"
           />
         </Box>
       </Box>
@@ -109,4 +120,4 @@ const ChangeNickname = () => {
   );
 };
 
-export default ChangeNickname;
+export default ChangeEmail;

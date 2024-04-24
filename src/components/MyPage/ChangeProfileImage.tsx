@@ -3,10 +3,9 @@ import { Button, Typography, Avatar } from "@mui/material";
 // import styled from "@emotion/styled";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { useMutation, useQuery } from "react-query";
-import { changeUserInfo } from "@/apis/userApi";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import { changeUserInfoImage } from "@/apis/userApi";
+import { changeProfileImage } from "@/apis/user/changeUserInfoImage";
 
 type imageType = {
   profileImage: File | null;
@@ -50,7 +49,7 @@ const ChangeProfileImage = () => {
   // const changeProfileImage = useMutation<>(({profileImage, memberId}: imageType) => changeUserInfoImage({profileImage, memberId}))
   const { data, refetch } = useQuery(
     "changeProfileImage",
-    () => changeUserInfoImage({ profileImage, memberId }),
+    () => changeProfileImage({ profileImage, memberId }),
     {
       cacheTime: 0,
       enabled: false,

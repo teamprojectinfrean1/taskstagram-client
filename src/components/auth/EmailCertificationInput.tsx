@@ -3,7 +3,7 @@ import { Grid, Typography, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useQuery } from "react-query";
-import { requestEmailVerification } from "@/apis/userApi";
+import { requestEmailVerification } from "@/apis/user/requestEmailVerification";
 import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
 
 type EmailCertificationInputProps = {
@@ -28,9 +28,6 @@ const EmailCertificationInput = ({
     {
       enabled: false,
       cacheTime: 0,
-      // onSuccess: (data) => {
-      //   setShowErrorMessage("인증 번호가 전송되었습니다.");
-      // },
     }
   );
 
@@ -63,10 +60,10 @@ const EmailCertificationInput = ({
   }, [error]);
 
   useEffect(() => {
-    if (data !== undefined) {
+    if (!!data) {
       setShowErrorMessage("인증 번호가 전송되었습니다.");
     }
-  }, [data])
+  }, [data]);
 
   return (
     <>
@@ -121,7 +118,7 @@ const EmailCertificationInput = ({
         </Grid>
       </Grid>
       <EmailVerificationCodeInput
-        isSuccess={data}
+        isSuccess={!!data}
         email={email}
         findUserInfo={findUserInfo}
       />

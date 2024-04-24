@@ -6,9 +6,9 @@ import { AuthInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 import { useMutation, useQuery } from "react-query";
-import { resetPassword } from "@/apis/userApi";
 import { AuthisValid } from "@/models/Auth";
-import { resetPasswordRequest } from "@/apis/userApi";
+import { resetPassword } from "@/apis/user/resetPassword";
+import { resetPasswordRequest } from "@/apis/user/resetPassword";
 
 const ResetPassword = () => {
   const navigate = useNavigate();

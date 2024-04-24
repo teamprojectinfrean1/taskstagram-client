@@ -2,7 +2,7 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { checkIdExistence } from "@/apis/userApi";
+import { checkIdExistence } from "@/apis/user/checkExistence";
 import { useQuery } from "react-query";
 
 type IdInputProps = {
@@ -36,20 +36,21 @@ const IdInput = ({
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data) => {
-        setIsIdDuplicate(data);
-        if (!data) {
-          setShowErrorMessage(
-            "이미 가입된 아이디입니다. 다른 아이디를 입력해주세요."
-          );
-          setErrorState(true);
-        } else {
-          setShowErrorMessage("");
-          setErrorState(false);
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    setIsIdDuplicate(!!data);
+    if (!!(!data)) {
+      setShowErrorMessage(
+        "이미 가입된 아이디입니다. 다른 아이디를 입력해주세요."
+      );
+      setErrorState(true);
+    } else {
+      setShowErrorMessage("");
+      setErrorState(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (validState) {
@@ -69,7 +70,7 @@ const IdInput = ({
   }, [isLoading]);
 
   useEffect(() => {
-    if (error === "Network Error") {
+    if (error) {
       setShowErrorMessage(
         "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요."
       );

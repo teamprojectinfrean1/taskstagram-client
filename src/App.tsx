@@ -23,11 +23,13 @@ import MyPage from "./pages/MyPage";
 import UserProfileLayout from "./components/MyPage/UserProfileLayout";
 import ChangeNickname from "./components/MyPage/ChangeNickname";
 import ChangePassword from "./components/MyPage/ChangePassword";
+import ChangeUserInfoSuccess from "./components/MyPage/ChangeUserInfoSuccess";
+import ChangeEmail from "./components/MyPage/ChangeEmail";
 
 const router = createBrowserRouter([
   {
     path: "/oauth/redirected/kakao",
-    element: <RedirectPage />
+    element: <RedirectPage />,
   },
   {
     path: "/auth",
@@ -50,7 +52,7 @@ const router = createBrowserRouter([
         element: <SignupSuccess />,
       },
       {
-        path: 'find/id',
+        path: "find/id",
         element: <FindIdLayout />,
         children: [
           {
@@ -77,8 +79,8 @@ const router = createBrowserRouter([
           },
           {
             path: "success",
-            element: <FindPasswordSuccess />
-          }
+            element: <FindPasswordSuccess />,
+          },
         ],
       },
     ],
@@ -106,17 +108,25 @@ const router = createBrowserRouter([
         children: [
           {
             index: true,
-            element: <UserProfileLayout />
+            element: <UserProfileLayout />,
           },
           {
-            path : "change/nickname",
-            element: <ChangeNickname />
+            path: "change/nickname",
+            element: <ChangeNickname />,
           },
           {
             path: "change/password",
-            element: <ChangePassword />
+            element: <ChangePassword />,
           },
-        ]
+          {
+            path: "change/email",
+            element: <ChangeEmail />,
+          },
+          {
+            path: "change/success",
+            element: <ChangeUserInfoSuccess />,
+          },
+        ],
       },
       {
         path: "/project",

@@ -4,7 +4,7 @@ import SideNav from "@/components/SideNav";
 import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
-import { getUserInfo } from "@/apis/memberApi";
+import { getUserInfo } from "@/apis/member/getUserInfo";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 

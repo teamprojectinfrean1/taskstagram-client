@@ -4,7 +4,7 @@ import { useNavigate, Link } from "react-router-dom";
 import SocialIcons from "../OAuth/SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
-import { Box, Button, Divider, Typography, Grid } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilValue } from "recoil";
@@ -69,12 +69,14 @@ const SignupFormRequired = () => {
         />
       </Link>
       <Box className="base-layout">
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: "bold", textAlign: "center" }}
-        >
-          회원가입
-        </Typography>
+        <Box sx={{mb:4}}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", textAlign: "center" }}
+          >
+            회원가입
+          </Typography>
+        </Box>
         <EmailInput
           email={signupInfo.email}
           setEmail={(value) => changeSignupInfo({ key: "email", value })}
@@ -118,7 +120,7 @@ const SignupFormRequired = () => {
           />
         </Box>
 
-        <Box sx={{mt:3}}>
+        <Box sx={{ mt: 3 }}>
           <PasswordConfirmationInput
             password={signupInfo.password}
             isPasswordConfirmValid={isValid.isPasswordConfirmValid}

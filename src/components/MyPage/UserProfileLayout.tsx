@@ -9,7 +9,6 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import theme from "@/theme/theme";
 import { useQuery } from "react-query";
-import { reissueCheck } from "@/apis/memberApi";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 

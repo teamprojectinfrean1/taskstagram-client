@@ -5,12 +5,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/authStore";
-import { fetchSignup } from "@/apis/userApi";
+import { fetchSignup } from "@/apis/user/fetchSignup";
 import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import { useMutation } from "react-query";
 import { SignupInfo } from "@/models/Auth";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ErrorHandling from "../ErrorHandling";
 
 const SingupFormOptional = () => {
@@ -20,20 +20,21 @@ const SingupFormOptional = () => {
 
   const signupInfo = useRecoilValue(signupInfoState);
 
-  const signupMutation = useMutation(
-    (signupInfo: SignupInfo) => fetchSignup(signupInfo),
-    {
-      onSuccess: (data) => {
-        if (data) {
-          navigate("/auth/signup/success", {
-            state: {
-              nickname: data,
-            },
-          });
-        }
-      },
-    }
+  const signupMutation = useMutation((signupInfo: SignupInfo) =>
+    fetchSignup(signupInfo)
   );
+
+  useEffect(() => {
+    if (signupMutation.data) {
+      navigate("/auth/signup/success", {
+        state: {
+          nickname: signupMutation.data,
+        },
+      });
+    }
+  });
+
+  const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
 
   return (
     <>
@@ -54,6 +55,8 @@ const SingupFormOptional = () => {
         <NicknameInput
           nickname={signupInfo.nickname}
           setNickname={(value) => changeSignupInfo({ key: "nickname", value })}
+          isNicknameDuplicate={isNicknameDuplicate}
+          setIsNicknameDuplicate={(value) => setIsNicknameDuplicate(value)}
         />
 
         <Box sx={{ textAlign: "center", mt: 5 }}>

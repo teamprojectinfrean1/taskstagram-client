@@ -3,7 +3,7 @@ import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import { checkEmailExistence } from "@/apis/userApi";
+import { checkEmailExistence } from "@/apis/user/checkExistence";
 
 type EmailInputProps = {
   email: string;
@@ -36,26 +36,21 @@ const EmailInput = ({
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data) => {
-        if (data === "Network Error") {
-          setShowErrorMessage(
-            "네트워크 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
-          );
-        } else {
-          setIsEmailDuplicate(data);
-          if (!data) {
-            setShowErrorMessage(
-              "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
-            );
-            setErrorState(true);
-          } else {
-            setShowErrorMessage("");
-            setErrorState(false);
-          }
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    setIsEmailDuplicate(!!data);
+    if (!!!data) {
+      setShowErrorMessage(
+        "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
+      );
+      setErrorState(true);
+    } else {
+      setShowErrorMessage("");
+      setErrorState(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (validState) {
@@ -75,9 +70,9 @@ const EmailInput = ({
   }, [isLoading]);
 
   useEffect(() => {
-    if (error === "Network Error") {
+    if (error) {
       setShowErrorMessage(
-        "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요."
+        "이메일 중복 확인 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
       );
       setErrorState(true);
     }
@@ -85,7 +80,7 @@ const EmailInput = ({
 
   return (
     <>
-      <Grid container spacing={2} sx={{ mt: 2 }}>
+      <Grid container spacing={2}>
         <Grid item xs={9}>
           <TextField
             sx={{

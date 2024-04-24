@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Typography } from "@mui/material";
 import PasswordInput from "../auth/PasswordInput";
@@ -9,12 +9,14 @@ import { AuthisValid } from "@/models/Auth";
 import PresentPasswordInput from "./PresentPasswordInput";
 import PasswordConfirmationInput from "../auth/PasswordConfirmationInput";
 import { useMutation } from "react-query";
-import { changeUserInfo } from "@/apis/userApi";
+import { changeUserInfo } from "@/apis/user/changeUserInfo";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
 
 const ChangePassword = () => {
+  const navigate = useNavigate();
+
   const userInfo = useRecoilValue(userInfoState);
   const memberId = userInfo.memberId;
 
@@ -44,12 +46,20 @@ const ChangePassword = () => {
 
   const [isPasswordRequiredField, setIsPasswordRequiredField] = useState(false);
 
-  const changePasswordMutation = useMutation(({ type, value, memberId }: any) =>
-    changeUserInfo({ type, value, memberId })
+  const changePasswordMutation = useMutation(
+    ({ type, value, memberId }: any) =>
+      changeUserInfo({ type, value, memberId }),
+    {
+      onSuccess: (data) => {
+        navigate("/mypage/change/success", {
+          state: "비밀번호",
+        });
+      },
+    }
   );
 
   useEffect(() => {
-    const passwordInputCheck = Object.values(isPasswordRequiredField).every(
+    const passwordInputCheck = Object.values(isValid).every(
       (flag) => flag === true
     );
     setIsPasswordRequiredField(passwordInputCheck);

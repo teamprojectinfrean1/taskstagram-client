@@ -2,11 +2,11 @@ import theme from "@/theme/theme";
 import { useEffect, useState } from "react";
 import SocialIcons from "../OAuth/SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import { fetchLogin } from "@/apis/userApi";
+import { fetchLogin } from "@/apis/user/fetchLogin";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
 
@@ -22,15 +22,15 @@ const LoginForm = () => {
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data: string) => {
-        console.log(data, "data");
-        if (data !== "Bad Request") {
-          setUserInfo({ ...userInfo, memberId: data });
-          navigate("/");
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    if (data) {
+      setUserInfo({ ...userInfo, memberId: data });
+      navigate("/");
+    }
+  }, [data]);
 
   return (
     <Box className="base-layout">
@@ -66,7 +66,7 @@ const LoginForm = () => {
       />
       {/* Network Error */}
       <ErrorHandling error={error} isLoading={isLoading} feature="로그인" />
-      {data === "Bad Request" && (
+      {typeof error === "number" && (
         <Box
           sx={{
             mt: 2,

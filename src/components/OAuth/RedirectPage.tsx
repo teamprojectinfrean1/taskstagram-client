@@ -1,4 +1,4 @@
-import { fetchKakaoLogin } from "@/apis/oauthApi";
+import { fetchKakaoLogin } from "@/apis/oauth/fetchKakaoLogin";
 import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { useNavigate, useLocation } from "react-router-dom";
