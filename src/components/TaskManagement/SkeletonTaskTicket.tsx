@@ -10,18 +10,21 @@ const SkeletonTaskTicket = () => {
         p: 1,
         boxShadow: 3,
         background: theme.palette.primary.light,
-        "&:hover": {
-          backgroundColor: theme.palette.secondary.light,
-        },
       }}
       variant="elevation"
       square={false}
     >
-      <CardHeader>
-        <Skeleton variant="rounded" width={80} height={30} />
-      </CardHeader>
-      <CardContent>
-        <Skeleton variant="rounded" height="calc(100% - 70px)" />
+      <CardHeader
+        sx={{ padding: "12px" }}
+        title={<Skeleton variant="rounded" width="100%" height={40} />}
+      ></CardHeader>
+      <CardContent
+        sx={{
+          padding: "12px",
+          height: "calc(100% - 52px)",
+        }}
+      >
+        <Skeleton variant="rounded" width="100%" height="100%" />
       </CardContent>
     </Card>
   );
