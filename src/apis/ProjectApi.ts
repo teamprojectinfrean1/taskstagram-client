@@ -49,7 +49,9 @@ export const getProjectList = async (
 ): Promise<ProjectSummary[]> => {
   if (userId) {
     try {
-      const response = await unauthorizedAxios.get(`${projectPath}/list/${userId}`);
+      const response = await unauthorizedAxios.get(
+        `${projectPath}/list/${userId}`
+      );
       return response.data.data;
     } catch {
       return [];
@@ -65,7 +67,9 @@ export const getProjectDetail = async (
 ): Promise<ProjectDetailReponse | null> => {
   if (projectId) {
     try {
-      const response = await unauthorizedAxios.get(`${projectPath}/${projectId}`);
+      const response = await unauthorizedAxios.get(
+        `${projectPath}/${projectId}`
+      );
       return response.data.data;
     } catch {
       return null;
@@ -112,7 +116,7 @@ export const createOneProject = async ({
     if (projectImageFile) {
       formData.append("multipartFile", projectImageFile);
     }
-    const response = await axios.post(`${projectUrl}`, formData, {
+    const response = await unauthorizedAxios.post(`${projectPath}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return response.data.isSuccess;
@@ -133,15 +137,18 @@ export const replaceOneProject = async ({
   endDate,
 }: ReplaceProjectRequest): Promise<boolean> => {
   try {
-    const response = await axios.put(`${projectUrl}/${projectId}`, {
-      projectName,
-      updaterUuid,
-      projectContent,
-      projectTagList,
-      memberUuidList,
-      startDate,
-      endDate,
-    });
+    const response = await unauthorizedAxios.put(
+      `${projectPath}/${projectId}`,
+      {
+        projectName,
+        updaterUuid,
+        projectContent,
+        projectTagList,
+        memberUuidList,
+        startDate,
+        endDate,
+      }
+    );
     return response.data.isSuccess;
   } catch {
     return false;
@@ -151,7 +158,9 @@ export const replaceOneProject = async ({
 //프로젝트 삭제
 export const deleteOneProject = async (projectId: string): Promise<boolean> => {
   try {
-    const response = await axios.delete(`${projectUrl}/${projectId}`);
+    const response = await unauthorizedAxios.delete(
+      `${projectPath}/${projectId}`
+    );
     return response.data.isSuccess; //추후 변경 필요
   } catch {
     return false;
