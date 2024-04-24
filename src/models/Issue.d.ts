@@ -1,7 +1,7 @@
 // import { RawDraftContentState } from "draft-js";
 
-type IssueStatus = "TODO" | "INPROGRESS" | "DONE" | null;
-type IssueStatusTitle = "할 일" | "진행 중" | "완료" | null;
+type IssueStatus = "TODO" | "INPROGRESS" | "DONE";
+type IssueStatusTitle = "할 일" | "진행 중" | "완료";
 
 
 type IssueDetails = {
@@ -35,26 +35,33 @@ type IssueSummary = {
 };
 
 type Issue = {
+  writerId?: string;
   taskId: string | null;
   taskTitle: string | null;
   assigneeId: string | null;
-  assigneeName: string | null;
+  assigneeNickname: string | null;
   assigneeProfileImage: string | null;
-  issueTitle: string;
-  issueContent: string;
+  issueId?: string;
+  issueTitle: string | null;
+  issueContent: RawDraftContentState | null;
   statusId: IssueStatus | null;
   statusTitle: IssueStatusTitle | null;
   startDate: string | null;
   endDate: string | null;
+  lastUpdatedDetail?: {
+    userUuid: string;
+    userNickname: string;
+    updatedDate: string;
+  };
 };
 
-type NewIssue = Issue & { // 필요 없게 될 수도 있음; 다시 돌아와서 지워야 함
-  creatorId: string;
-};
+type NewIssue = BaseIssue & {
 
-type UpdatedIssue = Issue & { // 필요 없게 될 수도 있음; 다시 돌아와서 지워야 함
-  modifierId: string;
-};
+}
+
+type UpdatedIssue = BaseIssue & {
+  issueId?: string;
+}
 
 type IssueStory = {
   userId: string;

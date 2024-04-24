@@ -155,9 +155,6 @@ const IssuePage = () => {
         sx={{
           p: 0.5,
           backgroundColor: theme.palette.primary.main,
-          "&:hover": {
-            backgroundColor: theme.palette.primary.light,
-          },
           color: theme.palette.background.default,
           position: "fixed",
           bottom: 30,

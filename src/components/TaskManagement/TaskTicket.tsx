@@ -34,7 +34,7 @@ const TaskTicket = ({
         borderRadius: 4,
         p: 1,
         boxShadow: 3,
-        background: theme.palette.primary.light,
+        background: theme.palette.background.default,
         "&:hover": {
           backgroundColor: theme.palette.secondary.light,
         },

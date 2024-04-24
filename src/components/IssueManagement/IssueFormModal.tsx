@@ -16,18 +16,27 @@ import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "@/components/Editor/TextEditor";
 import CommentContainer from "@/components/Comment/CommentContainer";
 import SearchableSelect from "@/components/SearchableSelect";
-import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
 import DeleteIcon from "@mui/icons-material/Delete";
 import AddIcon from "@mui/icons-material/Add";
 import { useQuery } from "react-query";
-import { getIssueDetails } from "@/apis/issueApi";
+import {
+  createIssue,
+  deleteIssue,
+  getIssueDetails,
+  updateIssueDetails,
+} from "@/apis/issueApi";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import UserAvatar from "@/components/UserAvatar";
+import { useMutation } from "react-query";
+import { RawAxiosRequestConfig } from "axios";
+import { RawDraftContentState } from "draft-js";
+import { useSetRecoilState } from "recoil";
+import { snackbarState } from "@/stores/snackbarStore";
 
 type User = {
   userId: string | null;
@@ -41,8 +50,8 @@ type Task = {
 };
 
 type Status = {
-  statusId: IssueStatus;
-  statusTitle: IssueStatusTitle;
+  statusId: IssueStatus | null;
+  statusTitle: IssueStatusTitle | null;
 };
 
 type IssueFormModalProps = {
@@ -54,17 +63,19 @@ const IssueFormModal = ({
   currentIssueId,
   handleClose,
 }: IssueFormModalProps) => {
+  const setSnackbar = useSetRecoilState(snackbarState);
   const userInfo = useRecoilValue(userInfoState);
   const isNewIssue = currentIssueId === "new-issue";
 
   const defaultFormData: Issue = {
+    writerId: userInfo.userId,
     taskId: null,
     taskTitle: null,
     assigneeId: null,
-    assigneeName: null,
+    assigneeNickname: null,
     assigneeProfileImage: null,
-    issueTitle: "",
-    issueContent: "",
+    issueTitle: null,
+    issueContent: null,
     statusId: null,
     statusTitle: null,
     startDate: null,
@@ -72,6 +83,7 @@ const IssueFormModal = ({
   };
 
   const [formData, setFormData] = useState<Issue>(defaultFormData);
+  const [formErrors, setFormErrors] = useState<Partial<Issue>>({});
 
   const {
     data: issueDetails,
@@ -88,11 +100,12 @@ const IssueFormModal = ({
 
   useEffect(() => {
     if (isSuccess && issueDetails) {
-      setFormData({
+      setFormData((prev) => ({
+        ...prev,
         taskId: issueDetails.taskId,
         taskTitle: issueDetails.taskTitle,
         assigneeId: issueDetails.assigneeId,
-        assigneeName: issueDetails.assigneeNickname,
+        assigneeNickname: issueDetails.assigneeNickname,
         assigneeProfileImage: issueDetails.assigneeProfileImage,
         issueTitle: issueDetails.issueTitle,
         issueContent: issueDetails.issueContent,
@@ -100,18 +113,25 @@ const IssueFormModal = ({
         statusTitle: issueDetails.statusTitle,
         startDate: issueDetails.startDate,
         endDate: issueDetails.endDate,
-      });
+      }));
     }
   }, [isSuccess, issueDetails]);
 
-  // const createIssueMutation = useMutation((newIssue) => createIssue(newIssue));
-  // const updateIssueMutation = useMutation((issueDetails) =>
-  //   updateIssue(issueDetails)
-  // );
+  useEffect(() => {
+    if (isError) {
+      setSnackbar({
+        show: true,
+        message:
+          "이슈를 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
+        severity: "error",
+      });
+    }
+  }, [isError, setSnackbar]);
 
-  console.log("****************FORM DATA", formData)
+  console.log("****************FORM DATA", formData);
+
   type IssueUpdate = {
-    [P in keyof Issue]?: Issue[P]; 
+    [P in keyof Issue]?: Issue[P];
   };
 
   const handleInputChange = (updates: IssueUpdate) => {
@@ -121,19 +141,149 @@ const IssueFormModal = ({
     }));
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    // api 명세서 참고하고 추후 수정 필요:
-    // const formData = new FormData(event.currentTarget);
+  const {
+    mutate: executeCreateIssue,
+    data: createIssueData,
+    isLoading: createIssueIsLoading,
+    isSuccess: createIssueIsSuccess,
+    isError: createIssueIsError,
+  } = useMutation((issue: Issue) => createIssue({ issue }));
 
-    // const rawContentState = formData.get('content');
-    // const contentString = rawContentState ? JSON.stringify(rawContentState) : null;
+  useEffect(() => {
+    if (createIssueIsSuccess) {
+      setSnackbar({
+        show: true,
+        message: "이슈를 추가했습니다.",
+        severity: "success",
+      });
+    }
+  }, [createIssueIsSuccess, setSnackbar]);
 
-    // const formJson = Object.fromEntries(formData.entries());
-    // formJson.content = contentString;
+  useEffect(() => {
+    if (createIssueIsError) {
+      setSnackbar({
+        show: true,
+        message:
+          "이슈를 추가하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
+        severity: "error",
+      });
+    }
+  }, [createIssueIsError, setSnackbar]);
 
-    // console.log(formJson);
-    // handleClose();
+  const {
+    mutate: executeUpdateIssueDetails,
+    data: updateIssueData,
+    isLoading: updateIssueIsLoading,
+    isSuccess: updateIssueIsSuccess,
+    isError: updateIssueIsError,
+  } = useMutation((issue: Issue) =>
+    updateIssueDetails({ issueId: issueDetails!.issueId!, issue })
+  );
+
+  useEffect(() => {
+    if (updateIssueIsSuccess) {
+      setSnackbar({
+        show: true,
+        message: "이슈를 수정했습니다.",
+        severity: "success",
+      });
+    }
+  }, [updateIssueIsSuccess, setSnackbar]);
+
+  useEffect(() => {
+    if (updateIssueIsError) {
+      setSnackbar({
+        show: true,
+        message:
+          "이슈를 수정하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
+        severity: "error",
+      });
+    }
+  }, [updateIssueIsError, setSnackbar]);
+
+  const {
+    mutate: executeDeleteIssue,
+    data: deleteIssueData,
+    isLoading: deleteissueisLoading,
+    isSuccess: deleteIssueIsSuccess,
+    isError: deleteIssueIsError,
+  } = useMutation(() => deleteIssue({ issueId: issueDetails!.issueId! }));
+
+  useEffect(() => {
+    if (deleteIssueIsSuccess) {
+      setSnackbar({
+        show: true,
+        message: "이슈를 삭제했습니다.",
+        severity: "success",
+      });
+    }
+  }, [deleteIssueIsSuccess, setSnackbar]);
+
+  useEffect(() => {
+    if (deleteIssueIsError) {
+      setSnackbar({
+        show: true,
+        message:
+          "이슈를 삭제하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
+        severity: "error",
+      });
+    }
+  }, [deleteIssueIsError]);
+
+  useEffect(() => {
+    if (createIssueIsLoading || updateIssueIsLoading || deleteissueisLoading) {
+      // show spinner
+    }
+  }, [createIssueIsLoading, updateIssueIsLoading, deleteissueisLoading]);
+
+  const isIssueContentEmpty = (rawContentState: RawDraftContentState) => {
+    return (
+      rawContentState.blocks.length === 1 &&
+      rawContentState.blocks[0].text === "" &&
+      rawContentState.blocks[0].inlineStyleRanges.length === 0 &&
+      rawContentState.blocks[0].entityRanges.length === 0 &&
+      Object.keys(rawContentState.entityMap).length === 0
+    );
+  };
+
+  const validateForm = () => {
+    const errors: Partial<Issue> = {};
+
+    const idFields = ["writerId", "statusId", "taskId"];
+
+    idFields.forEach((field) => {
+      if (!formData[field as keyof Issue]) {
+        errors[field as keyof Issue] = "필수 입력 항목입니다.";
+      }
+    });
+
+    if (!formData.issueTitle?.trim()) {
+      errors.issueTitle = "필수 입력 항목입니다.";
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const handleFormSubmit = () => {
+    if (!validateForm()) {
+      return;
+    }
+
+    const submissionData: Issue = {
+      ...formData,
+      issueTitle: formData.issueTitle!.trim(),
+      issueContent:
+        formData.issueContent && isIssueContentEmpty(formData.issueContent)
+          ? null
+          : formData.issueContent,
+    };
+
+    if (isNewIssue) {
+      executeCreateIssue(submissionData);
+    } else {
+      executeUpdateIssueDetails(submissionData);
+    }
   };
 
   return (
@@ -149,17 +299,41 @@ const IssueFormModal = ({
       }}
     >
       <DialogContent className="custom-scrollbar">
-        <DialogActions sx={{ mb: 3, p: 0 }}>
+        <DialogActions
+          sx={{
+            mb: 3,
+            p: 0,
+            "& > .MuiButtonBase-root": {
+              px: 2,
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.background.default,
+              "&:hover": { backgroundColor: theme.palette.primary.light },
+            },
+          }}
+        >
           {currentIssueId === "new-issue" ? (
-            <Button onClick={handleClose} startIcon={<AddIcon />}>
-              등록
+            <Button onClick={handleFormSubmit} startIcon={<AddIcon />}>
+              추가
             </Button>
           ) : (
             <>
-              <Button onClick={handleClose} startIcon={<SaveAsIcon />}>
+              <Button
+                disabled={!issueDetails}
+                onClick={handleFormSubmit}
+                startIcon={<SaveAsIcon />}
+              >
                 수정
               </Button>
-              <Button onClick={handleClose} startIcon={<DeleteIcon />}>
+              <Button
+                disabled={!issueDetails}
+                onClick={(event) => {
+                  event.preventDefault();
+                  if (issueDetails) {
+                    executeDeleteIssue();
+                  }
+                }}
+                startIcon={<DeleteIcon />}
+              >
                 삭제
               </Button>
             </>
@@ -170,38 +344,39 @@ const IssueFormModal = ({
         </DialogActions>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
+            {/* isLoading 이 true 일시 skeleton render */}
             <Box>
               <InputLabel htmlFor="title" sx={{ fontWeight: "bold", mb: 1 }}>
-                제목
+                제목 *
               </InputLabel>
               <TextField
                 id="title"
                 variant="outlined"
                 fullWidth
-                value={formData.issueTitle ?? ""}
+                required
+                value={formData.issueTitle}
                 onChange={(e) =>
                   handleInputChange({ issueTitle: e.target.value })
                 }
+                error={!!formErrors.issueTitle}
+                helperText={formErrors.issueTitle}
               />
             </Box>
             <Box>
               <InputLabel htmlFor="content" sx={{ fontWeight: "bold", mb: 1 }}>
                 내용
               </InputLabel>
-              {/* <TextEditor
+              <TextEditor
                 id="content"
                 initialContent={formData.issueContent}
                 handleContentChange={(content) =>
-                  handleInputChange("issueContent", content)
+                  handleInputChange({ issueContent: content })
                 }
-              /> */}
+              />
             </Box>
             <CommentContainer />
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
-            <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-              날짜
-            </Typography>
             <SearchableSelect<User>
               label="담당자"
               possibleOptions={[
@@ -223,13 +398,13 @@ const IssueFormModal = ({
               ]}
               selectedOptions={{
                 userId: formData.assigneeId,
-                userNickname: formData.assigneeName,
+                userNickname: formData.assigneeNickname,
                 userProfileImage: formData.assigneeProfileImage,
               }}
               onSelectionChange={(selected) =>
                 handleInputChange({
                   assigneeId: selected?.userId ?? null,
-                  assigneeName: selected?.userNickname ?? null,
+                  assigneeNickname: selected?.userNickname ?? null,
                 })
               }
               optionIdentifier="userId"
@@ -261,7 +436,7 @@ const IssueFormModal = ({
               )}
             />
             <SearchableSelect<Task>
-              label="태스크"
+              label="태스크 *"
               possibleOptions={[
                 { taskId: "1", taskTitle: "Task 1" },
                 { taskId: "2", taskTitle: "Task 2" },
@@ -280,6 +455,8 @@ const IssueFormModal = ({
               optionIdentifier="taskId"
               optionLabel="taskTitle"
               multiselect={false}
+              error={!!formErrors.taskId}
+              helperText={formErrors.taskId}
             />
 
             <InputLabel htmlFor="dateRange" sx={{ fontWeight: "bold", mb: 1 }}>
@@ -296,7 +473,7 @@ const IssueFormModal = ({
               }
             />
             <SearchableSelect<Status>
-              label="상태"
+              label="상태 *"
               possibleOptions={[
                 { statusId: "TODO", statusTitle: "할 일" },
                 { statusId: "INPROGRESS", statusTitle: "진행 중" },
@@ -315,7 +492,18 @@ const IssueFormModal = ({
               optionIdentifier="statusId"
               optionLabel="statusTitle"
               multiselect={false}
+              error={!!formErrors.statusId}
+              helperText={formErrors.statusId}
             />
+            {issueDetails?.lastUpdatedDetail && (
+              <Typography
+                align="right"
+                sx={{ color: grey[600], fontSize: ".7rem" }}
+              >
+                최종 수정일: {issueDetails.lastUpdatedDetail.updatedDate} <br />
+                최종 수정자: {issueDetails.lastUpdatedDetail.userNickname}
+              </Typography>
+            )}
           </Grid>
         </Grid>
       </DialogContent>

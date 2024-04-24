@@ -17,6 +17,8 @@ type SingleSelectProps<T> = {
   optionIdentifier: keyof T;
   optionLabel: keyof T;
   multiselect: false;
+  error?: boolean;
+  helperText?: string | null;
   InputProps?: (
     params: AutocompleteRenderInputParams
   ) => Partial<TextFieldProps["InputProps"]>;
@@ -35,6 +37,8 @@ type MultiSelectProps<T> = {
   optionIdentifier: keyof T;
   optionLabel: keyof T;
   multiselect: true;
+  error?: boolean;
+  helperText?: string;
   InputProps?: (
     params: AutocompleteRenderInputParams
   ) => Partial<TextFieldProps["InputProps"]>;
@@ -55,13 +59,15 @@ const SearchableSelect = <T extends object>({
   optionIdentifier,
   optionLabel,
   multiselect,
+  error,
+  helperText,
   InputProps,
   renderInput,
   renderOption,
 }: SearchableSelectProps<T>) => {
   const isOptionEqualToValue = (option: T, value: T) =>
     option[optionIdentifier] === value[optionIdentifier];
-  
+
   const getOptionLabel = (option: T) => {
     if (!option || option[optionLabel] == null) return "";
     return option[optionLabel] as string;
@@ -69,9 +75,13 @@ const SearchableSelect = <T extends object>({
 
   const filterValidSelection = () => {
     if (multiselect) {
-      return Array.isArray(selectedOptions) ? selectedOptions.filter(opt => opt && opt[optionIdentifier] != null) : [];
+      return Array.isArray(selectedOptions)
+        ? selectedOptions.filter((opt) => opt && opt[optionIdentifier] != null)
+        : [];
     } else {
-      return selectedOptions && selectedOptions[optionIdentifier] != null ? selectedOptions : null;
+      return selectedOptions && selectedOptions[optionIdentifier] != null
+        ? selectedOptions
+        : null;
     }
   };
 
@@ -84,7 +94,7 @@ const SearchableSelect = <T extends object>({
     };
   };
 
-  console.log(selectedOptions)
+  console.log(selectedOptions);
 
   return (
     <Box>
@@ -125,6 +135,8 @@ const SearchableSelect = <T extends object>({
               inputProps={{
                 ...params.inputProps,
               }}
+              error={error}
+              helperText={helperText}
             />
           ))
         }
