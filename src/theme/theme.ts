@@ -12,8 +12,8 @@ const theme = createTheme({
       dark: "rgb(69, 94, 131)",
     },
     background: {
-      default: "#e5e8ed",
-      paper: "rgba(228, 230, 237)"
+      paper: "rgba(228, 230, 237)",
+      default: "#FFFFFF"
     },
     text: {
       secondary: "#121923",

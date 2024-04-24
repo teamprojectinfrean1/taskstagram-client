@@ -31,7 +31,7 @@ const DurationPicker = ({
     <Box display="flex" gap={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
-          label="Start"
+          label="시작"
           name="startDate"
           sx={{ flex: 1 }}
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
@@ -41,7 +41,7 @@ const DurationPicker = ({
           }}
         />
         <DatePicker
-          label="End"
+          label="마감"
           name="endDate"
           sx={{ flex: 1 }}
           value={selectedEndDate ? dayjs(selectedEndDate) : null}

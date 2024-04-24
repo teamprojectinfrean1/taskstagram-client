@@ -1,29 +1,90 @@
-import { useState } from "react";
-import { Autocomplete, Box, InputLabel, Paper, TextField } from "@mui/material";
+import {
+  Autocomplete,
+  AutocompleteRenderInputParams,
+  Box,
+  InputLabel,
+  Paper,
+  TextField,
+  TextFieldProps,
+} from "@mui/material";
 import theme from "@/theme/theme";
 
-type SearchableSelectProps = {
+type SingleSelectProps<T> = {
   label: string;
-  possibleOptions: string[];
-  selectedOptions: string | string[] | null;
-  onSelectionChange: (value: string | string[] | null) => void;
-  multiselect?: boolean;
+  possibleOptions: T[];
+  selectedOptions: T;
+  onSelectionChange: (value: T | null) => void;
+  optionIdentifier: keyof T;
+  optionLabel: keyof T;
+  multiselect: false;
+  InputProps?: (
+    params: AutocompleteRenderInputParams
+  ) => Partial<TextFieldProps["InputProps"]>;
+  renderInput?: (params: TextFieldProps) => React.ReactNode;
+  renderOption?: (
+    props: React.HTMLAttributes<HTMLLIElement>,
+    option: T
+  ) => React.ReactNode;
 };
 
-const SearchableSelect = ({
+type MultiSelectProps<T> = {
+  label: string;
+  possibleOptions: T[];
+  selectedOptions: T[];
+  onSelectionChange: (value: T[]) => void;
+  optionIdentifier: keyof T;
+  optionLabel: keyof T;
+  multiselect: true;
+  InputProps?: (
+    params: AutocompleteRenderInputParams
+  ) => Partial<TextFieldProps["InputProps"]>;
+  renderInput?: (params: TextFieldProps) => React.ReactNode;
+  renderOption?: (
+    props: React.HTMLAttributes<HTMLLIElement>,
+    option: T
+  ) => React.ReactNode;
+};
+
+type SearchableSelectProps<T> = SingleSelectProps<T> | MultiSelectProps<T>;
+
+const SearchableSelect = <T extends object>({
   label,
   possibleOptions,
   selectedOptions,
   onSelectionChange,
-  multiselect = false,
-}: SearchableSelectProps) => {
-  const handleOptionChange = (
-    event: React.SyntheticEvent<Element, Event>,
-    value: string | string[] | null
-  ) => {
-    console.log(value);
-    onSelectionChange(value);
+  optionIdentifier,
+  optionLabel,
+  multiselect,
+  InputProps,
+  renderInput,
+  renderOption,
+}: SearchableSelectProps<T>) => {
+  const isOptionEqualToValue = (option: T, value: T) =>
+    option[optionIdentifier] === value[optionIdentifier];
+  
+  const getOptionLabel = (option: T) => {
+    if (!option || option[optionLabel] == null) return "";
+    return option[optionLabel] as string;
   };
+
+  const filterValidSelection = () => {
+    if (multiselect) {
+      return Array.isArray(selectedOptions) ? selectedOptions.filter(opt => opt && opt[optionIdentifier] != null) : [];
+    } else {
+      return selectedOptions && selectedOptions[optionIdentifier] != null ? selectedOptions : null;
+    }
+  };
+
+  const handleInputProps = (params: AutocompleteRenderInputParams) => {
+    const defaultInputProps = params.InputProps;
+    const customInputProps = InputProps ? InputProps(params) : {};
+    return {
+      ...defaultInputProps,
+      ...customInputProps,
+    };
+  };
+
+  console.log(selectedOptions)
 
   return (
     <Box>
@@ -31,36 +92,46 @@ const SearchableSelect = ({
         {label}
       </InputLabel>
       <Autocomplete
-        value={selectedOptions ?? (multiselect ? [] : null)}
-        onChange={handleOptionChange}
+        value={filterValidSelection()}
+        onChange={(_, value) => {
+          if (multiselect) {
+            onSelectionChange(value as T[]);
+          } else {
+            onSelectionChange(value as T | null);
+          }
+        }}
         options={possibleOptions}
-        isOptionEqualToValue={(option, value) => option === value}
+        isOptionEqualToValue={isOptionEqualToValue}
+        getOptionLabel={getOptionLabel}
         multiple={multiselect}
         noOptionsText="일치하는 옵션이 없습니다"
         ListboxProps={{
           className: "custom-scrollbar",
         }}
         PaperComponent={({ children }) => (
-          <Paper style={{ backgroundColor: theme.palette.background.default }}>{children}</Paper>
+          <Paper style={{ backgroundColor: theme.palette.background.default }}>
+            {children}
+          </Paper>
         )}
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            id={`input-${label}`}
-            variant="outlined"
-            fullWidth
-            InputProps={{
-              ...params.InputProps,
-            }}
-          />
-        )}
-        renderOption={(props, option) => (
-          <li
-            {...props}
-          >
-            {option}
-          </li>
-        )}
+        renderInput={
+          renderInput ||
+          ((params) => (
+            <TextField
+              {...params}
+              id={`input-${label}`}
+              variant="outlined"
+              fullWidth
+              InputProps={handleInputProps(params)}
+              inputProps={{
+                ...params.inputProps,
+              }}
+            />
+          ))
+        }
+        renderOption={
+          renderOption ||
+          ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
+        }
       />
     </Box>
   );

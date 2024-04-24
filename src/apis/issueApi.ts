@@ -2,9 +2,6 @@ import { authorizedAxios } from "./domainSettings";
 
 const issuePath = "/issue";
 
-
-
-
 type CreateIssueRequest = {
   issue: NewIssue;
 };
@@ -24,11 +21,9 @@ export const createIssue = async ({
   }
 };
 
-
-
-
 type UpdateIssueStatusRequest = {
-  issueId: string;
+  issue: IssueSummary;
+  oldStatus: IssueStatus;
   newStatus: IssueStatus;
 };
 
@@ -37,21 +32,18 @@ type UpdateIssueStatusResponse = {
 };
 
 export const updateIssueStatus = async ({
-  issueId,
+  issue,
   newStatus,
 }: UpdateIssueStatusRequest): Promise<UpdateIssueStatusResponse> => {
   try {
     const response = await authorizedAxios.get(
-      `${issuePath}/status/${issueId}?=status=${newStatus}`
+      `${issuePath}/status/${issue.issueId}?=status=${newStatus}`
     );
     return response.data.isSuccess;
   } catch (error) {
     throw new Error("이슈 상태를 업데이트하는 중 오류가 발생했습니다.");
   }
 };
-
-
-
 
 type UpdateIssueDetailsRequest = {
   issueId: string;
@@ -77,17 +69,11 @@ export const updateIssueDetails = async ({
   }
 };
 
-
-
-
-
 type GetIssueDetailsRequest = {
   issueId: string;
 };
 
-type GetIssueDetailsResponse = {
-  issueDetails: IssueDetails;
-};
+type GetIssueDetailsResponse = IssueDetails;
 
 export const getIssueDetails = async ({
   issueId,
@@ -99,9 +85,6 @@ export const getIssueDetails = async ({
     throw new Error("이슈 상세 정보를 가져오는 중 오류가 발생했습니다.");
   }
 };
-
-
-
 
 type GetIssueListRequest = {
   issueStatus: IssueStatus;
@@ -117,12 +100,10 @@ export const getIssueList = async ({
   size,
 }: GetIssueListRequest): Promise<PaginatedResponse<IssueSummary>> => {
   try {
-    const response = await authorizedAxios.post(
+    const response = await authorizedAxios.get(
       `${issuePath}/allTickets/${issueStatus}`,
       {
-        projectId,
-        size,
-        page,
+        data: { projectId, page, size },
       }
     );
     return response.data.data;
@@ -130,9 +111,6 @@ export const getIssueList = async ({
     throw new Error("이슈 목록을 가져오는 중 오류가 발생했습니다.");
   }
 };
-
-
-
 
 type SearchIssueRequest = {
   filter: string;
@@ -165,9 +143,6 @@ export const searchIssue = async ({
   }
 };
 
-
-
-
 type DeleteIssueRequest = {
   issueId: string;
 };
@@ -180,9 +155,7 @@ export const deleteIssue = async ({
   issueId,
 }: DeleteIssueRequest): Promise<DeleteIssueResponse> => {
   try {
-    const response = await authorizedAxios.get(
-      `${issuePath}/${issueId}`
-    );
+    const response = await authorizedAxios.get(`${issuePath}/${issueId}`);
     return response.data.isSuccess;
   } catch (error) {
     throw new Error("이슈를 삭제하는 중 오류가 발생했습니다.");

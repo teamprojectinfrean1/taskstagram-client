@@ -6,7 +6,7 @@ export const userInfoState = atom<UserInfo>({
     userId: "",
     email: "",
     id: "",
-    userNickname: "",
+    nickname: "",
     profileImage: ""
   }
 })

@@ -22,7 +22,7 @@ import {
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
-import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
+// import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
 import theme from "@/theme/theme";
 
 const IssuePage = () => {
@@ -37,7 +37,7 @@ const IssuePage = () => {
     null
   );
 
-  const mutation = useUpdateIssueStatusMutation(projectId!);
+  // const mutation = useUpdateIssueStatusMutation(projectId!);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -73,11 +73,11 @@ const IssuePage = () => {
       targetContainerId &&
       originContainerId !== targetContainerId
     ) {
-      mutation.mutate({
-        issue: issueTicket,
-        oldStatus: originContainerId as IssueStatus,
-        newStatus: targetContainerId as IssueStatus,
-      });
+      // mutation.mutate({
+      //   issue: issueTicket,
+      //   oldStatus: originContainerId as IssueStatus,
+      //   newStatus: targetContainerId as IssueStatus,
+      // });
     }
 
     setHoveredContainerId(null);
@@ -99,7 +99,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          <IssueStoryContainer projectId={projectId!} />
+          {/* <IssueStoryContainer projectId={projectId!} /> */}
         </Box>
         <Box
           display="flex"
@@ -114,20 +114,20 @@ const IssuePage = () => {
           }}
         >
           <IssueTicketContainer
-            containerId="toDo"
-            isHovered={hoveredContainerId === "toDo"}
+            containerId="TODO"
+            isHovered={hoveredContainerId === "TODO"}
             projectId={projectId!}
             title="할 일"
           />
           <IssueTicketContainer
-            containerId="inProgress"
-            isHovered={hoveredContainerId === "inProgress"}
+            containerId="INPROGRESS"
+            isHovered={hoveredContainerId === "INPROGRESS"}
             projectId={projectId!}
             title="진행 중"
           />
           <IssueTicketContainer
-            containerId="done"
-            isHovered={hoveredContainerId === "done"}
+            containerId="DONE"
+            isHovered={hoveredContainerId === "DONE"}
             projectId={projectId!}
             title="완료"
           />
@@ -169,10 +169,12 @@ const IssuePage = () => {
       >
         <AddIcon />
       </IconButton>
-      <IssueFormModal
-        currentIssueId={issueIdToShowInModal}
-        handleClose={() => setIssueIdToShowInModal("")}
-      />
+      {issueIdToShowInModal && (
+        <IssueFormModal
+          currentIssueId={issueIdToShowInModal}
+          handleClose={() => setIssueIdToShowInModal(null)}
+        />
+      )}
     </DndContext>
   );
 };

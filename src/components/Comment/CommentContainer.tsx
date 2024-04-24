@@ -8,7 +8,7 @@ const CommentsContainer = () => {
   return (
     <Stack>
       <InputLabel htmlFor="Comments" sx={{ fontWeight: "bold", mb: 3 }}>
-        Comments
+        댓글
       </InputLabel>
       <Box display="flex" gap={4}>
         <UserAvatar sx={{ width: 50, height: 50 }} />

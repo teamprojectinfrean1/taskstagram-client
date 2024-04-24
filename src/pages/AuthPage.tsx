@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import LogoAndName from "../components/auth/LogoAndName";
+import LogoAndName from "@/components/auth/LogoAndName";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useEffect } from "react";
@@ -15,7 +15,7 @@ const AuthPage = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        bgcolor: `${theme.palette.background.default}`,
+        bgcolor: `${theme.palette.background.paper}`,
         display: "flex",
         alignItems: "center",
       }}

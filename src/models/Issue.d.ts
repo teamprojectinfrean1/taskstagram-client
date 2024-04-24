@@ -1,27 +1,17 @@
 // import { RawDraftContentState } from "draft-js";
 
-/* IssueFormData 추후 제거 예정 */
-type IssueFormData = {
-  title: string | null;
-  content: RawDraftContentState | null;
-  assignee: string[] | null;
-  task: string | null;
-  startDate: string | null;
-  endDate: string | null;
-  type: string | null;
-  status: string | null;
-};
+type IssueStatus = "TODO" | "INPROGRESS" | "DONE" | null;
+type IssueStatusTitle = "할 일" | "진행 중" | "완료" | null;
 
-type IssueStatus = "toDo" | "inProgress" | "done";
 
 type IssueDetails = {
-  projectId: string;
   taskId: string;
   taskTitle: string;
   issueId: string;
   issueTitle: string;
   issueContent: string;
-  status: IssueStatus;
+  statusId: IssueStatus;
+  statusTitle: IssueStatusTitle;
   assigneeId: string;
   assigneeNickname: string;
   assigneeProfileImage: string | null;
@@ -46,19 +36,23 @@ type IssueSummary = {
 
 type Issue = {
   taskId: string | null;
+  taskTitle: string | null;
   assigneeId: string | null;
+  assigneeName: string | null;
+  assigneeProfileImage: string | null;
   issueTitle: string;
   issueContent: string;
-  status: IssueStatus;
+  statusId: IssueStatus | null;
+  statusTitle: IssueStatusTitle | null;
   startDate: string | null;
   endDate: string | null;
 };
 
-type NewIssue = Issue & {
+type NewIssue = Issue & { // 필요 없게 될 수도 있음; 다시 돌아와서 지워야 함
   creatorId: string;
 };
 
-type UpdatedIssue = Issue & {
+type UpdatedIssue = Issue & { // 필요 없게 될 수도 있음; 다시 돌아와서 지워야 함
   modifierId: string;
 };
 

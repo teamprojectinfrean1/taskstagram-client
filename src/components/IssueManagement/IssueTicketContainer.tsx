@@ -19,7 +19,7 @@ const IssueTicketContainer = ({
   title,
 }: IssueTicketContainerProps) => {
   const { setNodeRef } = useDroppable({
-    id: containerId,
+    id: containerId!,
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -74,7 +74,7 @@ const IssueTicketContainer = ({
           />
         </Box>
         <Stack
-          id={containerId}
+          id={containerId!}
           ref={containerRef}
           spacing={2}
           className="custom-scrollbar"

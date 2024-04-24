@@ -4,7 +4,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { SkeletonUserStory, IssueStory } from "@/components/IssueManagement";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
-import { getUserStoryList } from "@/apis/userApi";
+import { getProjectMemberList } from "@/apis/memberApi";
 import InfiniteScroller from "@/components/InfiniteScroller";
 
 const USER_PER_PAGE = 15;
@@ -79,8 +79,8 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
           }}
           alignSelf="center"
         >
-          <InfiniteScroller<UserInfo>
-            queryFunction={getUserStoryList}
+          <InfiniteScroller<ProjectMember>
+            queryFunction={getProjectMemberList}
             queryKey={["userStoryList", projectId]}
             requestOptions={{
               projectId,

@@ -42,7 +42,7 @@ const router = createBrowserRouter([
         element: <SignupSuccess />,
       },
       {
-        path: 'find/id',
+        path: "find/id",
         element: <FindIdLayout />,
         children: [
           {
@@ -69,8 +69,8 @@ const router = createBrowserRouter([
           },
           {
             path: "success",
-            element: <FindPasswordSuccess />
-          }
+            element: <FindPasswordSuccess />,
+          },
         ],
       },
     ],

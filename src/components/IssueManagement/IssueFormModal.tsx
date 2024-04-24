@@ -7,6 +7,7 @@ import {
   DialogContent,
   Grid,
   InputLabel,
+  Skeleton,
   TextField,
   Typography,
 } from "@mui/material";
@@ -19,6 +20,30 @@ import { RawDraftContentState } from "draft-js";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
+import DeleteIcon from "@mui/icons-material/Delete";
+import AddIcon from "@mui/icons-material/Add";
+import { useQuery } from "react-query";
+import { getIssueDetails } from "@/apis/issueApi";
+import { useEffect } from "react";
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "@/stores/userStore";
+import UserAvatar from "@/components/UserAvatar";
+
+type User = {
+  userId: string | null;
+  userNickname: string | null;
+  userProfileImage: string | null;
+};
+
+type Task = {
+  taskId: string | null;
+  taskTitle: string | null;
+};
+
+type Status = {
+  statusId: IssueStatus;
+  statusTitle: IssueStatusTitle;
+};
 
 type IssueFormModalProps = {
   currentIssueId: string;
@@ -29,22 +54,71 @@ const IssueFormModal = ({
   currentIssueId,
   handleClose,
 }: IssueFormModalProps) => {
-  const [formData, setFormData] = useState<IssueFormData>({
-    title: null,
-    content: null,
-    assignee: null,
-    task: null,
+  const userInfo = useRecoilValue(userInfoState);
+  const isNewIssue = currentIssueId === "new-issue";
+
+  const defaultFormData: Issue = {
+    taskId: null,
+    taskTitle: null,
+    assigneeId: null,
+    assigneeName: null,
+    assigneeProfileImage: null,
+    issueTitle: "",
+    issueContent: "",
+    statusId: null,
+    statusTitle: null,
     startDate: null,
     endDate: null,
-    type: null,
-    status: null,
-  });
+  };
 
-  const handleInputChange = (
-    field: keyof IssueFormData,
-    value: string | string[] | RawDraftContentState | null
-  ) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
+  const [formData, setFormData] = useState<Issue>(defaultFormData);
+
+  const {
+    data: issueDetails,
+    isError,
+    isLoading,
+    isSuccess,
+  } = useQuery(
+    ["issueDetails", currentIssueId],
+    () => getIssueDetails({ issueId: currentIssueId }),
+    {
+      enabled: !isNewIssue,
+    }
+  );
+
+  useEffect(() => {
+    if (isSuccess && issueDetails) {
+      setFormData({
+        taskId: issueDetails.taskId,
+        taskTitle: issueDetails.taskTitle,
+        assigneeId: issueDetails.assigneeId,
+        assigneeName: issueDetails.assigneeNickname,
+        assigneeProfileImage: issueDetails.assigneeProfileImage,
+        issueTitle: issueDetails.issueTitle,
+        issueContent: issueDetails.issueContent,
+        statusId: issueDetails.statusId,
+        statusTitle: issueDetails.statusTitle,
+        startDate: issueDetails.startDate,
+        endDate: issueDetails.endDate,
+      });
+    }
+  }, [isSuccess, issueDetails]);
+
+  // const createIssueMutation = useMutation((newIssue) => createIssue(newIssue));
+  // const updateIssueMutation = useMutation((issueDetails) =>
+  //   updateIssue(issueDetails)
+  // );
+
+  console.log("****************FORM DATA", formData)
+  type IssueUpdate = {
+    [P in keyof Issue]?: Issue[P]; 
+  };
+
+  const handleInputChange = (updates: IssueUpdate) => {
+    setFormData((prev) => ({
+      ...prev,
+      ...updates,
+    }));
   };
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -64,8 +138,7 @@ const IssueFormModal = ({
 
   return (
     <Dialog
-      open={!!(currentIssueId && currentIssueId.length > 0)}
-      onClose={handleClose}
+      open={!!currentIssueId}
       PaperProps={{
         sx: {
           maxWidth: 1400,
@@ -73,47 +146,55 @@ const IssueFormModal = ({
           backgroundColor: theme.palette.background.default,
         },
         component: "form",
-        onSubmit: handleSubmit,
       }}
     >
       <DialogContent className="custom-scrollbar">
         <DialogActions sx={{ mb: 3, p: 0 }}>
-          <Button
-            type="submit"
-            onClick={handleClose}
-            startIcon={<SaveAsIcon />}
-          >
-            저장
-          </Button>
+          {currentIssueId === "new-issue" ? (
+            <Button onClick={handleClose} startIcon={<AddIcon />}>
+              등록
+            </Button>
+          ) : (
+            <>
+              <Button onClick={handleClose} startIcon={<SaveAsIcon />}>
+                수정
+              </Button>
+              <Button onClick={handleClose} startIcon={<DeleteIcon />}>
+                삭제
+              </Button>
+            </>
+          )}
           <Button onClick={handleClose} startIcon={<CloseIcon />}>
-            취소
+            닫기
           </Button>
         </DialogActions>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box>
               <InputLabel htmlFor="title" sx={{ fontWeight: "bold", mb: 1 }}>
-                Title
+                제목
               </InputLabel>
               <TextField
                 id="title"
                 variant="outlined"
                 fullWidth
-                value={formData.title ?? ""}
-                onChange={(e) => handleInputChange("title", e.target.value)}
+                value={formData.issueTitle ?? ""}
+                onChange={(e) =>
+                  handleInputChange({ issueTitle: e.target.value })
+                }
               />
             </Box>
             <Box>
               <InputLabel htmlFor="content" sx={{ fontWeight: "bold", mb: 1 }}>
-                Content
+                내용
               </InputLabel>
-              <TextEditor
+              {/* <TextEditor
                 id="content"
-                initialContent={formData.content}
+                initialContent={formData.issueContent}
                 handleContentChange={(content) =>
-                  handleInputChange("content", content)
+                  handleInputChange("issueContent", content)
                 }
-              />
+              /> */}
             </Box>
             <CommentContainer />
           </Grid>
@@ -121,25 +202,86 @@ const IssueFormModal = ({
             <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
               날짜
             </Typography>
-            <SearchableSelect
+            <SearchableSelect<User>
               label="담당자"
               possibleOptions={[
-                "Option 1",
-                "Option 2",
-                "Option 3",
+                {
+                  userId: "1",
+                  userNickname: "User 1",
+                  userProfileImage: null,
+                },
+                {
+                  userId: "2",
+                  userNickname: "User 2",
+                  userProfileImage: null,
+                },
+                {
+                  userId: "3",
+                  userNickname: "User 3",
+                  userProfileImage: null,
+                },
               ]}
-              selectedOptions={formData.assignee}
-              multiselect
-              onSelectionChange={(value) =>
-                handleInputChange("assignee", value)
+              selectedOptions={{
+                userId: formData.assigneeId,
+                userNickname: formData.assigneeName,
+                userProfileImage: formData.assigneeProfileImage,
+              }}
+              onSelectionChange={(selected) =>
+                handleInputChange({
+                  assigneeId: selected?.userId ?? null,
+                  assigneeName: selected?.userNickname ?? null,
+                })
               }
+              optionIdentifier="userId"
+              optionLabel="userNickname"
+              multiselect={false}
+              InputProps={(params) => ({
+                ...params.InputProps,
+                startAdornment: formData.assigneeId && (
+                  <UserAvatar
+                    sx={{
+                      imageUrl: formData.assigneeProfileImage,
+                      width: 40,
+                      height: 40,
+                      ml: 1,
+                      mr: 3,
+                    }}
+                  />
+                ),
+              })}
+              renderOption={(props, { userNickname, userProfileImage }) => (
+                <li {...props}>
+                  <Box display="flex" alignItems="center" gap={4}>
+                    <UserAvatar
+                      sx={{ imageUrl: userProfileImage, width: 40, height: 40 }}
+                    />
+                    {userNickname}
+                  </Box>
+                </li>
+              )}
             />
-            <SearchableSelect
-              label="Task"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
-              selectedOptions={formData.task}
-              onSelectionChange={(value) => handleInputChange("task", value)}
+            <SearchableSelect<Task>
+              label="태스크"
+              possibleOptions={[
+                { taskId: "1", taskTitle: "Task 1" },
+                { taskId: "2", taskTitle: "Task 2" },
+                { taskId: "3", taskTitle: "Task 3" },
+              ]}
+              selectedOptions={{
+                taskId: formData.taskId,
+                taskTitle: formData.taskTitle,
+              }}
+              onSelectionChange={(selected) =>
+                handleInputChange({
+                  taskId: selected?.taskId ?? null,
+                  taskTitle: selected?.taskTitle ?? null,
+                })
+              }
+              optionIdentifier="taskId"
+              optionLabel="taskTitle"
+              multiselect={false}
             />
+
             <InputLabel htmlFor="dateRange" sx={{ fontWeight: "bold", mb: 1 }}>
               기간
             </InputLabel>
@@ -147,17 +289,32 @@ const IssueFormModal = ({
               selectedStartDate={formData.startDate}
               selectedEndDate={formData.endDate}
               onStartDateSelectionChange={(value) =>
-                handleInputChange("startDate", value)
+                handleInputChange({ startDate: value })
               }
               onEndDateSelectionChange={(value) =>
-                handleInputChange("endDate", value)
+                handleInputChange({ endDate: value })
               }
             />
-            <SearchableSelect
+            <SearchableSelect<Status>
               label="상태"
-              possibleOptions={["Option 1", "Option 2", "Option 3"]}
-              selectedOptions={formData.status}
-              onSelectionChange={(value) => handleInputChange("status", value)}
+              possibleOptions={[
+                { statusId: "TODO", statusTitle: "할 일" },
+                { statusId: "INPROGRESS", statusTitle: "진행 중" },
+                { statusId: "DONE", statusTitle: "완료" },
+              ]}
+              selectedOptions={{
+                statusId: formData.statusId,
+                statusTitle: formData.statusTitle,
+              }}
+              onSelectionChange={(selected) =>
+                handleInputChange({
+                  statusId: selected?.statusId ?? null,
+                  statusTitle: selected?.statusTitle ?? null,
+                })
+              }
+              optionIdentifier="statusId"
+              optionLabel="statusTitle"
+              multiselect={false}
             />
           </Grid>
         </Grid>
