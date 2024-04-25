@@ -17,7 +17,6 @@ export const IssueDeleteButton = ({ issueId }: IssueDeleteButtonProps) => {
 
   useFeedbackHandler({
     isError,
-    isLoading,
     isSuccess,
     successMessage: "이슈를 삭제했습니다.",
     errorMessage:

@@ -4,6 +4,9 @@ import AddIcon from "@mui/icons-material/Add";
 import { useMutation } from "react-query";
 import { createIssue } from "@/apis/issueApi";
 
+import { useEffect } from "react";
+import Spinner from "../Spinner";
+
 type MutateFunction = (issue: Issue) => void;
 
 type IssueCreateButtonProps = {
@@ -23,20 +26,22 @@ export const IssueCreateButton = ({
 
   useFeedbackHandler({
     isError,
-    isLoading,
-    isSuccess,
-    successMessage: "이슈를 추가했습니다.",
     errorMessage:
       "이슈를 추가하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
+    isSuccess,
+    successMessage: "이슈를 추가했습니다.",
   });
 
   return (
-    <Button
-      disabled={isLoading}
-      onClick={() => handleFormSubmit(executeCreateIssue)}
-      startIcon={<AddIcon />}
-    >
-      추가
-    </Button>
+    <>
+      {isLoading && <Spinner centerInViewport size={70} />}
+      <Button
+        disabled={isLoading}
+        onClick={() => handleFormSubmit(executeCreateIssue)}
+        startIcon={<AddIcon />}
+      >
+        추가
+      </Button>
+    </>
   );
 };

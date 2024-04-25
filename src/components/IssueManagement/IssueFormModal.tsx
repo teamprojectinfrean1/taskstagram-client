@@ -31,6 +31,7 @@ import { IssueDeleteButton } from "./IssueDeleteButton";
 import { IssueUpdateButton } from "./IssueUpdateButton";
 import { IssueCreateButton } from "./IssueCreateButton";
 import useGetIssueDetails from "@/hooks/useGetIssueDetails";
+import Spinner from "../Spinner";
 
 type User = {
   userId: string | null;

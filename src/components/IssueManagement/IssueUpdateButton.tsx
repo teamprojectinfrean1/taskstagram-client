@@ -25,7 +25,6 @@ export const IssueUpdateButton = ({
 
   useFeedbackHandler({
     isError,
-    isLoading,
     isSuccess,
     successMessage: "이슈를 수정했습니다.",
     errorMessage:
