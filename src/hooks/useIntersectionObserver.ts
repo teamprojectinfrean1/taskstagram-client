@@ -1,6 +1,6 @@
 import { useRef, useCallback, useEffect } from "react";
 
-type UseIntersectionObserverProps = {
+type UseIntersectionObserverParams = {
   containerElement: Element | null;  
   isError: boolean;
   isLoading: boolean;
@@ -16,7 +16,7 @@ const useIntersectionObserver = ({
   hasNextPage,
   isFetchingNextPage,
   fetchNextPage,
-}: UseIntersectionObserverProps) => {
+}: UseIntersectionObserverParams) => {
   const observer = useRef<IntersectionObserver | null>(null);
   const targetElementRef = useRef<HTMLDivElement | null>(null);
 

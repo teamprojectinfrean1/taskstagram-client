@@ -28,7 +28,6 @@ import theme from "@/theme/theme";
 const IssuePage = () => {
   const { projectId } = useParams();
   // 추후 api 요청 보낸 후 존재하지 않는 projectId면 Not Found 페이지로 리다이렉트
-
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
   );

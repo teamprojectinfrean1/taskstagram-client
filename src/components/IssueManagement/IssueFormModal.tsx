@@ -11,7 +11,6 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
-import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "@/components/Editor/TextEditor";
 import CommentContainer from "@/components/Comment/CommentContainer";
@@ -19,24 +18,19 @@ import SearchableSelect from "@/components/SearchableSelect";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
-import DeleteIcon from "@mui/icons-material/Delete";
-import AddIcon from "@mui/icons-material/Add";
 import { useQuery } from "react-query";
-import {
-  createIssue,
-  deleteIssue,
-  getIssueDetails,
-  updateIssueDetails,
-} from "@/apis/issueApi";
+import { getIssueDetails } from "@/apis/issueApi";
 import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import UserAvatar from "@/components/UserAvatar";
-import { useMutation } from "react-query";
-import { RawAxiosRequestConfig } from "axios";
 import { RawDraftContentState } from "draft-js";
 import { useSetRecoilState } from "recoil";
 import { snackbarState } from "@/stores/snackbarStore";
+import { IssueDeleteButton } from "./IssueDeleteButton";
+import { IssueUpdateButton } from "./IssueUpdateButton";
+import { IssueCreateButton } from "./IssueCreateButton";
+import useGetIssueDetails from "@/hooks/useGetIssueDetails";
 
 type User = {
   userId: string | null;
@@ -54,6 +48,10 @@ type Status = {
   statusTitle: IssueStatusTitle | null;
 };
 
+type IssueUpdate = {
+  [P in keyof Issue]?: Issue[P];
+};
+
 type IssueFormModalProps = {
   currentIssueId: string;
   handleClose: () => void;
@@ -63,7 +61,6 @@ const IssueFormModal = ({
   currentIssueId,
   handleClose,
 }: IssueFormModalProps) => {
-  const setSnackbar = useSetRecoilState(snackbarState);
   const userInfo = useRecoilValue(userInfoState);
   const isNewIssue = currentIssueId === "new-issue";
 
@@ -85,54 +82,11 @@ const IssueFormModal = ({
   const [formData, setFormData] = useState<Issue>(defaultFormData);
   const [formErrors, setFormErrors] = useState<Partial<Issue>>({});
 
-  const {
-    data: issueDetails,
-    isError,
-    isLoading,
-    isSuccess,
-  } = useQuery(
-    ["issueDetails", currentIssueId],
-    () => getIssueDetails({ issueId: currentIssueId }),
-    {
-      enabled: !isNewIssue,
-    }
-  );
-
-  useEffect(() => {
-    if (isSuccess && issueDetails) {
-      setFormData((prev) => ({
-        ...prev,
-        taskId: issueDetails.taskId,
-        taskTitle: issueDetails.taskTitle,
-        assigneeId: issueDetails.assigneeId,
-        assigneeNickname: issueDetails.assigneeNickname,
-        assigneeProfileImage: issueDetails.assigneeProfileImage,
-        issueTitle: issueDetails.issueTitle,
-        issueContent: issueDetails.issueContent,
-        statusId: issueDetails.statusId,
-        statusTitle: issueDetails.statusTitle,
-        startDate: issueDetails.startDate,
-        endDate: issueDetails.endDate,
-      }));
-    }
-  }, [isSuccess, issueDetails]);
-
-  useEffect(() => {
-    if (isError) {
-      setSnackbar({
-        show: true,
-        message:
-          "이슈를 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
-        severity: "error",
-      });
-    }
-  }, [isError, setSnackbar]);
-
-  console.log("****************FORM DATA", formData);
-
-  type IssueUpdate = {
-    [P in keyof Issue]?: Issue[P];
-  };
+  const { issueDetails, isLoading } = useGetIssueDetails({
+    currentIssueId,
+    isNewIssue,
+    setFormData,
+  });
 
   const handleInputChange = (updates: IssueUpdate) => {
     setFormData((prev) => ({
@@ -140,101 +94,6 @@ const IssueFormModal = ({
       ...updates,
     }));
   };
-
-  const {
-    mutate: executeCreateIssue,
-    data: createIssueData,
-    isLoading: createIssueIsLoading,
-    isSuccess: createIssueIsSuccess,
-    isError: createIssueIsError,
-  } = useMutation((issue: Issue) => createIssue({ issue }));
-
-  useEffect(() => {
-    if (createIssueIsSuccess) {
-      setSnackbar({
-        show: true,
-        message: "이슈를 추가했습니다.",
-        severity: "success",
-      });
-    }
-  }, [createIssueIsSuccess, setSnackbar]);
-
-  useEffect(() => {
-    if (createIssueIsError) {
-      setSnackbar({
-        show: true,
-        message:
-          "이슈를 추가하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
-        severity: "error",
-      });
-    }
-  }, [createIssueIsError, setSnackbar]);
-
-  const {
-    mutate: executeUpdateIssueDetails,
-    data: updateIssueData,
-    isLoading: updateIssueIsLoading,
-    isSuccess: updateIssueIsSuccess,
-    isError: updateIssueIsError,
-  } = useMutation((issue: Issue) =>
-    updateIssueDetails({ issueId: issueDetails!.issueId!, issue })
-  );
-
-  useEffect(() => {
-    if (updateIssueIsSuccess) {
-      setSnackbar({
-        show: true,
-        message: "이슈를 수정했습니다.",
-        severity: "success",
-      });
-    }
-  }, [updateIssueIsSuccess, setSnackbar]);
-
-  useEffect(() => {
-    if (updateIssueIsError) {
-      setSnackbar({
-        show: true,
-        message:
-          "이슈를 수정하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
-        severity: "error",
-      });
-    }
-  }, [updateIssueIsError, setSnackbar]);
-
-  const {
-    mutate: executeDeleteIssue,
-    data: deleteIssueData,
-    isLoading: deleteissueisLoading,
-    isSuccess: deleteIssueIsSuccess,
-    isError: deleteIssueIsError,
-  } = useMutation(() => deleteIssue({ issueId: issueDetails!.issueId! }));
-
-  useEffect(() => {
-    if (deleteIssueIsSuccess) {
-      setSnackbar({
-        show: true,
-        message: "이슈를 삭제했습니다.",
-        severity: "success",
-      });
-    }
-  }, [deleteIssueIsSuccess, setSnackbar]);
-
-  useEffect(() => {
-    if (deleteIssueIsError) {
-      setSnackbar({
-        show: true,
-        message:
-          "이슈를 삭제하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
-        severity: "error",
-      });
-    }
-  }, [deleteIssueIsError]);
-
-  useEffect(() => {
-    if (createIssueIsLoading || updateIssueIsLoading || deleteissueisLoading) {
-      // show spinner
-    }
-  }, [createIssueIsLoading, updateIssueIsLoading, deleteissueisLoading]);
 
   const isIssueContentEmpty = (rawContentState: RawDraftContentState) => {
     return (
@@ -246,7 +105,7 @@ const IssueFormModal = ({
     );
   };
 
-  const validateForm = () => {
+  const isFormValid = () => {
     const errors: Partial<Issue> = {};
 
     const idFields = ["writerId", "statusId", "taskId"];
@@ -265,10 +124,8 @@ const IssueFormModal = ({
     return Object.keys(errors).length === 0;
   };
 
-  const handleFormSubmit = () => {
-    if (!validateForm()) {
-      return;
-    }
+  const handleFormSubmit = (mutateFunction: (issue: Issue) => void) => {
+    if (!isFormValid()) return;
 
     const submissionData: Issue = {
       ...formData,
@@ -278,12 +135,7 @@ const IssueFormModal = ({
           ? null
           : formData.issueContent,
     };
-
-    if (isNewIssue) {
-      executeCreateIssue(submissionData);
-    } else {
-      executeUpdateIssueDetails(submissionData);
-    }
+    mutateFunction(submissionData);
   };
 
   return (
@@ -312,30 +164,14 @@ const IssueFormModal = ({
           }}
         >
           {currentIssueId === "new-issue" ? (
-            <Button onClick={handleFormSubmit} startIcon={<AddIcon />}>
-              추가
-            </Button>
+            <IssueCreateButton handleFormSubmit={handleFormSubmit} />
           ) : (
             <>
-              <Button
-                disabled={!issueDetails}
-                onClick={handleFormSubmit}
-                startIcon={<SaveAsIcon />}
-              >
-                수정
-              </Button>
-              <Button
-                disabled={!issueDetails}
-                onClick={(event) => {
-                  event.preventDefault();
-                  if (issueDetails) {
-                    executeDeleteIssue();
-                  }
-                }}
-                startIcon={<DeleteIcon />}
-              >
-                삭제
-              </Button>
+              <IssueUpdateButton
+                issueId={issueDetails?.issueId!}
+                handleFormSubmit={handleFormSubmit}
+              />
+              <IssueDeleteButton issueId={issueDetails?.issueId!} />
             </>
           )}
           <Button onClick={handleClose} startIcon={<CloseIcon />}>

@@ -94,8 +94,6 @@ const SearchableSelect = <T extends object>({
     };
   };
 
-  console.log(selectedOptions);
-
   return (
     <Box>
       <InputLabel htmlFor={`input-${label}`} sx={{ fontWeight: "bold", mb: 1 }}>
