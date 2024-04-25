@@ -16,7 +16,7 @@ type TaskListResponse = {
 
 type LastUpdateDetailType = {
   userUuid: string;
-  userNickName: string;
+  userNickname: string;
   updatedDate: string;
 };
 

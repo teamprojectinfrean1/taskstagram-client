@@ -96,7 +96,7 @@ const TaskModal = ({
         taskEndDate: data.endDate,
         taskAuthorityType: data.editDeletePermission,
         taskStatus: data.taskStatus,
-        lastUpdateUserNickname: data.lastUpdateDetail.userNickName,
+        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
         lastUpdateDate: data.lastUpdateDetail.updatedDate
           .replace("T", " ")
           .slice(0, -3),
@@ -212,10 +212,10 @@ const TaskModal = ({
           </Button>
         </Box>
         <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-          {formData.lastUpdateUserNickname}
+          {formData.lastUpdateDate}
         </Typography>
         <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-          {formData.lastUpdateDate}
+          {formData.lastUpdateUserNickname}
         </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
