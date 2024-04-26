@@ -8,6 +8,7 @@ import {
   TextFieldProps,
 } from "@mui/material";
 import theme from "@/theme/theme";
+import SkeletonTextField from "@/components/SkeletonTextField";
 
 type SingleSelectProps<T> = {
   label: string;
@@ -27,6 +28,7 @@ type SingleSelectProps<T> = {
     props: React.HTMLAttributes<HTMLLIElement>,
     option: T
   ) => React.ReactNode;
+  isLoading?: boolean;
 };
 
 type MultiSelectProps<T> = {
@@ -47,6 +49,7 @@ type MultiSelectProps<T> = {
     props: React.HTMLAttributes<HTMLLIElement>,
     option: T
   ) => React.ReactNode;
+  isLoading?: boolean;
 };
 
 type SearchableSelectProps<T> = SingleSelectProps<T> | MultiSelectProps<T>;
@@ -64,6 +67,7 @@ const SearchableSelect = <T extends object>({
   InputProps,
   renderInput,
   renderOption,
+  isLoading = false,
 }: SearchableSelectProps<T>) => {
   const isOptionEqualToValue = (option: T, value: T) =>
     option[optionIdentifier] === value[optionIdentifier];
@@ -96,53 +100,59 @@ const SearchableSelect = <T extends object>({
 
   return (
     <Box>
-      <InputLabel htmlFor={`input-${label}`} sx={{ fontWeight: "bold", mb: 1 }}>
+      <InputLabel htmlFor={label} sx={{ fontWeight: "bold", mb: 1 }}>
         {label}
       </InputLabel>
-      <Autocomplete
-        value={filterValidSelection()}
-        onChange={(_, value) => {
-          if (multiselect) {
-            onSelectionChange(value as T[]);
-          } else {
-            onSelectionChange(value as T | null);
+      {isLoading ? (
+        <SkeletonTextField />
+      ) : (
+        <Autocomplete
+          value={filterValidSelection()}
+          onChange={(_, value) => {
+            if (multiselect) {
+              onSelectionChange(value as T[]);
+            } else {
+              onSelectionChange(value as T | null);
+            }
+          }}
+          options={possibleOptions}
+          isOptionEqualToValue={isOptionEqualToValue}
+          getOptionLabel={getOptionLabel}
+          multiple={multiselect}
+          noOptionsText="일치하는 옵션이 없습니다"
+          ListboxProps={{
+            className: "custom-scrollbar",
+          }}
+          PaperComponent={({ children }) => (
+            <Paper
+              style={{ backgroundColor: theme.palette.background.default }}
+            >
+              {children}
+            </Paper>
+          )}
+          renderInput={
+            renderInput ||
+            ((params) => (
+              <TextField
+                {...params}
+                id={`input-${label}`}
+                variant="outlined"
+                fullWidth
+                InputProps={handleInputProps(params)}
+                inputProps={{
+                  ...params.inputProps,
+                }}
+                error={error}
+                helperText={helperText}
+              />
+            ))
           }
-        }}
-        options={possibleOptions}
-        isOptionEqualToValue={isOptionEqualToValue}
-        getOptionLabel={getOptionLabel}
-        multiple={multiselect}
-        noOptionsText="일치하는 옵션이 없습니다"
-        ListboxProps={{
-          className: "custom-scrollbar",
-        }}
-        PaperComponent={({ children }) => (
-          <Paper style={{ backgroundColor: theme.palette.background.default }}>
-            {children}
-          </Paper>
-        )}
-        renderInput={
-          renderInput ||
-          ((params) => (
-            <TextField
-              {...params}
-              id={`input-${label}`}
-              variant="outlined"
-              fullWidth
-              InputProps={handleInputProps(params)}
-              inputProps={{
-                ...params.inputProps,
-              }}
-              error={error}
-              helperText={helperText}
-            />
-          ))
-        }
-        renderOption={
-          renderOption ||
-          ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
-        }
-      />
+          renderOption={
+            renderOption ||
+            ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
+          }
+        />
+      )}
     </Box>
   );
 };

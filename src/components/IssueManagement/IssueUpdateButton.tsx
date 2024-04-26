@@ -3,6 +3,7 @@ import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { useMutation } from "react-query";
 import { updateIssueDetails } from "@/apis/issueApi";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
+import Spinner from "@/components/Spinner";
 
 type MutateFunction = (issue: Issue) => void;
 
@@ -11,7 +12,7 @@ type IssueUpdateButtonProps = {
   handleFormSubmit: (mutationFunction: MutateFunction) => void;
 };
 
-export const IssueUpdateButton = ({
+const IssueUpdateButton = ({
   issueId,
   handleFormSubmit,
 }: IssueUpdateButtonProps) => {
@@ -32,12 +33,17 @@ export const IssueUpdateButton = ({
   });
 
   return (
-    <Button
-      disabled={!issueId || isLoading}
-      onClick={() => handleFormSubmit(executeUpdateIssueDetails)}
-      startIcon={<SaveAsIcon />}
-    >
-      수정
-    </Button>
+    <>
+      {isLoading && <Spinner centerInViewport size={70} />}
+      <Button
+        disabled={!issueId || isLoading}
+        onClick={() => handleFormSubmit(executeUpdateIssueDetails)}
+        startIcon={<SaveAsIcon />}
+      >
+        수정
+      </Button>
+    </>
   );
 };
+
+export default IssueUpdateButton;

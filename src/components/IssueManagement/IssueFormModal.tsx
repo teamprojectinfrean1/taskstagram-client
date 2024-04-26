@@ -7,7 +7,6 @@ import {
   DialogContent,
   Grid,
   InputLabel,
-  Skeleton,
   TextField,
   Typography,
 } from "@mui/material";
@@ -18,20 +17,17 @@ import SearchableSelect from "@/components/SearchableSelect";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
 import { grey } from "@mui/material/colors";
-import { useQuery } from "react-query";
-import { getIssueDetails } from "@/apis/issueApi";
-import { useEffect } from "react";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import UserAvatar from "@/components/UserAvatar";
 import { RawDraftContentState } from "draft-js";
-import { useSetRecoilState } from "recoil";
-import { snackbarState } from "@/stores/snackbarStore";
-import { IssueDeleteButton } from "./IssueDeleteButton";
-import { IssueUpdateButton } from "./IssueUpdateButton";
-import { IssueCreateButton } from "./IssueCreateButton";
+import {
+  IssueCreateButton,
+  IssueDeleteButton,
+  IssueUpdateButton,
+} from "@/components/IssueManagement";
 import useGetIssueDetails from "@/hooks/useGetIssueDetails";
-import Spinner from "../Spinner";
+import SkeletonTextField from "@/components/SkeletonTextField";
 
 type User = {
   userId: string | null;
@@ -83,11 +79,13 @@ const IssueFormModal = ({
   const [formData, setFormData] = useState<Issue>(defaultFormData);
   const [formErrors, setFormErrors] = useState<Partial<Issue>>({});
 
-  const { issueDetails, isLoading } = useGetIssueDetails({
-    currentIssueId,
-    isNewIssue,
-    setFormData,
-  });
+  const { issueDetails, isLoading: issueDetailsIsLoading } = useGetIssueDetails(
+    {
+      currentIssueId,
+      isNewIssue,
+      setFormData,
+    }
+  );
 
   const handleInputChange = (updates: IssueUpdate) => {
     setFormData((prev) => ({
@@ -156,11 +154,18 @@ const IssueFormModal = ({
           sx={{
             mb: 3,
             p: 0,
-            "& > .MuiButtonBase-root": {
+            "& .MuiButtonBase-root": {
               px: 2,
               backgroundColor: theme.palette.primary.main,
               color: theme.palette.background.default,
               "&:hover": { backgroundColor: theme.palette.primary.light },
+            },
+            "& .MuiButtonBase-root.Mui-disabled": {
+              backgroundColor: grey[400],
+              color: grey[600],
+              "&:hover": {
+                backgroundColor: grey[400],
+              },
             },
           }}
         >
@@ -186,18 +191,22 @@ const IssueFormModal = ({
               <InputLabel htmlFor="title" sx={{ fontWeight: "bold", mb: 1 }}>
                 제목 *
               </InputLabel>
-              <TextField
-                id="title"
-                variant="outlined"
-                fullWidth
-                required
-                value={formData.issueTitle}
-                onChange={(e) =>
-                  handleInputChange({ issueTitle: e.target.value })
-                }
-                error={!!formErrors.issueTitle}
-                helperText={formErrors.issueTitle}
-              />
+              {issueDetailsIsLoading ? (
+                <SkeletonTextField />
+              ) : (
+                <TextField
+                  id="title"
+                  variant="outlined"
+                  fullWidth
+                  required
+                  value={formData.issueTitle}
+                  onChange={(e) =>
+                    handleInputChange({ issueTitle: e.target.value })
+                  }
+                  error={!!formErrors.issueTitle}
+                  helperText={formErrors.issueTitle}
+                />
+              )}
             </Box>
             <Box>
               <InputLabel htmlFor="content" sx={{ fontWeight: "bold", mb: 1 }}>
@@ -209,6 +218,7 @@ const IssueFormModal = ({
                 handleContentChange={(content) =>
                   handleInputChange({ issueContent: content })
                 }
+                isLoading={issueDetailsIsLoading}
               />
             </Box>
             <CommentContainer />
@@ -271,6 +281,7 @@ const IssueFormModal = ({
                   </Box>
                 </li>
               )}
+              isLoading={issueDetailsIsLoading}
             />
             <SearchableSelect<Task>
               label="태스크 *"
@@ -294,21 +305,27 @@ const IssueFormModal = ({
               multiselect={false}
               error={!!formErrors.taskId}
               helperText={formErrors.taskId}
+              isLoading={issueDetailsIsLoading}
             />
-
-            <InputLabel htmlFor="dateRange" sx={{ fontWeight: "bold", mb: 1 }}>
-              기간
-            </InputLabel>
-            <DurationPicker
-              selectedStartDate={formData.startDate}
-              selectedEndDate={formData.endDate}
-              onStartDateSelectionChange={(value) =>
-                handleInputChange({ startDate: value })
-              }
-              onEndDateSelectionChange={(value) =>
-                handleInputChange({ endDate: value })
-              }
-            />
+            <Box>
+              <InputLabel
+                htmlFor="dateRange"
+                sx={{ fontWeight: "bold", mb: 1 }}
+              >
+                기간
+              </InputLabel>
+              <DurationPicker
+                selectedStartDate={formData.startDate}
+                selectedEndDate={formData.endDate}
+                onStartDateSelectionChange={(value) =>
+                  handleInputChange({ startDate: value })
+                }
+                onEndDateSelectionChange={(value) =>
+                  handleInputChange({ endDate: value })
+                }
+                isLoading={issueDetailsIsLoading}
+              />
+            </Box>
             <SearchableSelect<Status>
               label="상태 *"
               possibleOptions={[
@@ -331,6 +348,7 @@ const IssueFormModal = ({
               multiselect={false}
               error={!!formErrors.statusId}
               helperText={formErrors.statusId}
+              isLoading={issueDetailsIsLoading}
             />
             {issueDetails?.lastUpdatedDetail && (
               <Typography

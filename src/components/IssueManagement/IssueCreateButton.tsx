@@ -3,9 +3,7 @@ import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import AddIcon from "@mui/icons-material/Add";
 import { useMutation } from "react-query";
 import { createIssue } from "@/apis/issueApi";
-
-import { useEffect } from "react";
-import Spinner from "../Spinner";
+import Spinner from "@/components/Spinner";
 
 type MutateFunction = (issue: Issue) => void;
 
@@ -13,7 +11,7 @@ type IssueCreateButtonProps = {
   handleFormSubmit: (mutationFunction: MutateFunction) => void;
 };
 
-export const IssueCreateButton = ({
+const IssueCreateButton = ({
   handleFormSubmit,
 }: IssueCreateButtonProps) => {
   const {
@@ -45,3 +43,5 @@ export const IssueCreateButton = ({
     </>
   );
 };
+
+export default IssueCreateButton;

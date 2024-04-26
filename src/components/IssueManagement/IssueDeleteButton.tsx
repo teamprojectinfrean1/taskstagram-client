@@ -3,11 +3,13 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { deleteIssue } from "@/apis/issueApi";
 import { useMutation } from "react-query";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
+import Spinner from "@/components/Spinner";
 
 type IssueDeleteButtonProps = {
   issueId: string;
 };
-export const IssueDeleteButton = ({ issueId }: IssueDeleteButtonProps) => {
+
+const IssueDeleteButton = ({ issueId }: IssueDeleteButtonProps) => {
   const {
     mutate: executeDeleteIssue,
     isLoading,
@@ -24,17 +26,22 @@ export const IssueDeleteButton = ({ issueId }: IssueDeleteButtonProps) => {
   });
 
   return (
-    <Button
-      disabled={!issueId || isLoading}
-      onClick={(event) => {
-        event.preventDefault();
-        if (issueId) {
-          executeDeleteIssue();
-        }
-      }}
-      startIcon={<DeleteIcon />}
-    >
-      삭제
-    </Button>
+    <>
+      {isLoading && <Spinner centerInViewport size={70} />}
+      <Button
+        disabled={!issueId || isLoading}
+        onClick={(event) => {
+          event.preventDefault();
+          if (issueId) {
+            executeDeleteIssue();
+          }
+        }}
+        startIcon={<DeleteIcon />}
+      >
+        삭제
+      </Button>
+    </>
   );
 };
+
+export default IssueDeleteButton;

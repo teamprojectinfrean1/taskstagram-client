@@ -6,7 +6,7 @@ import SendIcon from "@mui/icons-material/Send";
 
 const CommentsContainer = () => {
   return (
-    <Stack>
+    <Stack sx={{ my: 8 }}>
       <InputLabel htmlFor="Comments" sx={{ fontWeight: "bold", mb: 3 }}>
         댓글
       </InputLabel>

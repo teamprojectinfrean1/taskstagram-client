@@ -8,17 +8,20 @@ import {
   convertFromRaw,
   RawDraftContentState,
 } from "draft-js";
+import { Skeleton } from "@mui/material";
 
 type TextEditorProps = {
   id: string;
   initialContent: RawDraftContentState | null;
   handleContentChange: (content: RawDraftContentState) => void;
+  isLoading?: boolean;
 };
 
 const TextEditor = ({
   id,
   initialContent,
   handleContentChange,
+  isLoading = false,
 }: TextEditorProps) => {
   const [editorState, setEditorState] = useState(() => {
     if (initialContent) {
@@ -32,8 +35,11 @@ const TextEditor = ({
     handleContentChange(convertToRaw(newState.getCurrentContent()));
   };
 
-  return (
+  return isLoading ? (
+    <Skeleton variant="rectangular" height={450} sx={{ borderRadius: "4px" }} />
+  ) : (
     <Editor
+      id={id}
       editorState={editorState}
       editorClassName="custom-scrollbar"
       onEditorStateChange={onEditorStateChange}
