@@ -169,9 +169,9 @@ export const getIssueList = async ({
       `${issuePath}/allTickets/${issueStatus}`,
       {
         params: {
-          projectId: projectId,
-          page: page,
-          size: size,
+          projectId,
+          page,
+          size,
         },
       }
     );
