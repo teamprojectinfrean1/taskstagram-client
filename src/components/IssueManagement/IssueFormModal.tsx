@@ -63,7 +63,7 @@ const IssueFormModal = ({
 
   const defaultFormData: Issue = {
     writerId: userInfo.userId,
-    taskId: null,
+    taskId: null, 
     taskTitle: null,
     assigneeId: null,
     assigneeNickname: null,

@@ -1,38 +1,37 @@
-import { Box, InputLabel, Stack, TextField } from "@mui/material";
-import UserAvatar from "@/components/UserAvatar";
+import { Box, InputLabel, Stack } from "@mui/material";
 import CommentList from "@/components/Comment/CommentList";
-import IconButton from "@mui/material/IconButton";
-import SendIcon from "@mui/icons-material/Send";
+import CommentEditor from "@/components/Comment/CommentEditor";
+import DeleteCommentModal from "@/components/Comment/DeleteCommentModal";
+import { useRecoilState, useRecoilValue } from "recoil";
+import { commentIdSelectedToDeleteState } from "@/stores/commentStore";
+import { userInfoState } from "@/stores/userStore";
+import UserAvatar from "@/components/UserAvatar";
 
 const CommentsContainer = () => {
+  const [commentIdSelectedToDelete, setCommentIdSelectedToDelete] =
+    useRecoilState(commentIdSelectedToDeleteState);
+
+  const { userId } = useRecoilValue(userInfoState);
+
   return (
-    <Stack sx={{ my: 8 }}>
-      <InputLabel htmlFor="Comments" sx={{ fontWeight: "bold", mb: 3 }}>
-        댓글
-      </InputLabel>
-      <Box display="flex" gap={4}>
-        <UserAvatar sx={{ width: 50, height: 50 }} />
-        <TextField
-          id="standard-multiline-flexible"
-          fullWidth
-          placeholder="내용을 입력해주세요"
-          multiline
-          maxRows={1000}
-          variant="standard"
-          className="custom-scrollbar"
-          sx={{ m: "auto" }}
+    <>
+      <Stack sx={{ my: 8 }}>
+        <InputLabel htmlFor="Comments" sx={{ fontWeight: "bold", mb: 3 }}>
+          댓글
+        </InputLabel>
+        <Box display="flex" gap={4}>
+          <UserAvatar sx={{ width: 50, height: 50 }} />
+          <CommentEditor userId={userId} />
+        </Box>
+        <CommentList />
+      </Stack>
+      {commentIdSelectedToDelete && (
+        <DeleteCommentModal
+          currentCommentId={commentIdSelectedToDelete}
+          handleClose={() => setCommentIdSelectedToDelete(null)}
         />
-      </Box>
-      <IconButton
-        size="large"
-        aria-label="post a comment"
-        sx={{ alignSelf: "end", p: 1 }}
-        onClick={() => {}}
-      >
-        <SendIcon />
-      </IconButton>
-      <CommentList />
-    </Stack>
+      )}
+    </>
   );
 };
 

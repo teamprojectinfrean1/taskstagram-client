@@ -4,6 +4,7 @@ import { deleteIssue } from "@/apis/issueApi";
 import { useMutation } from "react-query";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
+import PrimaryButton from "@/components/PrimaryButton";
 
 type IssueDeleteButtonProps = {
   issueId: string;
@@ -20,15 +21,15 @@ const IssueDeleteButton = ({ issueId }: IssueDeleteButtonProps) => {
   useFeedbackHandler({
     isError,
     isSuccess,
-    successMessage: "이슈를 삭제했습니다.",
+    successMessage: "이슈가 삭제되었습니다.",
     errorMessage:
-      "이슈를 삭제하는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
+      "이슈를 삭제하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
   });
 
   return (
     <>
       {isLoading && <Spinner centerInViewport size={70} />}
-      <Button
+      <PrimaryButton
         disabled={!issueId || isLoading}
         onClick={(event) => {
           event.preventDefault();
@@ -39,7 +40,7 @@ const IssueDeleteButton = ({ issueId }: IssueDeleteButtonProps) => {
         startIcon={<DeleteIcon />}
       >
         삭제
-      </Button>
+      </PrimaryButton>
     </>
   );
 };

@@ -14,7 +14,7 @@ type useFeedbackHandlerParams = {
 const useFeedbackHandler = ({
   isError = false,
   errorAction,
-  errorMessage = "처리 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  errorMessage = "처리 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
   isSuccess = false,
   successAction,
   successMessage = "성공적으로 처리되었습니다.",

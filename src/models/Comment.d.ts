@@ -5,7 +5,6 @@ type NewOrUpdatedComment = {
 };
 
 type ExistingComment = {
-  issueId: string;
   commentId: string;
   commentBody: string;
   lastModifiedDate: string;

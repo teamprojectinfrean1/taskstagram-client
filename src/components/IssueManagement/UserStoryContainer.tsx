@@ -87,8 +87,8 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
               size: USER_PER_PAGE,
             }}
             containerRef={containerRef}
-            firstPageErrorMessage="스토리 목록을 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오."
-            subsequentPageErrorMessage="스토리 목록을 추가로 불러오는 중 문제가 발생했습니다. 잠시 후에 다시 시도해 주십시오."
+            firstPageErrorMessage="스토리 목록을 불러오는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오."
+            subsequentPageErrorMessage="스토리 목록을 추가로 불러오는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오."
             noDataToShowMessage="현재 표시할 스토리가 없습니다."
             renderItem={(story, index) => (
               <IssueStory
