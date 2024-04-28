@@ -1,9 +1,9 @@
 import axios from "axios";
 
-const BASE_URL = "http://124.61.74.148:8080/api/v1/";
+const BASE_URL = "https://d2wzo46dl5rumb.cloudfront.net/";
 
 const unauthorizedAxios = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: BASE_URL,
 });
 
 const getAccessToken = () => {
@@ -11,7 +11,7 @@ const getAccessToken = () => {
 };
 
 const authorizedAxios = axios.create({
-  baseURL: process.env.REACT_APP_BASE_URL,
+  baseURL: BASE_URL,
   headers: {
     Authorization: getAccessToken(),
   },
