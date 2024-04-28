@@ -1,12 +1,10 @@
-import { Box, InputLabel, Stack } from "@mui/material";
+import { InputLabel, Stack } from "@mui/material";
 import CommentList from "@/components/Comment/CommentList";
 import DeleteCommentModal from "@/components/Comment/DeleteCommentModal";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { commentIdSelectedToDeleteState } from "@/stores/commentStore";
-import { userInfoState } from "@/stores/userStore";
-import UserAvatar from "@/components/UserAvatar";
-import Spinner from "@/components/Spinner";
 import CommentCreator from "@/components/Comment/CommentCreator";
+
 
 const CommentsContainer = () => {
   const [commentIdSelectedToDelete, setCommentIdSelectedToDelete] =
