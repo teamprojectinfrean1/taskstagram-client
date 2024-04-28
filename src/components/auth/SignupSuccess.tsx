@@ -11,17 +11,17 @@ const SignupSuccess = () => {
 
   return (
     <Box className="base-layout text-center">
-      <Typography variant="h3" sx={{ fontFamily: "Pattaya", mt: 12 }}>
+      <Typography variant="h2" sx={{ fontFamily: "Pattaya", mt: 12 }}>
         Welcome to
       </Typography>
-      <Typography variant="h3" sx={{ fontFamily: "Pattaya", color: "#2388B3" }}>
+      <Typography variant="h2" sx={{ fontFamily: "Pattaya", color: "#2388B3", display: "inline" }}>
         Task
-        <Typography
-          variant="h3"
-          sx={{ fontFamily: "Pattaya", display: "inline", color: "black" }}
-        >
-          tagram!
-        </Typography>
+      </Typography>
+      <Typography
+        variant="h2"
+        sx={{ fontFamily: "Pattaya", display: "inline", color: "black" }}
+      >
+        tagram!
       </Typography>
       <Box sx={{ my: 5 }}>
         <Typography>{nickname}님, 가입이 완료되었습니다.</Typography>

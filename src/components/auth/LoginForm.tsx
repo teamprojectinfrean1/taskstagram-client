@@ -1,46 +1,52 @@
 import theme from "@/theme/theme";
-import { useState } from "react";
-import SocialIcons from "./SocialIcons";
+import { useEffect, useState } from "react";
+import SocialIcons from "../OAuth/SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import { fetchLogin } from "@/apis/auth";
+import { fetchLogin } from "@/apis/user/fetchLogin";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useQuery } from "react-query";
 import { useNavigate } from "react-router-dom";
+import { useRecoilState } from "recoil";
+import { userInfoState } from "@/stores/userStore";
+import ErrorHandling from "../ErrorHandling";
 
 const LoginForm = () => {
-  const [email, setEmail] = useState("");
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { data, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "login",
-    () => fetchLogin({ email, password }),
+    () => fetchLogin({ id, password }),
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data) => {
-        if (data) {
-          navigate("/");
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    if (data) {
+      setUserInfo({ ...userInfo, memberId: data });
+      navigate("/");
+    }
+  }, [data]);
 
   return (
     <Box className="base-layout">
       <Typography variant="h5" sx={{ fontWeight: "bold", mt: 8 }}>
         로그인
       </Typography>
-      <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
+      <Typography sx={{ mt: 5, ml: 0.5 }}>ID</Typography>
       <OutlinedInput
         type="email"
         fullWidth
         size="small"
-        placeholder={"example@email.com"}
+        placeholder={"아이디"}
         sx={{ mt: 1 }}
-        value={email}
+        value={id}
         onChange={(e) => {
-          setEmail(e.target.value);
+          setId(e.target.value);
         }}
       />
       <Typography sx={{ mt: 3, ml: 0.5 }}>Password</Typography>
@@ -58,8 +64,9 @@ const LoginForm = () => {
           e.key === "Enter" && refetch();
         }}
       />
-
-      {data !== undefined && !data && (
+      {/* Network Error */}
+      <ErrorHandling error={error} isLoading={isLoading} feature="로그인" />
+      {typeof error === "number" && (
         <Box
           sx={{
             mt: 2,

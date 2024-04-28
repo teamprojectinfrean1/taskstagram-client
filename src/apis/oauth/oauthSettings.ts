@@ -1,0 +1,1 @@
+export const oauthPath = "http://124.61.74.148:8080/api/v1/oauth"

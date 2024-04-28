@@ -5,7 +5,8 @@ const theme = createTheme({
     mode: "light",
     primary: {
       main: "#121923",
-      light: "white"
+      light: "white",
+      dark: "#F0F0F0",
     },
     secondary: {
       main: "#173665",
@@ -13,9 +14,10 @@ const theme = createTheme({
     },
     background: {
       default: "#e5e8ed",
-      paper: "rgba(228, 230, 237)"
+      paper: "rgba(228, 230, 237)",
     },
     text: {
+      primary: "#626262",
       secondary: "#121923",
     },
     error: {

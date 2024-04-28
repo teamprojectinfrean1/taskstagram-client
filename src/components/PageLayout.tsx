@@ -1,25 +1,38 @@
-import { useState, Fragment } from "react";
+import { useState, Fragment, useEffect } from "react";
 import TopNav from "@/components/TopNav";
 import SideNav from "@/components/SideNav";
 import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
-import { getUserInfo } from "@/apis/userApi";
-import { useSetRecoilState } from "recoil";
+import { getUserInfo } from "@/apis/member/getUserInfo";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import Snackbar from "@/components/Snackbar";
 
 const PageLayout = () => {
-  
-  // 사용자 정보 recoil에 담는 코드  
-  const setUserInfo = useSetRecoilState(userInfoState);
-  const { data } = useQuery("userInfo", () => getUserInfo(), {
+  // 사용자 정보 recoil에 담는 코드
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
+  const { data, refetch } = useQuery("userInfo", () => getUserInfo(), {
+    enabled: false,
+    cacheTime: 0,
     onSuccess: (data) => {
       if (data) {
-        setUserInfo(data);
+        setUserInfo({
+          ...userInfo,
+          email: data.email,
+          id: data.id,
+          nickname: data.nickname,
+          profileImage: data.profileImage,
+          userId: data.userId,
+          weaver: data.weaver,
+        });
       }
     },
   });
+
+  useEffect(() => {
+    refetch()
+  }, [data])
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 

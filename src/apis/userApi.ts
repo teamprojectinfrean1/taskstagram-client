@@ -2,7 +2,8 @@ import axios from "axios";
 import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 import { IssueStory } from "@/models/Issue";
 
-const userPath = "/users";
+const userPath = "users";
+// const userPath = "http://127.0.0.1:8080/api/v1/users"
 
 type UserStoryListRequest = {
   projectId: string;
@@ -12,24 +13,6 @@ type UserStoryListRequest = {
 type UserStoryListResponse = {
   dataList: IssueStory[];
   hasMore: boolean;
-};
-
-
-export const getUserInfo = async () => {
-  let userInfo = null;
-  try {
-    const response = await unauthorizedAxios.get(`${userPath}/token`, {
-      headers: {
-        Authorization: sessionStorage.getItem('accessToken')
-      }
-    });
-    if (response.data) {
-      userInfo = response.data.data
-    }
-    return userInfo
-  } catch (err) {
-    console.error(err);
-  }
 };
 
 export const getUserStoryList = async ({

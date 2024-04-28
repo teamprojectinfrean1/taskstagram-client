@@ -15,42 +15,37 @@ const PasswordConfirmationInput = ({
   setIsPasswordConfirmValid,
 }: PasswordDoubleInputProps) => {
   const [passwordConfirm, setPasswordConfirm] = useState("");
-  const arePasswordsInSync = !!(
-    passwordConfirm && !isPasswordConfirmValid
-  );
+  const arePasswordsInSync = !!(passwordConfirm && !isPasswordConfirmValid);
 
   return (
-    <>
-      <TextField
-        sx={{
-          mt: 3,
-          "& .MuiFormHelperText-root": {
-            position: "absolute",
-            mt: 5,
-            ml: 1,
-            fontSize: "11px",
-            fontWeight: "bold",
-            color: theme.palette.error.main,
-          },
-        }}
-        type="password"
-        fullWidth
-        size="small"
-        placeholder={"비밀번호 확인"}
-        error={arePasswordsInSync}
-        helperText={arePasswordsInSync && "비밀번호가 일치하지 않습니다."}
-        value={passwordConfirm}
-        onChange={(e) => {
-          setPasswordConfirm(e.target.value);
-          setIsPasswordConfirmValid(
-            passwordDoubleCheck({
-              password,
-              passwordDouble: e.target.value,
-            })
-          );
-        }}
-      />
-    </>
+    <TextField
+      sx={{
+        "& .MuiFormHelperText-root": {
+          position: "absolute",
+          mt: 5,
+          ml: 1,
+          fontSize: "11px",
+          fontWeight: "bold",
+          color: theme.palette.error.main,
+        },
+      }}
+      type="password"
+      fullWidth
+      size="small"
+      placeholder={"비밀번호 확인"}
+      error={arePasswordsInSync}
+      helperText={arePasswordsInSync && "비밀번호가 일치하지 않습니다."}
+      value={passwordConfirm}
+      onChange={(e) => {
+        setPasswordConfirm(e.target.value);
+        setIsPasswordConfirmValid(
+          passwordDoubleCheck({
+            password,
+            passwordDouble: e.target.value,
+          })
+        );
+      }}
+    />
   );
 };
 
