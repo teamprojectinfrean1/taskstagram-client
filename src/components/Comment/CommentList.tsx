@@ -1,10 +1,21 @@
 import { useRef } from "react";
-import { Stack } from "@mui/material";
+import { Box, Skeleton, Stack } from "@mui/material";
 import CommentCard from "@/components/Comment/CommentCard";
 import InfiniteScroller from "@/components/InfiniteScroller";
 import { getCommentList } from "@/apis/commentApi";
 import { useRecoilValue } from "recoil";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
+
+const SkeletonCommentCard = (
+  <Box display="flex" gap={4}>
+    <Skeleton variant="circular" width={50} height={50} />
+    <Skeleton
+      variant="rectangular"
+      height={120}
+      sx={{ flexGrow: 1, borderRadius: "4px" }}
+    />
+  </Box>
+);
 
 const COMMENT_PER_PAGE = 15;
 
@@ -29,7 +40,7 @@ const CommentList = () => {
         renderItem={(comment) => (
           <CommentCard key={comment.commentId} comment={comment} />
         )}
-        renderSkeleton={() => <></>}
+        renderSkeleton={() => SkeletonCommentCard}
       />
     </Stack>
   );

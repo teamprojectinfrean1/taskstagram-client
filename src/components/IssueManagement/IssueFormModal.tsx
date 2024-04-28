@@ -187,7 +187,6 @@ const IssueFormModal = ({
         </DialogActions>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
-            {/* isLoading 이 true 일시 skeleton render */}
             <Box>
               <InputLabel htmlFor="title" sx={{ fontWeight: "bold", mb: 1 }}>
                 제목 *
@@ -222,8 +221,9 @@ const IssueFormModal = ({
                 isLoading={issueDetailsIsLoading}
               />
             </Box>
-            <CommentContainer />
-            {/* {!isNewIssue && <CommentContainer />} */}
+            {!isNewIssue && (
+              <CommentContainer issueDetailsIsLoading={issueDetailsIsLoading} />
+            )}
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
             <SearchableSelect<User>

@@ -2,7 +2,7 @@ import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { useMutation } from "react-query";
 import { createComment } from "@/apis/commentApi";
 import PrimaryButton from "@/components/PrimaryButton";
-import { Box } from "@mui/material";
+import { Box, Skeleton } from "@mui/material";
 import { useState } from "react";
 import { useRecoilValue } from "recoil";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
@@ -11,7 +11,21 @@ import { userInfoState } from "@/stores/userStore";
 import UserAvatar from "@/components/UserAvatar";
 import { CommentInputControl } from "./CommentInputControl";
 
-const CommentCreator = () => {
+const SkeletonCommentCreator = (
+  <Box display="flex" gap={4} sx={{ mb: 5 }}>
+    <Skeleton variant="circular" width={50} height={50} />
+    <Skeleton
+      variant="rectangular"
+      height={80}
+      sx={{ flexGrow: 1, borderRadius: "4px" }}
+    />
+  </Box>
+);
+
+type CommentCreatorProps = {
+  issueDetailsIsLoading: boolean;
+};
+const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
   const { userId } = useRecoilValue(userInfoState);
   const issueId = useRecoilValue(issueIdToShowInModalState);
 
@@ -40,6 +54,10 @@ const CommentCreator = () => {
     isSuccess,
     successMessage: "댓글이 추가되었습니다.",
   });
+
+  if(issueDetailsIsLoading) {
+    return SkeletonCommentCreator;
+  }
 
   return (
     <Box sx={{ mb: 5 }}>

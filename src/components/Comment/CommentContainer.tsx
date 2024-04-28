@@ -5,8 +5,12 @@ import { useRecoilState } from "recoil";
 import { commentIdSelectedToDeleteState } from "@/stores/commentStore";
 import CommentCreator from "@/components/Comment/CommentCreator";
 
-
-const CommentsContainer = () => {
+type CommentsContainerProps = {
+  issueDetailsIsLoading: boolean;
+};
+const CommentsContainer = ({
+  issueDetailsIsLoading,
+}: CommentsContainerProps) => {
   const [commentIdSelectedToDelete, setCommentIdSelectedToDelete] =
     useRecoilState(commentIdSelectedToDeleteState);
 
@@ -16,7 +20,7 @@ const CommentsContainer = () => {
         <InputLabel htmlFor="Comments" sx={{ fontWeight: "bold", mb: 3 }}>
           댓글
         </InputLabel>
-        <CommentCreator/>
+        <CommentCreator issueDetailsIsLoading={issueDetailsIsLoading} />
         <CommentList />
       </Stack>
       {commentIdSelectedToDelete && (
