@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://d2wzo46dl5rumb.cloudfront.net/api/v1/";
+const BASE_URL = "https://d2wzo46dl5rumb.cloudfront.net/";
 
 const unauthorizedAxios = axios.create({
   baseURL: BASE_URL,
