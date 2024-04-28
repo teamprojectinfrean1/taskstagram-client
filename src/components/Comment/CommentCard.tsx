@@ -1,5 +1,4 @@
 import UserAvatar from "@/components/UserAvatar";
-import CommentEditor from "@/components/Comment/CommentEditor";
 import {
   Box,
   IconButton,
@@ -13,31 +12,46 @@ import MoreVertIcon from "@mui/icons-material/MoreVert";
 import { useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
-import { useSetRecoilState } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { commentIdSelectedToDeleteState } from "@/stores/commentStore";
+import Spinner from "@/components/Spinner";
+import { userInfoState } from "@/stores/userStore";
+import { CommentInputControl } from "@/components/Comment/CommentInputControl";
+import PrimaryButton from "@/components/PrimaryButton";
+import useFeedbackHandler from "@/hooks/useFeedbackHandler";
+import { useMutation } from "react-query";
+import { updateComment } from "@/apis/commentApi";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
 
 type CommentCardProps = {
   comment: ExistingComment;
 };
 
 const CommentCard = ({ comment }: CommentCardProps) => {
+  const { userId: loggedInUserId } = useRecoilValue(userInfoState);
+  const issueId = useRecoilValue(issueIdToShowInModalState);
   const setCommentIdSelectedToDelete = useSetRecoilState(
     commentIdSelectedToDeleteState
   );
-  const [editMode, setEditMode] = useState<boolean>(false);
-  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
-  const open = Boolean(anchorEl);
-
   const {
     commentId,
     commentBody,
     lastModifiedDate,
-    userId,
+    userId: commentWriterId,
     userNickname,
     userProfileImage,
   } = comment;
 
-  const handleClick = (event: React.MouseEvent<HTMLElement>) => {
+  const [editMode, setEditMode] = useState<boolean>(false);
+  const [updatedCommentBody, setUpdatedCommentBody] =
+    useState<string>(commentBody);
+
+  const isLoggedInUserCommentWriter = loggedInUserId === commentWriterId;
+
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+  const open = Boolean(anchorEl);
+
+  const handleSettingsClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -45,24 +59,61 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     setAnchorEl(null);
   };
 
-  const handleEdit = () => {
+  const handleCommentEdit = () => {
     handleCloseSettingsDropdown();
     setEditMode(true);
   };
 
-  const handleDelete = () => {
+  const handleCommentDelete = () => {
     handleCloseSettingsDropdown();
     setCommentIdSelectedToDelete(commentId);
   };
+
+  const {
+    mutate: executeUpdateComment,
+    data,
+    isLoading: isUpdatingComment,
+    isSuccess,
+    isError,
+  } = useMutation(() =>
+    updateComment({
+      commentId,
+      comment: {
+        writerId: loggedInUserId,
+        issueId: issueId!,
+        commentBody: updatedCommentBody,
+      },
+    })
+  );
+
+  useFeedbackHandler({
+    isError,
+    errorMessage:
+      "댓글을 수정하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
+    isSuccess,
+    successMessage: "댓글이 수정되었습니다.",
+    unconditionalExecute: () => setEditMode(false),
+  });
+
+  if (isUpdatingComment) {
+    return <Spinner />;
+  }
 
   return (
     <Box display="flex" gap={4}>
       <UserAvatar sx={{ width: 50, height: 50 }} imageUrl={userProfileImage} />
       {editMode ? (
-        <CommentEditor
-          endEditMode={() => setEditMode(false)}
-          existingComment={{ commentId, commentBody }}
-          userId={userId}
+        <CommentInputControl
+          commentBody={updatedCommentBody}
+          setCommentBody={setUpdatedCommentBody}
+          renderButton={
+            <PrimaryButton
+              disabled={isUpdatingComment}
+              onClick={() => executeUpdateComment}
+            >
+              저장
+            </PrimaryButton>
+          }
         />
       ) : (
         <Stack
@@ -82,35 +133,39 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             }}
           >
             <Typography sx={{ fontWeight: "bold" }}>{userNickname}</Typography>
-            <IconButton
-              size="small"
-              edge="end"
-              color="inherit"
-              aria-label="comment-settings"
-              onClick={handleClick}
-            >
-              <MoreVertIcon />
-            </IconButton>
-            <Menu
-              anchorEl={anchorEl}
-              open={open}
-              onClose={handleCloseSettingsDropdown}
-              sx={{
-                "& .MuiButtonBase-root": {
-                  px: 2,
-                },
-                "& .MuiSvgIcon-root": {
-                  mr: 1,
-                },
-              }}
-            >
-              <MenuItem onClick={handleEdit}>
-                <EditOutlinedIcon fontSize="small" /> 수정
-              </MenuItem>
-              <MenuItem onClick={handleDelete}>
-                <DeleteOutlineOutlinedIcon fontSize="small" /> 삭제
-              </MenuItem>
-            </Menu>
+            {isLoggedInUserCommentWriter && (
+              <>
+                <IconButton
+                  size="small"
+                  edge="end"
+                  color="inherit"
+                  aria-label="comment-settings"
+                  onClick={handleSettingsClick}
+                >
+                  <MoreVertIcon />
+                </IconButton>
+                <Menu
+                  anchorEl={anchorEl}
+                  open={open}
+                  onClose={handleCloseSettingsDropdown}
+                  sx={{
+                    "& .MuiButtonBase-root": {
+                      px: 2,
+                    },
+                    "& .MuiSvgIcon-root": {
+                      mr: 1,
+                    },
+                  }}
+                >
+                  <MenuItem onClick={handleCommentEdit}>
+                    <EditOutlinedIcon fontSize="small" /> 수정
+                  </MenuItem>
+                  <MenuItem onClick={handleCommentDelete}>
+                    <DeleteOutlineOutlinedIcon fontSize="small" /> 삭제
+                  </MenuItem>
+                </Menu>
+              </>
+            )}
           </Box>
           <Typography>{commentBody}</Typography>
           <Typography

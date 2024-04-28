@@ -28,6 +28,7 @@ import {
 } from "@/components/IssueManagement";
 import useGetIssueDetails from "@/hooks/useGetIssueDetails";
 import SkeletonTextField from "@/components/SkeletonTextField";
+import PrimaryButton from "@/components/PrimaryButton";
 
 type User = {
   userId: string | null;
@@ -63,7 +64,7 @@ const IssueFormModal = ({
 
   const defaultFormData: Issue = {
     writerId: userInfo.userId,
-    taskId: null, 
+    taskId: null,
     taskTitle: null,
     assigneeId: null,
     assigneeNickname: null,
@@ -180,9 +181,9 @@ const IssueFormModal = ({
               <IssueDeleteButton issueId={issueDetails?.issueId!} />
             </>
           )}
-          <Button onClick={handleClose} startIcon={<CloseIcon />}>
+          <PrimaryButton onClick={handleClose} startIcon={<CloseIcon />}>
             닫기
-          </Button>
+          </PrimaryButton>
         </DialogActions>
         <Grid container spacing={4}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
@@ -222,6 +223,7 @@ const IssueFormModal = ({
               />
             </Box>
             <CommentContainer />
+            {/* {!isNewIssue && <CommentContainer />} */}
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
             <SearchableSelect<User>
