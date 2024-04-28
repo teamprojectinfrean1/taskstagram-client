@@ -11,7 +11,7 @@ const Spinner = ({ centerInViewport = false, size = 40 }: SpinnerProps) => {
       {centerInViewport ? (
         <Backdrop
           sx={{
-            zIndex: 999,
+            zIndex: 2000,
           }}
           open={true}
         >
@@ -19,7 +19,7 @@ const Spinner = ({ centerInViewport = false, size = 40 }: SpinnerProps) => {
             size={size}
             sx={{
               color: "#fff",
-              zIndex: 1000,
+              zIndex: 2001,
             }}
           />
         </Backdrop>

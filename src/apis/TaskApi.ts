@@ -57,7 +57,7 @@ export type ReplaceTaskRequest = {
 };
 
 //프로젝트에 생성된 테스크들 조회
-export const getTaskList = async ({
+export const getPaginatedTaskList = async ({
   page,
   size,
   projectId,
