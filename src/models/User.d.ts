@@ -5,3 +5,9 @@ export type UserInfo = {
   nickname: string;
   profileImage: string;
 };
+
+export type UserSummary = {
+  id: string;
+  nickname: string;
+  profileImage: string | null;
+};

@@ -4,8 +4,8 @@ import { ProjectSummary } from "@/models/Project";
 const projectPath = "project";
 
 type LastUpdateDetailType = {
-  userUuid: string;
-  userNickName: string;
+  memeberUuid: string;
+  userNickname: string;
   updatedDate: string;
 };
 
@@ -13,10 +13,34 @@ type ProjectDetailReponse = {
   projectId: string;
   projectName: string;
   projectContent: string;
+  projectImage: string | null;
   startDate: string;
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;
   projectTagList: [] | null;
+};
+
+export type CreateProjectRequest = {
+  projectName: string | null;
+  writerUuid: string | null;
+  projectContent: string | null;
+  projectImageFile: File | null;
+  projectTagList: string[] | null;
+  memberUuidList: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  createDate: string | null;
+};
+
+export type ReplaceProjectRequest = {
+  projectId: string;
+  projectName: string | null;
+  projectContent: string | null;
+  updaterUuid: string;
+  projectTagList: string[] | null;
+  startDate: string | null;
+  endDate: string | null;
+  memberUuidList: string[] | null;
 };
 
 // 프로젝트 리스트 조회
@@ -25,7 +49,9 @@ export const getProjectList = async (
 ): Promise<ProjectSummary[]> => {
   if (userId) {
     try {
-      const response = await unauthorizedAxios.get(`${projectPath}/list/${userId}`);
+      const response = await unauthorizedAxios.get(
+        `${projectPath}/list/${userId}`
+      );
       return response.data.data;
     } catch {
       return [];
@@ -41,13 +67,103 @@ export const getProjectDetail = async (
 ): Promise<ProjectDetailReponse | null> => {
   if (projectId) {
     try {
-      const response = await unauthorizedAxios.get(`${projectPath}/${projectId}`);
+      const response = await unauthorizedAxios.get(
+        `${projectPath}/${projectId}`
+      );
       return response.data.data;
     } catch {
       return null;
     }
   } else {
     return null;
+  }
+};
+
+//프로젝트 생성
+export const createOneProject = async ({
+  projectName,
+  writerUuid,
+  projectContent,
+  projectImageFile,
+  projectTagList,
+  memberUuidList,
+  startDate,
+  endDate,
+  createDate,
+}: CreateProjectRequest): Promise<boolean> => {
+  try {
+    const formData = new FormData();
+    formData.append(
+      "project",
+      new Blob(
+        [
+          JSON.stringify({
+            projectName,
+            writerUuid,
+            projectContent,
+            projectTagList,
+            memberUuidList,
+            startDate,
+            endDate,
+            createDate,
+          }),
+        ],
+        {
+          type: "application/json",
+        }
+      )
+    );
+    if (projectImageFile) {
+      formData.append("multipartFile", projectImageFile);
+    }
+    const response = await unauthorizedAxios.post(`${projectPath}`, formData, {
+      headers: { "Content-Type": "multipart/form-data" },
+    });
+    return response.data.isSuccess;
+  } catch {
+    return false;
+  }
+};
+
+//프로젝트 수정
+export const replaceOneProject = async ({
+  projectId,
+  projectName,
+  updaterUuid,
+  projectContent,
+  projectTagList,
+  memberUuidList,
+  startDate,
+  endDate,
+}: ReplaceProjectRequest): Promise<boolean> => {
+  try {
+    const response = await unauthorizedAxios.put(
+      `${projectPath}/${projectId}`,
+      {
+        projectName,
+        updaterUuid,
+        projectContent,
+        projectTagList,
+        memberUuidList,
+        startDate,
+        endDate,
+      }
+    );
+    return response.data.isSuccess;
+  } catch {
+    return false;
+  }
+};
+
+//프로젝트 삭제
+export const deleteOneProject = async (projectId: string): Promise<boolean> => {
+  try {
+    const response = await unauthorizedAxios.delete(
+      `${projectPath}/${projectId}`
+    );
+    return response.data.isSuccess; //추후 변경 필요
+  } catch {
+    return false;
   }
 };
 

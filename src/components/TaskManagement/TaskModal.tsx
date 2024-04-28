@@ -9,6 +9,7 @@ import {
   Radio,
   FormControl,
   FormControlLabel,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import Task from "@/models/Task";
@@ -29,6 +30,7 @@ import {
 } from "@/apis/TaskApi";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
+import { grey } from "@mui/material/colors";
 
 type TaskModalProps = {
   selectedTask: Task;
@@ -71,6 +73,8 @@ const TaskModal = ({
     taskEndDate: null,
     taskAuthorityType: "",
     taskStatus: null,
+    lastUpdateUserNickname: "",
+    lastUpdateDate: "",
   });
 
   const selectedProject = useRecoilValue(selectedProjectState);
@@ -92,6 +96,10 @@ const TaskModal = ({
         taskEndDate: data.endDate,
         taskAuthorityType: data.editDeletePermission,
         taskStatus: data.taskStatus,
+        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
+        lastUpdateDate: data.lastUpdateDetail.updatedDate
+          .replace("T", " ")
+          .slice(0, -3),
       });
     }
   }, [data, isOpen]);
@@ -115,6 +123,8 @@ const TaskModal = ({
       taskEndDate: null,
       taskAuthorityType: "",
       taskStatus: null,
+      lastUpdateUserNickname: "",
+      lastUpdateDate: "",
     });
     //모달창 닫기
     onCloseModal();
@@ -127,7 +137,7 @@ const TaskModal = ({
       //필수값 체크 로직 추가해야함.
       onAdd({
         projectId: selectedProject.projectId,
-        writerUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
+        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
@@ -145,7 +155,7 @@ const TaskModal = ({
       //이미 생성된 Task
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
-        updaterUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
+        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
@@ -201,6 +211,12 @@ const TaskModal = ({
             취소
           </Button>
         </Box>
+        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
+          {formData.lastUpdateDate}
+        </Typography>
+        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
+          {formData.lastUpdateUserNickname}
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box sx={{ display: "grid", gap: 1 }}>

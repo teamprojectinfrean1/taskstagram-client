@@ -15,8 +15,7 @@ import {
   CreateTaskRequest,
   ReplaceTaskRequest,
 } from "@/apis/TaskApi";
-import Backdrop from "@mui/material/Backdrop";
-import CircularProgress from "@mui/material/CircularProgress";
+import SkeletonTaskTicket from "@/components/TaskManagement/SkeletonTaskTicket";
 
 const TaskPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -112,27 +111,38 @@ const TaskPage = () => {
           columnSpacing={{ xs: 1, sm: 2, md: 3 }}
           sx={{ height: "100%", minHeight: "450px", m: 1 }}
         >
-          {currentPage === 1 && (
-            <Grid item xs={12} md={3}>
-              <NewTask
-                onClick={setSelectedTask}
-                onShowTaskModal={setShowModal}
-              ></NewTask>
-            </Grid>
-          )}
-          {data?.taskList && data.taskList.length > 0
-            ? data.taskList.map((task) => (
-                <Grid item xs={12} md={3} key={task.taskId}>
-                  <TaskTicket
-                    key={task.taskId}
-                    selectedTask={task}
-                    onDelete={deleteTask}
+          {isLoading === true ? (
+            Array.from(Array(8)).map((_, index) => (
+              <Grid item xs={12} md={3} key={index}>
+                <SkeletonTaskTicket></SkeletonTaskTicket>
+              </Grid>
+            ))
+          ) : (
+            <>
+              {/* 에러 처리 필요 */}
+              {currentPage === 1 && (
+                <Grid item xs={12} md={3}>
+                  <NewTask
+                    onClick={setSelectedTask}
                     onShowTaskModal={setShowModal}
-                    onSelectedTask={setSelectedTask}
-                  />
+                  ></NewTask>
                 </Grid>
-              ))
-            : null}
+              )}
+              {data?.taskList &&
+                data.taskList.length > 0 &&
+                data.taskList.map((task) => (
+                  <Grid item xs={12} md={3} key={task.taskId}>
+                    <TaskTicket
+                      key={task.taskId}
+                      selectedTask={task}
+                      onDelete={deleteTask}
+                      onShowTaskModal={setShowModal}
+                      onSelectedTask={setSelectedTask}
+                    />
+                  </Grid>
+                ))}
+            </>
+          )}
         </Grid>
         <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
           <Pagination
@@ -151,12 +161,12 @@ const TaskPage = () => {
         onDelete={deleteTask}
         onCloseModal={handleCloseTaskModal}
       ></TaskModal>
-      <Backdrop
+      {/* <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={isLoading}
       >
         <CircularProgress color="inherit" />
-      </Backdrop>
+      </Backdrop> */}
     </div>
   );
 };

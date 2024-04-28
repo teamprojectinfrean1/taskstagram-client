@@ -1,7 +1,5 @@
-import axios from "axios";
 import Task from "@/models/Task";
-import { authorizedAxios } from "./domainSettings";
-
+import { unauthorizedAxios } from "./domainSettings";
 
 const taskPath = "task";
 
@@ -18,7 +16,7 @@ type TaskListResponse = {
 
 type LastUpdateDetailType = {
   userUuid: string;
-  userNickName: string;
+  userNickname: string;
   updatedDate: string;
 };
 
@@ -64,7 +62,7 @@ export const getPaginatedTaskList = async ({
 }: GetTaskListRequest): Promise<TaskListResponse | null> => {
   if (page && size && projectId !== null) {
     try {
-      const response = await authorizedAxios.get(taskPath, {
+      const response = await unauthorizedAxios.get(taskPath, {
         params: {
           page,
           size,
@@ -89,7 +87,7 @@ export const getTaskDetail = async (
 ): Promise<TaskDetailReponse | null> => {
   if (taskId) {
     try {
-      const response = await authorizedAxios.get(`${taskPath}/${taskId}`);
+      const response = await unauthorizedAxios.get(`${taskPath}/${taskId}`);
       return response.data.data;
     } catch {
       return null;
@@ -119,7 +117,7 @@ export const createOneTask = async ({
     editDeletePermission !== null
   ) {
     try {
-      const response = await axios.post(`${taskPath}`, {
+      const response = await unauthorizedAxios.post(`${taskPath}`, {
         projectId,
         writerUuid,
         taskTitle,
@@ -138,6 +136,7 @@ export const createOneTask = async ({
   }
 };
 
+//task 수정
 export const replaceOneTask = async ({
   selectedTaskId,
   updaterUuid,
@@ -157,7 +156,7 @@ export const replaceOneTask = async ({
     editDeletePermission !== null
   ) {
     try {
-      const response = await axios.put(
+      const response = await unauthorizedAxios.put(
         `${taskPath}`,
         {
           updaterUuid,
@@ -187,7 +186,7 @@ export const replaceOneTask = async ({
 export const deleteOneTask = async (taskId: string): Promise<boolean> => {
   if (taskId) {
     try {
-      const response = await axios.delete(`${taskPath}`, {
+      const response = await unauthorizedAxios.delete(`${taskPath}`, {
         params: {
           taskId: taskId,
         },
