@@ -78,9 +78,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      //<ProtectedRouter>
-      <PageLayout />
-      //</ProtectedRouter>
+      <ProtectedRouter>
+        <PageLayout />
+      </ProtectedRouter>
     ),
     errorElement: <NotFoundPage />,
     children: [
