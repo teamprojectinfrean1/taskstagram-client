@@ -103,6 +103,7 @@ const ChangePassword = () => {
             현재 비밀번호
           </Typography>
           <PresentPasswordInput
+            isError = {changePasswordMutation.error === 304? true : false}
             presentPassword={passwordInfo.presentPassword}
             setPresentPassword={(value) =>
               setPasswordInfo({
@@ -146,7 +147,6 @@ const ChangePassword = () => {
               }}
             />
           </Box>
-
           <Button
             fullWidth
             variant="contained"
