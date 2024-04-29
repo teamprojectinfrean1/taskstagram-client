@@ -9,15 +9,17 @@ type useFeedbackHandlerParams = {
   isSuccess?: boolean;
   successAction?: () => void;
   successMessage?: string;
+  unconditionalExecute?: () => void;
 };
 
 const useFeedbackHandler = ({
   isError = false,
   errorAction,
-  errorMessage = "처리 중 문제가 발생했습니다. 잠시 후 다시 시도해 주세요.",
+  errorMessage = "처리 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
   isSuccess = false,
   successAction,
   successMessage = "성공적으로 처리되었습니다.",
+  unconditionalExecute
 }: useFeedbackHandlerParams) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
@@ -29,11 +31,7 @@ const useFeedbackHandler = ({
         message: successMessage,
         severity: "success",
       });
-    }
-  }, [isSuccess, successAction, successMessage, setSnackbar]);
-
-  useEffect(() => {
-    if (isError) {
+    } else if (isError) {
       if (errorAction) errorAction();
       setSnackbar({
         show: true,
@@ -41,7 +39,8 @@ const useFeedbackHandler = ({
         severity: "error",
       });
     }
-  }, [isError, errorAction, errorMessage, setSnackbar]);
+    if (unconditionalExecute) unconditionalExecute();  
+  }, [isSuccess, isError, successAction, errorAction, successMessage, errorMessage, unconditionalExecute, setSnackbar]);
 };
 
 export default useFeedbackHandler;

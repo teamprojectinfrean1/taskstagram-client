@@ -28,7 +28,6 @@ import {
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
-import { UserSummary } from "@/models/User";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
 

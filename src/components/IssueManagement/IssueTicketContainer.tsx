@@ -1,67 +1,32 @@
 import { Box, Paper, Stack, Typography } from "@mui/material";
-import { Fragment } from "react";
-import { IssueTicket, SkeletonIssueTicket } from "@/components/IssueManagement";
 import { useDroppable } from "@dnd-kit/core";
-import { IssueSummary } from "@/models/Issue";
-import useIntersectionObserver from "@/hooks/useIntersectionObserver";
-import useGetIssueTicketListQuery from "@/hooks/useGetIssueTicketListQuery";
-import { useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { issueIdToShowInModalState } from "@/stores/issueStore";
+import { useRef, useState } from "react";
 import SearchWithDropdownFilter from "@/components/SearchWithDropdownFilter";
-import { mockToDoIssueSummaryList } from "@/mock/issueMock";
+import { DefaultIssueList } from "@/components/IssueManagement/DefaultIssueList";
+import { IssueSearchResults } from "@/components/IssueManagement/IssueSearchResults";
 
 type IssueTicketContainerProps = {
-  ariaLabel: string;
-  containerId: string;
+  containerId: IssueStatus;
   isHovered: boolean;
   projectId: string;
   title: string;
-  children?: React.ReactNode;
 };
 
 const IssueTicketContainer = ({
-  ariaLabel,
   containerId,
   isHovered,
   projectId,
   title,
-  children,
 }: IssueTicketContainerProps) => {
   const { setNodeRef } = useDroppable({
-    id: containerId,
+    id: containerId!,
   });
 
-  const {
-    data,
-    isLoading,
-    isError,
-    hasNextPage,
-    fetchNextPage,
-    isFetchingNextPage,
-  } = useGetIssueTicketListQuery({
-    projectId: projectId!,
-    issueStatus: containerId,
-  });
+  const containerRef = useRef<HTMLDivElement>(null);
 
-  const lastIssueRef = useIntersectionObserver({
-    containerId,
-    isLoading,
-    hasNextPage,
-    isFetchingNextPage,
-    fetchNextPage,
-  });
-
-  /* 데이터 페칭 시 skeleton UI가 렌더링 되는지 테스트하기 위해 임시 구현; 추후 제거 예정 */
-  const [testLoading, setTestLoading] = useState(true);
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setTestLoading(false), 3000);
-    return () => clearTimeout(timeout);
-  }, []);
-
+  const [searchMode, setSearchMode] = useState(false);
   const [searchParams, setSearchParams] = useState<IssueSearchParams>({
-    filter: "Issue",
+    filter: "ISSUE",
     keyword: "",
   });
 
@@ -73,6 +38,10 @@ const IssueTicketContainer = ({
       ...prev,
       [key]: value,
     }));
+  };
+
+  const triggerSearch = () => {
+    setSearchMode(true);
   };
 
   return (
@@ -100,11 +69,13 @@ const IssueTicketContainer = ({
         <Box sx={{ px: 2 }}>
           <SearchWithDropdownFilter
             handleSearchParamsChange={handleSearchParamsChange}
+            triggerSearch={triggerSearch}
             searchParams={searchParams}
           />
         </Box>
         <Stack
-          id={containerId}
+          id={containerId!}
+          ref={containerRef}
           spacing={2}
           className="custom-scrollbar"
           sx={{
@@ -115,36 +86,20 @@ const IssueTicketContainer = ({
             pb: 2,
           }}
         >
-          {children}
-          {data?.pages.map((page, i) => (
-            <Fragment key={i}>
-              {page.issueList.map((issue, index) => (
-                <IssueTicket
-                  key={issue.issueId}
-                  index={index}
-                  issue={issue}
-                  parent={containerId}
-                />
-              ))}
-            </Fragment>
-          ))}
-          {/* {!testLoading &&
-            mockToDoIssueSummaryList.map((issue, index) => (
-              <IssueTicket
-                key={issue.issueId}
-                index={index}
-                issue={issue}
-                parent={containerId}
-              />
-            ))} */}
-          {(isFetchingNextPage || testLoading) &&
-            Array.from({ length: 3 }, (_, i) => (
-              <SkeletonIssueTicket key={i} />
-            ))}
-          <div
-            ref={hasNextPage ? lastIssueRef : undefined}
-            style={{ display: hasNextPage ? "inline" : "none" }}
-          />
+          {searchMode ? (
+            <IssueSearchResults
+              projectId={projectId}
+              containerId={containerId}
+              containerRef={containerRef}
+              searchParams={searchParams}
+            />
+          ) : (
+            <DefaultIssueList
+              projectId={projectId}
+              containerId={containerId}
+              containerRef={containerRef}
+            />
+          )}
         </Stack>
       </Stack>
     </Paper>

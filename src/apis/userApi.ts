@@ -1,42 +1,20 @@
-import axios from "axios";
-import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
-import { IssueStory } from "@/models/Issue";
+import { unauthorizedAxios } from "./domainSettings";
 
 const userPath = "users";
-// const userPath = "http://127.0.0.1:8080/api/v1/users"
 
-type UserStoryListRequest = {
-  projectId: string;
-  page: number;
-};
-
-type UserStoryListResponse = {
-  dataList: IssueStory[];
-  hasMore: boolean;
-};
-
-export const getUserStoryList = async ({
-  projectId,
-  page,
-}: UserStoryListRequest): Promise<UserStoryListResponse> => {
-  const USER_PER_PAGE = 15;
-
+export const getUserInfo = async () => {
+  let userInfo = null;
   try {
-    const response = await authorizedAxios.post(
-      `${userPath}/project/user-list`,
-      {
-        projectId,
-        USER_PER_PAGE,
-        page,
-      }
-    );
-    const data = response.data;
-    return { dataList: data.data, hasMore: data.hasMore };
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message);
-    } else {
-      throw new Error("An unknown error occurred");
+    const response = await unauthorizedAxios.get(`${userPath}/token`, {
+      headers: {
+        Authorization: sessionStorage.getItem("accessToken"),
+      },
+    });
+    if (response.data) {
+      userInfo = response.data.data;
     }
+    return userInfo;
+  } catch (err) {
+    console.error(err);
   }
 };

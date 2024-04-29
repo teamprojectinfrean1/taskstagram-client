@@ -1,8 +1,6 @@
-import { RawDraftContentState } from "draft-js";
-
-export type Task = {
-  taskId: string;
-  taskTitle: string;
+type Task = {
+  taskId: string | null;
+  taskTitle: string | null;
   taskContent: string | null;
   taskTags: string[] | null;
   taskStartDate: string | null;
@@ -13,4 +11,4 @@ export type Task = {
   lastUpdateDate: string;
 };
 
-export type TaskPermission = "allProjectMember" | "projectLeader";
+type TaskPermission = "allProjectMember" | "projectLeader";

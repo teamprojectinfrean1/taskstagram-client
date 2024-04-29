@@ -1,4 +1,4 @@
-export type UserInfo = {
+type UserInfo = {
   userId: string;
   memberId: string;
   email: string;
@@ -8,7 +8,7 @@ export type UserInfo = {
   weaver: boolean | null;
 };
 
-export type UserSummary = {
+type UserSummary = {
   id: string;
   nickname: string;
   profileImage: string | null;

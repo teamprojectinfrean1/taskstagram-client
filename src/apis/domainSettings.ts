@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "https://taskstagram.info";
+const BASE_URL = "https://mcpark.info/api/v1";
+
 
 const unauthorizedAxios = axios.create({
   baseURL: BASE_URL,

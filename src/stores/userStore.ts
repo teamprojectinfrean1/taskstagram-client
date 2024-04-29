@@ -1,5 +1,4 @@
 import { atom } from "recoil";
-import { UserInfo } from "@/models/User";
 
 export const userInfoState = atom<UserInfo>({
   key: 'userInfoState',

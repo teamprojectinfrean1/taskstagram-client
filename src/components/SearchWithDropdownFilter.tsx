@@ -5,16 +5,18 @@ import DropdownSelect from "@/components/DropdownSelect";
 import theme from "@/theme/theme";
 
 type SearchWithDropdownFilterProps = {
-  searchParams: IssueSearchParams;
   handleSearchParamsChange: (
     key: keyof IssueSearchParams,
     value: string
   ) => void;
+  triggerSearch: () => void;
+  searchParams: IssueSearchParams;
 };
 
 const SearchWithDropdownFilter = ({
-  searchParams,
   handleSearchParamsChange,
+  triggerSearch,
+  searchParams,
 }: SearchWithDropdownFilterProps) => {
   const handleKeywordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     handleSearchParamsChange("keyword", event.target.value);
@@ -24,11 +26,28 @@ const SearchWithDropdownFilter = ({
     handleSearchParamsChange("filter", value);
   };
 
+  const executeIssueSearch = (
+    event:
+      | React.KeyboardEvent<HTMLDivElement>
+      | React.MouseEvent<HTMLButtonElement, MouseEvent>
+  ) => {
+    if (
+      (event as React.KeyboardEvent<HTMLDivElement>).key === "Enter" ||
+      event.type === "click"
+    ) {
+      event.preventDefault();
+      if (searchParams.keyword.trim().length > 0) {
+        triggerSearch();
+      }
+    }
+  };
+
   return (
     <TextField
       variant="outlined"
       value={searchParams.keyword}
       onChange={handleKeywordChange}
+      onKeyDown={executeIssueSearch}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
@@ -37,9 +56,9 @@ const SearchWithDropdownFilter = ({
                 selectedOption={searchParams.filter}
                 handleFilterChange={handleFilterChange}
                 options={[
-                  { value: "Issue", label: "이슈" },
-                  { value: "Task", label: "태스크" },
-                  { value: "Assignee", label: "담당자" },
+                  { value: "ISSUE", label: "이슈" },
+                  { value: "TASK", label: "태스크" },
+                  { value: "ASSIGNEE", label: "담당자" },
                 ]}
               />
             </Box>
@@ -47,7 +66,12 @@ const SearchWithDropdownFilter = ({
         ),
         endAdornment: (
           <InputAdornment position="end">
-            <IconButton onClick={() => {}}>
+            <IconButton
+              type="button"
+              aria-label="serach"
+              disabled={!searchParams.keyword}
+              onClick={executeIssueSearch}
+            >
               <SearchIcon />
             </IconButton>
           </InputAdornment>
