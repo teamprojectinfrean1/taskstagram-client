@@ -41,6 +41,7 @@ export type ReplaceProjectRequest = {
   projectId: string;
   projectName: string | null;
   projectContent: string | null;
+  projectImageFile: File | null;
   updaterUuid: string;
   projectTagList: string[] | null;
   startDate: string | null;
@@ -136,22 +137,41 @@ export const replaceOneProject = async ({
   projectName,
   updaterUuid,
   projectContent,
+  projectImageFile,
   projectTagList,
   memberUuidList,
   startDate,
   endDate,
 }: ReplaceProjectRequest): Promise<boolean> => {
   try {
+    const formData = new FormData();
+    formData.append(
+      "project",
+      new Blob(
+        [
+          JSON.stringify({
+            projectName,
+            updaterUuid,
+            projectContent,
+            projectTagList,
+            memberUuidList,
+            startDate,
+            endDate,
+          }),
+        ],
+        {
+          type: "application/json",
+        }
+      )
+    );
+    if (projectImageFile) {
+      formData.append("multipartFile", projectImageFile);
+    }
     const response = await unauthorizedAxios.put(
       `${projectPath}/${projectId}`,
+      formData,
       {
-        projectName,
-        updaterUuid,
-        projectContent,
-        projectTagList,
-        memberUuidList,
-        startDate,
-        endDate,
+        headers: { "Content-Type": "multipart/form-data" },
       }
     );
     return response.data.isSuccess;
