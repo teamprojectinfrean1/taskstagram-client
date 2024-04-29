@@ -1,4 +1,4 @@
-import { unauthorizedAxios } from "./domainSettings";
+import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 
 const userPath = "users";
 
@@ -7,13 +7,13 @@ export const getUserInfo = async () => {
   try {
     const response = await unauthorizedAxios.get(`${userPath}/token`, {
       headers: {
-        Authorization: sessionStorage.getItem('accessToken')
-      }
+        Authorization: sessionStorage.getItem("accessToken"),
+      },
     });
     if (response.data) {
-      userInfo = response.data.data
+      userInfo = response.data.data;
     }
-    return userInfo
+    return userInfo;
   } catch (err) {
     console.error(err);
   }
@@ -47,10 +47,6 @@ export const getUserStoryList = async ({
     const data = response.data;
     return { dataList: data.data, hasMore: data.hasMore };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message);
-    } else {
-      throw new Error("An unknown error occurred");
-    }
+    throw new Error("이슈 스토리 목록을 가져오는 중 오류가 발생했습니다");
   }
 };

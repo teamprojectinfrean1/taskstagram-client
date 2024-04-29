@@ -3,8 +3,6 @@ import { Box, IconButton, InputAdornment, TextField } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
 import DropdownSelect from "@/components/DropdownSelect";
 import theme from "@/theme/theme";
-import { UseInfiniteQueryResult } from 'react-query';
-
 
 type SearchWithDropdownFilterProps = {
   handleSearchParamsChange: (
@@ -58,9 +56,9 @@ const SearchWithDropdownFilter = ({
                 selectedOption={searchParams.filter}
                 handleFilterChange={handleFilterChange}
                 options={[
-                  { value: "Issue", label: "이슈" },
-                  { value: "Task", label: "태스크" },
-                  { value: "Assignee", label: "담당자" },
+                  { value: "ISSUE", label: "이슈" },
+                  { value: "TASK", label: "태스크" },
+                  { value: "ASSIGNEE", label: "담당자" },
                 ]}
               />
             </Box>
