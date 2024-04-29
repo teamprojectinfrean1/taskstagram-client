@@ -4,9 +4,11 @@ export const userInfoState = atom<UserInfo>({
   key: 'userInfoState',
   default: {
     userId: "",
+    memberId: "",
     email: "",
     id: "",
     nickname: "",
-    profileImage: ""
+    profileImage: "",
+    weaver: null
   }
 })

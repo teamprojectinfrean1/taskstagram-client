@@ -4,23 +4,24 @@ import {
   Autocomplete,
   Checkbox,
   Paper,
-  autocompleteClasses,
-  Popper,
   ClickAwayListener,
   Box,
   Button,
-  InputBase,
   InputLabel,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import DoneIcon from "@mui/icons-material/Done";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import theme from "@/theme/theme";
-import { styled } from "@mui/material/styles";
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
+import {
+  StyledAutocompletePopper,
+  StyledInput,
+  StyledPopper,
+} from "@/components/Project/ProjectStyled";
 
 type SelectableProjectProps = {
   projects: ProjectSummary[];
@@ -34,61 +35,10 @@ type PopperComponentProps = {
   open: boolean;
 };
 
-const StyledAutocompletePopper = styled("div")(({ theme }) => ({
-  [`& .${autocompleteClasses.paper}`]: {
-    boxShadow: "none",
-    margin: 0,
-    color: "inherit",
-    fontSize: 14,
-  },
-  [`& .${autocompleteClasses.listbox}`]: {
-    backgroundColor: theme.palette.primary.main,
-    padding: 0,
-    [`& .${autocompleteClasses.option}`]: {
-      minHeight: "auto",
-      alignItems: "flex-start",
-      padding: 8,
-      borderBottom: "1px solid white",
-      '&[aria-selected="true"]': {
-        backgroundColor: "transparent",
-      },
-      [`&.${autocompleteClasses.focused}, &.${autocompleteClasses.focused}[aria-selected="true"]`]:
-        {
-          backgroundColor: theme.palette.action.hover,
-        },
-    },
-  },
-  [`&.${autocompleteClasses.popperDisablePortal}`]: {
-    position: "relative",
-  },
-}));
-
-const StyledInput = styled(InputBase)(({ theme }) => ({
-  padding: 10,
-  width: "100%",
-  borderBottom: "1px solid white",
-  "& input": {
-    borderRadius: 4,
-    backgroundColor: theme.palette.background.default,
-    padding: 8,
-    transition: theme.transitions.create(["border-color", "box-shadow"]),
-    border: "1px solid white",
-    fontSize: 14,
-  },
-}));
-
 const PopperComponent = (props: PopperComponentProps) => {
   const { disablePortal, anchorEl, open, ...other } = props;
   return <StyledAutocompletePopper {...other} />;
 };
-
-const StyledPopper = styled(Popper)(({ theme }) => ({
-  border: "1px solid white",
-  borderRadius: 6,
-  fontSize: 13,
-  color: theme.palette.background.default,
-  backgroundColor: theme.palette.primary.main,
-}));
 
 const SelectableProject = ({
   projects,
@@ -98,6 +48,13 @@ const SelectableProject = ({
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const selectedProject = useRecoilValue(selectedProjectState);
+  const [projectList, setProjectList] = useState<ProjectSummary[]>([]);
+
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      setProjectList(projects);
+    }
+  }, [projects]);
 
   const handleCheckBoxClick = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -126,8 +83,9 @@ const SelectableProject = ({
   };
 
   const handleCreateProjectBtnClick = () => {
+    onSelectedProjectChanged(null);
     handleClose();
-    navigate("/project");
+    navigate("/project", { state: { type: "new" } });
   };
 
   const handleOptionChange = (
@@ -164,7 +122,7 @@ const SelectableProject = ({
             ml: 1,
           }}
         >
-          {selectedProject?.projectName}
+          {selectedProject?.projectName ?? "새 프로젝트 추가"}
         </InputLabel>
         <Button
           disableRipple
@@ -191,10 +149,10 @@ const SelectableProject = ({
               open
               disableClearable
               disableCloseOnSelect
-              options={projects}
+              options={projectList}
               isOptionEqualToValue={(option, value) => option === value}
               noOptionsText={
-                projects && projects.length > 0
+                projectList && projectList.length > 0
                   ? "일치하는 옵션이 없습니다"
                   : "프로젝트가 없습니다"
               }

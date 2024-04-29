@@ -1,6 +1,6 @@
 import { unauthorizedAxios } from "./domainSettings";
 
-const userPath = "/users";
+const userPath = "users";
 
 export const getUserInfo = async () => {
   let userInfo = null;
@@ -16,5 +16,41 @@ export const getUserInfo = async () => {
     return userInfo
   } catch (err) {
     console.error(err);
+  }
+};
+
+type UserStoryListRequest = {
+  projectId: string;
+  page: number;
+};
+
+type UserStoryListResponse = {
+  dataList: IssueStory[];
+  hasMore: boolean;
+};
+
+export const getUserStoryList = async ({
+  projectId,
+  page,
+}: UserStoryListRequest): Promise<UserStoryListResponse> => {
+  const USER_PER_PAGE = 15;
+
+  try {
+    const response = await authorizedAxios.post(
+      `${userPath}/project/user-list`,
+      {
+        projectId,
+        USER_PER_PAGE,
+        page,
+      }
+    );
+    const data = response.data;
+    return { dataList: data.data, hasMore: data.hasMore };
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      throw new Error(error.response?.data?.message);
+    } else {
+      throw new Error("An unknown error occurred");
+    }
   }
 };

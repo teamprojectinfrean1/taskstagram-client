@@ -1,9 +1,9 @@
-import { checkEmailVerification } from "@/apis/auth";
 import theme from "@/theme/theme";
+import { checkEmailVerification } from "@/apis/user/checkEmailVerification";
 import { Typography, Grid, Button, Box, TextField } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useNavigate } from "react-router-dom";
+import { useFetcher, useNavigate } from "react-router-dom";
 
 type EmailVerificationCodeInputpProps = {
   isSuccess: boolean;
@@ -26,23 +26,26 @@ const EmailVerificationCodeInput = ({
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data) => {
-        if (findUserInfo === "findId" && data) {
-          navigate("/auth/find/id/success", {
-            state: {
-              id: data.id,
-            },
-          });
-        } else if (findUserInfo === "findPassword" && data) {
-          navigate("/auth/find/password/reset", {
-            state: {
-              userId: data.uuid,
-            },
-          });
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    if (data) {
+      if (findUserInfo === "findId" && data) {
+        navigate("/auth/find/id/success", {
+          state: {
+            id: data.id,
+          },
+        });
+      } else if (findUserInfo === "findPassword" && data) {
+        navigate("/auth/find/password/reset", {
+          state: {
+            userId: data.uuid,
+          },
+        });
+      }
+    }
+  }, [data]);
 
   return (
     <>
@@ -94,7 +97,7 @@ const EmailVerificationCodeInput = ({
         </Grid>
       </Grid>
 
-      {isSuccess !== undefined && (
+      {isSuccess && (
         <Box sx={{ mt: 7, textAlign: "center" }}>
           <Typography
             sx={{ color: `${theme.palette.error.main}`, fontSize: "12px" }}

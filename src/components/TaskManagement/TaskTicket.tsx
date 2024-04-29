@@ -4,10 +4,13 @@ import {
   CardHeader,
   IconButton,
   Typography,
+  Tooltip,
+  Box,
 } from "@mui/material";
 import theme from "@/theme/theme";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { RawDraftContentState, convertFromRaw } from "draft-js";
+import { green } from "@mui/material/colors";
 
 type TaskProps = {
   selectedTask: Task;
@@ -47,7 +50,39 @@ const TaskTicket = ({
           "& .MuiCardHeader-content": {
             overflow: "hidden",
           },
+          "& .MuiCardHeader-avatar": {
+            marginRight: "7px",
+          },
         }}
+        avatar={
+          <Tooltip
+            title={selectedTask.taskStatus}
+            slotProps={{
+              popper: {
+                modifiers: [
+                  {
+                    name: "offset",
+                    options: {
+                      offset: [0, -5],
+                    },
+                  },
+                ],
+              },
+            }}
+          >
+            <Box
+              sx={{
+                bgcolor:
+                  selectedTask.taskStatus === "진행 중"
+                    ? green[400]
+                    : "#a4cef8",
+                width: "12px",
+                height: "12px",
+                borderRadius: "50%",
+              }}
+            ></Box>
+          </Tooltip>
+        }
         onClick={onClick}
         action={
           <IconButton

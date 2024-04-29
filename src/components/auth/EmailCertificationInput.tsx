@@ -1,9 +1,9 @@
 import theme from "@/theme/theme";
 import { Grid, Typography, Button, TextField } from "@mui/material";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useQuery } from "react-query";
-import { requestEmailVerification } from "@/apis/auth";
+import { requestEmailVerification } from "@/apis/user/requestEmailVerification";
 import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
 
 type EmailCertificationInputProps = {
@@ -13,13 +13,16 @@ type EmailCertificationInputProps = {
 const EmailCertificationInput = ({
   findUserInfo,
 }: EmailCertificationInputProps) => {
+  const [errorState, setErrorState] = useState(false);
+  const [showErrorMessage, setShowErrorMessage] = useState("");
+
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   // 이메일 유효성 검사 상태
   const validState = !!(email && !isEmailValid);
 
   // 이메일 인증 useQuery
-  const { data, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "emailVerification",
     () => requestEmailVerification({ findUserInfo, email }),
     {
@@ -27,6 +30,40 @@ const EmailCertificationInput = ({
       cacheTime: 0,
     }
   );
+
+  useEffect(() => {
+    if (validState) {
+      setShowErrorMessage("이메일 형식이 올바르지 않습니다.");
+      setErrorState(true);
+    } else {
+      setShowErrorMessage("");
+      setErrorState(false);
+    }
+  }, [email]);
+
+  useEffect(() => {
+    if (isLoading !== undefined) {
+      if (isLoading) {
+        setShowErrorMessage("요청 중입니다. 잠시만 기다려주세요...");
+        setErrorState(true);
+      }
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (error === "Network Error") {
+      setShowErrorMessage(
+        "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
+      setErrorState(true);
+    }
+  }, [error]);
+
+  useEffect(() => {
+    if (!!data) {
+      setShowErrorMessage("인증 번호가 전송되었습니다.");
+    }
+  }, [data]);
 
   return (
     <>
@@ -49,12 +86,8 @@ const EmailCertificationInput = ({
             size="small"
             placeholder={"example@email.com"}
             value={email}
-            error={validState || data}
-            helperText={
-              validState
-                ? "이메일 형식이 올바르지 않습니다."
-                : data !== undefined && "인증 번호가 전송되었습니다."
-            }
+            error={errorState}
+            helperText={showErrorMessage}
             onChange={(e) => {
               setEmail(e.target.value);
               setIsEmailValid(
@@ -85,7 +118,7 @@ const EmailCertificationInput = ({
         </Grid>
       </Grid>
       <EmailVerificationCodeInput
-        isSuccess={data}
+        isSuccess={!!data}
         email={email}
         findUserInfo={findUserInfo}
       />

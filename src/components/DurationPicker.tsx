@@ -36,14 +36,13 @@ const DurationPicker = ({
           name="startDate"
           sx={{
             flex: 1,
-            "& .MuiInputBase-root": { p: 1 
-              
-            },
+            "& .MuiInputBase-root": { p: 1 },
             "& .MuiIconButton-root:hover": {
               color: theme.palette.primary.main,
               backgroundColor: "transparent",
             },
           }}
+          format="YYYY/MM/DD"
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
           onChange={(date) => handleStartDateChange(date)}
           slotProps={{
@@ -61,6 +60,7 @@ const DurationPicker = ({
               backgroundColor: "transparent",
             },
           }}
+          format="YYYY/MM/DD"
           value={selectedEndDate ? dayjs(selectedEndDate) : null}
           onChange={(date) => handleEndDateChange(date)}
           slotProps={{ textField: { size: "small" } }}

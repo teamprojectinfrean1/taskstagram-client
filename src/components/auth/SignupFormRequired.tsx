@@ -1,14 +1,14 @@
 import theme from "@/theme/theme";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import SocialIcons from "./SocialIcons";
+import SocialIcons from "../OAuth/SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
-import { Box, Button, Divider, Typography, Grid } from "@mui/material";
+import { Box, Button, Divider, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilValue } from "recoil";
-import { signupInfoState } from "@/stores/authStore";
+import { signupInfoState } from "@/stores/AuthStore";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 import { AuthisValid } from "@/models/Auth";
@@ -69,12 +69,14 @@ const SignupFormRequired = () => {
         />
       </Link>
       <Box className="base-layout">
-        <Typography
-          variant="h5"
-          sx={{ fontWeight: "bold", textAlign: "center" }}
-        >
-          회원가입
-        </Typography>
+        <Box sx={{mb:4}}>
+          <Typography
+            variant="h5"
+            sx={{ fontWeight: "bold", textAlign: "center" }}
+          >
+            회원가입
+          </Typography>
+        </Box>
         <EmailInput
           email={signupInfo.email}
           setEmail={(value) => changeSignupInfo({ key: "email", value })}
@@ -105,25 +107,31 @@ const SignupFormRequired = () => {
             });
           }}
         />
-        <PasswordInput
-          password={signupInfo.password}
-          setPassword={(value) => changeSignupInfo({ key: "password", value })}
-          isPasswordValid={isValid.isPasswordValid}
-          setIsPasswordValid={(value) =>
-            changeIsValid({ key: "isPasswordValid", value })
-          }
-        />
+        <Box sx={{ mt: 3 }}>
+          <PasswordInput
+            password={signupInfo.password}
+            setPassword={(value) =>
+              changeSignupInfo({ key: "password", value })
+            }
+            isPasswordValid={isValid.isPasswordValid}
+            setIsPasswordValid={(value) =>
+              changeIsValid({ key: "isPasswordValid", value })
+            }
+          />
+        </Box>
 
-        <PasswordConfirmationInput
-          password={signupInfo.password}
-          isPasswordConfirmValid={isValid.isPasswordConfirmValid}
-          setIsPasswordConfirmValid={(value) =>
-            changeIsValid({
-              key: "isPasswordConfirmValid",
-              value,
-            })
-          }
-        />
+        <Box sx={{ mt: 3 }}>
+          <PasswordConfirmationInput
+            password={signupInfo.password}
+            isPasswordConfirmValid={isValid.isPasswordConfirmValid}
+            setIsPasswordConfirmValid={(value) =>
+              changeIsValid({
+                key: "isPasswordConfirmValid",
+                value,
+              })
+            }
+          />
+        </Box>
         <Box sx={{ textAlign: "center", mt: 3 }}>
           <Button
             variant="contained"

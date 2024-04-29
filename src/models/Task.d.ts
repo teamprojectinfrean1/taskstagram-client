@@ -5,6 +5,10 @@ type Task = {
   taskTags: string[] | null;
   taskStartDate: string | null;
   taskEndDate: string | null;
-  taskAuthorityType: string;
+  taskAuthorityType: TaskPermission;
   taskStatus: string | null;
+  lastUpdateUserNickname: string;
+  lastUpdateDate: string;
 };
+
+type TaskPermission = "allProjectMember" | "projectLeader";

@@ -1,12 +1,28 @@
-import { AppBar, IconButton, Toolbar, useTheme } from "@mui/material";
+import {
+  AppBar,
+  IconButton,
+  Toolbar,
+  useTheme,
+  Box,
+  Typography,
+  Button,
+  Avatar,
+  MenuItem,
+  Tooltip,
+  Menu,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
 import { ProjectSummary } from "@/models/Project";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
-import { useEffect, useMemo } from "react";
+import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
+import { useNavigate } from "react-router-dom";
+import basicProfileImage from "@/assets/basicProfileImage.png";
+import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import { userInfoState } from "@/stores/userStore";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -15,30 +31,42 @@ type TopNavProps = {
 const TopNav = ({ onMenuClick }: TopNavProps) => {
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
-  const queryClient = useQueryClient();
+  const [projectDataList, setProjectDataList] = useState<ProjectSummary[]>([]);
 
-  const { data } = useQuery(
+  const { data, isSuccess, refetch } = useQuery(
     "getProjectList",
-    () => getProjectList("07c7ac1c-e1a9-4b54-9ef5-5f13884c8077")
+    () => getProjectList("3f0351b0-6141-4ed6-ac0c-47c3685045bf")
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
-  //첫 렌더링에만 호출되어 메인 프로젝트가 선택되도록
   useEffect(() => {
-    if (data && data.length > 0) {
-      const mainProject =
-        data.find((item) => item.isMainProject === true) ?? null;
-      setSelectedProject(mainProject);
+    if (isSuccess === true) {
+      let projectList: ProjectSummary[] = [];
+      const mainProjectData = data?.mainProject;
+      const noMainProjectDataList = data?.noMainProject ?? [];
+      if (mainProjectData && mainProjectData !== null) {
+        projectList.push(mainProjectData);
+      }
+      if (noMainProjectDataList && noMainProjectDataList.length > 0) {
+        projectList = projectList.concat(noMainProjectDataList);
+      }
+      setProjectDataList(projectList);
+      setSelectedProject(projectList[0]);
     }
-  }, []);
+  }, [data, isSuccess]);
 
   const changeMainprojectMuation = useMutation({
     mutationFn: changeMainProject,
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
-    },
-    //추후 실패시 동작되는 로직도 추가 예정
   });
+
+  useEffect(() => {
+    if (
+      changeMainprojectMuation.isSuccess &&
+      changeMainprojectMuation.isSuccess === true
+    ) {
+      refetch();
+    }
+  }, [changeMainprojectMuation.isSuccess]);
 
   const handleChangeMainProject = (selectedProjectId: string | null) => {
     changeMainprojectMuation.mutate(selectedProjectId);
@@ -49,6 +77,28 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   ) => {
     setSelectedProject(selectedProject);
   };
+
+  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const handleOpenUserMenu = (e: React.MouseEvent<HTMLElement>) => {
+    setAnchorElUser(e.currentTarget);
+  };
+
+  const handleCloseUserMenu = (e: any) => {
+    setAnchorElUser(null);
+  };
+
+  const settings = ["마이페이지", "로그아웃"];
+
+  const navigate = useNavigate();
+  const redirectGo = (setting: string) => {
+    if (setting === "마이페이지") {
+      navigate("/mypage");
+    }
+  };
+
+  const userInfo = useRecoilValue(userInfoState);
+  const profileImage = userInfo.profileImage;
 
   return (
     <AppBar position="static">
@@ -64,7 +114,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
           <MenuIcon />
         </IconButton>
         <SelectableProject
-          projects={data ?? []}
+          projects={projectDataList}
           onSelectedProjectChanged={handleChangeSelectedProject}
           onClickCheckBox={handleChangeMainProject}
         />

@@ -19,11 +19,14 @@
     "@types/react": "^18.2.48",
     "@types/react-dom": "^18.2.18",
     "axios": "^1.6.7",
+    "base-64": "^1.0.0",
     "dayjs": "^1.11.10",
     "draft-js": "^0.11.7",
     "immutable": "^4.3.5",
+    "jwt-decode": "^4.0.0",
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
+    "react-cookie": "^7.1.4",
     "react-dom": "^18.2.0",
     "react-draft-wysiwyg": "^1.15.0",
     "react-query": "^3.39.3",
@@ -39,7 +42,8 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "eject": "craco eject"
+    "eject": "craco eject",
+    "deploy" : "aws s3 sync ./build s3://task-tagram --profile=sukhojung"
   },
   "eslintConfig": {
     "extends": [

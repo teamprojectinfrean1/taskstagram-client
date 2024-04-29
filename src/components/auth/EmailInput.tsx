@@ -3,7 +3,7 @@ import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import { checkEmailExistence } from "@/apis/auth";
+import { checkEmailExistence } from "@/apis/user/checkExistence";
 
 type EmailInputProps = {
   email: string;
@@ -30,26 +30,27 @@ const EmailInput = ({
   // 이메일 중복 검사 상태
   const disabledState = !!(!isEmailValid || isEmailDuplicate);
 
-  const { data, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "checkMail",
     () => checkEmailExistence(email),
     {
       enabled: false,
       cacheTime: 0,
-      onSuccess: (data) => {
-        setIsEmailDuplicate(data);
-        if (!data) {
-          setShowErrorMessage(
-            "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
-          );
-          setErrorState(true);
-        } else {
-          setShowErrorMessage("");
-          setErrorState(false);
-        }
-      },
     }
   );
+
+  useEffect(() => {
+    setIsEmailDuplicate(!!data);
+    if (!!!data) {
+      setShowErrorMessage(
+        "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
+      );
+      setErrorState(true);
+    } else {
+      setShowErrorMessage("");
+      setErrorState(false);
+    }
+  }, [data]);
 
   useEffect(() => {
     if (validState) {
@@ -61,9 +62,25 @@ const EmailInput = ({
     }
   }, [email]);
 
+  useEffect(() => {
+    if (isLoading) {
+      setShowErrorMessage("요청 중입니다. 잠시만 기다려주세요...");
+      setErrorState(true);
+    }
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (error) {
+      setShowErrorMessage(
+        "이메일 중복 확인 중 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
+      );
+      setErrorState(true);
+    }
+  }, [error]);
+
   return (
     <>
-      <Grid container spacing={2} sx={{ mt: 2 }}>
+      <Grid container spacing={2}>
         <Grid item xs={9}>
           <TextField
             sx={{

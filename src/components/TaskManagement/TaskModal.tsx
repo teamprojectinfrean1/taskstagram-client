@@ -9,6 +9,7 @@ import {
   Radio,
   FormControl,
   FormControlLabel,
+  Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Dayjs } from "dayjs";
@@ -28,6 +29,7 @@ import {
 } from "@/apis/TaskApi";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
+import { grey } from "@mui/material/colors";
 
 type TaskModalProps = {
   selectedTask: Task;
@@ -68,8 +70,10 @@ const TaskModal = ({
     taskTags: null,
     taskStartDate: null,
     taskEndDate: null,
-    taskAuthorityType: "",
+    taskAuthorityType: "allProjectMember",
     taskStatus: null,
+    lastUpdateUserNickname: "",
+    lastUpdateDate: "",
   });
 
   const selectedProject = useRecoilValue(selectedProjectState);
@@ -91,6 +95,10 @@ const TaskModal = ({
         taskEndDate: data.endDate,
         taskAuthorityType: data.editDeletePermission,
         taskStatus: data.taskStatus,
+        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
+        lastUpdateDate: data.lastUpdateDetail.updatedDate
+          .replace("T", " ")
+          .slice(0, -3),
       });
     }
   }, [data, isOpen]);
@@ -112,8 +120,10 @@ const TaskModal = ({
       taskTags: null,
       taskStartDate: null,
       taskEndDate: null,
-      taskAuthorityType: "",
+      taskAuthorityType: "allProjectMember",
       taskStatus: null,
+      lastUpdateUserNickname: "",
+      lastUpdateDate: "",
     });
     //모달창 닫기
     onCloseModal();
@@ -159,7 +169,7 @@ const TaskModal = ({
         editDeletePermission: formData.taskAuthorityType,
       });
     }
-    handleModalClose();
+    //handleModalClose();
   };
 
   //삭제버튼 이벤트
@@ -200,6 +210,12 @@ const TaskModal = ({
             취소
           </Button>
         </Box>
+        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
+          {formData.lastUpdateDate}
+        </Typography>
+        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
+          {formData.lastUpdateUserNickname}
+        </Typography>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box sx={{ display: "grid", gap: 1 }}>

@@ -41,7 +41,7 @@ const TextEditor = ({
       localization={{ locale: "ko" }}
       toolbar={toolbarOptions}
       editorStyle={{
-        height: "400px",
+        height: "360px",
         width: "100%",
         border: "1px solid lightgray",
         padding: "20px",
