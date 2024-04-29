@@ -29,6 +29,8 @@ import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import { UserSummary } from "@/models/User";
+import useFeedbackHandler from "@/hooks/useFeedbackHandler";
+import Spinner from "@/components/Spinner";
 
 const ProjectPage = () => {
   const location = useLocation();
@@ -94,7 +96,7 @@ const ProjectPage = () => {
   ];
   const selectedProject = useRecoilValue(selectedProjectState);
 
-  const { data, isLoading } = useQuery(
+  const { data, refetch, isLoading } = useQuery(
     ["getProjectDetail", selectedProject],
     () =>
       getProjectDetail(
@@ -105,21 +107,41 @@ const ProjectPage = () => {
 
   const createMutation = useMutation({
     mutationFn: createOneProject,
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["getProjectDetail"] });
-    },
   });
 
   const replaceMutation = useMutation({
     mutationFn: replaceOneProject,
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["getProjectDetail"] });
-    },
   });
 
   const deleteMutation = useMutation({
     mutationFn: deleteOneProject,
   });
+
+  useFeedbackHandler({
+    isError: createMutation.isError,
+    errorMessage:
+      "프로젝트를 저장하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+    isSuccess: createMutation.isSuccess,
+    successMessage: "프로젝트를 저장했습니다.",
+  });
+
+  useFeedbackHandler({
+    isError: replaceMutation.isError,
+    errorMessage:
+      "프로젝트를 수정하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+    isSuccess: replaceMutation.isSuccess,
+    successMessage: "프로젝트를 수정했습니다.",
+  });
+
+  useEffect(() => {
+    if (
+      (createMutation.isSuccess && createMutation.isSuccess === true) ||
+      (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
+    ) {
+      refetch();
+      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
+    }
+  }, [createMutation.isSuccess, replaceMutation.isSuccess]);
 
   useEffect(() => {
     if (data) {
@@ -182,7 +204,7 @@ const ProjectPage = () => {
           formData.projectStartDate !== null
             ? new Date(formData.projectStartDate).toISOString()
             : null,
-        memberUuidList: formData.projectMemberUuidList ?? [
+        memberUuidList: [
           "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         ],
       });
@@ -425,12 +447,9 @@ const ProjectPage = () => {
           </Grid>
         </Grid>
       </Box>
-      <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
+      {(createMutation.isLoading || replaceMutation.isLoading) && (
+        <Spinner centerInViewport size={70} />
+      )}
     </div>
   );
 };

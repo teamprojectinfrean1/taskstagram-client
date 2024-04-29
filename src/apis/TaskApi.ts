@@ -1,4 +1,4 @@
-import Task from "@/models/Task";
+import { Task, TaskPermission } from "@/models/Task";
 import { unauthorizedAxios } from "./domainSettings";
 
 const taskPath = "task";
@@ -28,7 +28,7 @@ type TaskDetailReponse = {
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;
   taskTagList: [] | null;
-  editDeletePermission: "allProjectMember" | "allProjectMember";
+  editDeletePermission: TaskPermission;
   taskStatus: string;
 };
 
@@ -40,7 +40,7 @@ export type CreateTaskRequest = {
   taskTagList: string[] | null;
   startDate: string | null;
   endDate: string | null;
-  editDeletePermission: string;
+  editDeletePermission: TaskPermission;
 };
 
 export type ReplaceTaskRequest = {
@@ -51,7 +51,7 @@ export type ReplaceTaskRequest = {
   taskTagList: string[] | null;
   startDate: string | null;
   endDate: string | null;
-  editDeletePermission: string;
+  editDeletePermission: TaskPermission;
 };
 
 //프로젝트에 생성된 테스크들 조회

@@ -1,7 +1,7 @@
 import { Card, IconButton, Typography } from "@mui/material";
 import theme from "@/theme/theme";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import Task from "@/models/Task";
+import { Task } from "@/models/Task";
 
 type NewTaskProps = {
   onShowTaskModal(isModalOpen: boolean): void;

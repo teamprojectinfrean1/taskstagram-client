@@ -12,7 +12,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import Task from "@/models/Task";
+import { Task, TaskPermission } from "@/models/Task";
 import { Dayjs } from "dayjs";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
@@ -71,7 +71,7 @@ const TaskModal = ({
     taskTags: null,
     taskStartDate: null,
     taskEndDate: null,
-    taskAuthorityType: "",
+    taskAuthorityType: "allProjectMember",
     taskStatus: null,
     lastUpdateUserNickname: "",
     lastUpdateDate: "",
@@ -121,7 +121,7 @@ const TaskModal = ({
       taskTags: null,
       taskStartDate: null,
       taskEndDate: null,
-      taskAuthorityType: "",
+      taskAuthorityType: "allProjectMember",
       taskStatus: null,
       lastUpdateUserNickname: "",
       lastUpdateDate: "",
@@ -170,7 +170,7 @@ const TaskModal = ({
         editDeletePermission: formData.taskAuthorityType,
       });
     }
-    handleModalClose();
+    //handleModalClose();
   };
 
   //삭제버튼 이벤트

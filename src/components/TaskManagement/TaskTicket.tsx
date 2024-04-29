@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import theme from "@/theme/theme";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import Task from "@/models/Task";
+import { Task } from "@/models/Task";
 import { green } from "@mui/material/colors";
 import { RawDraftContentState, convertFromRaw } from "draft-js";
 

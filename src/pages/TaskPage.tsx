@@ -3,7 +3,7 @@ import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
 import { useEffect, useState } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
-import Task from "@/models/Task";
+import { Task } from "@/models/Task";
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useMutation, useQuery, useQueryClient } from "react-query";
@@ -16,6 +16,8 @@ import {
   ReplaceTaskRequest,
 } from "@/apis/TaskApi";
 import SkeletonTaskTicket from "@/components/TaskManagement/SkeletonTaskTicket";
+import useFeedbackHandler from "@/hooks/useFeedbackHandler";
+import Spinner from "@/components/Spinner";
 
 const TaskPage = () => {
   const [showModal, setShowModal] = useState(false);
@@ -24,7 +26,7 @@ const TaskPage = () => {
   const selectedProject = useRecoilValue(selectedProjectState);
   const queryClient = useQueryClient();
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, refetch } = useQuery(
     ["getTaskList", selectedProject, currentPage],
     () =>
       getPaginatedTaskList({
@@ -40,27 +42,54 @@ const TaskPage = () => {
 
   const deleteMutation = useMutation({
     mutationFn: deleteOneTask,
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
-    },
-    //추후 실패시 동작되는 로직도 추가 예정
   });
 
   const createMutation = useMutation({
     mutationFn: createOneTask,
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
-    },
-    //추후 실패시 동작되는 로직도 추가 예정
   });
 
   const replaceMutation = useMutation({
     mutationFn: replaceOneTask,
-    onSuccess() {
-      queryClient.invalidateQueries({ queryKey: ["getTaskList"] });
-    },
-    //추후 실패시 동작되는 로직도 추가 예정
   });
+
+  useFeedbackHandler({
+    isError: createMutation.isError,
+    errorMessage:
+      "테스크를 저장하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+    isSuccess: createMutation.isSuccess,
+    successMessage: "테스크를 저장했습니다.",
+  });
+
+  useFeedbackHandler({
+    isError: replaceMutation.isError,
+    errorMessage:
+      "테스크를 수정하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+    isSuccess: replaceMutation.isSuccess,
+    successMessage: "테스크를 수정했습니다.",
+  });
+
+  useFeedbackHandler({
+    isError: deleteMutation.isError,
+    errorMessage:
+      "테스크를 삭제하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+    isSuccess: deleteMutation.isSuccess,
+    successMessage: "테스크를 삭제했습니다.",
+  });
+
+  useEffect(() => {
+    if (
+      (createMutation.isSuccess && createMutation.isSuccess === true) ||
+      (replaceMutation.isSuccess && replaceMutation.isSuccess === true) ||
+      (deleteMutation.isSuccess && deleteMutation.isSuccess === true)
+    ) {
+      refetch();
+      handleCloseTaskModal();
+    }
+  }, [
+    createMutation.isSuccess,
+    replaceMutation.isSuccess,
+    deleteMutation.isSuccess,
+  ]);
 
   const addTask = (request: CreateTaskRequest) => {
     if (request !== null) {
@@ -161,12 +190,9 @@ const TaskPage = () => {
         onDelete={deleteTask}
         onCloseModal={handleCloseTaskModal}
       ></TaskModal>
-      {/* <Backdrop
-        sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
-        open={isLoading}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop> */}
+      {(createMutation.isLoading ||
+        replaceMutation.isLoading ||
+        deleteMutation.isLoading) && <Spinner centerInViewport size={70} />}
     </div>
   );
 };

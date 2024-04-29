@@ -9,6 +9,11 @@ type LastUpdateDetailType = {
   updatedDate: string;
 };
 
+type PrjectListResponse = {
+  mainProject: ProjectSummary;
+  noMainProject: ProjectSummary[];
+};
+
 type ProjectDetailReponse = {
   projectId: string;
   projectName: string;
@@ -46,7 +51,7 @@ export type ReplaceProjectRequest = {
 // 프로젝트 리스트 조회
 export const getProjectList = async (
   userId: string
-): Promise<ProjectSummary[]> => {
+): Promise<PrjectListResponse | null> => {
   if (userId) {
     try {
       const response = await unauthorizedAxios.get(
@@ -54,10 +59,10 @@ export const getProjectList = async (
       );
       return response.data.data;
     } catch {
-      return [];
+      return null;
     }
   } else {
-    return [];
+    return null;
   }
 };
 

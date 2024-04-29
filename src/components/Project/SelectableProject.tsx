@@ -13,7 +13,7 @@ import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
 import DoneIcon from "@mui/icons-material/Done";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import theme from "@/theme/theme";
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
@@ -48,6 +48,13 @@ const SelectableProject = ({
   const navigate = useNavigate();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const selectedProject = useRecoilValue(selectedProjectState);
+  const [projectList, setProjectList] = useState<ProjectSummary[]>([]);
+
+  useEffect(() => {
+    if (projects && projects.length > 0) {
+      setProjectList(projects);
+    }
+  }, [projects]);
 
   const handleCheckBoxClick = (
     e: React.MouseEvent<HTMLButtonElement>,
@@ -142,10 +149,10 @@ const SelectableProject = ({
               open
               disableClearable
               disableCloseOnSelect
-              options={projects}
+              options={projectList}
               isOptionEqualToValue={(option, value) => option === value}
               noOptionsText={
-                projects && projects.length > 0
+                projectList && projectList.length > 0
                   ? "일치하는 옵션이 없습니다"
                   : "프로젝트가 없습니다"
               }
