@@ -261,7 +261,7 @@ const IssueFormModal = ({
                   >
                     담당자
                   </InputLabel>
-                  <SearchableSelect<ProjectMember>
+                  <SearchableSelect<Partial<ProjectMember>>
                     possibleOptions={allProjectMemberList || []}
                     selectedOptions={{
                       userId: formData.assigneeId,

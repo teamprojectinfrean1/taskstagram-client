@@ -3,4 +3,5 @@ type ProjectMember = {
   userId: string | null;
   userNickname: string | null;
   userProfileImage: string | null;
+  hasAssigneeIssueInProgress: boolean;
 };
