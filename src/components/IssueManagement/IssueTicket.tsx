@@ -15,29 +15,28 @@ import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
-import { IssueSummary } from "@/models/Issue";
 import { SxProps } from "@mui/material";
 
 
 type IssueTicketProps = {
-  issue: IssueSummary;
   index?: number;
+  issue: IssueSummary;
   parent?: string;
   sx?: SxProps;
 };
 
-const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
+const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
   const {
     issueId,
-    issueName,
+    issueTitle,
     taskId,
-    taskName,
+    taskTitle,
     assigneeId,
     assigneeNickname,
     assigneeProfileImage,
   } = issue;
-  const taskNameRef = useRef<HTMLDivElement>(null);
-  const textIsOverflowing = useOverflowDetection(taskNameRef, "vertical");
+  const taskTitleRef = useRef<HTMLDivElement>(null);
+  const textIsOverflowing = useOverflowDetection(taskTitleRef, "vertical");
 
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
@@ -96,15 +95,15 @@ const IssueTicket = ({ issue, index, parent, sx }: IssueTicketProps) => {
               </Tooltip>
             </Box>
             <Tooltip
-              title={textIsOverflowing ? issueName : ""}
+              title={textIsOverflowing ? issueTitle : ""}
               placement="top-end"
             >
               <Typography
-                ref={taskNameRef}
+                ref={taskTitleRef}
                 className="textClamping lineClampTwo"
                 sx={{ wordBreak: "break-all" }}
               >
-                {issueName}
+                {issueTitle}
               </Typography>
             </Tooltip>
           </Stack>

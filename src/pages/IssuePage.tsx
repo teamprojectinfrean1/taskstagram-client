@@ -20,16 +20,14 @@ import {
   useSensors,
   rectIntersection,
 } from "@dnd-kit/core";
-import { IssueSummary, IssueStatus } from "@/models/Issue";
 import { createPortal } from "react-dom";
 import { useParams } from "react-router-dom";
-import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
+// import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
 import theme from "@/theme/theme";
 
 const IssuePage = () => {
   const { projectId } = useParams();
   // 추후 api 요청 보낸 후 존재하지 않는 projectId면 Not Found 페이지로 리다이렉트
-
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
   );
@@ -38,7 +36,7 @@ const IssuePage = () => {
     null
   );
 
-  const mutation = useUpdateIssueStatusMutation(projectId!);
+  // const mutation = useUpdateIssueStatusMutation(projectId!);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -74,11 +72,11 @@ const IssuePage = () => {
       targetContainerId &&
       originContainerId !== targetContainerId
     ) {
-      mutation.mutate({
-        issue: issueTicket,
-        oldStatus: originContainerId as IssueStatus,
-        newStatus: targetContainerId as IssueStatus,
-      });
+      // mutation.mutate({
+      //   issue: issueTicket,
+      //   oldStatus: originContainerId as IssueStatus,
+      //   newStatus: targetContainerId as IssueStatus,
+      // });
     }
 
     setHoveredContainerId(null);
@@ -115,23 +113,20 @@ const IssuePage = () => {
           }}
         >
           <IssueTicketContainer
-            ariaLabel="create issue"
-            containerId="toDo"
-            isHovered={hoveredContainerId === "toDo"}
+            containerId="TODO"
+            isHovered={hoveredContainerId === "TODO"}
             projectId={projectId!}
             title="할 일"
-          ></IssueTicketContainer>
+          />
           <IssueTicketContainer
-            ariaLabel="create issue"
-            containerId="inProgress"
-            isHovered={hoveredContainerId === "inProgress"}
+            containerId="INPROGRESS"
+            isHovered={hoveredContainerId === "INPROGRESS"}
             projectId={projectId!}
             title="진행 중"
           />
           <IssueTicketContainer
-            ariaLabel="delete issue"
-            containerId="done"
-            isHovered={hoveredContainerId === "done"}
+            containerId="DONE"
+            isHovered={hoveredContainerId === "DONE"}
             projectId={projectId!}
             title="완료"
           />
@@ -156,13 +151,21 @@ const IssuePage = () => {
         edge="end"
         aria-label="Create New Issue"
         onClick={() => setIssueIdToShowInModal("new-issue")}
+        color="primary"
         sx={{
-          p: 0.5,
           backgroundColor: theme.palette.primary.main,
+          color: theme.palette.background.default,
           "&:hover": {
             backgroundColor: theme.palette.primary.light,
           },
-          color: theme.palette.background.default,
+          "&.Mui-disabled": {
+            backgroundColor: theme.palette.grey[400],
+            color: theme.palette.grey[600],
+            "&:hover": {
+              backgroundColor: theme.palette.grey[400],
+            },
+          },
+          p: 0.5,
           position: "fixed",
           bottom: 30,
           right: 60,
@@ -173,10 +176,12 @@ const IssuePage = () => {
       >
         <AddIcon />
       </IconButton>
-      <IssueFormModal
-        currentIssueId={issueIdToShowInModal}
-        handleClose={() => setIssueIdToShowInModal("")}
-      />
+      {issueIdToShowInModal && (
+        <IssueFormModal
+          currentIssueId={issueIdToShowInModal}
+          handleClose={() => setIssueIdToShowInModal(null)}
+        />
+      )}
     </DndContext>
   );
 };

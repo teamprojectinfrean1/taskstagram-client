@@ -9,9 +9,8 @@ import {
 } from "@mui/material";
 import theme from "@/theme/theme";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import { Task } from "@/models/Task";
-import { green } from "@mui/material/colors";
 import { RawDraftContentState, convertFromRaw } from "draft-js";
+import { green } from "@mui/material/colors";
 
 type TaskProps = {
   selectedTask: Task;
@@ -37,7 +36,7 @@ const TaskTicket = ({
         borderRadius: 4,
         p: 1,
         boxShadow: 3,
-        background: theme.palette.primary.light,
+        background: theme.palette.background.default,
         "&:hover": {
           backgroundColor: theme.palette.secondary.light,
         },

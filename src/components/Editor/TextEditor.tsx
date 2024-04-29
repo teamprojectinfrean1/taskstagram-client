@@ -34,6 +34,7 @@ const TextEditor = ({
 
   return (
     <Editor
+      id={id}
       editorState={editorState}
       editorClassName="custom-scrollbar"
       onEditorStateChange={onEditorStateChange}

@@ -1,5 +1,4 @@
-import { Task, TaskPermission } from "@/models/Task";
-import { unauthorizedAxios } from "./domainSettings";
+import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 
 const taskPath = "task";
 
@@ -80,6 +79,32 @@ export const getPaginatedTaskList = async ({
     return null;
   }
 };
+
+
+type GetAllTaskListRequest = {
+  projectId: string;
+};
+
+type GetAllTaskResponse = Task[]
+
+export const getAllTaskList = async ({
+  projectId,
+}: GetAllTaskListRequest): Promise<GetAllTaskResponse> => {
+  try {
+    const response = await authorizedAxios.post(
+      `${taskPath}/task/all`,
+      {
+        params: { 
+        projectId
+      }
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    throw new Error("태스크 목록 전체를 가져오는 중 오류가 발생했습니다.");
+  }
+};
+
 
 //task 상세조회
 export const getTaskDetail = async (

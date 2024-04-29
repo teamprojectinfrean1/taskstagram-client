@@ -3,6 +3,7 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
+import theme from "@/theme/theme";
 
 type DurationPickerProps = {
   selectedStartDate: string | null;
@@ -31,10 +32,17 @@ const DurationPicker = ({
     <Box display="flex" gap={2}>
       <LocalizationProvider dateAdapter={AdapterDayjs}>
         <DatePicker
-          label="Start"
+          label="시작"
           name="startDate"
+          sx={{
+            flex: 1,
+            "& .MuiInputBase-root": { p: 1 },
+            "& .MuiIconButton-root:hover": {
+              color: theme.palette.primary.main,
+              backgroundColor: "transparent",
+            },
+          }}
           format="YYYY/MM/DD"
-          sx={{ flex: 1 }}
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
           onChange={(date) => handleStartDateChange(date)}
           slotProps={{
@@ -42,10 +50,17 @@ const DurationPicker = ({
           }}
         />
         <DatePicker
-          label="End"
+          label="마감"
           name="endDate"
+          sx={{
+            flex: 1,
+            "& .MuiInputBase-root": { p: 1 },
+            "& .MuiIconButton-root:hover": {
+              color: theme.palette.primary.main,
+              backgroundColor: "transparent",
+            },
+          }}
           format="YYYY/MM/DD"
-          sx={{ flex: 1 }}
           value={selectedEndDate ? dayjs(selectedEndDate) : null}
           onChange={(date) => handleEndDateChange(date)}
           slotProps={{ textField: { size: "small" } }}

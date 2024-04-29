@@ -1,9 +1,23 @@
-import axios from "axios";
 import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
-import { IssueStory } from "@/models/Issue";
 
 const userPath = "users";
-// const userPath = "http://127.0.0.1:8080/api/v1/users"
+
+export const getUserInfo = async () => {
+  let userInfo = null;
+  try {
+    const response = await unauthorizedAxios.get(`${userPath}/token`, {
+      headers: {
+        Authorization: sessionStorage.getItem("accessToken"),
+      },
+    });
+    if (response.data) {
+      userInfo = response.data.data;
+    }
+    return userInfo;
+  } catch (err) {
+    console.error(err);
+  }
+};
 
 type UserStoryListRequest = {
   projectId: string;
@@ -33,10 +47,6 @@ export const getUserStoryList = async ({
     const data = response.data;
     return { dataList: data.data, hasMore: data.hasMore };
   } catch (error) {
-    if (axios.isAxiosError(error)) {
-      throw new Error(error.response?.data?.message);
-    } else {
-      throw new Error("An unknown error occurred");
-    }
+    throw new Error("이슈 스토리 목록을 가져오는 중 오류가 발생했습니다");
   }
 };

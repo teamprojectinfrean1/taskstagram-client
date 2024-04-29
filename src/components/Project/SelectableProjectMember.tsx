@@ -9,7 +9,6 @@ import {
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import SettingsIcon from "@mui/icons-material/Settings";
-import { UserSummary } from "@/models/User";
 import UserAvatar from "../UserAvatar";
 import {
   StyledAutocompletePopper,

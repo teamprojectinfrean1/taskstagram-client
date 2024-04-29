@@ -5,16 +5,14 @@ const theme = createTheme({
     mode: "light",
     primary: {
       main: "#121923",
-      light: "white",
-      dark: "#F0F0F0",
     },
     secondary: {
       main: "#173665",
       dark: "rgb(69, 94, 131)",
     },
     background: {
-      default: "#e5e8ed",
       paper: "rgba(228, 230, 237)",
+      default: "#FFFFFF",
     },
     text: {
       primary: "#626262",
@@ -37,6 +35,13 @@ const theme = createTheme({
           fontSize: "14px",
           fontWeight: 600,
           padding: 5,
+        },
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          marginLeft: 0,
         },
       },
     },
