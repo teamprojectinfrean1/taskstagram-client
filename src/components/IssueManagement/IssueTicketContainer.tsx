@@ -26,7 +26,7 @@ const IssueTicketContainer = ({
 
   const [searchMode, setSearchMode] = useState(false);
   const [searchParams, setSearchParams] = useState<IssueSearchParams>({
-    filter: "Issue",
+    filter: "ISSUE",
     keyword: "",
   });
 

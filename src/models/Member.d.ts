@@ -1,6 +1,6 @@
 type ProjectMember = {
-  memberId: string;
-  userId: string;
-  userNickname: string;
-  userProfileImage: string;
+  memberId?: string;
+  userId: string | null;
+  userNickname: string | null;
+  userProfileImage: string | null;
 };

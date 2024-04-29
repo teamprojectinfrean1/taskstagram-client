@@ -1,17 +1,19 @@
+import { useState } from "react";
 import {
   Autocomplete,
   AutocompleteRenderInputParams,
   Box,
   InputLabel,
   Paper,
+  Stack,
+  Skeleton,
+  Typography,
   TextField,
   TextFieldProps,
 } from "@mui/material";
 import theme from "@/theme/theme";
-import SkeletonTextField from "@/components/SkeletonTextField";
 
 type SingleSelectProps<T> = {
-  label: string;
   possibleOptions: T[];
   selectedOptions: T;
   onSelectionChange: (value: T | null) => void;
@@ -28,11 +30,13 @@ type SingleSelectProps<T> = {
     props: React.HTMLAttributes<HTMLLIElement>,
     option: T
   ) => React.ReactNode;
-  isLoading?: boolean;
+  renderSkeleton?: () => React.ReactNode;
+  optionsFetchErrorMessage?: React.ReactNode;
+  optionIsLoading?: boolean;
+  fetchOptions?: () => {};
 };
 
 type MultiSelectProps<T> = {
-  label: string;
   possibleOptions: T[];
   selectedOptions: T[];
   onSelectionChange: (value: T[]) => void;
@@ -49,13 +53,15 @@ type MultiSelectProps<T> = {
     props: React.HTMLAttributes<HTMLLIElement>,
     option: T
   ) => React.ReactNode;
-  isLoading?: boolean;
+  renderSkeleton?: () => React.ReactNode;
+  optionsFetchErrorMessage?: React.ReactNode;
+  optionIsLoading?: boolean;
+  fetchOptions?: () => {};
 };
 
 type SearchableSelectProps<T> = SingleSelectProps<T> | MultiSelectProps<T>;
 
 const SearchableSelect = <T extends object>({
-  label,
   possibleOptions,
   selectedOptions,
   onSelectionChange,
@@ -67,8 +73,22 @@ const SearchableSelect = <T extends object>({
   InputProps,
   renderInput,
   renderOption,
-  isLoading = false,
+  renderSkeleton,
+  optionsFetchErrorMessage,
+  optionIsLoading,
+  fetchOptions,
 }: SearchableSelectProps<T>) => {
+  const [fetchInitiated, setFetchInitiated] = useState(false);
+
+  const handleFocus = () => {
+    if (!fetchInitiated) {
+      setFetchInitiated(true);
+      if (fetchOptions) {
+        fetchOptions();
+      }
+    }
+  };
+
   const isOptionEqualToValue = (option: T, value: T) =>
     option[optionIdentifier] === value[optionIdentifier];
 
@@ -98,62 +118,97 @@ const SearchableSelect = <T extends object>({
     };
   };
 
+  const noOptionsText = () => {
+    if (
+      optionIsLoading ||
+      (!fetchInitiated && possibleOptions.length <= 0 && fetchOptions)
+    )
+      return "";
+    if (optionsFetchErrorMessage) return optionsFetchErrorMessage;
+    return (
+      <Typography
+        sx={{
+          fontSize: ".7rem",
+          fontWeight: 600,
+        }}
+      >
+        일치하는 옵션이 없습니다.
+      </Typography>
+    );
+  };
+
   return (
-    <Box>
-      <InputLabel htmlFor={label} sx={{ fontWeight: "bold", mb: 1 }}>
-        {label}
-      </InputLabel>
-      {isLoading ? (
-        <SkeletonTextField />
-      ) : (
-        <Autocomplete
-          value={filterValidSelection()}
-          onChange={(_, value) => {
-            if (multiselect) {
-              onSelectionChange(value as T[]);
-            } else {
-              onSelectionChange(value as T | null);
-            }
-          }}
-          options={possibleOptions}
-          isOptionEqualToValue={isOptionEqualToValue}
-          getOptionLabel={getOptionLabel}
-          multiple={multiselect}
-          noOptionsText="일치하는 옵션이 없습니다"
-          ListboxProps={{
-            className: "custom-scrollbar",
-          }}
-          PaperComponent={({ children }) => (
-            <Paper
-              style={{ backgroundColor: theme.palette.background.default }}
-            >
-              {children}
-            </Paper>
+    <Autocomplete
+      value={filterValidSelection()}
+      onChange={(_, value) => {
+        if (multiselect) {
+          onSelectionChange(value as T[]);
+        } else {
+          onSelectionChange(value as T | null);
+        }
+      }}
+      // options={
+      //   optionsFetchErrorMessage
+      //     ? []
+      //     : optionIsLoading
+      //     ? Array(4).fill({})
+      //     : possibleOptions
+      // }
+      options={optionsFetchErrorMessage ? [] : possibleOptions}
+      isOptionEqualToValue={isOptionEqualToValue}
+      getOptionLabel={getOptionLabel}
+      multiple={multiselect}
+      noOptionsText={noOptionsText()}
+      ListboxProps={{
+        className: "custom-scrollbar",
+      }}
+      PaperComponent={({ children }) => (
+        <Paper>
+          {/* {children} */}
+          {optionIsLoading && renderSkeleton ? (
+            <Stack spacing={2} sx={{ p: 2 }}>
+              {Array.from({ length: 4 }).map(() => renderSkeleton())}
+            </Stack>
+          ) : (
+            children
           )}
-          renderInput={
-            renderInput ||
-            ((params) => (
-              <TextField
-                {...params}
-                id={`input-${label}`}
-                variant="outlined"
-                fullWidth
-                InputProps={handleInputProps(params)}
-                inputProps={{
-                  ...params.inputProps,
-                }}
-                error={error}
-                helperText={helperText}
-              />
-            ))
-          }
-          renderOption={
-            renderOption ||
-            ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
-          }
-        />
+        </Paper>
       )}
-    </Box>
+      renderInput={
+        renderInput ||
+        ((params) => (
+          <TextField
+            {...params}
+            variant="outlined"
+            fullWidth
+            InputProps={{
+              ...params.InputProps,
+              onFocus: handleFocus,
+              ...(InputProps ? InputProps(params) : {}),
+            }}
+            inputProps={{
+              ...params.inputProps,
+            }}
+            error={error}
+            helperText={helperText}
+          />
+        ))
+      }
+      renderOption={
+        renderOption ||
+        ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
+      }
+      // renderOption={
+      //    optionIsLoading
+      //     ? renderSkeleton
+      //     : renderOption ||
+      //       ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
+      // }
+      // renderOption={
+      //   renderOption ||
+      //   ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
+      // }
+    />
   );
 };
 

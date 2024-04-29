@@ -182,7 +182,7 @@ export const getIssueList = async ({
 };
 
 type SearchIssueRequest = {
-  filter: string;
+  filter: IssueSearchFilter;
   page: number;
   projectId: string;
   size: number;

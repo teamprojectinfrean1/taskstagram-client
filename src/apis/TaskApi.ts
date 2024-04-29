@@ -1,5 +1,4 @@
 import axios from "axios";
-import Task from "@/models/Task";
 import { authorizedAxios } from "./domainSettings";
 
 
@@ -82,6 +81,32 @@ export const getTaskList = async ({
     return null;
   }
 };
+
+
+type GetAllTaskListRequest = {
+  projectId: string;
+};
+
+type GetAllTaskResponse = Task[]
+
+export const getAllTaskList = async ({
+  projectId,
+}: GetAllTaskListRequest): Promise<GetAllTaskResponse> => {
+  try {
+    const response = await authorizedAxios.post(
+      `${taskPath}/task/all`,
+      {
+        params: { 
+        projectId
+      }
+      }
+    );
+    return response.data.data;
+  } catch (error) {
+    throw new Error("태스크 목록 전체를 가져오는 중 오류가 발생했습니다.");
+  }
+};
+
 
 //task 상세조회
 export const getTaskDetail = async (

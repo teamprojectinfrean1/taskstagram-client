@@ -11,7 +11,6 @@ import {
   FormControlLabel,
 } from "@mui/material";
 import { useEffect, useState } from "react";
-import Task from "@/models/Task";
 import { Dayjs } from "dayjs";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import CloseIcon from "@mui/icons-material/Close";
@@ -77,7 +76,7 @@ const TaskModal = ({
 
   const { data } = useQuery(
     ["getTaskDetail", selectedTask],
-    () => getTaskDetail(selectedTask.taskId),
+    () => getTaskDetail(selectedTask.taskId!),
     { enabled: !!selectedTask && !!selectedTask.taskId }
   );
 
@@ -128,7 +127,7 @@ const TaskModal = ({
       onAdd({
         projectId: selectedProject.projectId,
         writerUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
-        taskTitle: formData.taskTitle,
+        taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
         startDate:
@@ -146,7 +145,7 @@ const TaskModal = ({
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
         updaterUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
-        taskTitle: formData.taskTitle,
+        taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
         startDate:

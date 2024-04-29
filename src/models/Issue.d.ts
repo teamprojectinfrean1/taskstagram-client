@@ -1,28 +1,8 @@
 // import { RawDraftContentState } from "draft-js";
 
 type IssueStatus = "TODO" | "INPROGRESS" | "DONE";
+
 type IssueStatusTitle = "할 일" | "진행 중" | "완료";
-
-
-type IssueDetails = {
-  taskId: string;
-  taskTitle: string;
-  issueId: string;
-  issueTitle: string;
-  issueContent: string;
-  statusId: IssueStatus;
-  statusTitle: IssueStatusTitle;
-  assigneeId: string;
-  assigneeNickname: string;
-  assigneeProfileImage: string | null;
-  startDate: string | null;
-  endDate: string | null;
-  lastUpdatedDetail: {
-    userUuid: string;
-    userNickname: string;
-    updatedDate: string;
-  };
-};
 
 type IssueSummary = {
   taskId: string;
@@ -55,9 +35,7 @@ type Issue = {
   };
 };
 
-type NewIssue = BaseIssue & {
-
-}
+type NewIssue = BaseIssue 
 
 type UpdatedIssue = BaseIssue & {
   issueId?: string;

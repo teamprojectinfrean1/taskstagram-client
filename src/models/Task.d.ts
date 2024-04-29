@@ -1,8 +1,6 @@
-import { RawDraftContentState } from "draft-js";
-
 type Task = {
-  taskId: string;
-  taskTitle: string;
+  taskId: string | null;
+  taskTitle: string | null;
   taskContent: string | null;
   taskTags: string[] | null;
   taskStartDate: string | null;
@@ -10,5 +8,3 @@ type Task = {
   taskAuthorityType: string;
   taskStatus: string | null;
 };
-
-export default Task;

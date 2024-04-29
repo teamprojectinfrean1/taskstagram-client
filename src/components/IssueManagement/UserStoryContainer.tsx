@@ -4,7 +4,7 @@ import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArro
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
 import { SkeletonUserStory, IssueStory } from "@/components/IssueManagement";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
-import { getProjectMemberList } from "@/apis/memberApi";
+import { getPaginatedProjectMemberList } from "@/apis/memberApi";
 import InfiniteScroller from "@/components/InfiniteScroller";
 
 const USER_PER_PAGE = 15;
@@ -80,7 +80,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
           alignSelf="center"
         >
           <InfiniteScroller<ProjectMember>
-            queryFunction={getProjectMemberList}
+            queryFunction={getPaginatedProjectMemberList}
             queryKey={["userStoryList", projectId]}
             requestOptions={{
               projectId,
@@ -93,8 +93,8 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
             renderItem={(story, index) => (
               <IssueStory
                 key={index}
-                userId={story.userId}
-                userNickname={story.userNickname}
+                userId={story.userId!}
+                userNickname={story.userNickname!}
                 userProfileImage=""
               />
             )}

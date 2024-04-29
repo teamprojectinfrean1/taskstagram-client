@@ -1,4 +1,4 @@
-type IssueSearchFilter = "Issue" | "Task" | "Assignee"
+type IssueSearchFilter = "ISSUE" | "TASK" | "ASSIGNEE"
 
 type IssueSearchParams = {
   filter: IssueSearchFilter;

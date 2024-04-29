@@ -7,7 +7,6 @@ import {
 } from "@mui/material";
 import theme from "@/theme/theme";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import Task from "@/models/Task";
 import { RawDraftContentState, convertFromRaw } from "draft-js";
 
 type TaskProps = {

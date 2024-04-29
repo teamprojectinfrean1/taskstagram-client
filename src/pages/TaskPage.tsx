@@ -3,7 +3,6 @@ import NewTask from "@/components/TaskManagement/NewTask";
 import TaskModal from "@/components/TaskManagement/TaskModal";
 import { useState } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
-import Task from "@/models/Task";
 import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useMutation, useQuery, useQueryClient } from "react-query";

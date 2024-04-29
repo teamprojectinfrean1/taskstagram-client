@@ -98,7 +98,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          {/* <IssueStoryContainer projectId={projectId!} /> */}
+          <IssueStoryContainer projectId={projectId!} />
         </Box>
         <Box
           display="flex"
@@ -151,10 +151,21 @@ const IssuePage = () => {
         edge="end"
         aria-label="Create New Issue"
         onClick={() => setIssueIdToShowInModal("new-issue")}
+        color="primary"
         sx={{
-          p: 0.5,
           backgroundColor: theme.palette.primary.main,
           color: theme.palette.background.default,
+          "&:hover": {
+            backgroundColor: theme.palette.primary.light,
+          },
+          "&.Mui-disabled": {
+            backgroundColor: theme.palette.grey[400],
+            color: theme.palette.grey[600],
+            "&:hover": {
+              backgroundColor: theme.palette.grey[400],
+            },
+          },
+          p: 0.5,
           position: "fixed",
           bottom: 30,
           right: 60,
