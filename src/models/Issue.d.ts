@@ -28,8 +28,8 @@ type Issue = {
   statusTitle: IssueStatusTitle | null;
   startDate: string | null;
   endDate: string | null;
-  lastUpdatedDetail?: {
-    userUuid: string;
+  lastUpdateDetail?: {
+    memberUuid: string;
     userNickname: string;
     updatedDate: string;
   };
