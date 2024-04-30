@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useParams } from "react-router-dom";
 import {
   Box,
   Dialog,
@@ -35,17 +34,6 @@ import SkeletonIssueFormModalSideContent from "./SkeletonIssueFormModalSideConte
 import { SkeletonIssueFormModalMainContent } from "./SkeletonIssueFormModalMainContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
-// type Member = {
-//   userId: string | null;
-//   userNickname: string | null;
-//   userProfileImage: string | null;
-// };
-
-// type Task = {
-//   taskId: string | null;
-//   taskTitle: string | null;
-// };
-
 type Status = {
   statusId: IssueStatus | null;
   statusTitle: IssueStatusTitle | null;
@@ -58,17 +46,17 @@ type IssueUpdate = {
 type IssueFormModalProps = {
   currentIssueId: string;
   handleClose: () => void;
+  projectId: string;
 };
 
 const IssueFormModal = ({
   currentIssueId,
   handleClose,
+  projectId,
 }: IssueFormModalProps) => {
-  // const { projectId } = useParams();
-  const projectId = "1a490be9-a3f7-4483-bc42-c283fec0e004"; // 추후 제거 예정
 
-  const {memberId} = useRecoilValue(userInfoState);
-  console.log(memberId)
+  const { memberId } = useRecoilValue(userInfoState);
+  console.log(memberId);
   const isNewIssue = currentIssueId === "new-issue";
 
   const defaultFormData: Issue = {
@@ -131,7 +119,6 @@ const IssueFormModal = ({
     // const idFields = ["writerId", "statusId", "taskId"];
     const idFields = ["writerId", "statusId"];
 
-
     idFields.forEach((field) => {
       if (!formData[field as keyof Issue]) {
         errors[field as keyof Issue] = "필수 입력 항목입니다.";
@@ -158,11 +145,10 @@ const IssueFormModal = ({
           : formData.issueContent,
     };
 
-
     mutateFunction(submissionData);
   };
 
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~", formData)
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~", formData);
   return (
     <Dialog
       open={!!currentIssueId}
@@ -196,7 +182,10 @@ const IssueFormModal = ({
           }}
         >
           {currentIssueId === "new-issue" ? (
-            <IssueCreateButton handleFormSubmit={handleFormSubmit} projectId={projectId}/>
+            <IssueCreateButton
+              handleFormSubmit={handleFormSubmit}
+              projectId={projectId}
+            />
           ) : (
             <>
               <IssueUpdateButton
@@ -231,7 +220,7 @@ const IssueFormModal = ({
                     value={formData.issueTitle}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       handleInputChange({ issueTitle: e.target.value })
-                  }
+                    }
                     error={!!formErrors.issueTitle}
                     helperText={formErrors.issueTitle}
                   />
@@ -280,7 +269,8 @@ const IssueFormModal = ({
                       handleInputChange({
                         assigneeId: selected?.memberId ?? null,
                         assigneeNickname: selected?.userNickname ?? null,
-                        assigneeProfileImage: selected?.userProfileImage ?? null
+                        assigneeProfileImage:
+                          selected?.userProfileImage ?? null,
                       })
                     }
                     optionIdentifier="memberId"

@@ -5,5 +5,3 @@ export const selectedProjectState = atom<ProjectSummary | null>({
   key: "selectedProjectState",
   default: null,
 });
-
-// 

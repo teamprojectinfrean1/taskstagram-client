@@ -1,13 +1,8 @@
-import { useState, useEffect } from "react";
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import { useState, useEffect, useRef } from "react";
+import { EditorState, convertToRaw, convertFromRaw, RawDraftContentState } from "draft-js";
 import { Editor } from "react-draft-wysiwyg";
 import toolbarOptions from "@/components/Editor/toolbarConfig";
-import {
-  EditorState,
-  convertToRaw,
-  convertFromRaw,
-  RawDraftContentState,
-} from "draft-js";
+import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 
 type TextEditorProps = {
   id: string;
@@ -21,29 +16,32 @@ const TextEditor = ({
   handleContentChange,
 }: TextEditorProps) => {
   const [editorState, setEditorState] = useState(EditorState.createEmpty());
+  const isInitialized = useRef(false); 
 
   useEffect(() => {
-    if (initialContent) {
+    if (initialContent && !isInitialized.current) {
       const contentState = convertFromRaw(initialContent);
       setEditorState(EditorState.createWithContent(contentState));
-    } else {
-      setEditorState(EditorState.createEmpty());
+      isInitialized.current = true;  
     }
-  }, [initialContent]);  // Re-initialize when initialContent changes
+  }, [initialContent]); 
 
   const onEditorStateChange = (newState: EditorState) => {
     setEditorState(newState);
-    handleContentChange(convertToRaw(newState.getCurrentContent()));
+    const rawContent = convertToRaw(newState.getCurrentContent());
+    if (!rawContent.blocks.every(block => block.text === "")) { 
+      handleContentChange(rawContent);
+    }
   };
 
   return (
     <Editor
       id={id}
       editorState={editorState}
-      editorClassName="custom-scrollbar"
       onEditorStateChange={onEditorStateChange}
-      localization={{ locale: "ko" }}
+      editorClassName="custom-scrollbar"
       toolbar={toolbarOptions}
+      localization={{ locale: "ko" }}
       editorStyle={{
         height: "360px",
         width: "100%",

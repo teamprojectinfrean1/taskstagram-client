@@ -8,7 +8,7 @@ import {
 import { Box, Fade, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   DndContext,
   DragEndEvent,
@@ -21,14 +21,14 @@ import {
   rectIntersection,
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
-import { useParams } from "react-router-dom";
-// import { useUpdateIssueStatusMutation } from "@/hooks/useUpdateIssueStatusMutation";
 import theme from "@/theme/theme";
+import { selectedProjectState } from "@/stores/projectStore";
 
 const IssuePage = () => {
-  // const { projectId } = useParams();
-  const projectId = "1a490be9-a3f7-4483-bc42-c283fec0e004"; // 추후 제거 예정
-  // 추후 api 요청 보낸 후 존재하지 않는 projectId면 Not Found 페이지로 리다이렉트
+  const selectedProjectId = "1a490be9-a3f7-4483-bc42-c283fec0e004"; // 추후 제거 예정
+
+  // const selectedProjectId = useRecoilValue(selectedProjectState);
+
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
   );
@@ -37,7 +37,7 @@ const IssuePage = () => {
     null
   );
 
-  // const mutation = useUpdateIssueStatusMutation(projectId!);
+  // const mutation = useUpdateIssueStatusMutation(selectedProjectId!);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -99,7 +99,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          {/* <IssueStoryContainer projectId={projectId!} /> */}
+          {/* <IssueStoryContainer projectId={selectedProjectId!} /> */}
         </Box>
         <Box
           display="flex"
@@ -116,19 +116,19 @@ const IssuePage = () => {
           <IssueTicketContainer
             containerId="TODO"
             isHovered={hoveredContainerId === "TODO"}
-            projectId={projectId!}
+            projectId={selectedProjectId!}
             title="할 일"
           />
           <IssueTicketContainer
             containerId="INPROGRESS"
             isHovered={hoveredContainerId === "INPROGRESS"}
-            projectId={projectId!}
+            projectId={selectedProjectId!}
             title="진행 중"
           />
           <IssueTicketContainer
             containerId="DONE"
             isHovered={hoveredContainerId === "DONE"}
-            projectId={projectId!}
+            projectId={selectedProjectId!}
             title="완료"
           />
         </Box>
@@ -180,6 +180,7 @@ const IssuePage = () => {
         <IssueFormModal
           currentIssueId={issueIdToShowInModal}
           handleClose={() => setIssueIdToShowInModal(null)}
+          projectId={selectedProjectId}
         />
       )}
     </DndContext>

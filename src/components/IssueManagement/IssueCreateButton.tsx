@@ -46,7 +46,7 @@ const IssueCreateButton = ({
       {isLoading && <Spinner centerInViewport size={70} />}
       <PrimaryButton
         disabled={isLoading}
-        onClick={(e) => {
+        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
           e.stopPropagation();
           handleFormSubmit(executeCreateIssue);
         }}
