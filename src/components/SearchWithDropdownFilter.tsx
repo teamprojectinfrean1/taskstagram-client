@@ -71,6 +71,7 @@ const SearchWithDropdownFilter = ({
               aria-label="serach"
               disabled={!searchParams.keyword}
               onClick={executeIssueSearch}
+              color="primary"
             >
               <SearchIcon />
             </IconButton>

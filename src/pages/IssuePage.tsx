@@ -152,7 +152,6 @@ const IssuePage = () => {
         edge="end"
         aria-label="Create New Issue"
         onClick={() => setIssueIdToShowInModal("new-issue")}
-        color="primary"
         sx={{
           backgroundColor: theme.palette.primary.main,
           color: theme.palette.background.default,

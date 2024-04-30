@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
 import { Editor } from "react-draft-wysiwyg";
 import toolbarOptions from "@/components/Editor/toolbarConfig";
@@ -20,12 +20,16 @@ const TextEditor = ({
   initialContent,
   handleContentChange,
 }: TextEditorProps) => {
-  const [editorState, setEditorState] = useState(() => {
+  const [editorState, setEditorState] = useState(EditorState.createEmpty());
+
+  useEffect(() => {
     if (initialContent) {
-      return EditorState.createWithContent(convertFromRaw(initialContent));
+      const contentState = convertFromRaw(initialContent);
+      setEditorState(EditorState.createWithContent(contentState));
+    } else {
+      setEditorState(EditorState.createEmpty());
     }
-    return EditorState.createEmpty();
-  });
+  }, [initialContent]);  // Re-initialize when initialContent changes
 
   const onEditorStateChange = (newState: EditorState) => {
     setEditorState(newState);

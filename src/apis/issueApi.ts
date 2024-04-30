@@ -74,7 +74,7 @@ export const updateIssueDetails = async ({
     startDate,
     endDate,
     issueTitle,
-    issueContent,
+    issueContent: JSON.stringify(issueContent),
     status: statusId,
   };
 
@@ -150,6 +150,7 @@ export const getIssueDetails = async ({
       ...rest,
     };
 
+    console.log("&&&&&&&&&&&&&&&&&&&&", issueDetails)
 
     return issueDetails;
   } catch (error) {

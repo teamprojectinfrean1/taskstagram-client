@@ -26,7 +26,10 @@ const DropdownSelect = ({
       label="Option"
       sx={{
         "&.MuiSelect-select": {
-          paddingLeft: 0,
+          pl: 0,
+        },
+        "& .MuiSelect-icon": {
+          mr: -.5,
         },
         border: "none",
         "& .MuiOutlinedInput-notchedOutline": { border: "none" },

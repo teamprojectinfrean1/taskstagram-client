@@ -12,11 +12,10 @@ import UserAvatar from "@/components/UserAvatar";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import theme from "@/theme/theme";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
-import { useRecoilState } from "recoil";
+import { useSetRecoilState } from "recoil";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { SxProps } from "@mui/material";
-
 
 type IssueTicketProps = {
   index?: number;
@@ -29,18 +28,14 @@ const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
   const {
     issueId,
     issueTitle,
-    taskId,
     taskTitle,
-    assigneeId,
     assigneeNickname,
     assigneeProfileImage,
   } = issue;
   const taskTitleRef = useRef<HTMLDivElement>(null);
   const textIsOverflowing = useOverflowDetection(taskTitleRef, "vertical");
 
-  const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
-    issueIdToShowInModalState
-  );
+  const setIssueIdToShowInModal = useSetRecoilState(issueIdToShowInModalState);
 
   const { attributes, listeners, setNodeRef, transform } = useDraggable({
     id: issueId,
@@ -87,11 +82,18 @@ const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
                   className="textClamping lineClampOne"
                   sx={{ wordBreak: "break-all" }}
                 >
-                  taskTitle
+                  {taskTitle}
                 </Typography>
               </Box>
-              <Tooltip title={assigneeNickname} placement="top" sx={{ zIndex: 10 }}>
-                <UserAvatar sx={{ width: 28, height: 28 }} />
+              <Tooltip
+                title={assigneeNickname}
+                placement="top"
+                sx={{ zIndex: 10 }}
+              >
+                <UserAvatar
+                  sx={{ width: 28, height: 28 }}
+                  imageUrl={assigneeProfileImage}
+                />
               </Tooltip>
             </Box>
             <Tooltip

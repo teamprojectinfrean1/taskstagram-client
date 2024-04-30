@@ -6,7 +6,8 @@ import dayjs, { Dayjs } from "dayjs";
 import utc from 'dayjs/plugin/utc'; 
 import theme from "@/theme/theme";
 
-dayjs.extend(utc); 
+dayjs.extend(utc);
+
 type DurationPickerProps = {
   selectedStartDate: string | null;
   selectedEndDate: string | null;
@@ -21,7 +22,7 @@ const DurationPicker = ({
   onEndDateSelectionChange,
 }: DurationPickerProps) => {
   const handleStartDateChange = (startDate: Dayjs | null) => {
-    const dateString = startDate ? startDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
+    const dateString = startDate ? startDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]") : null;
     onStartDateSelectionChange(dateString);
     if (selectedEndDate && startDate && dayjs(selectedEndDate).isBefore(startDate)) {
       onEndDateSelectionChange(null);
@@ -29,7 +30,7 @@ const DurationPicker = ({
   };
 
   const handleEndDateChange = (endDate: Dayjs | null) => {
-    const dateString = endDate ? endDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSSZ") : null;
+    const dateString = endDate ? endDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]") : null;
     onEndDateSelectionChange(dateString);
   };
 
@@ -48,7 +49,7 @@ const DurationPicker = ({
             },
           }}
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
-          onChange={(date) => handleStartDateChange(date)}
+          onChange={handleStartDateChange}
           slotProps={{
             textField: { size: "small" },
           }}
@@ -66,7 +67,7 @@ const DurationPicker = ({
           }}
           minDate={selectedStartDate ? dayjs(selectedStartDate) : undefined}
           value={selectedEndDate ? dayjs(selectedEndDate) : null}
-          onChange={(date) => handleEndDateChange(date)}
+          onChange={handleEndDateChange}
           slotProps={{ textField: { size: "small" } }}
         />
       </LocalizationProvider>
