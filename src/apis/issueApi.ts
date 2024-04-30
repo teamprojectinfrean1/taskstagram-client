@@ -31,7 +31,7 @@ export const createIssue = async ({
     startDate,
     endDate,
     issueTitle,
-    issueContent,
+    issueContent: JSON.stringify(issueContent),
     status: statusId,
   };
 
@@ -128,9 +128,13 @@ export const getIssueDetails = async ({
   issueId,
 }: GetIssueDetailsRequest): Promise<GetIssueDetailsResponse> => {
   try {
-    const response = await authorizedAxios.get(`${issuePath}/${issueId}`);
+    const response = await authorizedAxios.get(
+      `${issuePath}/detail/${issueId}`
+    );
 
-    const { status, issueContent, ...rest } = response.data;
+    console.log(response.data.data);
+
+    const { status, issueContent, ...rest } = response.data.data;
 
     const statusTitleMap: { [key in IssueStatus]: IssueStatusTitle } = {
       TODO: "할 일",
@@ -138,12 +142,14 @@ export const getIssueDetails = async ({
       DONE: "완료",
     };
 
+
     const issueDetails = {
       statusId: status,
       statusTitle: statusTitleMap[status as IssueStatus],
       issueContent: issueContent ? JSON.parse(issueContent) : null,
       ...rest,
     };
+
 
     return issueDetails;
   } catch (error) {
@@ -175,7 +181,12 @@ export const getIssueList = async ({
         },
       }
     );
-    return response.data.data;
+    console.log(response.data.data);
+    // return response.data.data;
+    return {
+      dataList: response.data.data.dataList,
+      totalPage: response.data.data.totalPage,
+    };
   } catch (error) {
     throw new Error("이슈 목록을 가져오는 중 오류가 발생했습니다.");
   }

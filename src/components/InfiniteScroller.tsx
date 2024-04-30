@@ -13,7 +13,7 @@ type InfiniteScrollerProps<T> = {
   firstPageErrorMessage: string;
   subsequentPageErrorMessage: string;
   noDataToShowMessage: string;
-  renderItem: (item: T, index: number) => React.ReactNode;
+  renderItem: (item: T) => React.ReactNode;
   renderSkeleton: (index: number) => React.ReactNode;
   numberOfSkeletons?: number;
 };
@@ -77,13 +77,19 @@ const InfiniteScroller = <T,>({
 
   return (
     <>
-      {data?.pages.map((page, pageIndex) => (
-        <Fragment key={pageIndex}>
-          {page.dataList.map((item, itemIndex) => renderItem(item, itemIndex))}
-        </Fragment>
-      ))}
+      {data?.pages.map((page, pageIndex) => {
+        return (
+          <Fragment key={pageIndex}>
+            {page?.dataList.map((item) =>
+              renderItem(item)
+            )}
+          </Fragment>
+        );
+      })}
       {(isLoading || isFetchingNextPage) &&
-        Array.from({ length: numberOfSkeletons }, (_, index) => renderSkeleton(index))}
+        Array.from({ length: numberOfSkeletons }, (_, index) =>
+          renderSkeleton(index)
+        )}
       {!isError && hasNextPage && (
         <div
           ref={hasNextPage ? lastItemRef : undefined}

@@ -1,13 +1,13 @@
 type NewOrUpdatedComment = {
   writerId: string;
   issueId: string;
-  commentBody: string;
+  body: string;
 };
 
 type ExistingComment = {
   commentId: string;
-  commentBody: string;
-  lastModifiedDate: string;
+  body: string;
+  updatedAt: string;
   userId: string;
   userNickname: string;
   userProfileImage: string;

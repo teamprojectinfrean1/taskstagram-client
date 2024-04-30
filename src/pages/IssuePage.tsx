@@ -26,7 +26,8 @@ import { useParams } from "react-router-dom";
 import theme from "@/theme/theme";
 
 const IssuePage = () => {
-  const { projectId } = useParams();
+  // const { projectId } = useParams();
+  const projectId = "1a490be9-a3f7-4483-bc42-c283fec0e004"; // 추후 제거 예정
   // 추후 api 요청 보낸 후 존재하지 않는 projectId면 Not Found 페이지로 리다이렉트
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
@@ -98,7 +99,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          <IssueStoryContainer projectId={projectId!} />
+          {/* <IssueStoryContainer projectId={projectId!} /> */}
         </Box>
         <Box
           display="flex"

@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useQuery } from "react-query";
 import { getIssueDetails } from "@/apis/issueApi";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
+import { useSetRecoilState } from "recoil";
 
 type UseGetIssueDetailsParams = {
   currentIssueId: string;
@@ -14,6 +16,8 @@ const useGetIssueDetails = ({
   isNewIssue,
   setFormData,
 }: UseGetIssueDetailsParams) => {
+  const setIssueIdToShowInModal = useSetRecoilState(issueIdToShowInModalState);
+
   const {
     data: issueDetails,
     isError,
@@ -22,7 +26,10 @@ const useGetIssueDetails = ({
   } = useQuery(
     ["issueDetails", currentIssueId],
     () => getIssueDetails({ issueId: currentIssueId }),
-    { enabled: !isNewIssue }
+    {
+      enabled: !isNewIssue,
+      staleTime: 30000,
+    }
   );
 
   useEffect(() => {
@@ -46,6 +53,7 @@ const useGetIssueDetails = ({
 
   useFeedbackHandler({
     isError,
+    errorAction: () => setIssueIdToShowInModal(null),
     errorMessage:
       "이슈를 불러오는 중 문제가 발생했습니다. 잠시 후 다시 시도해 주십시오.",
   });

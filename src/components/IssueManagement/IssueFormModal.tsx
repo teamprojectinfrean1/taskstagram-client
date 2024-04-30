@@ -64,12 +64,15 @@ const IssueFormModal = ({
   currentIssueId,
   handleClose,
 }: IssueFormModalProps) => {
-  const { projectId } = useParams();
-  const userInfo = useRecoilValue(userInfoState);
+  // const { projectId } = useParams();
+  const projectId = "1a490be9-a3f7-4483-bc42-c283fec0e004"; // 추후 제거 예정
+
+  const {memberId} = useRecoilValue(userInfoState);
+  console.log(memberId)
   const isNewIssue = currentIssueId === "new-issue";
 
   const defaultFormData: Issue = {
-    writerId: userInfo.userId,
+    writerId: memberId,
     taskId: null,
     taskTitle: null,
     assigneeId: null,
@@ -125,7 +128,9 @@ const IssueFormModal = ({
   const isFormValid = () => {
     const errors: Partial<Issue> = {};
 
-    const idFields = ["writerId", "statusId", "taskId"];
+    // const idFields = ["writerId", "statusId", "taskId"];
+    const idFields = ["writerId", "statusId"];
+
 
     idFields.forEach((field) => {
       if (!formData[field as keyof Issue]) {
@@ -152,9 +157,12 @@ const IssueFormModal = ({
           ? null
           : formData.issueContent,
     };
+
+
     mutateFunction(submissionData);
   };
 
+  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~", formData)
   return (
     <Dialog
       open={!!currentIssueId}
@@ -188,7 +196,7 @@ const IssueFormModal = ({
           }}
         >
           {currentIssueId === "new-issue" ? (
-            <IssueCreateButton handleFormSubmit={handleFormSubmit} />
+            <IssueCreateButton handleFormSubmit={handleFormSubmit} projectId={projectId}/>
           ) : (
             <>
               <IssueUpdateButton
@@ -264,17 +272,18 @@ const IssueFormModal = ({
                   <SearchableSelect<Partial<ProjectMember>>
                     possibleOptions={allProjectMemberList || []}
                     selectedOptions={{
-                      userId: formData.assigneeId,
+                      memberId: formData.assigneeId,
                       userNickname: formData.assigneeNickname,
                       userProfileImage: formData.assigneeProfileImage,
                     }}
                     onSelectionChange={(selected) =>
                       handleInputChange({
-                        assigneeId: selected?.userId ?? null,
+                        assigneeId: selected?.memberId ?? null,
                         assigneeNickname: selected?.userNickname ?? null,
+                        assigneeProfileImage: selected?.userProfileImage ?? null
                       })
                     }
-                    optionIdentifier="userId"
+                    optionIdentifier="memberId"
                     optionLabel="userNickname"
                     multiselect={false}
                     InputProps={(params) => ({

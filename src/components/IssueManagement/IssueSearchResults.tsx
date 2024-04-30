@@ -32,10 +32,9 @@ export const IssueSearchResults = ({
       firstPageErrorMessage="검색 결과를 불러오는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오."
       subsequentPageErrorMessage="검색 결과를 추가로 불러오는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오."
       noDataToShowMessage="해당 검색 조건에 맞는 결과가 없습니다."
-      renderItem={(issue, index) => (
+      renderItem={(issue) => (
         <IssueTicket
           key={issue.issueId}
-          index={index}
           issue={issue}
           parent={containerId!}
         />

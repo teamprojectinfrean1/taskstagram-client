@@ -42,7 +42,7 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
       comment: {
         writerId: userId,
         issueId: issueId!,
-        commentBody,
+        body: commentBody,
       },
     })
   );

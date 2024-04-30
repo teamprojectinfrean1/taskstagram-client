@@ -58,7 +58,7 @@ export const getCommentList = async ({
 }: GetCommentListRequest): Promise<PaginatedResponse<ExistingComment>> => {
   try {
     const response = await authorizedAxios.get(
-      `${commentPath}/${issueId}`,
+      `${commentPath}`,
       {
         params: {
           issueId,

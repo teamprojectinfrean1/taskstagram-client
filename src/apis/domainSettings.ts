@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const BASE_URL = "https://mcpark.info/api/v1";
+// const BASE_URL = "http://124.61.74.148:8080/api/v1";
+const BASE_URL = "";
 
 
 const unauthorizedAxios = axios.create({

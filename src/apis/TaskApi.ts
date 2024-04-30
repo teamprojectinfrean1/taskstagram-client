@@ -91,8 +91,8 @@ export const getAllTaskList = async ({
   projectId,
 }: GetAllTaskListRequest): Promise<GetAllTaskResponse> => {
   try {
-    const response = await authorizedAxios.post(
-      `${taskPath}/task/all`,
+    const response = await authorizedAxios.get(
+      `${taskPath}/all`,
       {
         params: { 
         projectId

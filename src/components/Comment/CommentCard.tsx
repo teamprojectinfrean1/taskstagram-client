@@ -28,25 +28,25 @@ type CommentCardProps = {
 };
 
 const CommentCard = ({ comment }: CommentCardProps) => {
-  const { userId: loggedInUserId } = useRecoilValue(userInfoState);
+  const { memberId: loggedInMemberId } = useRecoilValue(userInfoState);
   const issueId = useRecoilValue(issueIdToShowInModalState);
   const setCommentIdSelectedToDelete = useSetRecoilState(
     commentIdSelectedToDeleteState
   );
   const {
     commentId,
-    commentBody,
-    lastModifiedDate,
+    body,
+    updatedAt,
     userId: commentWriterId,
     userNickname,
     userProfileImage,
   } = comment;
 
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [updatedCommentBody, setUpdatedCommentBody] =
-    useState<string>(commentBody);
+  const [updatedCommentBody, setUpdatedCommentBody] = useState<string>(body);
 
-  const isLoggedInUserCommentWriter = loggedInUserId === commentWriterId;
+  const isLoggedInUserCommentWriter = loggedInMemberId === commentWriterId;
+
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -79,9 +79,9 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     updateComment({
       commentId,
       comment: {
-        writerId: loggedInUserId,
+        writerId: loggedInMemberId,
         issueId: issueId!,
-        commentBody: updatedCommentBody,
+        body: updatedCommentBody,
       },
     })
   );
@@ -167,13 +167,13 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               </>
             )}
           </Box>
-          <Typography>{commentBody}</Typography>
+          <Typography>{body}</Typography>
           <Typography
             variant="subtitle2"
             textAlign="right"
             sx={{ color: grey[600], mr: 1 }}
           >
-            {lastModifiedDate}
+            {updatedAt.split("T")[0]}
           </Typography>
         </Stack>
       )}
