@@ -43,7 +43,7 @@
     "build": "craco build",
     "test": "craco test",
     "eject": "craco eject",
-    "deploy" : "aws s3 sync ./build s3://task-tagram --profile=sukhojung"
+    "deploy": "aws s3 sync ./build s3://task-tagram --profile=sukhojung"
   },
   "eslintConfig": {
     "extends": [

@@ -229,9 +229,9 @@ const IssueFormModal = ({
                     fullWidth
                     required
                     value={formData.issueTitle}
-                    onChange={(e) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       handleInputChange({ issueTitle: e.target.value })
-                    }
+                  }
                     error={!!formErrors.issueTitle}
                     helperText={formErrors.issueTitle}
                   />
