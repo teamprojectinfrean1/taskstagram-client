@@ -26,7 +26,7 @@ type CommentCreatorProps = {
   issueDetailsIsLoading: boolean;
 };
 const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
-  const { userId } = useRecoilValue(userInfoState);
+  const { memberId: loggedInMemberId } = useRecoilValue(userInfoState);
   const issueId = useRecoilValue(issueIdToShowInModalState);
 
   const [commentBody, setCommentBody] = useState<string>("");
@@ -40,7 +40,7 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
   } = useMutation(() =>
     createComment({
       comment: {
-        writerId: userId,
+        writerId: loggedInMemberId,
         issueId: issueId!,
         body: commentBody,
       },
@@ -53,9 +53,10 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
       "댓글을 추가하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
     isSuccess,
     successMessage: "댓글이 추가되었습니다.",
+    successAction: () => setCommentBody(""),
   });
 
-  if(issueDetailsIsLoading) {
+  if (issueDetailsIsLoading) {
     return SkeletonCommentCreator;
   }
 
@@ -77,6 +78,9 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
                 추가
               </PrimaryButton>
             }
+            handleCancel={() => {
+              setCommentBody("");
+            }}
           />
         </Box>
       )}

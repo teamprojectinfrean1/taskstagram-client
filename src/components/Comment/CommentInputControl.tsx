@@ -1,16 +1,17 @@
 import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 
-
 type CommentInputControlProps = {
   commentBody: string;
   setCommentBody: (value: string) => void;
   renderButton: React.ReactNode;
+  handleCancel: () => void;
 };
 export const CommentInputControl = ({
   commentBody,
   setCommentBody,
   renderButton,
+  handleCancel,
 }: CommentInputControlProps) => {
   const [isFocused, setIsFocused] = useState(false);
 
@@ -20,11 +21,6 @@ export const CommentInputControl = ({
 
   const handleFocus = () => {
     setIsFocused(true);
-  };
-
-  const handleCancel = () => {
-    setIsFocused(false);
-    setCommentBody("");
   };
 
   return (
@@ -51,7 +47,14 @@ export const CommentInputControl = ({
             "& .MuiButtonBase-root": { px: 2, py: 0.5, borderRadius: 10 },
           }}
         >
-          <Button onClick={handleCancel}>취소</Button>
+          <Button
+            onClick={() => {
+              setIsFocused(false);
+              handleCancel();
+            }}
+          >
+            취소
+          </Button>
           {renderButton}
         </Box>
       )}

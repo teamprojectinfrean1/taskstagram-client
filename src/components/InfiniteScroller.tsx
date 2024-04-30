@@ -28,7 +28,7 @@ const InfiniteScroller = <T,>({
   noDataToShowMessage,
   renderItem,
   renderSkeleton,
-  numberOfSkeletons = 3,
+  numberOfSkeletons = 5,
 }: InfiniteScrollerProps<T>) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
@@ -51,6 +51,7 @@ const InfiniteScroller = <T,>({
           return undefined;
         }
       },
+      staleTime: 30000 
     }
   );
 

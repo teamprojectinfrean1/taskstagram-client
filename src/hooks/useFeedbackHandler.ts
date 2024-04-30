@@ -39,7 +39,9 @@ const useFeedbackHandler = ({
         severity: "error",
       });
     }
-    if (unconditionalExecute) unconditionalExecute();  
+    if ((isSuccess || isError) && unconditionalExecute) {
+      console.log("설마??????????????????????")
+      unconditionalExecute();  }
   }, [isSuccess, isError, successAction, errorAction, successMessage, errorMessage, unconditionalExecute, setSnackbar]);
 };
 

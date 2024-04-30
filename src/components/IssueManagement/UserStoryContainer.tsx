@@ -52,11 +52,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
 
   return (
     <Paper elevation={2} sx={{ height: "100%" }}>
-      <Box
-        display="flex"
-        alignItems="center"
-        sx={{ height: "100%", px: 1, py: 2 }}
-      >
+      <Box display="flex" alignItems="center" sx={{ height: "100%", py: 2 }}>
         <IconButton
           size="large"
           aria-label="scroll leftwards"
@@ -94,6 +90,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
               <IssueStory key={story.memberId} story={story} />
             )}
             renderSkeleton={(index) => <SkeletonUserStory key={index} />}
+            numberOfSkeletons={9}
           />
         </Box>
         <IconButton

@@ -30,7 +30,7 @@ const IssueStory = ({ story }: UserStoryProps) => {
         imageUrl={userProfileImage}
       />
       <Tooltip title={textIsOverflowing ? userNickname : ""} placement="bottom">
-        <Typography ref={userNameRef} className="textClamping lineClampOne">
+        <Typography ref={userNameRef} className="textClamping lineClampOne" sx={{fontSize: 18, fontWeight: 600}}>
           {userNickname}
         </Typography>
       </Tooltip>

@@ -23,6 +23,8 @@ import { useMutation } from "react-query";
 import { updateComment } from "@/apis/commentApi";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 
+import { useEffect } from "react";
+
 type CommentCardProps = {
   comment: ExistingComment;
 };
@@ -46,7 +48,6 @@ const CommentCard = ({ comment }: CommentCardProps) => {
   const [updatedCommentBody, setUpdatedCommentBody] = useState<string>(body);
 
   const isLoggedInUserCommentWriter = loggedInMemberId === commentWriterId;
-
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
@@ -75,16 +76,18 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     isLoading: isUpdatingComment,
     isSuccess,
     isError,
-  } = useMutation(() =>
-    updateComment({
+  } = useMutation(() => {
+    return updateComment({
       commentId,
       comment: {
         writerId: loggedInMemberId,
         issueId: issueId!,
         body: updatedCommentBody,
       },
-    })
-  );
+    });
+  });
+
+  console.log("*************************", commentId, editMode);
 
   useFeedbackHandler({
     isError,
@@ -109,17 +112,21 @@ const CommentCard = ({ comment }: CommentCardProps) => {
           renderButton={
             <PrimaryButton
               disabled={isUpdatingComment}
-              onClick={() => executeUpdateComment}
+              onClick={() => executeUpdateComment()}
             >
               저장
             </PrimaryButton>
           }
+          handleCancel={() => {
+            setUpdatedCommentBody(body);
+            setEditMode(false);
+          }}
         />
       ) : (
         <Stack
           sx={{
             width: "100%",
-            py: 1,
+            py: 2,
             px: 3,
             border: `1px solid ${grey[400]}`,
             borderRadius: 4,
@@ -132,17 +139,19 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               justifyContent: "space-between",
             }}
           >
-            <Typography sx={{ fontWeight: "bold" }}>{userNickname}</Typography>
+            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+              {userNickname}
+            </Typography>
             {isLoggedInUserCommentWriter && (
               <>
                 <IconButton
-                  size="small"
                   edge="end"
                   color="inherit"
                   aria-label="comment-settings"
                   onClick={handleSettingsClick}
+                  sx={{ p: 0.5 }}
                 >
-                  <MoreVertIcon />
+                  <MoreVertIcon fontSize="small" />
                 </IconButton>
                 <Menu
                   anchorEl={anchorEl}
@@ -167,11 +176,10 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               </>
             )}
           </Box>
-          <Typography>{body}</Typography>
+          <Typography variant="caption">{body}</Typography>
           <Typography
-            variant="subtitle2"
             textAlign="right"
-            sx={{ color: grey[600], mr: 1 }}
+            sx={{ color: grey[600], fontSize: ".7rem" }}
           >
             {updatedAt.split("T")[0]}
           </Typography>

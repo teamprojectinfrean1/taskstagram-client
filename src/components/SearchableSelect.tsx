@@ -184,7 +184,7 @@ const SearchableSelect = <T extends object>({
             InputProps={{
               ...params.InputProps,
               onFocus: handleFocus,
-              ...(InputProps ? InputProps(params) : {}),
+              ...(InputProps ? handleInputProps(params) : {}),
             }}
             inputProps={{
               ...params.inputProps,

@@ -284,8 +284,8 @@ const IssueFormModal = ({
                             imageUrl: formData.assigneeProfileImage,
                             width: 40,
                             height: 40,
-                            ml: 1,
-                            mr: 3,
+                            ml: 3,
+                            mr: 10,
                           }}
                         />
                       ),
@@ -295,7 +295,7 @@ const IssueFormModal = ({
                       { userNickname, userProfileImage }
                     ) => (
                       <li {...props}>
-                        <Box display="flex" alignItems="center" gap={4}>
+                        <Box display="flex" alignItems="center" gap={2}>
                           <UserAvatar
                             sx={{
                               imageUrl: userProfileImage,
@@ -308,7 +308,7 @@ const IssueFormModal = ({
                       </li>
                     )}
                     renderSkeleton={() => (
-                      <Box display="flex" alignItems="center" gap={4}>
+                      <Box display="flex" alignItems="center" gap={2}>
                         <Skeleton variant="circular" width={40} height={40} />
                         <Skeleton
                           variant="text"
