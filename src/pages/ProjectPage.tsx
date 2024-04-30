@@ -353,9 +353,9 @@ const ProjectPage = () => {
                 sx={{
                   height: "250px",
                   width: "200px",
-                  backgroundColor: "#dae0e8",
+                  backgroundColor: theme.palette.background.paper,
                   "&:hover": {
-                    backgroundColor: "#c3cede",
+                    backgroundColor: "#C2C6D6",
                   },
                   backgroundImage: `url('${formData.projectImageUrl}')`,
                   backgroundRepeat: "no-repeat",
@@ -365,7 +365,7 @@ const ProjectPage = () => {
                 <input type="file" hidden onChange={handleFileChanged} />
                 {!formData.projectImageUrl && (
                   <AddCircleRoundedIcon
-                    sx={{ marginRight: 0 }}
+                    sx={{ marginRight: 0, color: theme.palette.text.primary }}
                     fontSize="large"
                   />
                 )}
