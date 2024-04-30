@@ -54,7 +54,6 @@ const IssueFormModal = ({
   handleClose,
   projectId,
 }: IssueFormModalProps) => {
-
   const { memberId } = useRecoilValue(userInfoState);
   console.log(memberId);
   const isNewIssue = currentIssueId === "new-issue";
@@ -265,31 +264,31 @@ const IssueFormModal = ({
                       userNickname: formData.assigneeNickname,
                       userProfileImage: formData.assigneeProfileImage,
                     }}
-                    onSelectionChange={(selected) =>
+                    onSelectionChange={(selected) => {
                       handleInputChange({
                         assigneeId: selected?.memberId ?? null,
                         assigneeNickname: selected?.userNickname ?? null,
                         assigneeProfileImage:
                           selected?.userProfileImage ?? null,
                       })
-                    }
+                    }}
                     optionIdentifier="memberId"
                     optionLabel="userNickname"
                     multiselect={false}
-                    InputProps={(params) => ({
-                      ...params.InputProps,
-                      startAdornment: formData.assigneeId && (
-                        <UserAvatar
-                          sx={{
-                            imageUrl: formData.assigneeProfileImage,
-                            width: 40,
-                            height: 40,
-                            ml: 3,
-                            mr: 10,
-                          }}
-                        />
-                      ),
-                    })}
+                    // InputProps={(params) => ({
+                    //   ...params.InputProps,
+                    //   startAdornment: formData.assigneeId && (
+                    //     <UserAvatar
+                    //       sx={{
+                    //         imageUrl: formData.assigneeProfileImage,
+                    //         width: 40,
+                    //         height: 40,
+                    //         ml: 3,
+                    //         mr: 10,
+                    //       }}
+                    //     />
+                    //   ),
+                    // })}
                     renderOption={(
                       props,
                       { userNickname, userProfileImage }
@@ -297,8 +296,8 @@ const IssueFormModal = ({
                       <li {...props}>
                         <Box display="flex" alignItems="center" gap={2}>
                           <UserAvatar
+                            imageUrl={userProfileImage}
                             sx={{
-                              imageUrl: userProfileImage,
                               width: 40,
                               height: 40,
                             }}
@@ -320,10 +319,7 @@ const IssueFormModal = ({
                     )}
                     optionsFetchErrorMessage={
                       isErrorLoadingAllTaskList ? (
-                        <Box
-                          position="relative"
-                          sx={{ py: 2, px: 3, borderRadius: "2px dotted red" }}
-                        >
+                        <Box position="relative" sx={{ py: 2, px: 3 }}>
                           <ErrorOutlineIcon
                             sx={{
                               position: "absolute",
@@ -456,14 +452,15 @@ const IssueFormModal = ({
                     helperText={formErrors.statusId}
                   />
                 </Box>
-                {issueDetails?.lastUpdatedDetail && (
+                {issueDetails?.lastUpdateDetail && (
                   <Typography
                     align="right"
                     sx={{ color: grey[600], fontSize: ".7rem" }}
                   >
-                    최종 수정일: {issueDetails?.lastUpdatedDetail?.updatedDate}
+                    최종 수정일:{" "}
+                    {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
                     <br />
-                    최종 수정자: {issueDetails?.lastUpdatedDetail?.userNickname}
+                    최종 수정자: {issueDetails?.lastUpdateDetail?.userNickname}
                   </Typography>
                 )}
               </>
