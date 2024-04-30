@@ -132,6 +132,14 @@ const ProjectPage = () => {
     successMessage: "프로젝트를 수정했습니다.",
   });
 
+  useFeedbackHandler({
+    isError: deleteMutation.isError,
+    errorMessage:
+      "프로젝트를 삭제하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+    isSuccess: deleteMutation.isSuccess,
+    successMessage: "프로젝트를 삭제했습니다.",
+  });
+
   useEffect(() => {
     if (
       (createMutation.isSuccess && createMutation.isSuccess === true) ||
@@ -141,6 +149,13 @@ const ProjectPage = () => {
       queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
     }
   }, [createMutation.isSuccess, replaceMutation.isSuccess]);
+
+  useEffect(() => {
+    if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
+      //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
+      //navigate("/");
+    }
+  }, [deleteMutation.isSuccess]);
 
   useEffect(() => {
     if (data) {
@@ -214,7 +229,8 @@ const ProjectPage = () => {
         updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
-        projectTagList: formData.projectTags,
+        projectImageFile: formData.projectImageFile ?? null,
+        projectTagList: formData.projectTags ?? [],
         startDate:
           formData.projectStartDate !== null
             ? new Date(formData.projectStartDate).toISOString()
@@ -223,7 +239,9 @@ const ProjectPage = () => {
           formData.projectEndDate !== null
             ? new Date(formData.projectEndDate).toISOString()
             : null,
-        memberUuidList: formData.projectMemberUuidList,
+        memberUuidList: [
+          "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
+        ],
       });
     }
   };
@@ -446,9 +464,9 @@ const ProjectPage = () => {
           </Grid>
         </Grid>
       </Box>
-      {(createMutation.isLoading || replaceMutation.isLoading) && (
-        <Spinner centerInViewport size={70} />
-      )}
+      {(createMutation.isLoading ||
+        replaceMutation.isLoading ||
+        deleteMutation.isLoading) && <Spinner centerInViewport size={70} />}
     </div>
   );
 };

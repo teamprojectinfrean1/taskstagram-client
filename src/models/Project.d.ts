@@ -18,4 +18,7 @@ export type ProjectSummary = {
   projectName: string;
   isMainProject: bool;
   projectImage: string | null;
+  permission: ProjectPermission;
 };
+
+export type ProjectPermission = "MEMBER" | "LEADER";
