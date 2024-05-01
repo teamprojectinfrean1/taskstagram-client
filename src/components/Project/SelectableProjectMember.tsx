@@ -175,7 +175,7 @@ const ProjectMemberAutocomplete = ({
                       backgroundColor: theme.palette.primary.main,
                       color: theme.palette.background.default,
                       p: 0,
-                      maxHeight: "35vh",
+                      maxHeight: "30vh",
                     },
                     "& .MuiAutocomplete-noOptions": {
                       backgroundColor: theme.palette.primary.main,

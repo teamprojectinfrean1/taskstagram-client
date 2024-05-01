@@ -11,6 +11,7 @@ import {
   FormControlLabel,
   Typography,
   Skeleton,
+  Stack,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Dayjs } from "dayjs";
@@ -215,12 +216,23 @@ const TaskModal = ({
             취소
           </Button>
         </Box>
-        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-          {formData.lastUpdateDate}
-        </Typography>
-        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-          {formData.lastUpdateUserNickname}
-        </Typography>
+        <Stack alignItems="flex-end">
+          {isLoading ? (
+            <>
+              <Skeleton variant="text" width={150} />
+              <Skeleton variant="text" width={120} />
+            </>
+          ) : (
+            <>
+              <Typography variant="body2" sx={{ color: grey[600] }}>
+                {formData.lastUpdateDate}
+              </Typography>
+              <Typography variant="body2" sx={{ color: grey[600] }}>
+                {formData.lastUpdateUserNickname}
+              </Typography>
+            </>
+          )}
+        </Stack>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box sx={{ display: "grid", gap: 1 }}>

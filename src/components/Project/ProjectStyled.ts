@@ -50,4 +50,5 @@ export const StyledPopper = styled(Popper)(({ theme }) => ({
   fontSize: 13,
   color: theme.palette.background.default,
   backgroundColor: theme.palette.primary.main,
+  zIndex: "10",
 }));

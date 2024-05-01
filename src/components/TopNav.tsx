@@ -31,12 +31,13 @@ type TopNavProps = {
 const TopNav = ({ onMenuClick }: TopNavProps) => {
   const userInfo = useRecoilValue(userInfoState);
   const profileImage = userInfo.profileImage;
-  const userUuid = userInfo.memberId
+  const userUuid = userInfo.memberId || "3f0351b0-6141-4ed6-ac0c-47c3685045bf"; //임시 고정
 
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
   // const [projectDataList, setProjectDataList] = useState<ProjectSummary[]>([]);
-  const [projectDataList, setProjectDataList] = useRecoilState(projectListState)
+  const [projectDataList, setProjectDataList] =
+    useRecoilState(projectListState);
 
   const { data, isSuccess, refetch } = useQuery(
     "getProjectList",
