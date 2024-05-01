@@ -1,24 +1,13 @@
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { Button, Typography, Avatar } from "@mui/material";
-// import styled from "@emotion/styled";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { useMutation, useQuery } from "react-query";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import { changeProfileImage } from "@/apis/user/changeUserInfoImage";
 
-type imageType = {
-  profileImage: File | null;
-  memberId: string;
-};
 
 const ChangeProfileImage = () => {
-  // const VisuallyHiddenInput = styled("input")({
-  //   clip: "rect(0 0 0 0)",
-  //   overflow: "hidden",
-  //   position: "absolute",
-  // });
-
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleClick = () => {
@@ -46,7 +35,6 @@ const ChangeProfileImage = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const memberId = userInfo.memberId;
 
-  // const changeProfileImage = useMutation<>(({profileImage, memberId}: imageType) => changeUserInfoImage({profileImage, memberId}))
   const { data, refetch } = useQuery(
     "changeProfileImage",
     () => changeProfileImage({ profileImage, memberId }),

@@ -1,7 +1,6 @@
 import { Box, Button, Typography, Avatar } from "@mui/material";
-import FaceIcon from "@mui/icons-material/Face";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import basicProfileImage from "@/assets/basicProfileImage.png"
 
 type ProfileImageInputProps = {

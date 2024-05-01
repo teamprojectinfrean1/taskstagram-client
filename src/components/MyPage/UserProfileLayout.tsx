@@ -1,4 +1,4 @@
-import { Box, Grid, Typography, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import UserInfoForm from "./UserInfoForm";
 import PasswordForm from "./PasswordForm";
 import PermissionForm from "./PermissionForm";
@@ -29,8 +29,9 @@ const UserProfileLayout = () => {
         <Box
           boxShadow={10}
           sx={{
-            p: 5,
-            backgroundColor: `${theme.palette.primary.light}`,
+            py: 3,
+            px: 5,
+            backgroundColor: 'white',
             minWidth: "37rem",
             borderRadius: "7px",
           }}

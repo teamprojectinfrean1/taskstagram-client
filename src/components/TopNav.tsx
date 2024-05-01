@@ -15,7 +15,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import SelectableProject from "./Project/SelectableProject";
 import { ProjectSummary } from "@/models/Project";
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedProjectState } from "@/stores/projectStore";
+import { projectListState, selectedProjectState } from "@/stores/projectStore";
 import { useEffect, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
@@ -29,13 +29,18 @@ type TopNavProps = {
 };
 
 const TopNav = ({ onMenuClick }: TopNavProps) => {
+  const userInfo = useRecoilValue(userInfoState);
+  const profileImage = userInfo.profileImage;
+  const userUuid = userInfo.memberId
+
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
-  const [projectDataList, setProjectDataList] = useState<ProjectSummary[]>([]);
+  // const [projectDataList, setProjectDataList] = useState<ProjectSummary[]>([]);
+  const [projectDataList, setProjectDataList] = useRecoilState(projectListState)
 
   const { data, isSuccess, refetch } = useQuery(
     "getProjectList",
-    () => getProjectList("3f0351b0-6141-4ed6-ac0c-47c3685045bf")
+    () => getProjectList(userUuid)
     //추후 실패시 동작되는 로직도 추가 예정
   );
 
@@ -50,6 +55,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
       }
+      console.log(projectList);
       setProjectDataList(projectList);
       setSelectedProject(projectList[0]);
     }
@@ -78,6 +84,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
     setSelectedProject(selectedProject);
   };
 
+  // TopNav dropdown
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
   const handleOpenUserMenu = (e: React.MouseEvent<HTMLElement>) => {
@@ -97,27 +104,62 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
     }
   };
 
-  const userInfo = useRecoilValue(userInfoState);
-  const profileImage = userInfo.profileImage;
-
   return (
     <AppBar position="static">
-      <Toolbar>
+      <Toolbar sx={{ justifyContent: "space-between" }}>
+        <Box sx={{ display: "flex", alignItems: "center" }}>
+          <IconButton
+            size="large"
+            edge="start"
+            color="inherit"
+            aria-label="menu"
+            sx={{ mr: 2 }}
+            onClick={onMenuClick}
+          >
+            <MenuIcon />
+          </IconButton>
+          <SelectableProject
+            projects={projectDataList}
+            onSelectedProjectChanged={handleChangeSelectedProject}
+            onClickCheckBox={handleChangeMainProject}
+          />
+        </Box>
+        {/* TopNav dropdown */}
         <IconButton
           size="large"
-          edge="start"
+          edge="end"
+          onClick={handleOpenUserMenu}
           color="inherit"
-          aria-label="menu"
-          sx={{ mr: 2 }}
-          onClick={onMenuClick}
+          sx={{ p: 0 }}
         >
-          <MenuIcon />
+          <Avatar src={profileImage ? profileImage : basicProfileImage} />
+          <KeyboardArrowDownIcon sx={{ color: "#afbaca" }} />
         </IconButton>
-        <SelectableProject
-          projects={projectDataList}
-          onSelectedProjectChanged={handleChangeSelectedProject}
-          onClickCheckBox={handleChangeMainProject}
-        />
+        <Menu
+          open={!!anchorElUser}
+          onClose={handleCloseUserMenu}
+          sx={{ mt: "45px" }}
+          anchorEl={anchorElUser}
+          anchorOrigin={{ vertical: "top", horizontal: "right" }}
+          keepMounted
+          transformOrigin={{
+            vertical: "top",
+            horizontal: "right",
+          }}
+        >
+          {settings.map((setting) => (
+            <MenuItem key={setting} onClick={handleCloseUserMenu}>
+              <Typography
+                textAlign="center"
+                onClick={() => {
+                  redirectGo(setting);
+                }}
+              >
+                {setting}
+              </Typography>
+            </MenuItem>
+          ))}
+        </Menu>
       </Toolbar>
     </AppBar>
   );

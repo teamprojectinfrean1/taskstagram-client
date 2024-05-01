@@ -80,8 +80,6 @@ const NicknameInput = ({
     }
   }, [error]);
 
-  const signupInfo = useRecoilValue(signupInfoState);
-
   return (
     <>
       <Typography sx={{ mt: 4, ml: 0.5 }}>Nickname</Typography>

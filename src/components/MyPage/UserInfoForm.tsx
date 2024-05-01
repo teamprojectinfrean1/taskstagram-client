@@ -1,7 +1,7 @@
 import { userInfoState } from "@/stores/userStore";
 import { Box, Grid, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilValue } from "recoil";
 import theme from "@/theme/theme";
 
 const UserInfoForm = () => {

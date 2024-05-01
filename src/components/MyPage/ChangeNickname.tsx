@@ -6,7 +6,7 @@ import { useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/user/changeUserInfo";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
 

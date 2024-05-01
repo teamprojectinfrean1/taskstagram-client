@@ -3,7 +3,7 @@ import { checkEmailVerification } from "@/apis/user/checkEmailVerification";
 import { Typography, Grid, Button, Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useFetcher, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type EmailVerificationCodeInputpProps = {
   isSuccess: boolean;

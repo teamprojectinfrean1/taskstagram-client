@@ -7,3 +7,7 @@ export const selectedProjectState = atom<ProjectSummary | null>({
 });
 
 // 
+export const projectListState = atom<ProjectSummary[]> ({
+  key: "projectListState",
+  default: []
+})
