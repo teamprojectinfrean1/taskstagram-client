@@ -92,7 +92,10 @@ const TaskModal = ({
         taskId: data.taskId,
         taskTitle: data.taskTitle,
         taskContent: data.taskContent,
-        taskTags: data.taskTagList,
+        taskTags:
+          data.taskTags !== null && data.taskTags !== ""
+            ? data.taskTags.split(",")
+            : null,
         taskStartDate: data.startDate,
         taskEndDate: data.endDate,
         taskAuthorityType: data.editDeletePermission,
@@ -138,7 +141,7 @@ const TaskModal = ({
       //필수값 체크 로직 추가해야함.
       onAdd({
         projectId: selectedProject.projectId,
-        writerUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
+        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
@@ -156,7 +159,7 @@ const TaskModal = ({
       //이미 생성된 Task
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
-        updaterUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
+        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,

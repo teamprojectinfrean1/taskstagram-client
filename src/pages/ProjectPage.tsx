@@ -168,7 +168,10 @@ const ProjectPage = () => {
         projectStartDate: data.startDate,
         projectEndDate: data.endDate,
         projectMemberUuidList: [],
-        projectTags: data.projectTagList,
+        projectTags:
+          data.projectTags !== null && data.projectTags !== ""
+            ? data.projectTags.split(",")
+            : null,
         lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
         lastUpdateDate: data.lastUpdateDetail.updatedDate
           .replace("T", " ")

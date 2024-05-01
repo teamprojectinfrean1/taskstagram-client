@@ -22,7 +22,7 @@ type ProjectDetailReponse = {
   startDate: string;
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;
-  projectTagList: [] | null;
+  projectTags: string | null;
 };
 
 export type CreateProjectRequest = {

@@ -26,7 +26,7 @@ type TaskDetailReponse = {
   startDate: string;
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;
-  taskTagList: [] | null;
+  taskTags: string | null;
   editDeletePermission: TaskPermission;
   taskStatus: string;
 };
@@ -80,31 +80,26 @@ export const getPaginatedTaskList = async ({
   }
 };
 
-
 type GetAllTaskListRequest = {
   projectId: string;
 };
 
-type GetAllTaskResponse = Task[]
+type GetAllTaskResponse = Task[];
 
 export const getAllTaskList = async ({
   projectId,
 }: GetAllTaskListRequest): Promise<GetAllTaskResponse> => {
   try {
-    const response = await authorizedAxios.get(
-      `${taskPath}/all`,
-      {
-        params: { 
-        projectId
-      }
-      }
-    );
+    const response = await authorizedAxios.get(`${taskPath}/all`, {
+      params: {
+        projectId,
+      },
+    });
     return response.data.data;
   } catch (error) {
     throw new Error("태스크 목록 전체를 가져오는 중 오류가 발생했습니다.");
   }
 };
-
 
 //task 상세조회
 export const getTaskDetail = async (
