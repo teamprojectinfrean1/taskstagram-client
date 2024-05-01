@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { AuthInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { AuthisValid } from "@/models/Auth";
 import { resetPassword } from "@/apis/user/resetPassword";
 import { resetPasswordRequest } from "@/apis/user/resetPassword";

@@ -1,12 +1,11 @@
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Typography, Box, Button } from "@mui/material";
-import NicknameInput from "../auth/NicknameInput";
 import { useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/user/changeUserInfo";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
 import EmailInput from "../auth/EmailInput";
