@@ -9,30 +9,27 @@ import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
 import EmailInput from "../auth/EmailInput";
+import { ChangeUserInfoRequest } from "@/apis/user/changeUserInfo";
 
 const ChangeEmail = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const loginType = userInfo.weaver
   const memberId = userInfo.memberId;
+
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
 
-  const validState = !!(email && !isEmailValid);
-  const disabledState = !!(!isEmailValid || isEmailDuplicate);
-
   const changeEmailMutation = useMutation(
-    ({ type, value, memberId }: any) =>
+    ({ type, value, memberId }: ChangeUserInfoRequest) =>
       changeUserInfo({ type, value, memberId }),
     {
       onSuccess: (data) => {
-        console.log(data);
         setUserInfo({ ...userInfo, email: data });
-        navigate('/mypage/change/success', {
-          state: "닉네임"
-        })
+        navigate("/mypage/change/success", {
+          state: "이메일",
+        });
       },
     }
   );
@@ -43,7 +40,7 @@ const ChangeEmail = () => {
         boxShadow={10}
         sx={{
           height: "90%",
-          backgroundColor: `${theme.palette.primary.light}`,
+          backgroundColor: "white",
           minWidth: "37rem",
           borderRadius: "7px",
         }}
@@ -65,7 +62,7 @@ const ChangeEmail = () => {
         <Box
           className="base-layout"
           sx={{
-            border: `1px solid ${theme.palette.primary.dark}`,
+            border: "1px solid #F0F0F0",
             height: "70%",
             borderRadius: "7px",
             mt: 6,
@@ -78,7 +75,7 @@ const ChangeEmail = () => {
                 새로운 이메일을 입력해주세요.
               </Typography>
             </Box>
-            <Typography sx={{ml:0.5}}>Email</Typography>
+            <Typography sx={{ ml: 0.5 }}>Email</Typography>
             <EmailInput
               email={email}
               setEmail={(value) => setEmail(value)}
