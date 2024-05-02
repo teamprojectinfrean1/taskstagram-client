@@ -1,7 +1,7 @@
 import { authorizedAxios } from "../domainSettings";
 import { userPath } from "./userSettings";
 
-type ChangeUserInfoRequest = {
+export type ChangeUserInfoRequest = {
   type: string;
   value: File | string | Object | null;
   memberId: string;
@@ -13,7 +13,6 @@ export const changeUserInfo = async ({
   value,
   memberId,
 }: ChangeUserInfoRequest) => {
-  console.log(type, value, memberId);
   try {
     const response = await authorizedAxios.put(
       `${userPath}/update?uuid=${memberId}`,
@@ -22,9 +21,14 @@ export const changeUserInfo = async ({
         value,
       }
     );
-    console.log(response.data);
-    return response.data.data.nickname;
+    if (type === "email") {
+      return response.data.data.email;
+    } else if (type === "nickname") {
+      return response.data.data.nickname;
+    } else {
+      return response.data.isSuccess;
+    }
   } catch (error) {
-    throw error
+    throw error;
   }
 };

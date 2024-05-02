@@ -5,11 +5,15 @@ import { useMutation, useQuery } from "react-query";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import { changeProfileImage } from "@/apis/user/changeUserInfoImage";
-
+import { styled } from "@mui/material/styles";
 
 const ChangeProfileImage = () => {
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    overflow: "hidden",
+    position: "absolute",
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -17,9 +21,7 @@ const ChangeProfileImage = () => {
   };
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
-
   const acceptFileType = ["image/png", "image/jpg", "image/jpeg"];
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFile = e.target.files[0];
@@ -42,8 +44,8 @@ const ChangeProfileImage = () => {
       cacheTime: 0,
       enabled: false,
       onSuccess: (data) => {
-        setUserInfo({...userInfo, profileImage: data})
-      }
+        setUserInfo({ ...userInfo, profileImage: data });
+      },
     }
   );
 
@@ -82,15 +84,10 @@ const ChangeProfileImage = () => {
         >
           Upload Photo +
         </Typography>
-        <input
-          accept="image/png, image/jpeg, image/jpg"
+        <VisuallyHiddenInput
           type="file"
           ref={fileInputRef}
-          style={{
-            overflow: "hidden",
-            position: "absolute",
-            clip: "rect(0 0 0 0)",
-          }}
+          accept="image/png, image/jpeg, image/jpg"
           onChange={(e) => {
             handleFileChange(e);
           }}

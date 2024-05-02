@@ -8,6 +8,7 @@ import { getUserInfo } from "@/apis/member/getUserInfo";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import Snackbar from "@/components/Snackbar";
+import { jwtDecode } from "jwt-decode";
 
 const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
@@ -30,6 +31,18 @@ const PageLayout = () => {
     },
   });
 
+  // memberId 재추출
+  useEffect(() => {
+    const accessToken = sessionStorage.getItem('accessToken')
+    if (!userInfo.memberId && accessToken) {
+      const decodedToken = jwtDecode(accessToken)
+      const memberId = decodedToken.sub
+      if (memberId) {
+        setUserInfo({...userInfo, memberId})
+      }
+    }
+  }, [])
+  
   useEffect(() => {
     refetch()
   }, [data])
