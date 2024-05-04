@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import theme from "@/theme/theme";
 import {
   Autocomplete,
@@ -38,11 +38,20 @@ const ProjectMemberAutocomplete = ({
   selectedMemberUuidList,
   onSelectedMemberChanged,
 }: ProjectMemberAutocompleteProps) => {
-  const [value, setValue] = React.useState<UserSummary[]>([]);
-  const [pendingValue, setPendingValue] = React.useState<UserSummary[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [value, setValue] = useState<UserSummary[]>([]);
+  const [pendingValue, setPendingValue] = useState<UserSummary[]>([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const id = open ? "projectUserLabel" : undefined;
+
+  useEffect(() => {
+    if (memberUuidList && selectedMemberUuidList) {
+      const memeberValue: UserSummary[] = memberUuidList.filter((x) =>
+        selectedMemberUuidList.includes(x.id)
+      );
+      setValue(memeberValue);
+    }
+  }, [memberUuidList, selectedMemberUuidList]);
 
   const handleOptionChange = (
     event: React.SyntheticEvent<Element, Event>,
@@ -50,7 +59,7 @@ const ProjectMemberAutocomplete = ({
   ) => {
     if (value !== null) {
       setPendingValue(value);
-      onSelectedMemberChanged(value.map((x) => x.id));
+      onSelectedMemberChanged(value.map((x) => x.memberId));
     } else {
       onSelectedMemberChanged([]);
     }
