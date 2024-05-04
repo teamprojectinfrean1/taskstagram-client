@@ -40,17 +40,19 @@ const NicknameInput = ({
   );
 
   useEffect(() => {
-    setIsNicknameDuplicate(!!data);
-    if (!!!data) {
-      setShowErrorMessage(
-        "이미 가입된 닉네임입니다. 다른 닉네임을 입력해주세요."
-      );
-      setErrorState(true);
-    } else {
-      setShowErrorMessage("");
-      setErrorState(false);
+    if (data !== undefined) {
+      setIsNicknameDuplicate(!!data);
+      if (!!!data) {
+        setShowErrorMessage(
+          "이미 가입된 닉네임입니다. 다른 닉네임을 입력해주세요."
+        );
+        setErrorState(true);
+      } else {
+        setShowErrorMessage("");
+        setErrorState(false);
+      }
     }
-  }, [data]);
+  });
 
   useEffect(() => {
     if (validState) {

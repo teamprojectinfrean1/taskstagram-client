@@ -2,13 +2,18 @@ import { authorizedAxios } from "./domainSettings";
 
 const issuePath = "/issue";
 
+const statusTitleMap: { [key in IssueStatus]: IssueStatusTitle } = {
+  TODO: "할 일",
+  INPROGRESS: "진행 중",
+  DONE: "완료",
+};
+
+
 type CreateIssueRequest = {
   issue: Issue;
 };
 
-type CreateIssueResponse = {
-  isSuccess: boolean;
-};
+type CreateIssueResponse = Issue;
 
 export const createIssue = async ({
   issue,
@@ -37,7 +42,17 @@ export const createIssue = async ({
 
   try {
     const response = await authorizedAxios.post(issuePath, newIssuePayload);
-    return response.data.isSuccess;
+
+    const { status, issueContent, ...rest } = response.data.data;
+
+    const issueDetails = {
+      statusId: status,
+      statusTitle: statusTitleMap[status as IssueStatus],
+      issueContent: issueContent ? JSON.parse(issueContent) : null,
+      ...rest,
+    };
+
+    return issueDetails;
   } catch (error) {
     throw new Error("이슈를 생성하는 중 오류가 발생했습니다.");
   }
@@ -108,7 +123,7 @@ export const updateIssueStatus = async ({
       `${issuePath}/status/${issue.issueId}`,
       {
         params: {
-          status: newStatus,
+          status: newStatus, // body로 바뀔 예정 
         },
       }
     );
@@ -132,16 +147,7 @@ export const getIssueDetails = async ({
       `${issuePath}/detail/${issueId}`
     );
 
-    console.log(response.data.data);
-
     const { status, issueContent, ...rest } = response.data.data;
-
-    const statusTitleMap: { [key in IssueStatus]: IssueStatusTitle } = {
-      TODO: "할 일",
-      INPROGRESS: "진행 중",
-      DONE: "완료",
-    };
-
 
     const issueDetails = {
       statusId: status,
@@ -149,8 +155,6 @@ export const getIssueDetails = async ({
       issueContent: issueContent ? JSON.parse(issueContent) : null,
       ...rest,
     };
-
-    console.log("&&&&&&&&&&&&&&&&&&&&", issueDetails)
 
     return issueDetails;
   } catch (error) {
@@ -182,8 +186,7 @@ export const getIssueList = async ({
         },
       }
     );
-    console.log(response.data.data);
-    // return response.data.data;
+
     return {
       dataList: response.data.data.dataList,
       totalPage: response.data.data.totalPage,

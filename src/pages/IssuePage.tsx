@@ -25,7 +25,7 @@ import theme from "@/theme/theme";
 import { selectedProjectState } from "@/stores/projectStore";
 
 const IssuePage = () => {
-  const selectedProjectId = "1a490be9-a3f7-4483-bc42-c283fec0e004"; // 추후 제거 예정
+  const selectedProjectId = "ca005f9b-fc1a-4004-acee-e7f549699718"; // 추후 제거 예정
 
   // const selectedProjectId = useRecoilValue(selectedProjectState);
 

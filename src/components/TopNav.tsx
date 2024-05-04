@@ -23,6 +23,7 @@ import { useNavigate } from "react-router-dom";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { userInfoState } from "@/stores/userStore";
+import UserProfileDropdown from "./UserProfileDropdown";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -86,24 +87,24 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   };
 
   // TopNav dropdown
-  const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+  // const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenUserMenu = (e: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(e.currentTarget);
-  };
+  // const handleOpenUserMenu = (e: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorElUser(e.currentTarget);
+  // };
 
-  const handleCloseUserMenu = (e: any) => {
-    setAnchorElUser(null);
-  };
+  // const handleCloseUserMenu = (e: React.MouseEvent<HTMLElement>) => {
+  //   setAnchorElUser(null);
+  // };
 
-  const settings = ["마이페이지", "로그아웃"];
+  // const settings = ["마이페이지", "로그아웃"];
 
-  const navigate = useNavigate();
-  const redirectGo = (setting: string) => {
-    if (setting === "마이페이지") {
-      navigate("/mypage");
-    }
-  };
+  // const navigate = useNavigate();
+  // const redirectGo = (setting: string) => {
+  //   if (setting === "마이페이지") {
+  //     navigate("/mypage");
+  //   }
+  // };
 
   return (
     <AppBar position="static">
@@ -125,8 +126,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
             onClickCheckBox={handleChangeMainProject}
           />
         </Box>
+        <UserProfileDropdown />
         {/* TopNav dropdown */}
-        <IconButton
+        {/* <IconButton
           size="large"
           edge="end"
           onClick={handleOpenUserMenu}
@@ -160,7 +162,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
               </Typography>
             </MenuItem>
           ))}
-        </Menu>
+        </Menu> */}
       </Toolbar>
     </AppBar>
   );

@@ -5,3 +5,4 @@ export const checkNicknamePath = `${userPath}/checkNickname`
 export const loginPath = `${userPath}/login`
 export const signupPath = `${userPath}/join`
 export const resetPasswordPath = `${userPath}/findPassword/verification/update`
+export const logoutPath = `${userPath}/logout`

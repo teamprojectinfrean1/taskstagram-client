@@ -40,17 +40,19 @@ const EmailInput = ({
   );
 
   useEffect(() => {
-    setIsEmailDuplicate(!!data);
-    if (!!!data) {
-      setShowErrorMessage(
-        "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
-      );
-      setErrorState(true);
-    } else {
-      setShowErrorMessage("");
-      setErrorState(false);
+    if (data !== undefined) {
+      setIsEmailDuplicate(!!data);
+      if (!!!data) {
+        setShowErrorMessage(
+          "이미 가입된 이메일입니다. 다른 이메일을 입력해주세요."
+        );
+        setErrorState(true);
+      } else {
+        setShowErrorMessage("");
+        setErrorState(false);
+      }
     }
-  }, [data]);
+  });
 
   useEffect(() => {
     if (validState) {

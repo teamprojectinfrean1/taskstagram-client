@@ -13,7 +13,7 @@ const ChangeUserInfoSuccess = () => {
       boxShadow={10}
       sx={{
         height: "90%",
-        backgroundColor: `${theme.palette.primary.light}`,
+        backgroundColor: 'white',
         minWidth: "37rem",
         borderRadius: "7px",
       }}
@@ -29,7 +29,7 @@ const ChangeUserInfoSuccess = () => {
       <Box
         className="base-layout"
         sx={{
-          border: `1px solid ${theme.palette.primary.dark}`,
+          border: '1px solid #F0F0F0',
           height: "50%",
           borderRadius: "7px",
           mt: 6,
