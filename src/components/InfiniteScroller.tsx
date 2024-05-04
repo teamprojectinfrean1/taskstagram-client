@@ -51,7 +51,9 @@ const InfiniteScroller = <T,>({
           return undefined;
         }
       },
-      staleTime: 30000 
+      // staleTime: 30000
+      // refetchOnWindowFocus: false
+      refetchOnMount: "always",
     }
   );
 
@@ -81,9 +83,7 @@ const InfiniteScroller = <T,>({
       {data?.pages.map((page, pageIndex) => {
         return (
           <Fragment key={pageIndex}>
-            {page?.dataList.map((item) =>
-              renderItem(item)
-            )}
+            {page?.dataList.map((item) => renderItem(item))}
           </Fragment>
         );
       })}
@@ -94,7 +94,7 @@ const InfiniteScroller = <T,>({
       {!isError && hasNextPage && (
         <div
           ref={hasNextPage ? lastItemRef : undefined}
-          style={{ display: "none" }}
+          style={{ display: "none", border: "2px solid blue"}}
         />
       )}
       {isError && (

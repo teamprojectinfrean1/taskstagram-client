@@ -28,7 +28,8 @@ const useGetIssueDetails = ({
     () => getIssueDetails({ issueId: currentIssueId }),
     {
       enabled: !isNewIssue,
-      staleTime: 30000,
+      // staleTime: 30000,
+      // refetchOnWindowFocus: false
     }
   );
 

@@ -55,7 +55,6 @@ const IssueFormModal = ({
   projectId,
 }: IssueFormModalProps) => {
   const { memberId } = useRecoilValue(userInfoState);
-  console.log(memberId);
   const isNewIssue = currentIssueId === "new-issue";
 
   const defaultFormData: Issue = {
@@ -115,8 +114,7 @@ const IssueFormModal = ({
   const isFormValid = () => {
     const errors: Partial<Issue> = {};
 
-    // const idFields = ["writerId", "statusId", "taskId"];
-    const idFields = ["writerId", "statusId"];
+    const idFields = ["writerId", "statusId", "taskId"];
 
     idFields.forEach((field) => {
       if (!formData[field as keyof Issue]) {
@@ -147,7 +145,6 @@ const IssueFormModal = ({
     mutateFunction(submissionData);
   };
 
-  console.log("~~~~~~~~~~~~~~~~~~~~~~~~~~", formData);
   return (
     <Dialog
       open={!!currentIssueId}
@@ -191,7 +188,7 @@ const IssueFormModal = ({
                 issueId={issueDetails?.issueId!}
                 handleFormSubmit={handleFormSubmit}
               />
-              <IssueDeleteButton issueId={issueDetails?.issueId!} />
+              <IssueDeleteButton issueId={issueDetails?.issueId!} projectId={projectId} issueStatus={issueDetails?.statusId}/>
             </>
           )}
           <PrimaryButton onClick={handleClose} startIcon={<CloseIcon />}>
@@ -457,8 +454,7 @@ const IssueFormModal = ({
                     align="right"
                     sx={{ color: grey[600], fontSize: ".7rem" }}
                   >
-                    최종 수정일:{" "}
-                    {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
+                    최종 수정일: {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
                     <br />
                     최종 수정자: {issueDetails?.lastUpdateDetail?.userNickname}
                   </Typography>
