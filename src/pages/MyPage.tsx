@@ -21,7 +21,7 @@ const MyPage = () => {
       <Box
         boxShadow={10}
         sx={{
-          backgroundColor: `${theme.palette.primary.dark}`,
+          backgroundColor: '#F0F0F0',
           height: "40rem",
           display: "flex",
           justifyContent: "center",

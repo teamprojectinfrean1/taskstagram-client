@@ -64,7 +64,6 @@ const LoginForm = () => {
           e.key === "Enter" && refetch();
         }}
       />
-      {/* Network Error */}
       <ErrorHandling error={error} isLoading={isLoading} feature="로그인" />
       {typeof error === "number" && (
         <Box

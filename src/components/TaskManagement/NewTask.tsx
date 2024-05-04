@@ -19,13 +19,13 @@ const NewTask = ({ onClick, onShowTaskModal }: NewTaskProps) => {
         borderRadius: 4,
         boxShadow: 3,
         p: 1,
-        background: theme.palette.background.default,
+        background: theme.palette.background.paper,
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
         "&:hover": {
-          backgroundColor: theme.palette.secondary.light,
+          backgroundColor: "#C2C6D6",
           cursor: "pointer",
         },
       }}

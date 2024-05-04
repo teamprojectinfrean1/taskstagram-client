@@ -2,7 +2,7 @@ import { Box, Typography } from "@mui/material";
 
 const LogoAndName = () => {
   return (
-    <Box sx={{my:'auto'}}>
+    <Box sx={{ my: "auto" }}>
       <img src="favicon.ico" alt="..." width={50} />
       <Box display="flex" sx={{ my: 5 }}>
         <Typography
@@ -22,10 +22,10 @@ const LogoAndName = () => {
       <Box display="flex" sx={{ ml: 3 }}>
         <Box
           sx={{
-            borderRadius:'50%',
-            width:'120px',
-            height:'120px',
-            bgcolor:'#dee1e6',
+            borderRadius: "50%",
+            width: "120px",
+            height: "120px",
+            bgcolor: "#dee1e6",
             "& > *": {
               position: "absolute",
               borderRadius: "50%",

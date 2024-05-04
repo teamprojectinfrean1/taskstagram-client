@@ -30,7 +30,7 @@ const IdInput = ({
   // 아이디 중복 검사 상태
   const disabledState = !!(!isIdValid || isIdDuplicate);
 
-  const { data, isLoading, error, refetch } = useQuery(
+  const { data, isSuccess, isLoading, error, refetch } = useQuery(
     "checkId",
     () => checkIdExistence(id),
     {
@@ -40,17 +40,19 @@ const IdInput = ({
   );
 
   useEffect(() => {
-    setIsIdDuplicate(!!data);
-    if (!!(!data)) {
-      setShowErrorMessage(
-        "이미 가입된 아이디입니다. 다른 아이디를 입력해주세요."
-      );
-      setErrorState(true);
-    } else {
-      setShowErrorMessage("");
-      setErrorState(false);
+    if (data !== undefined) {
+      setIsIdDuplicate(!!data);
+      if (!!!data) {
+        setShowErrorMessage(
+          "이미 가입된 아이디입니다. 다른 아이디를 입력해주세요."
+        );
+        setErrorState(true);
+      } else {
+        setShowErrorMessage("");
+        setErrorState(false);
+      }
     }
-  }, [data]);
+  });
 
   useEffect(() => {
     if (validState) {

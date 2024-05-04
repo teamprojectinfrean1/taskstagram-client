@@ -1,7 +1,6 @@
 import { Box, Button, Typography, Avatar } from "@mui/material";
-import FaceIcon from "@mui/icons-material/Face";
 import { styled } from "@mui/material/styles";
-import React, { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import basicProfileImage from "@/assets/basicProfileImage.png"
 
 type ProfileImageInputProps = {
@@ -21,12 +20,19 @@ const ProfileImageInput = ({
     position: "absolute",
   });
 
+  const acceptFileType = ["image/png", "image/jpg", "image/jpeg"];
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      setProfileImage(selectedFile);
-      const previewUrl = URL.createObjectURL(selectedFile);
-      setPreviewImage(previewUrl);
+      const imageType = selectedFile.type
+      if (acceptFileType.includes(imageType)) {
+        setProfileImage(selectedFile);
+        const previewUrl = URL.createObjectURL(selectedFile);
+        setPreviewImage(previewUrl);
+      } else {
+        alert("이미지 파일의 형식은 .png, .jpg, .jpeg만 가능합니다.")
+      }
     }
   };
 
@@ -40,17 +46,15 @@ const ProfileImageInput = ({
           }}
         >
           <Avatar
-            src={previewImage}
-            alt={basicProfileImage}
+            src={previewImage? previewImage : basicProfileImage}
             sx={{
-              backgroundColor: "#B2B4B8",
-              borderRadius: "50%",
               width: "120px",
               height: "120px",
             }}
           />
           <VisuallyHiddenInput
             type="file"
+            accept="image/png, image/jpeg, image/jpg"
             onChange={(e) => {
               handleFileChange(e);
             }}

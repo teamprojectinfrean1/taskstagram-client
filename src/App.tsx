@@ -16,7 +16,7 @@ import SignupFormRequired from "@/components/auth/SignupFormRequired";
 import SignupFormOptional from "@/components/auth/SignupFormOptional";
 import ProjectPage from "./pages/ProjectPage";
 import ProtectedRouter from "./components/ProtectedRouter";
-import ResetPassword from "@/components/auth/ResetPassword";
+import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
 import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
 import RedirectPage from "./components/OAuth/RedirectPage";
 import MyPage from "./pages/MyPage";
@@ -75,7 +75,7 @@ const router = createBrowserRouter([
           },
           {
             path: "reset",
-            element: <ResetPassword />,
+            element: <ResetPasswordForm />,
           },
           {
             path: "success",

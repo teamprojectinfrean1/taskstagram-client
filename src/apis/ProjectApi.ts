@@ -22,7 +22,7 @@ type ProjectDetailReponse = {
   startDate: string;
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;
-  projectTagList: [] | null;
+  projectTags: string | null;
 };
 
 export type CreateProjectRequest = {
@@ -51,12 +51,12 @@ export type ReplaceProjectRequest = {
 
 // 프로젝트 리스트 조회
 export const getProjectList = async (
-  userId: string
+  userUuid: string
 ): Promise<PrjectListResponse | null> => {
-  if (userId) {
+  if (userUuid) {
     try {
       const response = await unauthorizedAxios.get(
-        `${projectPath}/list/${userId}`
+        `${projectPath}/list/${userUuid}`
       );
       return response.data.data;
     } catch {

@@ -9,7 +9,7 @@ const SkeletonTaskTicket = () => {
         borderRadius: 4,
         p: 1,
         boxShadow: 3,
-        background: theme.palette.primary.light,
+        background: theme.palette.background.paper,
       }}
       variant="elevation"
       square={false}

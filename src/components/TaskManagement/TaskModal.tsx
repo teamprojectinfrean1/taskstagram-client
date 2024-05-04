@@ -10,6 +10,8 @@ import {
   FormControl,
   FormControlLabel,
   Typography,
+  Skeleton,
+  Stack,
 } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Dayjs } from "dayjs";
@@ -78,7 +80,7 @@ const TaskModal = ({
 
   const selectedProject = useRecoilValue(selectedProjectState);
 
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     ["getTaskDetail", selectedTask],
     () => getTaskDetail(selectedTask.taskId!),
     { enabled: !!selectedTask && !!selectedTask.taskId }
@@ -90,7 +92,10 @@ const TaskModal = ({
         taskId: data.taskId,
         taskTitle: data.taskTitle,
         taskContent: data.taskContent,
-        taskTags: data.taskTagList,
+        taskTags:
+          data.taskTags !== null && data.taskTags !== ""
+            ? data.taskTags.split(",")
+            : null,
         taskStartDate: data.startDate,
         taskEndDate: data.endDate,
         taskAuthorityType: data.editDeletePermission,
@@ -136,7 +141,7 @@ const TaskModal = ({
       //필수값 체크 로직 추가해야함.
       onAdd({
         projectId: selectedProject.projectId,
-        writerUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
+        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
@@ -154,7 +159,7 @@ const TaskModal = ({
       //이미 생성된 Task
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
-        updaterUuid: "07c7ac1c-e1a9-4b54-9ef5-5f13884c8077", //임시 고정
+        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
         taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
         taskTagList: formData.taskTags,
@@ -193,7 +198,7 @@ const TaskModal = ({
           <Button
             type="submit"
             onClick={onClickSaveBtn}
-            disabled={formData.taskTitle === ""}
+            disabled={isLoading || formData.taskTitle === ""}
             startIcon={<SaveAsIcon />}
           >
             저장
@@ -201,109 +206,174 @@ const TaskModal = ({
           <Button
             type="submit"
             onClick={onClickDeleteBtn}
-            disabled={selectedTask === null}
+            disabled={isLoading || selectedTask === null}
             startIcon={<DeleteIcon />}
           >
             삭제
           </Button>
-          <Button onClick={handleModalClose} startIcon={<CloseIcon />}>
+          <Button
+            disabled={isLoading}
+            onClick={handleModalClose}
+            startIcon={<CloseIcon />}
+          >
             취소
           </Button>
         </Box>
-        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-          {formData.lastUpdateDate}
-        </Typography>
-        <Typography align="right" variant="body2" sx={{ color: grey[600] }}>
-          {formData.lastUpdateUserNickname}
-        </Typography>
+        <Stack alignItems="flex-end">
+          {isLoading ? (
+            <>
+              <Skeleton variant="text" width={150} />
+              <Skeleton variant="text" width={120} />
+            </>
+          ) : (
+            <>
+              <Typography variant="body2" sx={{ color: grey[600] }}>
+                {formData.lastUpdateDate}
+              </Typography>
+              <Typography variant="body2" sx={{ color: grey[600] }}>
+                {formData.lastUpdateUserNickname}
+              </Typography>
+            </>
+          )}
+        </Stack>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box sx={{ display: "grid", gap: 1 }}>
               <InputLabel htmlFor="Task명" sx={{ fontWeight: "bold", mb: 1 }}>
                 Task명
               </InputLabel>
-              <TextField
-                fullWidth
-                sx={{
-                  "& .MuiInputBase-root": {
-                    height: 40,
-                  },
-                }}
-                color="secondary"
-                value={formData.taskTitle}
-                onChange={(e) => handleInputChange("taskTitle", e.target.value)}
-              />
+              {isLoading ? (
+                <Skeleton
+                  variant="rectangular"
+                  height={40}
+                  sx={{ borderRadius: "4px" }}
+                />
+              ) : (
+                <TextField
+                  fullWidth
+                  sx={{
+                    "& .MuiInputBase-root": {
+                      height: 40,
+                    },
+                  }}
+                  color="secondary"
+                  value={formData.taskTitle}
+                  onChange={(e) =>
+                    handleInputChange("taskTitle", e.target.value)
+                  }
+                />
+              )}
+
               <InputLabel htmlFor="내용" sx={{ fontWeight: "bold", mb: 1 }}>
                 내용
               </InputLabel>
-              <TextEditor
-                id="content"
-                initialContent={null}
-                handleContentChange={(value) =>
-                  handleInputChange("taskContent", value)
-                }
-              />
+              {isLoading ? (
+                <Skeleton
+                  variant="rectangular"
+                  height={430}
+                  sx={{ borderRadius: "4px" }}
+                />
+              ) : (
+                <TextEditor
+                  id="content"
+                  initialContent={null}
+                  handleContentChange={(value) =>
+                    handleInputChange("taskContent", value)
+                  }
+                />
+              )}
             </Box>
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
             <InputLabel htmlFor="태그" sx={{ fontWeight: "bold", mb: 1 }}>
               태그
             </InputLabel>
-            <TaskTagChipMaker
-              tagList={formData.taskTags}
-              onTagSelectionChange={(value) =>
-                handleInputChange("taskTags", value)
-              }
-            />
+            {isLoading ? (
+              <Skeleton
+                variant="rectangular"
+                height={45}
+                sx={{ borderRadius: "4px" }}
+              />
+            ) : (
+              <TaskTagChipMaker
+                tagList={formData.taskTags}
+                onTagSelectionChange={(value) =>
+                  handleInputChange("taskTags", value)
+                }
+              />
+            )}
             <InputLabel htmlFor="기간" sx={{ fontWeight: "bold", mb: 1 }}>
               기간
             </InputLabel>
-            <DurationPicker
-              selectedStartDate={formData.taskStartDate}
-              selectedEndDate={formData.taskEndDate}
-              onStartDateSelectionChange={(value) =>
-                handleInputChange("taskStartDate", value)
-              }
-              onEndDateSelectionChange={(value) =>
-                handleInputChange("taskEndDate", value)
-              }
-            />
+            {isLoading ? (
+              <Box display="flex" gap={2}>
+                <Skeleton
+                  variant="rectangular"
+                  height={67}
+                  sx={{ borderRadius: "4px", flexBasis: "50%" }}
+                />
+                <Skeleton
+                  variant="rectangular"
+                  height={67}
+                  sx={{ borderRadius: "4px", flexBasis: "50%" }}
+                />
+              </Box>
+            ) : (
+              <DurationPicker
+                selectedStartDate={formData.taskStartDate}
+                selectedEndDate={formData.taskEndDate}
+                onStartDateSelectionChange={(value) =>
+                  handleInputChange("taskStartDate", value)
+                }
+                onEndDateSelectionChange={(value) =>
+                  handleInputChange("taskEndDate", value)
+                }
+              />
+            )}
             <InputLabel
               htmlFor="수정/삭제 권한"
               sx={{ fontWeight: "bold", mb: 1 }}
             >
               수정/삭제 권한
             </InputLabel>
-            <Box
-              sx={{
-                borderRadius: 1,
-                border: 1,
-                p: 2,
-                borderColor: theme.palette.secondary.light,
-              }}
-            >
-              <FormControl>
-                <RadioGroup
-                  aria-labelledby="demo-controlled-radio-buttons-group"
-                  name="controlled-radio-buttons-group"
-                  value={formData.taskAuthorityType}
-                  onChange={(e) =>
-                    handleInputChange("taskAuthorityType", e.target.value)
-                  }
-                >
-                  <FormControlLabel
-                    value="allProjectMember"
-                    control={<Radio />}
-                    label="모든 구성원"
-                  />
-                  <FormControlLabel
-                    value="projectLeader"
-                    control={<Radio />}
-                    label="리더만"
-                  />
-                </RadioGroup>
-              </FormControl>
-            </Box>
+            {isLoading ? (
+              <Skeleton
+                variant="rectangular"
+                height={115}
+                sx={{ borderRadius: "4px" }}
+              />
+            ) : (
+              <Box
+                sx={{
+                  borderRadius: 1,
+                  border: 1,
+                  p: 2,
+                  borderColor: theme.palette.secondary.light,
+                }}
+              >
+                <FormControl>
+                  <RadioGroup
+                    aria-labelledby="demo-controlled-radio-buttons-group"
+                    name="controlled-radio-buttons-group"
+                    value={formData.taskAuthorityType}
+                    onChange={(e) =>
+                      handleInputChange("taskAuthorityType", e.target.value)
+                    }
+                  >
+                    <FormControlLabel
+                      value="allProjectMember"
+                      control={<Radio />}
+                      label="모든 구성원"
+                    />
+                    <FormControlLabel
+                      value="projectLeader"
+                      control={<Radio />}
+                      label="리더만"
+                    />
+                  </RadioGroup>
+                </FormControl>
+              </Box>
+            )}
           </Grid>
         </Grid>
       </Box>

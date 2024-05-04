@@ -15,12 +15,13 @@ export const checkEmailVerification = async ({
 }: checkEmailVerificationRequest) => {
   try {
     const response = await unauthorizedAxios.post(
-      `${userPath}/${findUserInfo}/verification/request`,
+      `${userPath}/${findUserInfo}/verification/check`,
       {
         email,
         verificationCode,
       }
     );
+    console.log(response.data);
     return response.data.data;
   } catch (error) {
     throw error

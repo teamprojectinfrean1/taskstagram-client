@@ -6,28 +6,30 @@ import { useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/user/changeUserInfo";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
+import { ChangeUserInfoRequest } from "@/apis/user/changeUserInfo";
 
 const ChangeNickname = () => {
   const navigate = useNavigate();
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const memberId = userInfo.memberId;
+
   const [nickname, setNickname] = useState("");
   const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
 
   const changeNicknameMutation = useMutation(
-    ({ type, value, memberId }: any) =>
+    ({ type, value, memberId }: ChangeUserInfoRequest) =>
       changeUserInfo({ type, value, memberId }),
     {
       onSuccess: (data) => {
         console.log(data);
         setUserInfo({ ...userInfo, nickname: data });
-        navigate('/mypage/change/success', {
-          state: "닉네임"
-        })
+        navigate("/mypage/change/success", {
+          state: "닉네임",
+        });
       },
     }
   );
@@ -38,7 +40,7 @@ const ChangeNickname = () => {
         boxShadow={10}
         sx={{
           height: "90%",
-          backgroundColor: `${theme.palette.primary.light}`,
+          backgroundColor: "white",
           minWidth: "37rem",
           borderRadius: "7px",
         }}
@@ -60,7 +62,7 @@ const ChangeNickname = () => {
         <Box
           className="base-layout"
           sx={{
-            border: `1px solid ${theme.palette.primary.dark}`,
+            border: "1px solid #F0F0F0",
             height: "70%",
             borderRadius: "7px",
             mt: 6,

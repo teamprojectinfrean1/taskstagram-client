@@ -1,26 +1,19 @@
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { Button, Typography, Avatar } from "@mui/material";
-// import styled from "@emotion/styled";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { useMutation, useQuery } from "react-query";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import { changeProfileImage } from "@/apis/user/changeUserInfoImage";
-
-type imageType = {
-  profileImage: File | null;
-  memberId: string;
-};
+import { styled } from "@mui/material/styles";
 
 const ChangeProfileImage = () => {
-  // const VisuallyHiddenInput = styled("input")({
-  //   clip: "rect(0 0 0 0)",
-  //   overflow: "hidden",
-  //   position: "absolute",
-  // });
-
+  const VisuallyHiddenInput = styled("input")({
+    clip: "rect(0 0 0 0)",
+    overflow: "hidden",
+    position: "absolute",
+  });
   const fileInputRef = useRef<HTMLInputElement>(null);
-
   const handleClick = () => {
     if (fileInputRef.current) {
       fileInputRef.current.click();
@@ -28,9 +21,7 @@ const ChangeProfileImage = () => {
   };
 
   const [profileImage, setProfileImage] = useState<File | null>(null);
-
   const acceptFileType = ["image/png", "image/jpg", "image/jpeg"];
-
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const selectedFile = e.target.files[0];
@@ -46,7 +37,6 @@ const ChangeProfileImage = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const memberId = userInfo.memberId;
 
-  // const changeProfileImage = useMutation<>(({profileImage, memberId}: imageType) => changeUserInfoImage({profileImage, memberId}))
   const { data, refetch } = useQuery(
     "changeProfileImage",
     () => changeProfileImage({ profileImage, memberId }),
@@ -54,8 +44,8 @@ const ChangeProfileImage = () => {
       cacheTime: 0,
       enabled: false,
       onSuccess: (data) => {
-        setUserInfo({...userInfo, profileImage: data})
-      }
+        setUserInfo({ ...userInfo, profileImage: data });
+      },
     }
   );
 
@@ -94,15 +84,10 @@ const ChangeProfileImage = () => {
         >
           Upload Photo +
         </Typography>
-        <input
-          accept="image/png, image/jpeg, image/jpg"
+        <VisuallyHiddenInput
           type="file"
           ref={fileInputRef}
-          style={{
-            overflow: "hidden",
-            position: "absolute",
-            clip: "rect(0 0 0 0)",
-          }}
+          accept="image/png, image/jpeg, image/jpg"
           onChange={(e) => {
             handleFileChange(e);
           }}

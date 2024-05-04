@@ -3,7 +3,7 @@ import { checkEmailVerification } from "@/apis/user/checkEmailVerification";
 import { Typography, Grid, Button, Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useQuery } from "react-query";
-import { useFetcher, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type EmailVerificationCodeInputpProps = {
   isSuccess: boolean;
@@ -20,7 +20,7 @@ const EmailVerificationCodeInput = ({
 
   const navigate = useNavigate();
 
-  const { data, refetch } = useQuery(
+  const { data, refetch, error } = useQuery(
     "checkEmailVerification",
     () => checkEmailVerification({ findUserInfo, email, verificationCode }),
     {
@@ -40,7 +40,7 @@ const EmailVerificationCodeInput = ({
       } else if (findUserInfo === "findPassword" && data) {
         navigate("/auth/find/password/reset", {
           state: {
-            userId: data.uuid,
+            memberId: data.uuid,
           },
         });
       }
@@ -69,7 +69,7 @@ const EmailVerificationCodeInput = ({
             error={isSuccess}
             helperText={
               isSuccess &&
-              (data === false
+              (error === 403
                 ? "인증번호를 다시 확인해주세요."
                 : "인증번호를 확인해주세요.")
             }

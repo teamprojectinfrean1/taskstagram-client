@@ -36,9 +36,9 @@ const TaskTicket = ({
         borderRadius: 4,
         p: 1,
         boxShadow: 3,
-        background: theme.palette.background.default,
+        background: theme.palette.background.paper,
         "&:hover": {
-          backgroundColor: theme.palette.secondary.light,
+          backgroundColor: "#C2C6D6",
         },
       }}
       variant="elevation"

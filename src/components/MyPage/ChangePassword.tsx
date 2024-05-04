@@ -13,6 +13,7 @@ import { changeUserInfo } from "@/apis/user/changeUserInfo";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
+import { ChangeUserInfoRequest } from "@/apis/user/changeUserInfo";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -47,16 +48,18 @@ const ChangePassword = () => {
   const [isPasswordRequiredField, setIsPasswordRequiredField] = useState(false);
 
   const changePasswordMutation = useMutation(
-    ({ type, value, memberId }: any) =>
-      changeUserInfo({ type, value, memberId }),
-    {
-      onSuccess: (data) => {
-        navigate("/mypage/change/success", {
-          state: "비밀번호",
-        });
-      },
-    }
+    ({ type, value, memberId }: ChangeUserInfoRequest) =>
+      changeUserInfo({ type, value, memberId })
   );
+
+  useEffect(() => {
+    if (changePasswordMutation.data) {
+      console.log(changePasswordMutation.data);
+      navigate("/mypage/change/success", {
+        state: "비밀번호",
+      });
+    }
+  });
 
   useEffect(() => {
     const passwordInputCheck = Object.values(isValid).every(
@@ -71,7 +74,7 @@ const ChangePassword = () => {
         boxShadow={10}
         sx={{
           height: "90%",
-          backgroundColor: `${theme.palette.primary.light}`,
+          backgroundColor: "white",
           minWidth: "37rem",
           borderRadius: "7px",
         }}
@@ -93,7 +96,7 @@ const ChangePassword = () => {
         <Box
           className="base-layout"
           sx={{
-            border: `1px solid ${theme.palette.primary.dark}`,
+            border: "1px solid #F0F0F0",
             borderRadius: "7px",
             mt: 6,
             p: 2,
@@ -103,7 +106,7 @@ const ChangePassword = () => {
             현재 비밀번호
           </Typography>
           <PresentPasswordInput
-            isError = {changePasswordMutation.error === 304? true : false}
+            isError={changePasswordMutation.error === 304 ? true : false}
             presentPassword={passwordInfo.presentPassword}
             setPresentPassword={(value) =>
               setPasswordInfo({
@@ -116,7 +119,7 @@ const ChangePassword = () => {
         <Box
           className="base-layout"
           sx={{
-            border: `1px solid ${theme.palette.primary.dark}`,
+            border: "1px solid #F0F0F0",
             borderRadius: "7px",
             mt: 2,
             p: 2,

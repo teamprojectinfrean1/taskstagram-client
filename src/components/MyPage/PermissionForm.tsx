@@ -1,101 +1,68 @@
-import { Box, Grid, Typography, Button } from "@mui/material";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
-import basicProfileImage from "@/assets/basicProfileImage.png";
+import { Box, Grid, Typography, Button, Avatar } from "@mui/material";
+import { useRecoilValue } from "recoil";
+import { projectListState } from "@/stores/projectStore";
+import basicProjectImage from "@/assets/basicProjectImage.png";
+import StarIcon from "@mui/icons-material/Star";
 
 const PermissionForm = () => {
-  const testMainProject = [
-    {
-      profileImage: basicProfileImage,
-      name: "Navigation",
-      permission: "프로젝트 구성원",
-    },
-    {
-      profileImage: basicProfileImage,
-      name: "Music",
-      permission: "관리자",
-    },
-    {
-      profileImage: basicProfileImage,
-      name: "AI 드로잉 서비스",
-      permission: "프로젝트 구성원",
-    },
-    {
-      profileImage: basicProfileImage,
-      name: "Daily diary",
-      permission: "프로젝트 구성원",
-    },
-    {
-      profileImage: basicProfileImage,
-      name: "카드 관리 서비스",
-      permission: "프로젝트 구성원",
-    },
-    {
-      profileImage: basicProfileImage,
-      name: "test1",
-      permission: "프로젝트 구성원",
-    },
-    {
-      profileImage: basicProfileImage,
-      name: "test1",
-      permission: "프로젝트 구성원",
-    },
-  ];
-
-  const noProject = false;
+  const projectList = useRecoilValue(projectListState);
+  console.log(projectList);
 
   const showProjectPermisson = () => {
-    return testMainProject ? (
+    return projectList ? (
       <>
-        {testMainProject.map((data, index) => (
+        {projectList.map((data) => (
           <Box
-            key={index}
+            key={data.projectId}
             sx={{
-              display: "flex",
+              // display: "flex",
               border: "1px solid #626262",
               mt: 2,
               p: 1,
               borderRadius: "7px",
-              alignItems: "center",
+              // alignItems: "center",
             }}
           >
-            <Box>
-              <img
-                src={data.profileImage}
-                alt=""
-                style={{
-                  backgroundColor: "#B2B4B8",
-                  borderRadius: "50%",
-                  width: "30px",
-                  height: "30px",
-                }}
-              />
-            </Box>
-            <Box sx={{ ml: 2 }}>
-              <Typography
-                variant="body2"
-                sx={{
-                  fontWeight: "bold",
-                  color: "#626262",
-                  fontFamily: "Poppins",
-                }}
-              >
-                {data.name}
-              </Typography>
-              <Typography
-                sx={{
-                  fontSize: "11px",
-                  color: "#A4A4A4",
-                  fontFamily: "Poppins",
-                }}
-              >
-                {data.permission}
-              </Typography>
-            </Box>
+            <Grid container spacing={1}>
+              <Grid item xs={3}>
+                <Avatar
+                  src={
+                    data.projectImage ? data.projectImage : basicProjectImage
+                  }
+                />
+              </Grid>
+              <Grid item xs={7}>
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontWeight: "bold",
+                    color: "#626262",
+                    fontFamily: "Poppins",
+                  }}
+                >
+                  {data.projectName}
+                </Typography>
+                <Typography
+                  sx={{
+                    fontSize: "11px",
+                    color: "#A4A4A4",
+                    fontFamily: "Poppins",
+                  }}
+                >
+                  {data.permission === "LEADER" ? "관리자" : "프로젝트 구성원"}
+                </Typography>
+              </Grid>
+              <Grid item xs={2}>
+                {data.isMainProject && (
+                  <StarIcon fontSize="medium" sx={{ color: "#E5DC00" }} />
+                )}
+              </Grid>
+            </Grid>
           </Box>
         ))}
       </>
     ) : (
-      <Box sx={{ mx:2, my:4 }}>
+      <Box sx={{ mx: 2, my: 4 }}>
         <Typography sx={{ fontFamily: "Poppins", color: "#A4A4A4" }}>
           포함된 프로젝트가 없습니다.
         </Typography>
@@ -111,7 +78,6 @@ const PermissionForm = () => {
         ml: 10,
         borderRadius: "7px",
         width: "300px",
-        height: "590px",
         backgroundColor: "white",
       }}
     >
@@ -124,9 +90,10 @@ const PermissionForm = () => {
           width: "120px",
           justifyContent: "center",
           alignItems: "center",
+          mt:2.5
         }}
       >
-        <Typography sx={{ color: "1F1F1F", fontSize: "11px" }}>
+        <Typography sx={{ color: "1F1F1F", fontSize: "11px", fontWeight:'bold' }}>
           Permisson
         </Typography>
       </Box>

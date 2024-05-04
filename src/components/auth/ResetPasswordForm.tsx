@@ -5,15 +5,15 @@ import { useEffect, useState } from "react";
 import { AuthInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { AuthisValid } from "@/models/Auth";
 import { resetPassword } from "@/apis/user/resetPassword";
 import { resetPasswordRequest } from "@/apis/user/resetPassword";
 
-const ResetPassword = () => {
+const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const userId = location.state.userId;
+  const memberId = location.state.memberId;
 
   const [passwordInfo, setPasswordInfo] = useState({
     password: "",
@@ -39,8 +39,8 @@ const ResetPassword = () => {
   };
 
   const resetPasswordMutation = useMutation(
-    ({ userId, password }: resetPasswordRequest) =>
-      resetPassword({ userId, password }),
+    ({ memberId, password }: resetPasswordRequest) =>
+      resetPassword({ memberId, password }),
     {
       onSuccess: (data) => {
         console.log(data);
@@ -103,7 +103,7 @@ const ResetPassword = () => {
         disabled={!isPasswordRequiredInput}
         onClick={() => {
           resetPasswordMutation.mutate({
-            userId,
+            memberId,
             password: passwordInfo.password,
           });
         }}
@@ -114,4 +114,4 @@ const ResetPassword = () => {
   );
 };
 
-export default ResetPassword;
+export default ResetPasswordForm;
