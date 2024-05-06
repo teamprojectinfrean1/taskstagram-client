@@ -50,15 +50,14 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   useEffect(() => {
     if (isSuccess === true) {
       let projectList: ProjectSummary[] = [];
-      const mainProjectData = data?.mainProject;
+      const mainProjectDataList = data?.mainProject ?? [];
       const noMainProjectDataList = data?.noMainProject ?? [];
-      if (mainProjectData && mainProjectData !== null) {
-        projectList.push(mainProjectData);
+      if (mainProjectDataList && mainProjectDataList.length > 0) {
+        projectList = projectList.concat(mainProjectDataList);
       }
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
       }
-      console.log(projectList);
       setProjectDataList(projectList);
       setSelectedProject(projectList[0]);
     }
