@@ -32,7 +32,8 @@ type TopNavProps = {
 const TopNav = ({ onMenuClick }: TopNavProps) => {
   const userInfo = useRecoilValue(userInfoState);
   const profileImage = userInfo.profileImage;
-  const userUuid = userInfo.memberId || "3f0351b0-6141-4ed6-ac0c-47c3685045bf"; //임시 고정
+  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+  //"3f0351b0-6141-4ed6-ac0c-47c3685045bf"; //임시 고정
 
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);

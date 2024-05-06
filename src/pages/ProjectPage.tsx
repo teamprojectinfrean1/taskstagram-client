@@ -31,6 +31,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
 import { getAllMemberList, getAllProjectMemberList } from "@/apis/memberApi";
+import OneFormModal from "@/components/OneFormModal";
 
 const ProjectPage = () => {
   const location = useLocation();
@@ -40,6 +41,9 @@ const ProjectPage = () => {
   const [memberList, setMemberList] = useState<UserSummary[]>([]);
   const selectedProject = useRecoilValue(selectedProjectState);
   const type = location.state !== null ? location.state.type : "";
+  const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
+  const [showDeleteFormMoalInvalidText, showSetDeleteFormMoalInvalidText] =
+    useState(false);
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
     projectName: "",
@@ -216,7 +220,7 @@ const ProjectPage = () => {
     if (type === "new") {
       createMutation.mutate({
         projectName: formData.projectName,
-        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
+        writerUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
         projectImageFile: formData.projectImageFile ?? null,
@@ -239,7 +243,7 @@ const ProjectPage = () => {
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
         projectName: formData.projectName,
-        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
+        updaterUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
         projectImageFile: formData.projectImageFile ?? null,
@@ -259,8 +263,22 @@ const ProjectPage = () => {
 
   //삭제 버튼
   const handleDeleteProjectBtnClicked = () => {
-    if (selectedProject !== null && selectedProject.projectId) {
-      deleteMutation.mutate(selectedProject.projectId);
+    setShowDeleteFormModal(true);
+  };
+
+  //삭제 모달창 확인 버튼
+  const handleConfirmModal = (inputText: string) => {
+    if (
+      selectedProject !== null &&
+      selectedProject.projectId &&
+      inputText !== null
+    ) {
+      if (selectedProject.projectName === inputText) {
+        deleteMutation.mutate(selectedProject.projectId);
+        setShowDeleteFormModal(false);
+      } else {
+        showSetDeleteFormMoalInvalidText(true);
+      }
     }
   };
 
@@ -537,6 +555,20 @@ const ProjectPage = () => {
       {(createMutation.isLoading ||
         replaceMutation.isLoading ||
         deleteMutation.isLoading) && <Spinner centerInViewport size={70} />}
+      {selectedProject && selectedProject.projectId && (
+        <OneFormModal
+          isOpen={showDeleteFormModal}
+          title={"프로젝트 삭제"}
+          contentName={selectedProject.projectName}
+          contentText={
+            "프로젝트를 정말 삭제하시겠습니까? 프로젝트명을 입력후 삭제 버튼을 눌러주세요."
+          }
+          invalidText={"올바른 프로젝트명을 입력해주세요."}
+          showInvalidText={showDeleteFormMoalInvalidText}
+          handleConfirm={handleConfirmModal}
+          handleModalClose={() => setShowDeleteFormModal(false)}
+        ></OneFormModal>
+      )}
     </div>
   );
 };
