@@ -6,21 +6,17 @@ import StarIcon from "@mui/icons-material/Star";
 
 const PermissionForm = () => {
   const projectList = useRecoilValue(projectListState);
-  console.log(projectList);
-
   const showProjectPermisson = () => {
-    return projectList ? (
+    return projectList.length !== 0 ? (
       <>
         {projectList.map((data) => (
           <Box
             key={data.projectId}
             sx={{
-              // display: "flex",
               border: "1px solid #626262",
               mt: 2,
               p: 1,
               borderRadius: "7px",
-              // alignItems: "center",
             }}
           >
             <Grid container spacing={1}>
@@ -90,10 +86,12 @@ const PermissionForm = () => {
           width: "120px",
           justifyContent: "center",
           alignItems: "center",
-          mt:2.5
+          mt: 2.5,
         }}
       >
-        <Typography sx={{ color: "1F1F1F", fontSize: "11px", fontWeight:'bold' }}>
+        <Typography
+          sx={{ color: "1F1F1F", fontSize: "11px", fontWeight: "bold" }}
+        >
           Permisson
         </Typography>
       </Box>

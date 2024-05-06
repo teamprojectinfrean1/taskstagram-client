@@ -44,7 +44,7 @@
     "test": "craco test",
     "eject": "craco eject",
     "deploy" : "aws s3 sync ./build s3://task-tagram --profile=sukhojung",
-    "invalidate" : "aws cloudfront create-invalidation --profile=sukhojung --distribution-id EZVJR7JZ498HCC --paths /*"
+    "invalidate" : "aws cloudfront create-invalidation --profile=sukhojung --distribution-id E2VJR7JZ498HCC --paths /*"
   },
   "eslintConfig": {
     "extends": [
