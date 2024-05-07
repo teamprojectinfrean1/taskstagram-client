@@ -78,7 +78,12 @@ const OneFormModal = ({
       </DialogContent>
       <DialogActions>
         <Button onClick={handleModalClose}>취소</Button>
-        <Button onClick={() => handleConfirm(inputText)}>삭제</Button>
+        <Button
+          disabled={inputText === "" || showError}
+          onClick={() => handleConfirm(inputText)}
+        >
+          삭제
+        </Button>
       </DialogActions>
     </Dialog>
   );

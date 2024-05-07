@@ -180,7 +180,6 @@ const TaskModal = ({
   //삭제버튼 이벤트
   const onClickDeleteBtn = () => {
     onDelete(selectedTask);
-    handleModalClose();
   };
 
   return (

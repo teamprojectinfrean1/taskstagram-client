@@ -268,15 +268,9 @@ const ProjectPage = () => {
 
   //삭제 모달창 확인 버튼
   const handleConfirmModal = (inputText: string) => {
-    if (
-      selectedProject !== null &&
-      selectedProject.projectId &&
-      inputText !== null
-    ) {
-      if (selectedProject.projectName === inputText) {
-        deleteMutation.mutate(selectedProject.projectId);
-        setShowDeleteFormModal(false);
-      }
+    if (selectedProject !== null && selectedProject.projectId) {
+      deleteMutation.mutate(selectedProject.projectId);
+      setShowDeleteFormModal(false);
     }
   };
 
