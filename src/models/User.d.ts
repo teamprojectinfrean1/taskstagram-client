@@ -10,6 +10,7 @@ type UserInfo = {
 
 type UserSummary = {
   id: string;
+  memberId: string;
   nickname: string;
   profileImage: string | null;
 };

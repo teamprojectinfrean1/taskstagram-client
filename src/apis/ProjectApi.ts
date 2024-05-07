@@ -10,7 +10,7 @@ type LastUpdateDetailType = {
 };
 
 type PrjectListResponse = {
-  mainProject: ProjectSummary;
+  mainProject: ProjectSummary[];
   noMainProject: ProjectSummary[];
 };
 

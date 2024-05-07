@@ -32,7 +32,8 @@ type TopNavProps = {
 const TopNav = ({ onMenuClick }: TopNavProps) => {
   const userInfo = useRecoilValue(userInfoState);
   const profileImage = userInfo.profileImage;
-  const userUuid = userInfo.memberId || "3f0351b0-6141-4ed6-ac0c-47c3685045bf"; //임시 고정
+  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+  //"3f0351b0-6141-4ed6-ac0c-47c3685045bf"; //임시 고정
 
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
@@ -49,15 +50,14 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   useEffect(() => {
     if (isSuccess === true) {
       let projectList: ProjectSummary[] = [];
-      const mainProjectData = data?.mainProject;
+      const mainProjectDataList = data?.mainProject ?? [];
       const noMainProjectDataList = data?.noMainProject ?? [];
-      if (mainProjectData && mainProjectData !== null) {
-        projectList.push(mainProjectData);
+      if (mainProjectDataList && mainProjectDataList.length > 0) {
+        projectList = projectList.concat(mainProjectDataList);
       }
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
       }
-      console.log(projectList);
       setProjectDataList(projectList);
       setSelectedProject(projectList[0]);
     }

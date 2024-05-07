@@ -13,7 +13,7 @@ const useGetMemberAndTaskOptions = ({
     isError: isErrorLoadingAllProjectMembers,
     refetch: fetchAllProjectMemberList
   } = useQuery(["allProjectMemberList", projectId], () =>
-    getAllProjectMemberList({ projectId }), { enabled: false }
+    getAllProjectMemberList({ projectId }), { enabled: false, refetchOnWindowFocus: false }
   );
 
   const { 
@@ -22,7 +22,8 @@ const useGetMemberAndTaskOptions = ({
     isError: isErrorLoadingAllTaskList,
     refetch: fetchAllTaskList 
   } = useQuery(["allTaskList", projectId], () => getAllTaskList({ projectId }), {
-    enabled: false 
+    enabled: false,
+    // refetchOnWindowFocus: false
   });
 
   return {
