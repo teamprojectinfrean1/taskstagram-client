@@ -32,6 +32,7 @@ import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
 import { getAllMemberList, getAllProjectMemberList } from "@/apis/memberApi";
 import OneFormModal from "@/components/OneFormModal";
+import PrimaryButton from "@/components/PrimaryButton";
 
 const ProjectPage = () => {
   const location = useLocation();
@@ -311,35 +312,21 @@ const ProjectPage = () => {
               <Box
                 sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}
               >
-                <Button
-                  type="submit"
+                <PrimaryButton
                   startIcon={<SaveAsIcon />}
-                  sx={{
-                    width: "120px",
-                    height: "30px",
-                    backgroundColor: theme.palette.primary.main,
-                    color: theme.palette.background.default,
-                    marginRight: "10px",
-                  }}
+                  sx={{ mr: "10px" }}
                   disabled={isLoading}
                   onClick={handleSaveProjectBtnClicked}
                 >
                   저장
-                </Button>
-                <Button
-                  type="submit"
+                </PrimaryButton>
+                <PrimaryButton
                   startIcon={<DeleteIcon />}
-                  sx={{
-                    width: "120px",
-                    height: "30px",
-                    backgroundColor: "#dae0e8",
-                    color: theme.palette.primary.main,
-                  }}
                   disabled={isLoading}
                   onClick={handleDeleteProjectBtnClicked}
                 >
                   삭제
-                </Button>
+                </PrimaryButton>
               </Box>
               <Stack alignItems="flex-end">
                 {isLoading ? (

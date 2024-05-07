@@ -9,6 +9,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import theme from "@/theme/theme";
+import PrimaryButton from "./PrimaryButton";
 
 type OneFormModalProps = {
   isOpen: boolean;
@@ -77,13 +78,14 @@ const OneFormModal = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleModalClose}>취소</Button>
-        <Button
+        <PrimaryButton onClick={handleModalClose}>닫기</PrimaryButton>
+        <PrimaryButton
+          sx={{ mr: "15px" }}
           disabled={inputText === "" || showError}
           onClick={() => handleConfirm(inputText)}
         >
           삭제
-        </Button>
+        </PrimaryButton>
       </DialogActions>
     </Dialog>
   );

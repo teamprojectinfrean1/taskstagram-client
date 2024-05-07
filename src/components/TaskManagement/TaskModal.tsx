@@ -32,6 +32,7 @@ import {
 import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
 import { grey } from "@mui/material/colors";
+import PrimaryButton from "../PrimaryButton";
 
 type TaskModalProps = {
   selectedTask: Task;
@@ -144,7 +145,7 @@ const TaskModal = ({
         writerUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
         taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
-        taskTagList: formData.taskTags,
+        taskTagList: formData.taskTags ?? [],
         startDate:
           formData.taskStartDate !== null
             ? new Date(formData.taskStartDate).toISOString()
@@ -162,7 +163,7 @@ const TaskModal = ({
         updaterUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
         taskTitle: formData.taskTitle!,
         taskContent: formData.taskContent !== null ? formData.taskContent : "",
-        taskTagList: formData.taskTags,
+        taskTagList: formData.taskTags ?? [],
         startDate:
           formData.taskStartDate !== null
             ? new Date(formData.taskStartDate).toISOString()
@@ -194,52 +195,35 @@ const TaskModal = ({
           {/* <저장버튼 활성화 조건> 
                       1. 필수값 체크(일단 Task명으로만)
                       2. 이전값 이후값 비교*/}
-          <Button
-            type="submit"
+          <PrimaryButton
+            sx={{ mr: "3px" }}
             onClick={onClickSaveBtn}
             disabled={isLoading || formData.taskTitle === ""}
             startIcon={<SaveAsIcon />}
           >
             저장
-          </Button>
-          <Button
-            type="submit"
+          </PrimaryButton>
+          <PrimaryButton
+            sx={{ mr: "3px" }}
             onClick={onClickDeleteBtn}
             disabled={isLoading || selectedTask === null}
             startIcon={<DeleteIcon />}
           >
             삭제
-          </Button>
-          <Button
+          </PrimaryButton>
+          <PrimaryButton
             disabled={isLoading}
             onClick={handleModalClose}
             startIcon={<CloseIcon />}
           >
-            취소
-          </Button>
+            닫기
+          </PrimaryButton>
         </Box>
-        <Stack alignItems="flex-end">
-          {isLoading ? (
-            <>
-              <Skeleton variant="text" width={150} />
-              <Skeleton variant="text" width={120} />
-            </>
-          ) : (
-            <>
-              <Typography variant="body2" sx={{ color: grey[600] }}>
-                {formData.lastUpdateDate}
-              </Typography>
-              <Typography variant="body2" sx={{ color: grey[600] }}>
-                {formData.lastUpdateUserNickname}
-              </Typography>
-            </>
-          )}
-        </Stack>
         <Grid container spacing={2}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box sx={{ display: "grid", gap: 1 }}>
-              <InputLabel htmlFor="Task명" sx={{ fontWeight: "bold", mb: 1 }}>
-                Task명
+              <InputLabel htmlFor="제목" sx={{ fontWeight: "bold", mb: 1 }}>
+                제목
               </InputLabel>
               {isLoading ? (
                 <Skeleton
@@ -373,6 +357,23 @@ const TaskModal = ({
                 </FormControl>
               </Box>
             )}
+            <Stack alignItems="flex-end">
+              {isLoading ? (
+                <>
+                  <Skeleton variant="text" width={150} />
+                  <Skeleton variant="text" width={120} />
+                </>
+              ) : (
+                <>
+                  <Typography variant="body2" sx={{ color: grey[600] }}>
+                    {formData.lastUpdateDate}
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: grey[600] }}>
+                    {formData.lastUpdateUserNickname}
+                  </Typography>
+                </>
+              )}
+            </Stack>
           </Grid>
         </Grid>
       </Box>
