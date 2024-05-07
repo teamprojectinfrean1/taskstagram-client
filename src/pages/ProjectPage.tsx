@@ -42,8 +42,7 @@ const ProjectPage = () => {
   const selectedProject = useRecoilValue(selectedProjectState);
   const type = location.state !== null ? location.state.type : "";
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
-  const [showDeleteFormMoalInvalidText, showSetDeleteFormMoalInvalidText] =
-    useState(false);
+
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
     projectName: "",
@@ -276,8 +275,6 @@ const ProjectPage = () => {
       if (selectedProject.projectName === inputText) {
         deleteMutation.mutate(selectedProject.projectId);
         setShowDeleteFormModal(false);
-      } else {
-        showSetDeleteFormMoalInvalidText(true);
       }
     }
   };
@@ -564,7 +561,6 @@ const ProjectPage = () => {
             "프로젝트를 정말 삭제하시겠습니까? 프로젝트명을 입력후 삭제 버튼을 눌러주세요."
           }
           invalidText={"올바른 프로젝트명을 입력해주세요."}
-          showInvalidText={showDeleteFormMoalInvalidText}
           handleConfirm={handleConfirmModal}
           handleModalClose={() => setShowDeleteFormModal(false)}
         ></OneFormModal>

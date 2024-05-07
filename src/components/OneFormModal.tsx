@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import {
   Button,
-  Box,
-  OutlinedInput,
-  Typography,
   TextField,
   Dialog,
   DialogActions,
@@ -19,7 +16,6 @@ type OneFormModalProps = {
   contentName: string;
   contentText: string;
   invalidText: string;
-  showInvalidText: boolean;
   handleConfirm(inputText: string): void;
   handleModalClose(): void;
 };
@@ -30,44 +26,55 @@ const OneFormModal = ({
   contentName,
   contentText,
   invalidText,
-  showInvalidText,
   handleConfirm,
   handleModalClose,
 }: OneFormModalProps) => {
   const [inputText, setInputText] = useState("");
+  const [showError, setShowError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
   useEffect(() => {
     if (isOpen === true) {
       setInputText("");
     }
   }, [isOpen]);
+
+  useEffect(() => {
+    if (contentName !== inputText && inputText !== "") {
+      setShowError(true);
+      setErrorMessage(invalidText);
+    } else {
+      setShowError(false);
+      setErrorMessage("");
+    }
+  }, [inputText]);
+
   return (
     <Dialog open={isOpen} onClose={handleModalClose}>
       <DialogTitle>{title}</DialogTitle>
       <DialogContent>
         <DialogContentText>{contentText}</DialogContentText>
-        <OutlinedInput
+        <TextField
+          sx={{
+            "& .MuiFormHelperText-root": {
+              position: "absolute",
+              mt: 5,
+              ml: 1,
+              fontSize: "11px",
+              fontWeight: "bold",
+              color: theme.palette.error.main,
+            },
+          }}
           fullWidth
           size="small"
           placeholder={contentName}
-          sx={{ mt: 1 }}
           value={inputText}
+          error={showError}
+          helperText={errorMessage}
           onChange={(e) => {
             setInputText(e.target.value);
           }}
         />
-        {showInvalidText && (
-          <Box
-            sx={{
-              mt: 2,
-              color: `${theme.palette.error.main}`,
-              textAlign: "left",
-            }}
-          >
-            <Typography fontSize="11px" fontWeight="bold">
-              {invalidText}
-            </Typography>
-          </Box>
-        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={handleModalClose}>취소</Button>
