@@ -210,7 +210,8 @@ const ProjectPage = () => {
   useEffect(() => {
     if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
       //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
-      //navigate("/");
+      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
+      navigate("/");
     }
   }, [deleteMutation.isSuccess]);
 
