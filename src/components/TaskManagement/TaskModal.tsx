@@ -279,6 +279,7 @@ const TaskModal = ({
               />
             ) : (
               <TaskTagChipMaker
+                isReadOnly={false}
                 tagList={formData.taskTags}
                 onTagSelectionChange={(value) =>
                   handleInputChange("taskTags", value)

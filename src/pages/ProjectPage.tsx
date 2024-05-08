@@ -46,8 +46,8 @@ const ProjectPage = () => {
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
   const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
-  const isUserSelectedProjectLeader =
-    selectedProject !== null ? selectedProject.permission === "LEADER" : null;
+  const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
+    useState<boolean | null>(null);
 
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
@@ -63,6 +63,12 @@ const ProjectPage = () => {
     lastUpdateDate: "",
     isMainProject: false,
   });
+
+  useEffect(() => {
+    setIsUserSelectedProjectLeader(
+      selectedProject !== null ? selectedProject.permission === "LEADER" : null
+    );
+  }, [selectedProject]);
 
   const { data, refetch, isLoading } = useQuery(
     ["getProjectDetail", selectedProject],
@@ -157,7 +163,7 @@ const ProjectPage = () => {
       });
       setMemberList(memberList);
     }
-  }, [allMemberList, isGetAllMemberListSuccess]);
+  }, [allMemberList, isGetAllMemberListSuccess, isUserSelectedProjectLeader]);
 
   useEffect(() => {
     if (
@@ -436,6 +442,7 @@ const ProjectPage = () => {
                       fontSize: "0.9rem",
                       height: "40px",
                     },
+                    readOnly: isUserSelectedProjectLeader === false,
                   }}
                 />
               )}
@@ -467,6 +474,7 @@ const ProjectPage = () => {
                       fontSize: "0.9rem",
                       height: "100px",
                     },
+                    readOnly: isUserSelectedProjectLeader === false,
                   }}
                 />
               )}
@@ -484,18 +492,17 @@ const ProjectPage = () => {
                   sx={{ borderRadius: "4px" }}
                 />
               ) : (
-                (isUserSelectedProjectLeader === null ||
-                  isUserSelectedProjectLeader === true) && (
-                  <SelectableProjectMember
-                    memberUuidList={memberList}
-                    selectedMemberUuidList={
-                      formData.projectMemberUuidList ?? []
-                    }
-                    onSelectedMemberChanged={(value) =>
-                      handleInputChange("projectMemberUuidList", value)
-                    }
-                  />
-                )
+                <SelectableProjectMember
+                  isMemberProjectLeader={
+                    isUserSelectedProjectLeader === null ||
+                    isUserSelectedProjectLeader === true
+                  }
+                  memberUuidList={memberList}
+                  selectedMemberUuidList={formData.projectMemberUuidList ?? []}
+                  onSelectedMemberChanged={(value) =>
+                    handleInputChange("projectMemberUuidList", value)
+                  }
+                />
               )}
             </Grid>
             <Grid item xs={3}>
@@ -544,6 +551,7 @@ const ProjectPage = () => {
                 />
               ) : (
                 <TagChipMaker
+                  isReadOnly={isUserSelectedProjectLeader === false}
                   tagList={formData.projectTags}
                   onTagSelectionChange={(value) =>
                     handleInputChange("projectTags", value)
