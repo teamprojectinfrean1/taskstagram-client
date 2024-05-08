@@ -14,4 +14,4 @@ type Member = {
   profileUrl: string | null;
 };
 
-export type ProjectPermission = "MEMBER" | "LEADER";
+type ProjectPermission = "MEMBER" | "LEADER";
