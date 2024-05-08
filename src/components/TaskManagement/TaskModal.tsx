@@ -219,11 +219,11 @@ const TaskModal = ({
             닫기
           </PrimaryButton>
         </Box>
-        <Grid container spacing={2}>
+        <Grid container spacing={4}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             <Box sx={{ display: "grid", gap: 1 }}>
               <InputLabel htmlFor="제목" sx={{ fontWeight: "bold", mb: 1 }}>
-                제목
+                제목 *
               </InputLabel>
               {isLoading ? (
                 <Skeleton
@@ -317,7 +317,7 @@ const TaskModal = ({
               htmlFor="수정/삭제 권한"
               sx={{ fontWeight: "bold", mb: 1 }}
             >
-              수정/삭제 권한
+              수정/삭제 권한 *
             </InputLabel>
             {isLoading ? (
               <Skeleton

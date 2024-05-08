@@ -137,11 +137,11 @@ const TaskPage = () => {
           variant="h5"
           sx={{
             borderBottom: "1px solid black",
-            width: "65px",
+            width: "73px",
             fontWeight: "bold",
           }}
         >
-          TASK
+          테스크
         </Typography>
         <Grid
           container
