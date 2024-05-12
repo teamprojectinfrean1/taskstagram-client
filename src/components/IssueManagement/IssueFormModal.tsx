@@ -234,6 +234,7 @@ const IssueFormModal = ({
                   </InputLabel>
                   <TextEditor
                     id="content"
+                    isReadOnly={false}
                     initialContent={formData.issueContent}
                     handleContentChange={(content) =>
                       handleInputChange({ issueContent: content })

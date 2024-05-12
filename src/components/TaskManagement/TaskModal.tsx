@@ -37,6 +37,7 @@ import PrimaryButton from "../PrimaryButton";
 type TaskModalProps = {
   selectedTask: Task;
   isOpen: boolean;
+  isUserSelectedProjectLeader: boolean | null;
   onAdd(request: CreateTaskRequest): void;
   onReplace(request: ReplaceTaskRequest): void;
   onDelete(task: Task): void;
@@ -61,6 +62,7 @@ const style = {
 const TaskModal = ({
   selectedTask,
   isOpen,
+  isUserSelectedProjectLeader,
   onAdd,
   onReplace,
   onDelete,
@@ -80,6 +82,8 @@ const TaskModal = ({
   });
 
   const selectedProject = useRecoilValue(selectedProjectState);
+
+  const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
 
   const { data, isLoading } = useQuery(
     ["getTaskDetail", selectedTask],
@@ -106,6 +110,12 @@ const TaskModal = ({
           .replace("T", " ")
           .slice(0, -3),
       });
+      //로그인된 사용자가 프로젝트 리더가 아닌데 수정/삭제 권한이 프로젝트 리더만 인 경우는 편집 불가 모드
+      if (data.editDeletePermission === "projectLeader") {
+        setIsReadOnlyMode(isUserSelectedProjectLeader === false);
+      } else {
+        setIsReadOnlyMode(false);
+      }
     }
   }, [data, isOpen]);
 
@@ -198,7 +208,9 @@ const TaskModal = ({
           <PrimaryButton
             sx={{ mr: "3px" }}
             onClick={onClickSaveBtn}
-            disabled={isLoading || formData.taskTitle === ""}
+            disabled={
+              isLoading || isReadOnlyMode === true || formData.taskTitle === ""
+            }
             startIcon={<SaveAsIcon />}
           >
             저장
@@ -206,7 +218,9 @@ const TaskModal = ({
           <PrimaryButton
             sx={{ mr: "3px" }}
             onClick={onClickDeleteBtn}
-            disabled={isLoading || selectedTask === null}
+            disabled={
+              isLoading || isReadOnlyMode === true || selectedTask === null
+            }
             startIcon={<DeleteIcon />}
           >
             삭제
@@ -239,6 +253,7 @@ const TaskModal = ({
                       height: 40,
                     },
                   }}
+                  InputProps={{ readOnly: isReadOnlyMode === true }}
                   color="secondary"
                   value={formData.taskTitle}
                   onChange={(e) =>
@@ -259,6 +274,7 @@ const TaskModal = ({
               ) : (
                 <TextEditor
                   id="content"
+                  isReadOnly={isReadOnlyMode === true}
                   initialContent={null}
                   handleContentChange={(value) =>
                     handleInputChange("taskContent", value)
@@ -279,7 +295,7 @@ const TaskModal = ({
               />
             ) : (
               <TaskTagChipMaker
-                isReadOnly={false}
+                isReadOnly={isReadOnlyMode === true}
                 tagList={formData.taskTags}
                 onTagSelectionChange={(value) =>
                   handleInputChange("taskTags", value)
@@ -304,7 +320,7 @@ const TaskModal = ({
               </Box>
             ) : (
               <DurationPicker
-                isReadOnly={false}
+                isReadOnly={isReadOnlyMode === true}
                 selectedStartDate={formData.taskStartDate}
                 selectedEndDate={formData.taskEndDate}
                 onStartDateSelectionChange={(value) =>
@@ -346,11 +362,13 @@ const TaskModal = ({
                     }
                   >
                     <FormControlLabel
+                      disabled={isReadOnlyMode === true}
                       value="allProjectMember"
                       control={<Radio />}
                       label="모든 구성원"
                     />
                     <FormControlLabel
+                      disabled={isReadOnlyMode === true}
                       value="projectLeader"
                       control={<Radio />}
                       label="리더만"
