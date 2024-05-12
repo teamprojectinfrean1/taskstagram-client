@@ -304,6 +304,7 @@ const TaskModal = ({
               </Box>
             ) : (
               <DurationPicker
+                isReadOnly={false}
                 selectedStartDate={formData.taskStartDate}
                 selectedEndDate={formData.taskEndDate}
                 onStartDateSelectionChange={(value) =>

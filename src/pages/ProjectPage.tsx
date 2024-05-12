@@ -526,6 +526,7 @@ const ProjectPage = () => {
                 </Box>
               ) : (
                 <DurationPicker
+                  isReadOnly={isUserSelectedProjectLeader === false}
                   selectedStartDate={formData.projectStartDate}
                   selectedEndDate={formData.projectEndDate}
                   onStartDateSelectionChange={(value) =>

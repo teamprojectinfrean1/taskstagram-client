@@ -9,6 +9,7 @@ import theme from "@/theme/theme";
 dayjs.extend(utc);
 
 type DurationPickerProps = {
+  isReadOnly: boolean;
   selectedStartDate: string | null;
   selectedEndDate: string | null;
   onStartDateSelectionChange: (stringDateValue: string | null) => void;
@@ -16,6 +17,7 @@ type DurationPickerProps = {
 };
 
 const DurationPicker = ({
+  isReadOnly,
   selectedStartDate,
   selectedEndDate,
   onStartDateSelectionChange,
@@ -62,6 +64,7 @@ const DurationPicker = ({
           slotProps={{
             textField: { size: "small" },
           }}
+          readOnly={isReadOnly}
         />
         <DatePicker
           label="종료"
@@ -79,6 +82,7 @@ const DurationPicker = ({
           value={selectedEndDate ? dayjs(selectedEndDate) : null}
           onChange={handleEndDateChange}
           slotProps={{ textField: { size: "small" } }}
+          readOnly={isReadOnly}
         />
       </LocalizationProvider>
     </Box>
