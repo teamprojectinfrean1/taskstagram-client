@@ -1,4 +1,4 @@
-export type SignupInfo = {
+type SignupInfo = {
   email: string;
   id: string;
   password: string;
@@ -7,19 +7,19 @@ export type SignupInfo = {
 };
 
 // auth 유효성 검사 확인 type
-export type CheckAuthInputValidity = {
+type CheckAuthInputValidity = {
   type: string;
   authValue: string;
 };
 
 // auth input value 변경 type
-export type AuthInputValue = {
+type AuthInputValue = {
   key: string;
   value: string | File;
 };
 
 // auth input 유효성 변경 type
-export type AuthisValid = {
+type AuthisValid = {
   key: string;
   value: boolean;
 };

@@ -1,5 +1,4 @@
 import { unauthorizedAxios } from "./domainSettings";
-import { SignupInfo } from "@/models/Auth";
 
 const authPath = "auth";
 // const authPath = "http://127.0.0.1:8080/api/v1/auth"

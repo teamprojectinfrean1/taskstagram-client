@@ -7,13 +7,12 @@ type SocialIconsProps = {
   authPage: "login" | "signup";
 };
 
-const SocialIcons = ({ authPage }: SocialIconsProps) => {
+const SocialIcons = () => {
   return (
     <Box
-      className="base-layout"
       sx={{
         display: "flex",
-        justifyContent: "space-around",
+        justifyContent: "center",
         mt: 2,
       }}
     >

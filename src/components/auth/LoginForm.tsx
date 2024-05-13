@@ -2,9 +2,9 @@ import theme from "@/theme/theme";
 import { useEffect, useState } from "react";
 import SocialIcons from "../OAuth/SocialIcons";
 import AuthMenuOptions from "./AuthMenuOptions";
-import { fetchLogin } from "@/apis/user/fetchLogin";
+import { fetchLogin, fetchLoginRequest } from "@/apis/user/fetchLogin";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
-import { useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
@@ -16,21 +16,16 @@ const LoginForm = () => {
   const [password, setPassword] = useState("");
 
   const navigate = useNavigate();
-  const { data, isLoading, error, refetch } = useQuery(
-    "login",
-    () => fetchLogin({ id, password }),
-    {
-      enabled: false,
-      cacheTime: 0,
-    }
+  const mutateLogin = useMutation(({ id, password }: fetchLoginRequest) =>
+    fetchLogin({ id, password })
   );
 
   useEffect(() => {
-    if (data) {
-      setUserInfo({ ...userInfo, memberId: data });
+    if (mutateLogin.data) {
+      setUserInfo({ ...userInfo, memberId: mutateLogin.data });
       navigate("/");
     }
-  }, [data]);
+  }, [mutateLogin.data]);
 
   return (
     <Box className="base-layout">
@@ -61,11 +56,15 @@ const LoginForm = () => {
           setPassword(e.target.value);
         }}
         onKeyDown={(e) => {
-          e.key === "Enter" && refetch();
+          e.key === "Enter" && mutateLogin.mutate({ id, password });
         }}
       />
-      <ErrorHandling error={error} isLoading={isLoading} feature="로그인" />
-      {typeof error === "number" && (
+      <ErrorHandling
+        error={mutateLogin.error}
+        isLoading={mutateLogin.isLoading}
+        feature="로그인"
+      />
+      {typeof mutateLogin.error === "number" && (
         <Box
           sx={{
             mt: 2,
@@ -92,7 +91,7 @@ const LoginForm = () => {
           borderRadius: "7px",
         }}
         onClick={() => {
-          refetch();
+          mutateLogin.mutate({ id, password });
         }}
       >
         로그인
@@ -102,7 +101,7 @@ const LoginForm = () => {
         <AuthMenuOptions />
       </Box>
       <Divider sx={{ mt: 3 }}>간편 로그인</Divider>
-      <SocialIcons authPage="login" />
+      <SocialIcons />
     </Box>
   );
 };

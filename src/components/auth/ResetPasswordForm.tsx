@@ -2,11 +2,9 @@ import theme from "@/theme/theme";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Box, Typography, Button } from "@mui/material";
 import { useEffect, useState } from "react";
-import { AuthInputValue } from "@/models/Auth";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 import { useMutation } from "react-query";
-import { AuthisValid } from "@/models/Auth";
 import { resetPassword } from "@/apis/user/resetPassword";
 import { resetPasswordRequest } from "@/apis/user/resetPassword";
 

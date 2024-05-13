@@ -9,7 +9,6 @@ import { fetchSignup } from "@/apis/user/fetchSignup";
 import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import { useMutation } from "react-query";
-import { SignupInfo } from "@/models/Auth";
 import { useEffect, useState } from "react";
 import ErrorHandling from "../ErrorHandling";
 

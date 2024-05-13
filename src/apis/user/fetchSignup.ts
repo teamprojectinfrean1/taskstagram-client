@@ -1,5 +1,4 @@
 import { unauthorizedAxios } from "../domainSettings";
-import { SignupInfo } from "@/models/Auth";
 import { signupPath } from "./userSettings";
 
 // 회원가입 api

@@ -14,18 +14,14 @@ const RedirectPage = () => {
 
   const navigate = useNavigate();
 
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const { data, refetch } = useQuery(
     "kakaoLogin",
     () => fetchKakaoLogin(code),
     {
-      onSuccess: (data) => {
-        if (data) {
-          setUserInfo({...userInfo, memberId: data})
-          navigate("/");
-        }
-      },
+      enabled: false,
+      cacheTime: 0,
     }
   );
 
@@ -34,6 +30,13 @@ const RedirectPage = () => {
       refetch();
     }
   }, [code]);
+  
+  useEffect(() => {
+    if (data) {
+      setUserInfo({ ...userInfo, memberId: data });
+      navigate("/");
+    }
+  }, [data]);
 
   return <Box>잠시만 기다려주세요.</Box>;
 };

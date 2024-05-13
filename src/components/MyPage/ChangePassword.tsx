@@ -4,8 +4,6 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Typography } from "@mui/material";
 import PasswordInput from "../auth/PasswordInput";
 import { useState, useEffect } from "react";
-import { AuthInputValue } from "@/models/Auth";
-import { AuthisValid } from "@/models/Auth";
 import PresentPasswordInput from "./PresentPasswordInput";
 import PasswordConfirmationInput from "../auth/PasswordConfirmationInput";
 import { useMutation } from "react-query";
