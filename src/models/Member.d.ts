@@ -3,6 +3,7 @@ type ProjectMember = {
   userId: string;
   userNickname: string | null;
   userProfileImage: string | null;
+  permission: ProjectPermission;
   hasAssigneeIssueInProgress: boolean;
 };
 
@@ -12,3 +13,5 @@ type Member = {
   nickname: string | null;
   profileUrl: string | null;
 };
+
+type ProjectPermission = "MEMBER" | "LEADER";

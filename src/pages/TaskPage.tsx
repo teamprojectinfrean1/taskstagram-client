@@ -25,6 +25,8 @@ const TaskPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
+  const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
+    useState<boolean | null>(null);
 
   const { data, isLoading, refetch } = useQuery(
     ["getTaskList", selectedProject, currentPage],
@@ -75,6 +77,12 @@ const TaskPage = () => {
     isSuccess: deleteMutation.isSuccess,
     successMessage: "테스크를 삭제했습니다.",
   });
+
+  useEffect(() => {
+    setIsUserSelectedProjectLeader(
+      selectedProject !== null ? selectedProject.permission === "LEADER" : null
+    );
+  }, [selectedProject]);
 
   useEffect(() => {
     if (
@@ -137,11 +145,11 @@ const TaskPage = () => {
           variant="h5"
           sx={{
             borderBottom: "1px solid black",
-            width: "65px",
+            width: "73px",
             fontWeight: "bold",
           }}
         >
-          TASK
+          테스크
         </Typography>
         <Grid
           container
@@ -194,6 +202,7 @@ const TaskPage = () => {
       <TaskModal
         selectedTask={selectedTask as Task}
         isOpen={showModal}
+        isUserSelectedProjectLeader={isUserSelectedProjectLeader}
         onAdd={addTask}
         onReplace={replaceTask}
         onDelete={deleteTask}

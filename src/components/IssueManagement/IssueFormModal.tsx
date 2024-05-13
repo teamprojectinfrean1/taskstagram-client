@@ -188,7 +188,11 @@ const IssueFormModal = ({
                 issueId={issueDetails?.issueId!}
                 handleFormSubmit={handleFormSubmit}
               />
-              <IssueDeleteButton issueId={issueDetails?.issueId!} projectId={projectId} issueStatus={issueDetails?.statusId}/>
+              <IssueDeleteButton
+                issueId={issueDetails?.issueId!}
+                projectId={projectId}
+                issueStatus={issueDetails?.statusId}
+              />
             </>
           )}
           <PrimaryButton onClick={handleClose} startIcon={<CloseIcon />}>
@@ -230,6 +234,7 @@ const IssueFormModal = ({
                   </InputLabel>
                   <TextEditor
                     id="content"
+                    isReadOnly={false}
                     initialContent={formData.issueContent}
                     handleContentChange={(content) =>
                       handleInputChange({ issueContent: content })
@@ -267,7 +272,7 @@ const IssueFormModal = ({
                         assigneeNickname: selected?.userNickname ?? null,
                         assigneeProfileImage:
                           selected?.userProfileImage ?? null,
-                      })
+                      });
                     }}
                     optionIdentifier="memberId"
                     optionLabel="userNickname"
@@ -409,6 +414,7 @@ const IssueFormModal = ({
                     기간
                   </InputLabel>
                   <DurationPicker
+                    isReadOnly={false}
                     selectedStartDate={formData.startDate}
                     selectedEndDate={formData.endDate}
                     onStartDateSelectionChange={(value) =>
@@ -454,7 +460,8 @@ const IssueFormModal = ({
                     align="right"
                     sx={{ color: grey[600], fontSize: ".7rem" }}
                   >
-                    최종 수정일: {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
+                    최종 수정일:{" "}
+                    {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
                     <br />
                     최종 수정자: {issueDetails?.lastUpdateDetail?.userNickname}
                   </Typography>

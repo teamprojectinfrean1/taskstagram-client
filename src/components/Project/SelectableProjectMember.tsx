@@ -17,6 +17,7 @@ import {
 } from "@/components/Project/ProjectStyled";
 
 type ProjectMemberAutocompleteProps = {
+  isMemberProjectLeader: boolean;
   memberUuidList: UserSummary[];
   selectedMemberUuidList: string[] | null;
   onSelectedMemberChanged(value: string[] | null): void;
@@ -34,6 +35,7 @@ const PopperComponent = (props: PopperComponentProps) => {
 };
 
 const ProjectMemberAutocomplete = ({
+  isMemberProjectLeader,
   memberUuidList,
   selectedMemberUuidList,
   onSelectedMemberChanged,
@@ -80,16 +82,18 @@ const ProjectMemberAutocomplete = ({
 
   return (
     <>
-      <Box sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}>
-        <IconButton
-          disableRipple
-          size="small"
-          onClick={handleClick}
-          aria-describedby={id}
-        >
-          <SettingsIcon sx={{ color: theme.palette.primary.main }} />
-        </IconButton>
-      </Box>
+      {isMemberProjectLeader && (
+        <Box sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}>
+          <IconButton
+            disableRipple
+            size="small"
+            onClick={handleClick}
+            aria-describedby={id}
+          >
+            <SettingsIcon sx={{ color: theme.palette.primary.main }} />
+          </IconButton>
+        </Box>
+      )}
       {value.length > 0 && (
         <Box sx={{ p: 1, border: "1px solid lightGray", borderRadius: "4px" }}>
           {value.map((label) => (
