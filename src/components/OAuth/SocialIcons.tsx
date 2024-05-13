@@ -16,7 +16,7 @@ const SocialIcons = () => {
         mt: 2,
       }}
     >
-      <Link to="http://124.61.74.148:8080/api/v1/oauth/KAKAO">
+      <Link to="https://mcpark.info/api/v1/oauth/KAKAO">
         <img src={kakaoLoginButton} alt="kakakoLoginButton" />
       </Link>
     </Box>

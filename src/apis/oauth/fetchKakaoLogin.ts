@@ -5,7 +5,7 @@ import { jwtDecode } from "jwt-decode";
 
 export const fetchKakaoLogin = async (code: any) => {
   try {
-    const response = await axios.get(`http://124.61.74.148:8080/api/v1/${oauthPath}/login/KAKAO?code=${code}`, {
+    const response = await axios.get(`https://mcpark.info/api/v1/${oauthPath}/login/KAKAO?code=${code}`, {
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded',
       }
