@@ -1,10 +1,15 @@
 import axios from "axios";
+import { unauthorizedAxios } from "../domainSettings";
 import { oauthPath } from "./oauthSettings";
 import { jwtDecode } from "jwt-decode";
 
 export const fetchKakaoLogin = async (code: any) => {
   try {
-    const response = await axios.get(`${oauthPath}/login/KAKAO?code=${code}`)
+    const response = await axios.get(`https://mcpark.info/api/v1/${oauthPath}/login/KAKAO?code=${code}`, {
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }
+    })
     console.log(response.data.data);
     const accessToken = response.data.data.Authorization[0]
     const decodedToken = jwtDecode(accessToken)

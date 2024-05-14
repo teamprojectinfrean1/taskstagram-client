@@ -37,7 +37,7 @@ const NewTask = ({ onClick, onShowTaskModal }: NewTaskProps) => {
         variant="subtitle1"
         sx={{ textAlign: "center", fontWeight: "bold" }}
       >
-        TASK
+        테스크 추가
       </Typography>
     </Card>
   );

@@ -2,10 +2,15 @@ import { Chip, Autocomplete, TextField } from "@mui/material";
 
 type TagProps = {
   tagList: string[] | null;
+  isReadOnly: boolean;
   onTagSelectionChange: (tags: string[] | null) => void;
 };
 
-const TagChipMaker = ({ tagList, onTagSelectionChange }: TagProps) => {
+const TagChipMaker = ({
+  tagList,
+  isReadOnly,
+  onTagSelectionChange,
+}: TagProps) => {
   const handleTagsChange = (
     event: React.SyntheticEvent<Element, Event>,
     value: string[] | null
@@ -16,6 +21,7 @@ const TagChipMaker = ({ tagList, onTagSelectionChange }: TagProps) => {
     <Autocomplete
       multiple
       freeSolo
+      readOnly={isReadOnly}
       disableClearable
       value={tagList ?? []}
       onChange={handleTagsChange}
@@ -36,7 +42,7 @@ const TagChipMaker = ({ tagList, onTagSelectionChange }: TagProps) => {
         <TextField
           {...params}
           variant="outlined"
-          placeholder="태그입력"
+          placeholder={isReadOnly === false ? "태그입력" : ""}
           InputProps={{
             ...params.InputProps,
             sx: {

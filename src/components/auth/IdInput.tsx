@@ -74,7 +74,7 @@ const IdInput = ({
   useEffect(() => {
     if (error) {
       setShowErrorMessage(
-        "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요."
+        "네트워크 문제가 발생했습니다. 잠시 후 다시 시도해주세요."
       );
       setErrorState(true);
     }

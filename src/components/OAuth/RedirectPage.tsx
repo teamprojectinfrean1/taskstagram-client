@@ -10,6 +10,7 @@ const RedirectPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const code = queryParams.get("code");
+  console.log(code);
 
   const navigate = useNavigate();
 
@@ -19,12 +20,8 @@ const RedirectPage = () => {
     "kakaoLogin",
     () => fetchKakaoLogin(code),
     {
-      onSuccess: (data) => {
-        if (data) {
-          setUserInfo({ ...userInfo, memberId: data });
-          navigate("/");
-        }
-      },
+      enabled: false,
+      cacheTime: 0,
     }
   );
 
@@ -33,6 +30,13 @@ const RedirectPage = () => {
       refetch();
     }
   }, [code]);
+  
+  useEffect(() => {
+    if (data) {
+      setUserInfo({ ...userInfo, memberId: data });
+      navigate("/");
+    }
+  }, [data]);
 
   return <Box>잠시만 기다려주세요.</Box>;
 };

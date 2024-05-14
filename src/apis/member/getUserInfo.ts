@@ -9,9 +9,8 @@ export const getUserInfo = async () => {
         Authorization: sessionStorage.getItem("accessToken"),
       },
     });
-    console.log(response.data);
     return response.data.data;
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    console.error(error);
   }
 };

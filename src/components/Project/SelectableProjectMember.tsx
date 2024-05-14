@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 import theme from "@/theme/theme";
 import {
   Autocomplete,
@@ -17,6 +17,7 @@ import {
 } from "@/components/Project/ProjectStyled";
 
 type ProjectMemberAutocompleteProps = {
+  isMemberProjectLeader: boolean;
   memberUuidList: UserSummary[];
   selectedMemberUuidList: string[] | null;
   onSelectedMemberChanged(value: string[] | null): void;
@@ -34,15 +35,25 @@ const PopperComponent = (props: PopperComponentProps) => {
 };
 
 const ProjectMemberAutocomplete = ({
+  isMemberProjectLeader,
   memberUuidList,
   selectedMemberUuidList,
   onSelectedMemberChanged,
 }: ProjectMemberAutocompleteProps) => {
-  const [value, setValue] = React.useState<UserSummary[]>([]);
-  const [pendingValue, setPendingValue] = React.useState<UserSummary[]>([]);
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+  const [value, setValue] = useState<UserSummary[]>([]);
+  const [pendingValue, setPendingValue] = useState<UserSummary[]>([]);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const id = open ? "projectUserLabel" : undefined;
+
+  useEffect(() => {
+    if (memberUuidList && selectedMemberUuidList) {
+      const memeberValue: UserSummary[] = memberUuidList.filter((x) =>
+        selectedMemberUuidList.includes(x.id)
+      );
+      setValue(memeberValue);
+    }
+  }, [memberUuidList, selectedMemberUuidList]);
 
   const handleOptionChange = (
     event: React.SyntheticEvent<Element, Event>,
@@ -50,7 +61,7 @@ const ProjectMemberAutocomplete = ({
   ) => {
     if (value !== null) {
       setPendingValue(value);
-      onSelectedMemberChanged(value.map((x) => x.id));
+      onSelectedMemberChanged(value.map((x) => x.memberId));
     } else {
       onSelectedMemberChanged([]);
     }
@@ -71,16 +82,18 @@ const ProjectMemberAutocomplete = ({
 
   return (
     <>
-      <Box sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}>
-        <IconButton
-          disableRipple
-          size="small"
-          onClick={handleClick}
-          aria-describedby={id}
-        >
-          <SettingsIcon sx={{ color: theme.palette.primary.main }} />
-        </IconButton>
-      </Box>
+      {isMemberProjectLeader && (
+        <Box sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}>
+          <IconButton
+            disableRipple
+            size="small"
+            onClick={handleClick}
+            aria-describedby={id}
+          >
+            <SettingsIcon sx={{ color: theme.palette.primary.main }} />
+          </IconButton>
+        </Box>
+      )}
       {value.length > 0 && (
         <Box sx={{ p: 1, border: "1px solid lightGray", borderRadius: "4px" }}>
           {value.map((label) => (

@@ -17,13 +17,16 @@ import {
 import SkeletonTaskTicket from "@/components/TaskManagement/SkeletonTaskTicket";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
+import OneFormModal from "@/components/OneFormModal";
 
 const TaskPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedTask, setSelectedTask] = useState<Task | null>();
   const [currentPage, setCurrentPage] = useState(1);
   const selectedProject = useRecoilValue(selectedProjectState);
-  const queryClient = useQueryClient();
+  const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
+  const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
+    useState<boolean | null>(null);
 
   const { data, isLoading, refetch } = useQuery(
     ["getTaskList", selectedProject, currentPage],
@@ -76,6 +79,12 @@ const TaskPage = () => {
   });
 
   useEffect(() => {
+    setIsUserSelectedProjectLeader(
+      selectedProject !== null ? selectedProject.permission === "LEADER" : null
+    );
+  }, [selectedProject]);
+
+  useEffect(() => {
     if (
       (createMutation.isSuccess && createMutation.isSuccess === true) ||
       (replaceMutation.isSuccess && replaceMutation.isSuccess === true) ||
@@ -104,7 +113,8 @@ const TaskPage = () => {
 
   const deleteTask = (task: Task) => {
     if (task !== null && task.taskId) {
-      deleteMutation.mutate(task.taskId);
+      setSelectedTask(task);
+      setShowDeleteFormModal(true);
     }
   };
 
@@ -120,6 +130,14 @@ const TaskPage = () => {
     setCurrentPage(value);
   };
 
+  const handleConfirmModal = (inputText: string) => {
+    if (selectedTask && selectedTask.taskId) {
+      deleteMutation.mutate(selectedTask.taskId);
+      setShowDeleteFormModal(false);
+      handleCloseTaskModal();
+    }
+  };
+
   return (
     <div>
       <Grid container direction="column" spacing={1} p={5}>
@@ -127,11 +145,11 @@ const TaskPage = () => {
           variant="h5"
           sx={{
             borderBottom: "1px solid black",
-            width: "65px",
+            width: "73px",
             fontWeight: "bold",
           }}
         >
-          TASK
+          테스크
         </Typography>
         <Grid
           container
@@ -184,6 +202,7 @@ const TaskPage = () => {
       <TaskModal
         selectedTask={selectedTask as Task}
         isOpen={showModal}
+        isUserSelectedProjectLeader={isUserSelectedProjectLeader}
         onAdd={addTask}
         onReplace={replaceTask}
         onDelete={deleteTask}
@@ -192,6 +211,19 @@ const TaskPage = () => {
       {(createMutation.isLoading ||
         replaceMutation.isLoading ||
         deleteMutation.isLoading) && <Spinner centerInViewport size={70} />}
+      {selectedTask && selectedTask.taskId !== null && (
+        <OneFormModal
+          isOpen={showDeleteFormModal}
+          title={"테스크 삭제"}
+          contentName={selectedTask.taskTitle ?? ""}
+          contentText={
+            "테스크를 정말 삭제하시겠습니까? 테스크명을 입력후 삭제 버튼을 눌러주세요."
+          }
+          invalidText={"올바른 테스크명을 입력해주세요."}
+          handleConfirm={handleConfirmModal}
+          handleModalClose={() => setShowDeleteFormModal(false)}
+        ></OneFormModal>
+      )}
     </div>
   );
 };

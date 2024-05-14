@@ -11,7 +11,6 @@ import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/AuthStore";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
-import { AuthisValid } from "@/models/Auth";
 
 const SignupFormRequired = () => {
   const navigate = useNavigate();
@@ -69,7 +68,7 @@ const SignupFormRequired = () => {
         />
       </Link>
       <Box className="base-layout">
-        <Box sx={{mb:4}}>
+        <Box sx={{ mb: 4 }}>
           <Typography
             variant="h5"
             sx={{ fontWeight: "bold", textAlign: "center" }}
@@ -149,8 +148,6 @@ const SignupFormRequired = () => {
             계속
           </Button>
         </Box>
-        <Divider sx={{ mt: 3 }}>간편 회원가입</Divider>
-        <SocialIcons authPage="signup" />
       </Box>
     </>
   );

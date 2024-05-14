@@ -251,6 +251,7 @@ const IssueFormModal = ({
                   </InputLabel>
                   <TextEditor
                     id="content"
+                    isReadOnly={false}
                     initialContent={formData.issueContent ?? ""}
                     handleContentChange={(content) =>
                       handleInputChange({ issueContent: content })
@@ -427,6 +428,7 @@ const IssueFormModal = ({
                     기간
                   </InputLabel>
                   <DurationPicker
+                    isReadOnly={false}
                     selectedStartDate={formData.startDate}
                     selectedEndDate={formData.endDate}
                     onStartDateSelectionChange={(value) =>

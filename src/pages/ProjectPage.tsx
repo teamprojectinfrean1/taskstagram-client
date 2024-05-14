@@ -30,13 +30,25 @@ import { selectedProjectState } from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
+import { getAllMemberList, getAllProjectMemberList } from "@/apis/memberApi";
+import OneFormModal from "@/components/OneFormModal";
+import PrimaryButton from "@/components/PrimaryButton";
+import { userInfoState } from "@/stores/userStore";
 
 const ProjectPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
+  const [memberList, setMemberList] = useState<UserSummary[]>([]);
+  const selectedProject = useRecoilValue(selectedProjectState);
   const type = location.state !== null ? location.state.type : "";
+  const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
+  const userInfo = useRecoilValue(userInfoState);
+  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+  const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
+    useState<boolean | null>(null);
+
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
     projectName: "",
@@ -51,49 +63,12 @@ const ProjectPage = () => {
     lastUpdateDate: "",
     isMainProject: false,
   });
-  const userUuidList = [
-    {
-      id: "user1",
-      nickname: "user1",
-      //이미지 임시고정
-      profileImage:
-        "https://weaver-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/9609d257-e6dc-4e30-811c-a06d50bda686_save.jpeg",
-    } as UserSummary,
-    {
-      id: "user2",
-      nickname: "user2",
-      profileImage:
-        "https://weaver-s3-bucket.s3.ap-northeast-2.amazonaws.com/images/39e4f374-2c99-4e93-98a7-893084709d95_cat.png",
-    } as UserSummary,
-    { id: "user3", nickname: "user3", profileImage: null } as UserSummary,
-    { id: "user4", nickname: "user4", profileImage: null } as UserSummary,
-    { id: "user5", nickname: "user5", profileImage: null } as UserSummary,
-    { id: "user6", nickname: "user6", profileImage: null } as UserSummary,
-    { id: "user7", nickname: "user7", profileImage: null } as UserSummary,
-    { id: "user8", nickname: "user8", profileImage: null } as UserSummary,
-    { id: "user9", nickname: "user9", profileImage: null } as UserSummary,
-    {
-      id: "user1000000000",
-      nickname: "user1000000000",
-      profileImage: null,
-    } as UserSummary,
-    {
-      id: "user111111111111111111111",
-      nickname: "user111111111111111111111",
-      profileImage: null,
-    } as UserSummary,
-    {
-      id: "user1222222222222222222222222222",
-      nickname: "user1222222222222222222222222222",
-      profileImage: null,
-    } as UserSummary,
-    {
-      id: "user133333333333333333333333333333333333",
-      nickname: "user133333333333333333333333333333333333",
-      profileImage: null,
-    } as UserSummary,
-  ];
-  const selectedProject = useRecoilValue(selectedProjectState);
+
+  useEffect(() => {
+    setIsUserSelectedProjectLeader(
+      selectedProject !== null ? selectedProject.permission === "LEADER" : null
+    );
+  }, [selectedProject]);
 
   const { data, refetch, isLoading } = useQuery(
     ["getProjectDetail", selectedProject],
@@ -103,6 +78,109 @@ const ProjectPage = () => {
       ),
     { enabled: !!selectedProject && !!selectedProject.projectId }
   );
+
+  const { data: allMemberList, isSuccess: isGetAllMemberListSuccess } =
+    useQuery(["getAllMemberList"], () => getAllMemberList());
+
+  const {
+    data: allProjectMemberList,
+    isSuccess: isGetAllProjectMemberListSuccess,
+  } = useQuery(
+    ["getAllProjectMemberList", selectedProject],
+    () => {
+      if (selectedProject && selectedProject.projectId) {
+        return getAllProjectMemberList({
+          projectId: selectedProject.projectId,
+        });
+      }
+    },
+    { enabled: !!selectedProject && !!selectedProject.projectId }
+  );
+
+  useEffect(() => {
+    if (data) {
+      setFormData({
+        projectId: data.projectId,
+        projectName: data.projectName,
+        projectContent: data.projectContent,
+        projectImageUrl: data.projectImage,
+        projectImageFile: null,
+        projectStartDate: data.startDate,
+        projectEndDate: data.endDate,
+        projectMemberUuidList: [],
+        projectTags:
+          data.projectTags !== null && data.projectTags !== ""
+            ? data.projectTags.split(",")
+            : null,
+        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
+        lastUpdateDate: data.lastUpdateDetail.updatedDate
+          .replace("T", " ")
+          .slice(0, -3),
+        isMainProject: selectedProject?.isMainProject,
+      });
+      //선택된 프로젝트 변경될 때마다 location.state 초기화
+      navigate(location.pathname, { replace: true });
+    }
+    if (type === "new") {
+      setFormData({
+        projectId: "",
+        projectName: "",
+        projectContent: "",
+        projectImageUrl: "",
+        projectImageFile: null,
+        projectStartDate: null,
+        projectEndDate: null,
+        projectMemberUuidList: [],
+        projectTags: null,
+        lastUpdateUserNickname: "",
+        lastUpdateDate: "",
+        isMainProject: false,
+      });
+    }
+  }, [type, data]);
+
+  useEffect(() => {
+    if (
+      isGetAllMemberListSuccess &&
+      isGetAllMemberListSuccess === true &&
+      allMemberList
+    ) {
+      let memeberList = [...allMemberList];
+      // 새로운 프로젝트 추가이거나 선택된 프로젝트가 자기 자신이 리더인 경우는 자기 자신은 제거되도록
+      if (
+        isUserSelectedProjectLeader === null ||
+        isUserSelectedProjectLeader === true
+      ) {
+        memeberList = memeberList.filter((x) => x.memberUuid !== userUuid);
+      }
+      const memberList: UserSummary[] = memeberList.map((x) => {
+        return {
+          id: x.userUuid,
+          memberId: x.memberUuid,
+          nickname: x.nickname,
+          profileImage: x.profileUrl,
+        } as UserSummary;
+      });
+      setMemberList(memberList);
+    }
+  }, [allMemberList, isGetAllMemberListSuccess, isUserSelectedProjectLeader]);
+
+  useEffect(() => {
+    if (
+      isGetAllProjectMemberListSuccess &&
+      isGetAllProjectMemberListSuccess === true &&
+      allProjectMemberList
+    ) {
+      //프로젝트 구성원 조회 - 리더는 제외되도록
+      const projectMemberList: string[] = allProjectMemberList
+        .filter((x) => x.permission !== "LEADER")
+        .map((x) => x.userId);
+      setFormData((prev) => ({
+        ...prev,
+        projectMemberUuidList: projectMemberList,
+      }));
+    }
+  }, [allProjectMemberList, isGetAllProjectMemberListSuccess]);
 
   const createMutation = useMutation({
     mutationFn: createOneProject,
@@ -153,58 +231,17 @@ const ProjectPage = () => {
   useEffect(() => {
     if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
       //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
-      //navigate("/");
+      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
+      navigate("/");
     }
   }, [deleteMutation.isSuccess]);
-
-  useEffect(() => {
-    if (data) {
-      setFormData({
-        projectId: data.projectId,
-        projectName: data.projectName,
-        projectContent: data.projectContent,
-        projectImageUrl: data.projectImage,
-        projectImageFile: null,
-        projectStartDate: data.startDate,
-        projectEndDate: data.endDate,
-        projectMemberUuidList: [],
-        projectTags:
-          data.projectTags !== null && data.projectTags !== ""
-            ? data.projectTags.split(",")
-            : null,
-        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
-        lastUpdateDate: data.lastUpdateDetail.updatedDate
-          .replace("T", " ")
-          .slice(0, -3),
-        isMainProject: selectedProject?.isMainProject,
-      });
-      //선택된 프로젝트 변경될 때마다 location.state 초기화
-      navigate(location.pathname, { replace: true });
-    }
-    if (type === "new") {
-      setFormData({
-        projectId: "",
-        projectName: "",
-        projectContent: "",
-        projectImageUrl: "",
-        projectImageFile: null,
-        projectStartDate: null,
-        projectEndDate: null,
-        projectMemberUuidList: [],
-        projectTags: null,
-        lastUpdateUserNickname: "",
-        lastUpdateDate: "",
-        isMainProject: false,
-      });
-    }
-  }, [type, data]);
 
   //저장 버튼
   const handleSaveProjectBtnClicked = () => {
     if (type === "new") {
       createMutation.mutate({
         projectName: formData.projectName,
-        writerUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
+        writerUuid: userUuid,
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
         projectImageFile: formData.projectImageFile ?? null,
@@ -221,15 +258,13 @@ const ProjectPage = () => {
           formData.projectStartDate !== null
             ? new Date(formData.projectStartDate).toISOString()
             : null,
-        memberUuidList: [
-          "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
-        ],
+        memberUuidList: formData.projectMemberUuidList ?? [],
       });
     } else if (selectedProject !== null) {
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
         projectName: formData.projectName,
-        updaterUuid: "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
+        updaterUuid: userUuid,
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
         projectImageFile: formData.projectImageFile ?? null,
@@ -242,17 +277,21 @@ const ProjectPage = () => {
           formData.projectEndDate !== null
             ? new Date(formData.projectEndDate).toISOString()
             : null,
-        memberUuidList: [
-          "3f0351b0-6141-4ed6-ac0c-47c3685045bf", //임시 고정
-        ],
+        memberUuidList: formData.projectMemberUuidList ?? [],
       });
     }
   };
 
   //삭제 버튼
   const handleDeleteProjectBtnClicked = () => {
+    setShowDeleteFormModal(true);
+  };
+
+  //삭제 모달창 확인 버튼
+  const handleConfirmModal = (inputText: string) => {
     if (selectedProject !== null && selectedProject.projectId) {
       deleteMutation.mutate(selectedProject.projectId);
+      setShowDeleteFormModal(false);
     }
   };
 
@@ -293,35 +332,25 @@ const ProjectPage = () => {
               <Box
                 sx={{ mb: 1, p: 0, display: "flex", justifyContent: "right" }}
               >
-                <Button
-                  type="submit"
+                <PrimaryButton
                   startIcon={<SaveAsIcon />}
-                  sx={{
-                    width: "120px",
-                    height: "30px",
-                    backgroundColor: theme.palette.primary.main,
-                    color: theme.palette.background.default,
-                    marginRight: "10px",
-                  }}
-                  disabled={isLoading}
+                  sx={{ mr: "10px" }}
+                  disabled={isLoading || isUserSelectedProjectLeader === false}
                   onClick={handleSaveProjectBtnClicked}
                 >
                   저장
-                </Button>
-                <Button
-                  type="submit"
+                </PrimaryButton>
+                <PrimaryButton
                   startIcon={<DeleteIcon />}
-                  sx={{
-                    width: "120px",
-                    height: "30px",
-                    backgroundColor: "#dae0e8",
-                    color: theme.palette.primary.main,
-                  }}
-                  disabled={isLoading}
+                  disabled={
+                    isLoading ||
+                    isUserSelectedProjectLeader === null ||
+                    isUserSelectedProjectLeader === false
+                  }
                   onClick={handleDeleteProjectBtnClicked}
                 >
                   삭제
-                </Button>
+                </PrimaryButton>
               </Box>
               <Stack alignItems="flex-end">
                 {isLoading ? (
@@ -389,8 +418,8 @@ const ProjectPage = () => {
           </Grid>
           <Grid item container xs={12} md={5} rowSpacing={4}>
             <Grid item xs={3}>
-              <InputLabel htmlFor="이름" sx={{ fontWeight: "bold", mb: 1 }}>
-                이름
+              <InputLabel htmlFor="제목" sx={{ fontWeight: "bold", mb: 1 }}>
+                제목 *
               </InputLabel>
             </Grid>
             <Grid item xs={9}>
@@ -413,13 +442,14 @@ const ProjectPage = () => {
                       fontSize: "0.9rem",
                       height: "40px",
                     },
+                    readOnly: isUserSelectedProjectLeader === false,
                   }}
                 />
               )}
             </Grid>
             <Grid item xs={3}>
-              <InputLabel htmlFor="상세내용" sx={{ fontWeight: "bold", mb: 1 }}>
-                상세내용
+              <InputLabel htmlFor="내용" sx={{ fontWeight: "bold", mb: 1 }}>
+                내용
               </InputLabel>
             </Grid>
             <Grid item xs={9}>
@@ -444,6 +474,7 @@ const ProjectPage = () => {
                       fontSize: "0.9rem",
                       height: "100px",
                     },
+                    readOnly: isUserSelectedProjectLeader === false,
                   }}
                 />
               )}
@@ -462,8 +493,12 @@ const ProjectPage = () => {
                 />
               ) : (
                 <SelectableProjectMember
-                  memberUuidList={userUuidList}
-                  selectedMemberUuidList={formData.projectMemberUuidList}
+                  isMemberProjectLeader={
+                    isUserSelectedProjectLeader === null ||
+                    isUserSelectedProjectLeader === true
+                  }
+                  memberUuidList={memberList}
+                  selectedMemberUuidList={formData.projectMemberUuidList ?? []}
                   onSelectedMemberChanged={(value) =>
                     handleInputChange("projectMemberUuidList", value)
                   }
@@ -491,6 +526,7 @@ const ProjectPage = () => {
                 </Box>
               ) : (
                 <DurationPicker
+                  isReadOnly={isUserSelectedProjectLeader === false}
                   selectedStartDate={formData.projectStartDate}
                   selectedEndDate={formData.projectEndDate}
                   onStartDateSelectionChange={(value) =>
@@ -516,6 +552,7 @@ const ProjectPage = () => {
                 />
               ) : (
                 <TagChipMaker
+                  isReadOnly={isUserSelectedProjectLeader === false}
                   tagList={formData.projectTags}
                   onTagSelectionChange={(value) =>
                     handleInputChange("projectTags", value)
@@ -529,6 +566,19 @@ const ProjectPage = () => {
       {(createMutation.isLoading ||
         replaceMutation.isLoading ||
         deleteMutation.isLoading) && <Spinner centerInViewport size={70} />}
+      {selectedProject && selectedProject.projectId && (
+        <OneFormModal
+          isOpen={showDeleteFormModal}
+          title={"프로젝트 삭제"}
+          contentName={selectedProject.projectName}
+          contentText={
+            "프로젝트를 정말 삭제하시겠습니까? 프로젝트명을 입력후 삭제 버튼을 눌러주세요."
+          }
+          invalidText={"올바른 프로젝트명을 입력해주세요."}
+          handleConfirm={handleConfirmModal}
+          handleModalClose={() => setShowDeleteFormModal(false)}
+        ></OneFormModal>
+      )}
     </div>
   );
 };

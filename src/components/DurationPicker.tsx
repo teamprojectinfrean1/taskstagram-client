@@ -3,12 +3,13 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import dayjs, { Dayjs } from "dayjs";
-import utc from 'dayjs/plugin/utc'; 
+import utc from "dayjs/plugin/utc";
 import theme from "@/theme/theme";
 
 dayjs.extend(utc);
 
 type DurationPickerProps = {
+  isReadOnly: boolean;
   selectedStartDate: string | null;
   selectedEndDate: string | null;
   onStartDateSelectionChange: (stringDateValue: string | null) => void;
@@ -16,21 +17,30 @@ type DurationPickerProps = {
 };
 
 const DurationPicker = ({
+  isReadOnly,
   selectedStartDate,
   selectedEndDate,
   onStartDateSelectionChange,
   onEndDateSelectionChange,
 }: DurationPickerProps) => {
   const handleStartDateChange = (startDate: Dayjs | null) => {
-    const dateString = startDate ? startDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]") : null;
+    const dateString = startDate
+      ? startDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
+      : null;
     onStartDateSelectionChange(dateString);
-    if (selectedEndDate && startDate && dayjs(selectedEndDate).isBefore(startDate)) {
+    if (
+      selectedEndDate &&
+      startDate &&
+      dayjs(selectedEndDate).isBefore(startDate)
+    ) {
       onEndDateSelectionChange(null);
     }
   };
 
   const handleEndDateChange = (endDate: Dayjs | null) => {
-    const dateString = endDate ? endDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]") : null;
+    const dateString = endDate
+      ? endDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
+      : null;
     onEndDateSelectionChange(dateString);
   };
 
@@ -48,11 +58,13 @@ const DurationPicker = ({
               backgroundColor: "transparent",
             },
           }}
+          format="YYYY/MM/DD"
           value={selectedStartDate ? dayjs(selectedStartDate) : null}
           onChange={handleStartDateChange}
           slotProps={{
             textField: { size: "small" },
           }}
+          readOnly={isReadOnly}
         />
         <DatePicker
           label="종료"
@@ -65,10 +77,12 @@ const DurationPicker = ({
               backgroundColor: "transparent",
             },
           }}
+          format="YYYY/MM/DD"
           minDate={selectedStartDate ? dayjs(selectedStartDate) : undefined}
           value={selectedEndDate ? dayjs(selectedEndDate) : null}
           onChange={handleEndDateChange}
           slotProps={{ textField: { size: "small" } }}
+          readOnly={isReadOnly}
         />
       </LocalizationProvider>
     </Box>
