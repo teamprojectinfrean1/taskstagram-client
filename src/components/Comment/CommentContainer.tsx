@@ -16,7 +16,7 @@ const CommentsContainer = ({
 
   return (
     <>
-      <Stack sx={{ my: 8 }}>
+      <Stack sx={{ my: 2 }}>
         <InputLabel htmlFor="Comments" sx={{ fontWeight: "bold", mb: 3 }}>
           댓글
         </InputLabel>

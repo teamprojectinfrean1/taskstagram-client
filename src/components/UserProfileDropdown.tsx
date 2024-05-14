@@ -13,7 +13,7 @@ const UserProfileDropdown = () => {
 
   const userInfo = useRecoilValue(userInfoState);
   const profileImage = userInfo.profileImage;
-  
+
   const { data, refetch } = useQuery("logout", () => fetchLogout(), {
     enabled: false,
     cacheTime: 0,

@@ -13,7 +13,7 @@ const RedirectPage = () => {
 
   const navigate = useNavigate();
 
-  const [userInfo, setUserInfo] = useRecoilState(userInfoState)
+  const [userInfo, setUserInfo] = useRecoilState(userInfoState);
 
   const { data, refetch } = useQuery(
     "kakaoLogin",
@@ -21,7 +21,7 @@ const RedirectPage = () => {
     {
       onSuccess: (data) => {
         if (data) {
-          setUserInfo({...userInfo, memberId: data})
+          setUserInfo({ ...userInfo, memberId: data });
           navigate("/");
         }
       },

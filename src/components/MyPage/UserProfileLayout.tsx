@@ -31,7 +31,7 @@ const UserProfileLayout = () => {
           sx={{
             py: 3,
             px: 5,
-            backgroundColor: 'white',
+            backgroundColor: "white",
             minWidth: "37rem",
             borderRadius: "7px",
           }}

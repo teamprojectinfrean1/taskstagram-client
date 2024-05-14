@@ -33,19 +33,19 @@ const PageLayout = () => {
 
   // memberId 재추출
   useEffect(() => {
-    const accessToken = sessionStorage.getItem('accessToken')
+    const accessToken = sessionStorage.getItem("accessToken");
     if (!userInfo.memberId && accessToken) {
-      const decodedToken = jwtDecode(accessToken)
-      const memberId = decodedToken.sub
+      const decodedToken = jwtDecode(accessToken);
+      const memberId = decodedToken.sub;
       if (memberId) {
-        setUserInfo({...userInfo, memberId})
+        setUserInfo({ ...userInfo, memberId });
       }
     }
-  }, [])
-  
+  }, []);
+
   useEffect(() => {
-    refetch()
-  }, [data])
+    refetch();
+  }, [data]);
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 

@@ -26,6 +26,7 @@ import ChangePassword from "./components/MyPage/ChangePassword";
 import ChangeUserInfoSuccess from "./components/MyPage/ChangeUserInfoSuccess";
 import ChangeEmail from "./components/MyPage/ChangeEmail";
 
+
 const router = createBrowserRouter([
   {
     path: "/oauth/redirected/kakao",

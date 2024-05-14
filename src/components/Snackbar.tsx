@@ -24,7 +24,8 @@ const Snackbar = () => {
       />
       <MuiSnackbar
         open={show}
-        autoHideDuration={6000}
+        onClose={handleClose}
+        autoHideDuration={3000}
         anchorOrigin={{
           vertical: "top",
           horizontal: "center",

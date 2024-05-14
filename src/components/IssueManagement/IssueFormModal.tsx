@@ -58,7 +58,7 @@ const IssueFormModal = ({
   const isNewIssue = currentIssueId === "new-issue";
 
   const defaultFormData: Issue = {
-    writerId: memberId,
+    writerId: memberId || "",
     taskId: null,
     taskTitle: null,
     assigneeId: null,
@@ -179,22 +179,43 @@ const IssueFormModal = ({
         >
           {currentIssueId === "new-issue" ? (
             <IssueCreateButton
+              handleCloseIssueFormModal={handleClose}
               handleFormSubmit={handleFormSubmit}
               projectId={projectId}
             />
           ) : (
             <>
               <IssueUpdateButton
-                issueId={issueDetails?.issueId!}
+                handleCloseIssueFormModal={handleClose}
                 handleFormSubmit={handleFormSubmit}
+                issueId={issueDetails?.issueId!}
+                oldAssigneeId={issueDetails?.assigneeId!}
+                oldIssueStatus={issueDetails?.statusId!}
+                projectId={projectId}
               />
-              <IssueDeleteButton issueId={issueDetails?.issueId!} projectId={projectId} issueStatus={issueDetails?.statusId}/>
+              <IssueDeleteButton
+                handleCloseIssueFormModal={handleClose}
+                issueId={issueDetails?.issueId!}
+                projectId={projectId}
+                issueStatus={issueDetails?.statusId}
+              />
             </>
           )}
           <PrimaryButton onClick={handleClose} startIcon={<CloseIcon />}>
             닫기
           </PrimaryButton>
         </DialogActions>
+        {issueDetails?.lastUpdateDetail && (
+          <Typography
+            align="right"
+            sx={{ color: grey[600], fontSize: ".8rem" }}
+          >
+            최종 수정일:{" "}
+            {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
+            <br />
+            최종 수정자: {issueDetails?.lastUpdateDetail?.userNickname}
+          </Typography>
+        )}
         <Grid container spacing={4}>
           <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
             {issueDetailsIsLoading ? (
@@ -213,7 +234,7 @@ const IssueFormModal = ({
                     variant="outlined"
                     fullWidth
                     required
-                    value={formData.issueTitle}
+                    value={formData.issueTitle ?? ""}
                     onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       handleInputChange({ issueTitle: e.target.value })
                     }
@@ -230,16 +251,13 @@ const IssueFormModal = ({
                   </InputLabel>
                   <TextEditor
                     id="content"
-                    initialContent={formData.issueContent}
+                    initialContent={formData.issueContent ?? ""}
                     handleContentChange={(content) =>
                       handleInputChange({ issueContent: content })
                     }
                   />
                 </Box>
               </>
-            )}
-            {!isNewIssue && (
-              <CommentContainer issueDetailsIsLoading={issueDetailsIsLoading} />
             )}
           </Grid>
           <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
@@ -257,9 +275,9 @@ const IssueFormModal = ({
                   <SearchableSelect<Partial<ProjectMember>>
                     possibleOptions={allProjectMemberList || []}
                     selectedOptions={{
-                      memberId: formData.assigneeId,
-                      userNickname: formData.assigneeNickname,
-                      userProfileImage: formData.assigneeProfileImage,
+                      memberId: formData.assigneeId ?? "",
+                      userNickname: formData.assigneeNickname ?? "",
+                      userProfileImage: formData.assigneeProfileImage ?? "",
                     }}
                     onSelectionChange={(selected) => {
                       handleInputChange({
@@ -267,7 +285,7 @@ const IssueFormModal = ({
                         assigneeNickname: selected?.userNickname ?? null,
                         assigneeProfileImage:
                           selected?.userProfileImage ?? null,
-                      })
+                      });
                     }}
                     optionIdentifier="memberId"
                     optionLabel="userNickname"
@@ -315,7 +333,7 @@ const IssueFormModal = ({
                       </Box>
                     )}
                     optionsFetchErrorMessage={
-                      isErrorLoadingAllTaskList ? (
+                      isErrorLoadingAllProjectMembers ? (
                         <Box position="relative" sx={{ py: 2, px: 3 }}>
                           <ErrorOutlineIcon
                             sx={{
@@ -356,8 +374,8 @@ const IssueFormModal = ({
                     }}
                     onSelectionChange={(selected) =>
                       handleInputChange({
-                        taskId: selected?.taskId ?? null,
-                        taskTitle: selected?.taskTitle ?? null,
+                        taskId: selected?.taskId ?? "",
+                        taskTitle: selected?.taskTitle ?? "",
                       })
                     }
                     optionIdentifier="taskId"
@@ -449,17 +467,23 @@ const IssueFormModal = ({
                     helperText={formErrors.statusId}
                   />
                 </Box>
-                {issueDetails?.lastUpdateDetail && (
+                {/* {issueDetails?.lastUpdateDetail && (
                   <Typography
                     align="right"
                     sx={{ color: grey[600], fontSize: ".7rem" }}
                   >
-                    최종 수정일: {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
+                    최종 수정일:{" "}
+                    {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
                     <br />
                     최종 수정자: {issueDetails?.lastUpdateDetail?.userNickname}
                   </Typography>
-                )}
+                )} */}
               </>
+            )}
+          </Grid>
+          <Grid item xs={12} md={8}>
+            {!isNewIssue && (
+              <CommentContainer issueDetailsIsLoading={issueDetailsIsLoading} />
             )}
           </Grid>
         </Grid>

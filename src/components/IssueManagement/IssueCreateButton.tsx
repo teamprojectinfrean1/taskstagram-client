@@ -1,71 +1,74 @@
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
-import AddIcon from "@mui/icons-material/Add";
-import { InfiniteData, useMutation, useQueryClient } from "react-query";
+import EditIcon from "@mui/icons-material/Edit";
+import { useCallback } from "react";
+import { useMutation, useQueryClient } from "react-query";
 import { createIssue } from "@/apis/issueApi";
 import Spinner from "@/components/Spinner";
 import PrimaryButton from "@/components/PrimaryButton";
+import {
+  issueStatusBoardSearchModeState,
+  issueStatusBoardSearchParamsState,
+} from "@/stores/issueStore";
+import { useRecoilState, useSetRecoilState } from "recoil";
+import { addIssueToCache } from "@/utils/issue/issueStatusBoardUpdaters";
+import { markMemberAsHavingActiveIssue } from "@/utils/issue/userStoryBoardUpdaters";
 
 type MutateFunction = (issue: Issue) => void;
 
 type IssueCreateButtonProps = {
+  handleCloseIssueFormModal: () => void;
   handleFormSubmit: (mutationFunction: MutateFunction) => void;
   projectId: string;
 };
 
 const IssueCreateButton = ({
+  handleCloseIssueFormModal,
   handleFormSubmit,
   projectId,
 }: IssueCreateButtonProps) => {
   const queryClient = useQueryClient();
+  const [issueStatusBoardSearchModes, setIssueStatusBoardSearchModes] =
+    useRecoilState(issueStatusBoardSearchModeState);
+  const setIssueStatusBoardSearchParams = useSetRecoilState(
+    issueStatusBoardSearchParamsState
+  );
 
   const {
     mutate: executeCreateIssue,
-    data,
+    data: newIssue,
     isLoading,
     isSuccess,
     isError,
   } = useMutation((newIssue: Issue) => createIssue({ issue: newIssue }));
 
-  const addNewIssueToList = (newIssue: Issue) => {
-    const queryKey = ["defaultIssueList", projectId, newIssue?.statusId];
-
-    // console.log("New issue:", newIssue);
-    // console.log("Query key:", queryKey);
-
-    queryClient.setQueryData<InfiniteData<PaginatedResponse<Issue>> | undefined>(
-      queryKey,
-      (oldData) => {
-        if (newIssue && oldData) {
-          let newPages = [];
-          let carryOverIssue: Issue | undefined = newIssue;
-
-          for (const page of oldData.pages) {
-            const currentPageIssues = [carryOverIssue, ...page.dataList].filter(Boolean) as Issue[];
-            carryOverIssue = currentPageIssues.pop(); 
-
-            newPages.push({ ...page, dataList: currentPageIssues });
-
-            if (!carryOverIssue) break; 
-          }
-
-          if (carryOverIssue) {
-            newPages.push({
-              dataList: [carryOverIssue],
-              totalPage: oldData.pages[oldData.pages.length - 1].totalPage + 1,
-            });
-          }
-
-          return {
-            ...oldData,
-            pages: newPages,
-            pageParams: oldData.pageParams,
-          } as InfiniteData<PaginatedResponse<Issue>>;
-        } else {
-          return oldData;
-        }
+  const successAction = useCallback(() => {
+    if (newIssue) {
+      addIssueToCache({
+        issueStatus: newIssue.statusId!,
+        newOrUpdatedIssue: newIssue,
+        projectId,
+        queryClient,
+        isIssueStatusBoardInSearchMode:
+          issueStatusBoardSearchModes[newIssue?.statusId!],
+        setIssueStatusBoardSearchModes,
+        setIssueStatusBoardSearchParams,
+      });
+      if (newIssue.statusId === "INPROGRESS") {
+        markMemberAsHavingActiveIssue({
+          assigneeIdOfNewOrUpdatedIssue: newIssue.assigneeId!,
+          projectId,
+          queryClient,
+        });
       }
-    );
-  };
+      handleCloseIssueFormModal();
+    }
+  }, [
+    newIssue,
+    projectId,
+    queryClient,
+    issueStatusBoardSearchModes,
+    setIssueStatusBoardSearchModes,
+  ]);
 
   useFeedbackHandler({
     isError,
@@ -73,7 +76,7 @@ const IssueCreateButton = ({
       "이슈를 추가하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
     isSuccess,
     successMessage: "이슈가 추가되었습니다.",
-    successAction: () => {if(data) addNewIssueToList(data)},
+    successAction,
   });
 
   return (
@@ -85,9 +88,9 @@ const IssueCreateButton = ({
           e.stopPropagation();
           handleFormSubmit(executeCreateIssue);
         }}
-        startIcon={<AddIcon />}
+        startIcon={<EditIcon />}
       >
-        추가
+        저장
       </PrimaryButton>
     </>
   );

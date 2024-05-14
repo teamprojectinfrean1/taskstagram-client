@@ -6,19 +6,22 @@ import { useInfiniteQuery } from "react-query";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 
 type InfiniteScrollerProps<T> = {
+  enableQuery?: boolean;
   queryFunction: (params: any) => Promise<PaginatedResponse<T>>;
   queryKey: string | string[];
   requestOptions: any;
   containerRef: React.RefObject<HTMLDivElement>;
-  firstPageErrorMessage: string;
+  firstPageErrorMessage: string | ((error: string) => string);
   subsequentPageErrorMessage: string;
   noDataToShowMessage: string;
   renderItem: (item: T) => React.ReactNode;
   renderSkeleton: (index: number) => React.ReactNode;
   numberOfSkeletons?: number;
+  handleFirstPageResponse?: (status: string, message?: string) => void;
 };
 
 const InfiniteScroller = <T,>({
+  enableQuery = true,
   queryFunction,
   queryKey,
   requestOptions,
@@ -29,6 +32,7 @@ const InfiniteScroller = <T,>({
   renderItem,
   renderSkeleton,
   numberOfSkeletons = 5,
+  handleFirstPageResponse,
 }: InfiniteScrollerProps<T>) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
@@ -36,7 +40,9 @@ const InfiniteScroller = <T,>({
     data,
     isLoading,
     isFetchingNextPage,
+    error,
     isError,
+    isSuccess,
     hasNextPage,
     fetchNextPage,
   } = useInfiniteQuery(
@@ -52,8 +58,9 @@ const InfiniteScroller = <T,>({
         }
       },
       // staleTime: 30000
-      // refetchOnWindowFocus: false
+      refetchOnWindowFocus: false,
       refetchOnMount: "always",
+      enabled: enableQuery,
     }
   );
 
@@ -68,7 +75,16 @@ const InfiniteScroller = <T,>({
 
   const lastSuccessfullyFetchedPage = data?.pages.length || 0;
 
+
   useEffect(() => {
+    if (
+      handleFirstPageResponse &&
+      isError &&
+      !data
+    ) {
+      const currentError = error as { message: string };
+      handleFirstPageResponse("error", currentError.message);
+    }
     if (isError && lastSuccessfullyFetchedPage > 0) {
       setSnackbar({
         show: true,
@@ -77,6 +93,26 @@ const InfiniteScroller = <T,>({
       });
     }
   }, [isError, lastSuccessfullyFetchedPage, setSnackbar]);
+
+  useEffect(() => {
+    if (
+      handleFirstPageResponse &&
+      isSuccess &&
+      lastSuccessfullyFetchedPage === 1
+    ) {
+      handleFirstPageResponse("success");
+    }
+  }, [isSuccess, lastSuccessfullyFetchedPage, setSnackbar]);
+
+  const resolveErrorMessage = () => {
+    const currentError = error as { message: string };
+
+    if (typeof firstPageErrorMessage === "function") {
+      return firstPageErrorMessage(currentError.message);
+    } else {
+      return firstPageErrorMessage;
+    }
+  };
 
   return (
     <>
@@ -94,12 +130,12 @@ const InfiniteScroller = <T,>({
       {!isError && hasNextPage && (
         <div
           ref={hasNextPage ? lastItemRef : undefined}
-          style={{ display: "none", border: "2px solid blue"}}
+          style={{ display: "none", border: "2px solid blue" }}
         />
       )}
       {isError && (
         <Typography variant="caption" sx={{ p: 2 }}>
-          {firstPageErrorMessage}
+          {resolveErrorMessage()}
         </Typography>
       )}
       {!isError && data?.pages[0].dataList.length === 0 && (

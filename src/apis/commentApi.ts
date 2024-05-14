@@ -6,16 +6,14 @@ type CreateCommentRequest = {
   comment: NewOrUpdatedComment;
 };
 
-type CreateCommentResponse = {
-  isSuccess: boolean;
-};
+type CreateCommentResponse = ExistingComment;
 
 export const createComment = async ({
   comment,
 }: CreateCommentRequest): Promise<CreateCommentResponse> => {
   try {
     const response = await authorizedAxios.post(commentPath, comment);
-    return response.data.isSuccess;
+    return response.data.data;
   } catch (error) {
     throw new Error("댓글을 생성하는 중 오류가 발생했습니다.");
   }
@@ -26,9 +24,7 @@ type UpdateCommentRequest = {
   comment: NewOrUpdatedComment;
 };
 
-type UpdateCommentResponse = {
-  isSuccess: boolean;
-};
+type UpdateCommentResponse = ExistingComment;
 
 export const updateComment = async ({
   commentId,
@@ -39,7 +35,7 @@ export const updateComment = async ({
       `${commentPath}/${commentId}`,
       comment
     );
-    return response.data.isSuccess;
+    return response.data.data;
   } catch (error) {
     throw new Error("댓글을 업데이트하는 중 오류가 발생했습니다.");
   }
@@ -78,7 +74,7 @@ type DeleteCommentRequest = {
 };
 
 type DeleteCommentResponse = {
-  isSuccess: boolean;
+  commentId: string;
 };
 
 export const deleteComment = async ({
@@ -88,7 +84,7 @@ export const deleteComment = async ({
     const response = await authorizedAxios.delete(
       `${commentPath}/${commentId}`
     );
-    return response.data.isSuccess;
+    return response.data.data;
   } catch (error) {
     throw new Error("댓글을 삭제하는 중 오류가 발생했습니다.");
   }

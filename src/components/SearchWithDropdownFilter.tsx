@@ -9,13 +9,13 @@ type SearchWithDropdownFilterProps = {
     key: keyof IssueSearchParams,
     value: string
   ) => void;
-  triggerSearch: () => void;
+  startSearchMode: () => void;
   searchParams: IssueSearchParams;
 };
 
 const SearchWithDropdownFilter = ({
   handleSearchParamsChange,
-  triggerSearch,
+  startSearchMode,
   searchParams,
 }: SearchWithDropdownFilterProps) => {
   const handleKeywordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -37,7 +37,7 @@ const SearchWithDropdownFilter = ({
     ) {
       event.preventDefault();
       if (searchParams.keyword.trim().length > 0) {
-        triggerSearch();
+        startSearchMode();
       }
     }
   };
@@ -68,7 +68,7 @@ const SearchWithDropdownFilter = ({
           <InputAdornment position="end">
             <IconButton
               type="button"
-              aria-label="serach"
+              aria-label="search"
               disabled={!searchParams.keyword}
               onClick={executeIssueSearch}
               color="primary"

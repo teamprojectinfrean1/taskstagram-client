@@ -6,10 +6,14 @@ import {
   DialogTitle,
   Typography,
 } from "@mui/material";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { deleteComment } from "@/apis/commentApi";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
+import { removeItemFromCache } from "@/utils/reactQueryCacheUpdaters";
+import { useRecoilValue } from "recoil";
+import { issueIdToShowInModalState } from "@/stores/issueStore";
+import { useCallback } from "react";
 
 type DeleteCommentModalProps = {
   currentCommentId: string;
@@ -20,20 +24,36 @@ const DeleteCommentModal = ({
   currentCommentId,
   handleClose,
 }: DeleteCommentModalProps) => {
+  const queryClient = useQueryClient();
+  const issueId = useRecoilValue(issueIdToShowInModalState);
+
   const {
     mutate: executeDeleteComment,
-    data,
+    data: deletedComment,
     isLoading,
     isSuccess,
     isError,
   } = useMutation(() => deleteComment({ commentId: currentCommentId }));
 
+  const successAction = useCallback(() => {
+    if (deletedComment) {
+      removeItemFromCache<ExistingComment>({
+        queryClient,
+        queryKey: ["commentList", issueId!],
+        idOfElementToRemove: deletedComment.commentId,
+        idPropertyName: "commentId",
+      });
+      handleClose();
+    }
+  }, [deletedComment, queryClient, issueId]);
+
   useFeedbackHandler({
     isError,
-    isSuccess,
-    successMessage: "댓글이 삭제되었습니다.",
     errorMessage:
       "댓글을 삭제하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
+    isSuccess,
+    successMessage: "댓글이 삭제되었습니다.",
+    successAction,
   });
 
   return (
@@ -59,7 +79,6 @@ const DeleteCommentModal = ({
           <Button onClick={handleClose}>취소</Button>
           <Button
             onClick={() => {
-              handleClose();
               executeDeleteComment();
             }}
             autoFocus

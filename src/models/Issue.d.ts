@@ -1,5 +1,3 @@
-// import { RawDraftContentState } from "draft-js";
-
 type IssueStatus = "TODO" | "INPROGRESS" | "DONE";
 
 type IssueStatusTitle = "할 일" | "진행 중" | "완료";
@@ -9,6 +7,7 @@ type IssueSummary = {
   taskTitle: string;
   issueId: string;
   issueTitle: string;
+  statusId: IssueStatus;
   assigneeId: string;
   assigneeNickname: string;
   assigneeProfileImage: string | null;
@@ -47,3 +46,4 @@ type IssueStory = {
   profileImage: string;
   hasIssueInProgress: booelan;
 };
+

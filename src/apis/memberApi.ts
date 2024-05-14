@@ -1,4 +1,4 @@
-import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
+import { authorizedAxios } from "./domainSettings";
 
 const memberPath = "/member";
 
@@ -16,7 +16,7 @@ export const getPaginatedProjectMemberList = async ({
   PaginatedResponse<ProjectMember>
 > => {
   try {
-    const response = await unauthorizedAxios.get(
+    const response = await authorizedAxios.get(
       `${memberPath}/project/user/page`,
       {
         params: {
@@ -26,10 +26,11 @@ export const getPaginatedProjectMemberList = async ({
         },
       }
     );
-    console.log(response)
     return response.data.data;
   } catch (error) {
-    throw new Error("프로젝트 멤버 목록 페이지를 가져오는 중 오류가 발생했습니다.");
+    throw new Error(
+      "프로젝트 멤버 목록 페이지를 가져오는 중 오류가 발생했습니다."
+    );
   }
 };
 
@@ -43,7 +44,7 @@ export const getAllProjectMemberList = async ({
   projectId,
 }: GetAllProjectMemberListRequest): Promise<GetAllProjectMemberListResponse> => {
   try {
-    const response = await unauthorizedAxios.get(
+    const response = await authorizedAxios.get(
       `${memberPath}/project/user/list`,
       {
         params: {
@@ -53,6 +54,8 @@ export const getAllProjectMemberList = async ({
     );
     return response.data.data;
   } catch (error) {
-    throw new Error("프로젝트 멤버 목록 전체를 가져오는 중 오류가 발생했습니다.");
+    throw new Error(
+      "프로젝트 멤버 목록 전체를 가져오는 중 오류가 발생했습니다."
+    );
   }
 };

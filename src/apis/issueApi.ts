@@ -8,12 +8,11 @@ const statusTitleMap: { [key in IssueStatus]: IssueStatusTitle } = {
   DONE: "완료",
 };
 
-
 type CreateIssueRequest = {
   issue: Issue;
 };
 
-type CreateIssueResponse = Issue;
+type CreateIssueResponse = IssueSummary;
 
 export const createIssue = async ({
   issue,
@@ -43,16 +42,14 @@ export const createIssue = async ({
   try {
     const response = await authorizedAxios.post(issuePath, newIssuePayload);
 
-    const { status, issueContent, ...rest } = response.data.data;
+    const { status, ...rest } = response.data.data;
 
-    const issueDetails = {
+    const issueSummary = {
       statusId: status,
-      statusTitle: statusTitleMap[status as IssueStatus],
-      issueContent: issueContent ? JSON.parse(issueContent) : null,
       ...rest,
     };
 
-    return issueDetails;
+    return issueSummary;
   } catch (error) {
     throw new Error("이슈를 생성하는 중 오류가 발생했습니다.");
   }
@@ -63,9 +60,7 @@ type UpdateIssueDetailsRequest = {
   issue: Issue;
 };
 
-type UpdateIssueDetailsResponse = {
-  isSuccess: boolean;
-};
+type UpdateIssueDetailsResponse = IssueSummary;
 
 export const updateIssueDetails = async ({
   issueId,
@@ -98,36 +93,46 @@ export const updateIssueDetails = async ({
       `${issuePath}/detail/${issueId}`,
       updatedIssuePayload
     );
-    return response.data.isSuccess;
+
+    const { status, ...rest } = response.data.data;
+
+    const issueSummary = {
+      statusId: status,
+      ...rest,
+    };
+
+    return issueSummary;
   } catch (error) {
     throw new Error("이슈 상세 정보를 업데이트하는 중 오류가 발생했습니다.");
   }
 };
 
 type UpdateIssueStatusRequest = {
-  issue: IssueSummary;
-  oldStatus: IssueStatus;
+  modifierId: string;
+  issueId: string;
   newStatus: IssueStatus;
 };
 
 type UpdateIssueStatusResponse = {
-  isSuccess: boolean;
+  issueId: string;
+  statusId: IssueStatus;
 };
 
 export const updateIssueStatus = async ({
-  issue,
+  modifierId,
+  issueId,
   newStatus,
 }: UpdateIssueStatusRequest): Promise<UpdateIssueStatusResponse> => {
   try {
     const response = await authorizedAxios.put(
-      `${issuePath}/status/${issue.issueId}`,
+      `${issuePath}/status/${issueId}`,
       {
-        params: {
-          status: newStatus, // body로 바뀔 예정 
-        },
+        memberId: modifierId,
+        status: newStatus,
       }
     );
-    return response.data.isSuccess;
+    const data = response.data.data;
+    return { issueId, statusId: data.status };
   } catch (error) {
     throw new Error("이슈 상태를 업데이트하는 중 오류가 발생했습니다.");
   }
@@ -192,7 +197,11 @@ export const getIssueList = async ({
       totalPage: response.data.data.totalPage,
     };
   } catch (error) {
-    throw new Error("이슈 목록을 가져오는 중 오류가 발생했습니다.");
+    if (error === 422) {
+      throw new Error("태스크를 먼저 생성해야 함");
+    } else {
+      throw new Error("이슈 목록을 가져오는 중 오류가 발생했습니다.");
+    }
   }
 };
 
@@ -231,7 +240,7 @@ type DeleteIssueRequest = {
 };
 
 type DeleteIssueResponse = {
-  isSuccess: boolean;
+  issueId: string;
 };
 
 export const deleteIssue = async ({
@@ -239,7 +248,7 @@ export const deleteIssue = async ({
 }: DeleteIssueRequest): Promise<DeleteIssueResponse> => {
   try {
     const response = await authorizedAxios.delete(`${issuePath}/${issueId}`);
-    return response.data.isSuccess;
+    return { issueId: response.data.data };
   } catch (error) {
     throw new Error("이슈를 삭제하는 중 오류가 발생했습니다.");
   }

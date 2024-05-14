@@ -9,7 +9,7 @@ import {
 } from "@mui/material";
 import { grey } from "@mui/material/colors";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useRecoilValue, useSetRecoilState } from "recoil";
@@ -19,17 +19,17 @@ import { userInfoState } from "@/stores/userStore";
 import { CommentInputControl } from "@/components/Comment/CommentInputControl";
 import PrimaryButton from "@/components/PrimaryButton";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { updateComment } from "@/apis/commentApi";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
-
-import { useEffect } from "react";
+import { updateItemInCache } from "@/utils/reactQueryCacheUpdaters";
 
 type CommentCardProps = {
   comment: ExistingComment;
 };
 
 const CommentCard = ({ comment }: CommentCardProps) => {
+  const queryClient = useQueryClient();
   const { memberId: loggedInMemberId } = useRecoilValue(userInfoState);
   const issueId = useRecoilValue(issueIdToShowInModalState);
   const setCommentIdSelectedToDelete = useSetRecoilState(
@@ -37,7 +37,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
   );
   const {
     commentId,
-    body,
+    commentBody,
     updatedAt,
     userId: commentWriterId,
     userNickname,
@@ -45,7 +45,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
   } = comment;
 
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [updatedCommentBody, setUpdatedCommentBody] = useState<string>(body);
+  const [updatedCommentBody, setUpdatedCommentBody] = useState<string>(commentBody);
 
   const isLoggedInUserCommentWriter = loggedInMemberId === commentWriterId;
 
@@ -69,10 +69,11 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     handleCloseSettingsDropdown();
     setCommentIdSelectedToDelete(commentId);
   };
+  
 
   const {
     mutate: executeUpdateComment,
-    data,
+    data: updatedComment,
     isLoading: isUpdatingComment,
     isSuccess,
     isError,
@@ -82,12 +83,21 @@ const CommentCard = ({ comment }: CommentCardProps) => {
       comment: {
         writerId: loggedInMemberId,
         issueId: issueId!,
-        body: updatedCommentBody,
+        commentBody: updatedCommentBody,
       },
     });
   });
 
-  console.log("*************************", commentId, editMode);
+  const successAction = useCallback(() => {
+    setEditMode(false);  
+    updateItemInCache<ExistingComment>({
+      idPropertyName: "commentId",
+      moveToFront: false,
+      queryClient,
+      queryKey: ["commentList", issueId!],
+      updatedItem: updatedComment!,
+    });
+  }, [queryClient, issueId, updatedComment]);
 
   useFeedbackHandler({
     isError,
@@ -95,7 +105,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
       "댓글을 수정하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
     isSuccess,
     successMessage: "댓글이 수정되었습니다.",
-    unconditionalExecute: () => setEditMode(false),
+    successAction,
   });
 
   if (isUpdatingComment) {
@@ -118,7 +128,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
             </PrimaryButton>
           }
           handleCancel={() => {
-            setUpdatedCommentBody(body);
+            setUpdatedCommentBody(commentBody);
             setEditMode(false);
           }}
         />
@@ -176,7 +186,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
               </>
             )}
           </Box>
-          <Typography variant="caption">{body}</Typography>
+          <Typography variant="caption">{commentBody}</Typography>
           <Typography
             textAlign="right"
             sx={{ color: grey[600], fontSize: ".7rem" }}

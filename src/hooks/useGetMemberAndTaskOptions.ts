@@ -11,20 +11,26 @@ const useGetMemberAndTaskOptions = ({
     data: allProjectMemberList,
     isLoading: isLoadingAllProjectMembers,
     isError: isErrorLoadingAllProjectMembers,
-    refetch: fetchAllProjectMemberList
-  } = useQuery(["allProjectMemberList", projectId], () =>
-    getAllProjectMemberList({ projectId }), { enabled: false, refetchOnWindowFocus: false }
+    refetch: fetchAllProjectMemberList,
+  } = useQuery(
+    ["allProjectMemberList", projectId],
+    () => getAllProjectMemberList({ projectId }),
+    { enabled: false, refetchOnWindowFocus: false }
   );
 
-  const { 
-    data: allTaskList, 
-    isLoading: isLoadingAllTaskList, 
+  const {
+    data: allTaskList,
+    isLoading: isLoadingAllTaskList,
     isError: isErrorLoadingAllTaskList,
-    refetch: fetchAllTaskList 
-  } = useQuery(["allTaskList", projectId], () => getAllTaskList({ projectId }), {
-    enabled: false,
-    // refetchOnWindowFocus: false
-  });
+    refetch: fetchAllTaskList,
+  } = useQuery(
+    ["allTaskList", projectId],
+    () => getAllTaskList({ projectId }),
+    {
+      enabled: false,
+      // refetchOnWindowFocus: false
+    }
+  );
 
   return {
     allProjectMemberList,
@@ -34,7 +40,7 @@ const useGetMemberAndTaskOptions = ({
     allTaskList,
     isLoadingAllTaskList,
     isErrorLoadingAllTaskList,
-    fetchAllTaskList
+    fetchAllTaskList,
   };
 };
 

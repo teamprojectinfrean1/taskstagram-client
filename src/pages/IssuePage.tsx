@@ -1,11 +1,12 @@
 import { useState } from "react";
+import { useQueryClient } from "react-query";
 import {
   IssueFormModal,
   IssueStoryContainer,
   IssueTicket,
-  IssueTicketContainer,
+  IssueStatusBoard,
 } from "@/components/IssueManagement";
-import { Box, Fade, IconButton, Stack } from "@mui/material";
+import { Box, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -22,22 +23,33 @@ import {
 } from "@dnd-kit/core";
 import { createPortal } from "react-dom";
 import theme from "@/theme/theme";
+import { userInfoState } from "@/stores/userStore";
 import { selectedProjectState } from "@/stores/projectStore";
+import useUpdateIssueStatus from "@/hooks/useUpdateIssueStatus";
+import { issueFeatureAvailabilityState } from "@/stores/issueStore";
 
 const IssuePage = () => {
-  const selectedProjectId = "ca005f9b-fc1a-4004-acee-e7f549699718"; // 추후 제거 예정
+  const queryClient = useQueryClient();
 
-  // const selectedProjectId = useRecoilValue(selectedProjectState);
+  const { memberId } = useRecoilValue(userInfoState);
+
+  const selectedProject = useRecoilValue(selectedProjectState);
+  const selectedProjectId = selectedProject ? selectedProject.projectId : undefined;
 
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
   );
+
+  const isIssueFeatureAvailable = useRecoilValue(issueFeatureAvailabilityState)
   const [draggedIssue, setDraggedIssue] = useState<IssueSummary | null>(null);
   const [hoveredContainerId, setHoveredContainerId] = useState<string | null>(
     null
   );
 
-  // const mutation = useUpdateIssueStatusMutation(selectedProjectId!);
+  const executeUpdateIssueStatus = useUpdateIssueStatus({
+    projectId: selectedProjectId!,
+    queryClient,
+  });
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -49,7 +61,6 @@ const IssuePage = () => {
 
   const onDragStart = (event: DragStartEvent) => {
     setDraggedIssue(event.active.data.current?.issue);
-    return;
   };
 
   const onDragOver = (event: DragOverEvent) => {
@@ -73,11 +84,12 @@ const IssuePage = () => {
       targetContainerId &&
       originContainerId !== targetContainerId
     ) {
-      // mutation.mutate({
-      //   issue: issueTicket,
-      //   oldStatus: originContainerId as IssueStatus,
-      //   newStatus: targetContainerId as IssueStatus,
-      // });
+      executeUpdateIssueStatus({
+        issue: issueTicket,
+        oldStatus: originContainerId as IssueStatus,
+        newStatus: targetContainerId as IssueStatus,
+        modifierId: memberId,
+      });
     }
 
     setHoveredContainerId(null);
@@ -113,22 +125,25 @@ const IssuePage = () => {
             minHeight: "300px",
           }}
         >
-          <IssueTicketContainer
+          <IssueStatusBoard
             containerId="TODO"
             isHovered={hoveredContainerId === "TODO"}
-            projectId={selectedProjectId!}
+            isIssueFeatureAvailable={isIssueFeatureAvailable}
+            projectId={selectedProjectId}
             title="할 일"
           />
-          <IssueTicketContainer
+          <IssueStatusBoard
             containerId="INPROGRESS"
             isHovered={hoveredContainerId === "INPROGRESS"}
-            projectId={selectedProjectId!}
+            isIssueFeatureAvailable={isIssueFeatureAvailable}
+            projectId={selectedProjectId}
             title="진행 중"
           />
-          <IssueTicketContainer
+          <IssueStatusBoard
             containerId="DONE"
             isHovered={hoveredContainerId === "DONE"}
-            projectId={selectedProjectId!}
+            isIssueFeatureAvailable={isIssueFeatureAvailable}
+            projectId={selectedProjectId}
             title="완료"
           />
         </Box>
@@ -147,36 +162,38 @@ const IssuePage = () => {
         </DragOverlay>,
         document.body
       )}
-      <IconButton
-        size="large"
-        edge="end"
-        aria-label="Create New Issue"
-        onClick={() => setIssueIdToShowInModal("new-issue")}
-        sx={{
-          backgroundColor: theme.palette.primary.main,
-          color: theme.palette.background.default,
-          "&:hover": {
-            backgroundColor: theme.palette.primary.light,
-          },
-          "&.Mui-disabled": {
-            backgroundColor: theme.palette.grey[400],
-            color: theme.palette.grey[600],
+      {selectedProjectId && isIssueFeatureAvailable && (
+        <IconButton
+          size="large"
+          edge="end"
+          aria-label="Create New Issue"
+          onClick={() => setIssueIdToShowInModal("new-issue")}
+          sx={{
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.background.default,
             "&:hover": {
-              backgroundColor: theme.palette.grey[400],
+              backgroundColor: theme.palette.primary.light,
             },
-          },
-          p: 0.5,
-          position: "fixed",
-          bottom: 30,
-          right: 60,
-          boxShadow: 4,
-          zIndex: 1000,
-          alignSelf: "flex-end",
-        }}
-      >
-        <AddIcon />
-      </IconButton>
-      {issueIdToShowInModal && (
+            "&.Mui-disabled": {
+              backgroundColor: theme.palette.grey[400],
+              color: theme.palette.grey[600],
+              "&:hover": {
+                backgroundColor: theme.palette.grey[400],
+              },
+            },
+            p: 0.5,
+            position: "fixed",
+            bottom: 30,
+            right: 60,
+            boxShadow: 4,
+            zIndex: 1000,
+            alignSelf: "flex-end",
+          }}
+        >
+          <AddIcon />
+        </IconButton>
+      )}
+      {selectedProjectId && issueIdToShowInModal && (
         <IssueFormModal
           currentIssueId={issueIdToShowInModal}
           handleClose={() => setIssueIdToShowInModal(null)}

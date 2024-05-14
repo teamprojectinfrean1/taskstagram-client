@@ -1,8 +1,7 @@
 import { IssueTicket, SkeletonIssueTicket } from "@/components/IssueManagement";
 import { searchIssue } from "@/apis/issueApi";
 import InfiniteScroller from "@/components/InfiniteScroller";
-
-const SEARCH_RESULT_PER_PAGE = 15;
+import { ISSUE_PER_PAGE } from "@/constants";
 
 type IssueSearchResultsProps = {
   projectId: string;
@@ -25,7 +24,7 @@ export const IssueSearchResults = ({
         filter: searchParams.filter,
         issueStatus: containerId,
         projectId,
-        size: SEARCH_RESULT_PER_PAGE,
+        size: ISSUE_PER_PAGE,
         word: searchParams.keyword,
       }}
       containerRef={containerRef}

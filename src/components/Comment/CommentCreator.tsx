@@ -1,15 +1,17 @@
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
-import { useMutation } from "react-query";
+import { useMutation, useQueryClient } from "react-query";
 import { createComment } from "@/apis/commentApi";
 import PrimaryButton from "@/components/PrimaryButton";
 import { Box, Skeleton } from "@mui/material";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 import Spinner from "@/components/Spinner";
 import { userInfoState } from "@/stores/userStore";
 import UserAvatar from "@/components/UserAvatar";
 import { CommentInputControl } from "./CommentInputControl";
+import { addItemToCache } from "@/utils/reactQueryCacheUpdaters";
+import { COMMENT_PER_PAGE } from "@/constants";
 
 const SkeletonCommentCreator = (
   <Box display="flex" gap={4} sx={{ mb: 5 }}>
@@ -26,6 +28,7 @@ type CommentCreatorProps = {
   issueDetailsIsLoading: boolean;
 };
 const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
+  const queryClient = useQueryClient();
   const { memberId: loggedInMemberId } = useRecoilValue(userInfoState);
   const issueId = useRecoilValue(issueIdToShowInModalState);
 
@@ -33,7 +36,7 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
 
   const {
     mutate: executeCreateComment,
-    data,
+    data: newComment,
     isLoading,
     isSuccess,
     isError,
@@ -42,10 +45,22 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
       comment: {
         writerId: loggedInMemberId,
         issueId: issueId!,
-        body: commentBody,
+        commentBody,
       },
     })
   );
+
+  const successAction = useCallback(() => {
+    setCommentBody("");
+    if (newComment) {
+      addItemToCache<ExistingComment>({
+        queryClient,
+        queryKey: ["commentList", issueId!],
+        newItem: newComment,
+        pageSize: COMMENT_PER_PAGE,
+      });
+    }
+  }, [newComment, queryClient, issueId]);
 
   useFeedbackHandler({
     isError,
@@ -53,7 +68,7 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
       "댓글을 추가하는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오.",
     isSuccess,
     successMessage: "댓글이 추가되었습니다.",
-    successAction: () => setCommentBody(""),
+    successAction,
   });
 
   if (issueDetailsIsLoading) {
