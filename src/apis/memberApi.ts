@@ -1,4 +1,4 @@
-import { authorizedAxios } from "./domainSettings";
+import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 
 const memberPath = "/member";
 
