@@ -11,7 +11,7 @@ export const markMemberAsHavingActiveIssue = ({
   projectId,
   queryClient,
 }: MarkMemberAsHavingActiveIssueParmas) => {
-  const queryKey = ["userStoryList", projectId];
+  const queryKey = ["issueStoryList", projectId];
 
   queryClient.setQueryData<
     InfiniteData<PaginatedResponse<ProjectMember>> | undefined

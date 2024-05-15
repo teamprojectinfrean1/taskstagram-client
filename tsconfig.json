@@ -16,6 +16,6 @@
     "noEmit": true,
     "jsx": "react-jsx"
   },
-  "include": ["src", "types", "src/components/Comment/.tsx"],
+  "include": ["src", "types"],
   "extends": "./tsconfig.paths.json"
 }

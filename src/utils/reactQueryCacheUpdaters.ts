@@ -16,6 +16,8 @@ export const removeItemFromCache = <T>({
   queryClient.setQueryData<InfiniteData<PaginatedResponse<T>> | undefined>(
     queryKey,
     (oldData) => {
+      console.log("removeItemFromCache", queryKey, oldData)
+
       if (!oldData) return undefined;
 
       const newPages = oldData.pages.map((page) => ({
@@ -57,6 +59,11 @@ export const removeItemFromCache = <T>({
         newPages.pop();
       }
 
+      console.log( {
+        ...oldData,
+        pages: newPages,
+        pageParams: oldData.pageParams,
+      })
       return {
         ...oldData,
         pages: newPages,

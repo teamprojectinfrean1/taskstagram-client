@@ -55,22 +55,21 @@ export const getAllProjectMemberList = async ({
     return response.data.data;
   } catch (error) {
     throw new Error(
-      
       "프로젝트 멤버 목록 전체를 가져오는 중 오류가 발생했습니다."
     );
   }
 };
 
-type GetAllMemberListResponse = Member[];
+type GetAllAppUserListResponse = User[];
 
-export const getAllMemberList = async (): Promise<GetAllMemberListResponse> => {
-  try {
-    const response = await unauthorizedAxios.get(
-      `${memberPath}/list/test` //추후 api명 변경 필요 (백엔드 요청)
-    );
-    return response.data.data.members;
-  } catch (error) {
-    throw new Error("전체 멤버 목록을 가져오는 중 오류가 발생했습니다."
-    );
-  }
-};
+export const getAllAppUserList =
+  async (): Promise<GetAllAppUserListResponse> => {
+    try {
+      const response = await unauthorizedAxios.get(
+        `${memberPath}/list/test` //추후 api명 변경 필요 (백엔드 요청)
+      );
+      return response.data.data.members;
+    } catch (error) {
+      throw new Error("전체 멤버 목록을 가져오는 중 오류가 발생했습니다.");
+    }
+  };

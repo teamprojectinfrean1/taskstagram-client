@@ -26,12 +26,11 @@ import {
   IssueCreateButton,
   IssueDeleteButton,
   IssueUpdateButton,
-} from "@/components/IssueManagement";
+  SkeletonIssueFormModal
+} from "@/components/Issue";
 import useGetIssueDetails from "@/hooks/useGetIssueDetails";
 import useGetMemberAndTaskOptions from "@/hooks/useGetMemberAndTaskOptions";
 import PrimaryButton from "@/components/PrimaryButton";
-import SkeletonIssueFormModalSideContent from "./SkeletonIssueFormModalSideContent";
-import { SkeletonIssueFormModalMainContent } from "./SkeletonIssueFormModalMainContent";
 import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 
 type Status = {
@@ -217,11 +216,11 @@ const IssueFormModal = ({
           </Typography>
         )}
         <Grid container spacing={4}>
-          <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
-            {issueDetailsIsLoading ? (
-              <SkeletonIssueFormModalMainContent />
-            ) : (
-              <>
+          {issueDetailsIsLoading ? (
+            <SkeletonIssueFormModal />
+          ) : (
+            <>
+              <Grid item xs={12} md={8} sx={{ "& > *": { mb: 3 } }}>
                 <Box>
                   <InputLabel
                     htmlFor="title"
@@ -258,14 +257,8 @@ const IssueFormModal = ({
                     }
                   />
                 </Box>
-              </>
-            )}
-          </Grid>
-          <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
-            {issueDetailsIsLoading ? (
-              <SkeletonIssueFormModalSideContent />
-            ) : (
-              <>
+              </Grid>
+              <Grid item xs={12} md={4} sx={{ "& > *": { mb: 3 } }}>
                 <Box>
                   <InputLabel
                     htmlFor="assignee"
@@ -276,9 +269,9 @@ const IssueFormModal = ({
                   <SearchableSelect<Partial<ProjectMember>>
                     possibleOptions={allProjectMemberList || []}
                     selectedOptions={{
-                      memberId: formData.assigneeId ?? "",
-                      userNickname: formData.assigneeNickname ?? "",
-                      userProfileImage: formData.assigneeProfileImage ?? "",
+                      memberId: formData.assigneeId ?? null,
+                      userNickname: formData.assigneeNickname ?? null,
+                      userProfileImage: formData.assigneeProfileImage ?? null,
                     }}
                     onSelectionChange={(selected) => {
                       handleInputChange({
@@ -307,9 +300,9 @@ const IssueFormModal = ({
                     // })}
                     renderOption={(
                       props,
-                      { userNickname, userProfileImage }
+                      { memberId, userNickname, userProfileImage }
                     ) => (
-                      <li {...props}>
+                      <li {...props} key={memberId}>
                         <Box display="flex" alignItems="center" gap={2}>
                           <UserAvatar
                             imageUrl={userProfileImage}
@@ -322,8 +315,13 @@ const IssueFormModal = ({
                         </Box>
                       </li>
                     )}
-                    renderSkeleton={() => (
-                      <Box display="flex" alignItems="center" gap={2}>
+                    renderSkeleton={(index) => (
+                      <Box
+                        key={index}
+                        display="flex"
+                        alignItems="center"
+                        gap={2}
+                      >
                         <Skeleton variant="circular" width={40} height={40} />
                         <Skeleton
                           variant="text"
@@ -384,8 +382,13 @@ const IssueFormModal = ({
                     multiselect={false}
                     error={!!formErrors.taskId}
                     helperText={formErrors.taskId}
-                    renderSkeleton={() => (
-                      <Skeleton variant="text" animation="wave" height={40} />
+                    renderSkeleton={(index) => (
+                      <Skeleton
+                        key={index}
+                        variant="text"
+                        animation="wave"
+                        height={40}
+                      />
                     )}
                     optionsFetchErrorMessage={
                       isErrorLoadingAllTaskList ? (
@@ -469,20 +472,9 @@ const IssueFormModal = ({
                     helperText={formErrors.statusId}
                   />
                 </Box>
-                {/* {issueDetails?.lastUpdateDetail && (
-                  <Typography
-                    align="right"
-                    sx={{ color: grey[600], fontSize: ".7rem" }}
-                  >
-                    최종 수정일:{" "}
-                    {issueDetails?.lastUpdateDetail?.updatedDate.split("T")[0]}
-                    <br />
-                    최종 수정자: {issueDetails?.lastUpdateDetail?.userNickname}
-                  </Typography>
-                )} */}
-              </>
-            )}
-          </Grid>
+              </Grid>{" "}
+            </>
+          )}
           <Grid item xs={12} md={8}>
             {!isNewIssue && (
               <CommentContainer issueDetailsIsLoading={issueDetailsIsLoading} />

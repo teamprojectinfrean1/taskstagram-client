@@ -3,13 +3,11 @@ import { InfiniteData, useMutation, QueryClient } from "react-query";
 import { updateIssueStatus } from "@/apis/issueApi";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { snackbarState } from "@/stores/snackbarStore";
-import {
-  issueStatusBoardSearchModeState,
-  issueStatusBoardSearchParamsState,
-} from "@/stores/issueStore";
+import { issueStatusBoardSearchState } from "@/stores/issueStore";
 import { updateIssueInCacheInvolvingStatusChange } from "@/utils/issue/issueStatusBoardUpdaters";
 import { markMemberAsHavingActiveIssue } from "@/utils/issue/userStoryBoardUpdaters";
 import { endIssueSearchMode } from "@/stores/issueStore";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
 
 type useUpdateIssueStatusParams = {
   projectId: string;
@@ -28,10 +26,8 @@ const useUpdateIssueStatus = ({
   queryClient,
 }: useUpdateIssueStatusParams) => {
   const setSnackbar = useSetRecoilState(snackbarState);
-  const [issueStatusBoardSearchModes, setIssueStatusBoardSearchModes] =
-    useRecoilState(issueStatusBoardSearchModeState);
-  const [searchParams, setIssueStatusBoardSearchParams] = useRecoilState(
-    issueStatusBoardSearchParamsState
+  const [issueStatusBoardSearch, setIssueStatusBoardSearch] = useRecoilState(
+    issueStatusBoardSearchState
   );
   const [rollbackData, setRollbackData] = useState<any>(null);
 
@@ -49,60 +45,51 @@ const useUpdateIssueStatus = ({
       }),
     {
       onMutate: async ({ issue, oldStatus, newStatus }) => {
-        const oldStatusBoardQueryKey = issueStatusBoardSearchModes[oldStatus]
-          ? "issueSearchResults"
-          : "defaultIssueList";
-        const newStatusBoardQueryKey = issueStatusBoardSearchModes[newStatus]
-          ? "issueSearchResults"
-          : "defaultIssueList";
+        const oldStatusBoardQueryKey = createIssueStatusBoardQueryKey({
+          issueStatus: oldStatus,
+          issueStatusBoardSearch,
+          projectId,
+        });
 
-        await queryClient.cancelQueries([
-          oldStatusBoardQueryKey,
+        const newStatusBoardQueryKey = createIssueStatusBoardQueryKey({
+          issueStatus: newStatus,
+          issueStatusBoardSearch,
           projectId,
-          oldStatus,
-        ]);
-        await queryClient.cancelQueries([
-          newStatusBoardQueryKey,
-          projectId,
-          newStatus,
-        ]);
+        });
+
+        await queryClient.cancelQueries([oldStatusBoardQueryKey]);
+        await queryClient.cancelQueries([newStatusBoardQueryKey]);
 
         const previousOldStatusIssueList = queryClient.getQueryData<
           InfiniteData<PaginatedResponse<IssueSummary>>
-        >([oldStatusBoardQueryKey, projectId, oldStatus]);
-        const previousNewStatusIssueList = issueStatusBoardSearchModes[
-          newStatus
-        ]
+        >(oldStatusBoardQueryKey);
+
+        const isNewStatusBoardInSearchMode =
+          issueStatusBoardSearch[newStatus].isSearchMode;
+
+        const previousNewStatusIssueList = isNewStatusBoardInSearchMode
           ? undefined
           : queryClient.getQueryData<
               InfiniteData<PaginatedResponse<IssueSummary>>
-            >([newStatusBoardQueryKey, projectId, newStatus]);
-
-        const savedSearchParams = issueStatusBoardSearchModes[newStatus]
-          ? searchParams[newStatus]
-          : undefined;
+            >(newStatusBoardQueryKey);
 
         updateIssueInCacheInvolvingStatusChange({
           newOrUpdatedIssue: { ...issue, statusId: newStatus },
-          oldStatus,
           newStatus,
-          projectId,
           queryClient,
-          issueStatusBoardSearchModes,
-          setIssueStatusBoardSearchModes,
-          setIssueStatusBoardSearchParams,
+          oldStatusBoardQueryKey,
+          newStatusBoardQueryKey,
+          isNewStatusBoardInSearchMode,
+          setIssueStatusBoardSearch,
           isOptimisticUpdate: true,
         });
 
         setRollbackData({
           issue,
-          oldStatus,
           oldStatusBoardQueryKey,
           previousOldStatusIssueList,
-          newStatus,
           newStatusBoardQueryKey,
           previousNewStatusIssueList,
-          savedSearchParams,
         });
       },
     }
@@ -119,11 +106,7 @@ const useUpdateIssueStatus = ({
       });
       const newStatus = updatedIssue.statusId;
 
-      endIssueSearchMode(
-        setIssueStatusBoardSearchModes,
-        setIssueStatusBoardSearchParams,
-        newStatus
-      );
+      endIssueSearchMode(setIssueStatusBoardSearch, newStatus);
 
       if (newStatus === "INPROGRESS") {
         markMemberAsHavingActiveIssue({
@@ -132,7 +115,7 @@ const useUpdateIssueStatus = ({
           queryClient,
         });
       } else if (newStatus === "TODO" || newStatus === "DONE") {
-        queryClient.invalidateQueries(["userStoryList", projectId]);
+        queryClient.invalidateQueries(["issueStoryList", projectId]);
       }
     }
   }, [isSuccess, setSnackbar]);
@@ -140,36 +123,22 @@ const useUpdateIssueStatus = ({
   useEffect(() => {
     if (isError && rollbackData) {
       const {
-        oldStatus,
         oldStatusBoardQueryKey,
         previousOldStatusIssueList,
-        newStatus,
         newStatusBoardQueryKey,
         previousNewStatusIssueList,
-        savedSearchParams,
       } = rollbackData;
 
       queryClient.setQueryData(
-        [oldStatusBoardQueryKey, projectId, oldStatus],
+        oldStatusBoardQueryKey,
         previousOldStatusIssueList
       );
 
       if (previousNewStatusIssueList) {
         queryClient.setQueryData(
-          [newStatusBoardQueryKey, projectId, newStatus],
+          newStatusBoardQueryKey,
           previousNewStatusIssueList
         );
-      }
-
-      if (savedSearchParams) {
-        setIssueStatusBoardSearchParams((prev) => ({
-          ...prev,
-          [newStatus]: savedSearchParams,
-        }));
-        setIssueStatusBoardSearchModes((prev) => ({
-          ...prev,
-          [newStatus]: true,
-        }));
       }
 
       setSnackbar({
@@ -185,8 +154,8 @@ const useUpdateIssueStatus = ({
     queryClient,
     projectId,
     setSnackbar,
-    setIssueStatusBoardSearchParams,
-    setIssueStatusBoardSearchModes,
+    issueStatusBoardSearch,
+    setIssueStatusBoardSearch,
   ]);
 
   return executeUpdateIssueStatus;

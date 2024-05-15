@@ -5,9 +5,10 @@ import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
 import PrimaryButton from "@/components/PrimaryButton";
 import { useMutation, useQueryClient } from "react-query";
-import { issueStatusBoardSearchModeState } from "@/stores/issueStore";
+import { issueStatusBoardSearchState } from "@/stores/issueStore";
 import { useRecoilValue } from "recoil";
 import { removeIssueFromCache } from "@/utils/issue/issueStatusBoardUpdaters";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
 
 type IssueDeleteButtonProps = {
   handleCloseIssueFormModal: () => void;
@@ -23,10 +24,7 @@ const IssueDeleteButton = ({
   issueStatus,
 }: IssueDeleteButtonProps) => {
   const queryClient = useQueryClient();
-  const issueStatusBoardSearchModes = useRecoilValue(
-    issueStatusBoardSearchModeState
-  );
-  const isStatusBoardOnSearchMode = issueStatusBoardSearchModes[issueStatus!];
+  const issueStatusBoardSearch = useRecoilValue(issueStatusBoardSearchState);
 
   const {
     mutate: executeDeleteIssue,
@@ -39,24 +37,20 @@ const IssueDeleteButton = ({
   const successAction = useCallback(() => {
     if (removedIssue) {
       removeIssueFromCache({
-        issueStatus: issueStatus!,
         issueIdToRemove: removedIssue.issueId,
-        projectId,
         queryClient,
-        isIssueStatusBoardInSearchMode: isStatusBoardOnSearchMode,
+        queryKey: createIssueStatusBoardQueryKey({
+          issueStatus: issueStatus!,
+          issueStatusBoardSearch,
+          projectId,
+        }),
       });
       if (issueStatus === "INPROGRESS") {
-        queryClient.invalidateQueries(["userStoryList", projectId]);
+        queryClient.invalidateQueries(["issueStoryList", projectId]);
       }
       handleCloseIssueFormModal();
     }
-     }, [
-    removedIssue,
-    issueStatus,
-    projectId,
-    queryClient,
-    isStatusBoardOnSearchMode,
-  ]);
+  }, [removedIssue, issueStatus, projectId, queryClient]);
 
   useFeedbackHandler({
     isError,

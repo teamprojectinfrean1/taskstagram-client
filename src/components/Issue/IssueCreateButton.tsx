@@ -5,13 +5,11 @@ import { useMutation, useQueryClient } from "react-query";
 import { createIssue } from "@/apis/issueApi";
 import Spinner from "@/components/Spinner";
 import PrimaryButton from "@/components/PrimaryButton";
-import {
-  issueStatusBoardSearchModeState,
-  issueStatusBoardSearchParamsState,
-} from "@/stores/issueStore";
+import { issueStatusBoardSearchState } from "@/stores/issueStore";
 import { useRecoilState, useSetRecoilState } from "recoil";
 import { addIssueToCache } from "@/utils/issue/issueStatusBoardUpdaters";
 import { markMemberAsHavingActiveIssue } from "@/utils/issue/userStoryBoardUpdaters";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
 
 type MutateFunction = (issue: Issue) => void;
 
@@ -27,10 +25,8 @@ const IssueCreateButton = ({
   projectId,
 }: IssueCreateButtonProps) => {
   const queryClient = useQueryClient();
-  const [issueStatusBoardSearchModes, setIssueStatusBoardSearchModes] =
-    useRecoilState(issueStatusBoardSearchModeState);
-  const setIssueStatusBoardSearchParams = useSetRecoilState(
-    issueStatusBoardSearchParamsState
+  const [issueStatusBoardSearch, setIssueStatusBoardSearch] = useRecoilState(
+    issueStatusBoardSearchState
   );
 
   const {
@@ -46,12 +42,15 @@ const IssueCreateButton = ({
       addIssueToCache({
         issueStatus: newIssue.statusId!,
         newOrUpdatedIssue: newIssue,
-        projectId,
+        queryKey: createIssueStatusBoardQueryKey({
+          issueStatus: newIssue.statusId!,
+          issueStatusBoardSearch,
+          projectId,
+        }),
         queryClient,
         isIssueStatusBoardInSearchMode:
-          issueStatusBoardSearchModes[newIssue?.statusId!],
-        setIssueStatusBoardSearchModes,
-        setIssueStatusBoardSearchParams,
+        issueStatusBoardSearch[newIssue?.statusId!].isSearchMode,
+        setIssueStatusBoardSearch,
       });
       if (newIssue.statusId === "INPROGRESS") {
         markMemberAsHavingActiveIssue({
@@ -66,8 +65,7 @@ const IssueCreateButton = ({
     newIssue,
     projectId,
     queryClient,
-    issueStatusBoardSearchModes,
-    setIssueStatusBoardSearchModes,
+    setIssueStatusBoardSearch,
   ]);
 
   useFeedbackHandler({

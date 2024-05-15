@@ -34,16 +34,22 @@ type Issue = {
   };
 };
 
-type NewIssue = BaseIssue 
+/* Issue Search */
+type IssueSearchFilter = "ISSUE" | "TASK" | "ASSIGNEE";
 
-type UpdatedIssue = BaseIssue & {
-  issueId?: string;
-}
-
-type IssueStory = {
-  userId: string;
-  userNickname: string;
-  profileImage: string;
-  hasIssueInProgress: booelan;
+type IssueSearchParams = {
+  filter: IssueSearchFilter;
+  keyword: string;
 };
+
+type SearchState = {
+  searchParams: IssueSearchParams;
+  isSearchMode: boolean;
+  executeSearchApi: boolean;
+};
+
+type IssueStatusBoardSearchState = {
+  [key in IssueStatus]: SearchState;
+};
+
 

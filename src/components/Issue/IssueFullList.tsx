@@ -1,21 +1,21 @@
-import { IssueTicket, SkeletonIssueTicket } from "@/components/IssueManagement";
+import { IssueTicket, SkeletonIssueTicket } from "@/components/Issue";
 import { getIssueList } from "@/apis/issueApi";
 import InfiniteScroller from "@/components/InfiniteScroller";
 import { ISSUE_PER_PAGE } from "@/constants";
 import { useSetRecoilState } from "recoil";
 import { issueFeatureAvailabilityState } from "@/stores/issueStore";
 
-type DefaultIssueListProps = {
+type IssueFullListProps = {
   projectId: string;
-  containerId: IssueStatus;
+  statusId: IssueStatus;
   containerRef: React.RefObject<HTMLDivElement>;
 };
 
-export const DefaultIssueList = ({
+const IssueFullList = ({
   projectId,
-  containerId,
+  statusId,
   containerRef,
-}: DefaultIssueListProps) => {
+}: IssueFullListProps) => {
   const setIssueFeatureAvailability = useSetRecoilState(
     issueFeatureAvailabilityState
   );
@@ -23,9 +23,9 @@ export const DefaultIssueList = ({
   return (
     <InfiniteScroller<IssueSummary>
       queryFunction={getIssueList}
-      queryKey={["defaultIssueList", projectId, containerId!]}
+      queryKey={["defaultIssueList", projectId, statusId!]}
       requestOptions={{
-        issueStatus: containerId,
+        issueStatus: statusId,
         projectId,
         size: ISSUE_PER_PAGE,
       }}
@@ -40,7 +40,7 @@ export const DefaultIssueList = ({
       subsequentPageErrorMessage="이슈 목록을 추가로 불러오는 중 문제가 발생했습니다. 나중에 다시 시도해 주십시오."
       noDataToShowMessage="현재 표시할 이슈가 없습니다."
       renderItem={(issue) => (
-        <IssueTicket key={issue.issueId} issue={issue} parent={containerId!} />
+        <IssueTicket key={issue.issueId} issue={issue} parent={statusId!} />
       )}
       renderSkeleton={(index) => <SkeletonIssueTicket key={index} />}
       handleFirstPageResponse={(status, message) => {
@@ -53,3 +53,5 @@ export const DefaultIssueList = ({
     />
   );
 };
+
+export default IssueFullList;

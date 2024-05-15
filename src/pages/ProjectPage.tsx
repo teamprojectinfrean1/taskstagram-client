@@ -30,7 +30,7 @@ import { selectedProjectState } from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
-import { getAllMemberList, getAllProjectMemberList } from "@/apis/memberApi";
+import { getAllAppUserList, getAllProjectMemberList } from "@/apis/memberApi";
 import OneFormModal from "@/components/OneFormModal";
 import PrimaryButton from "@/components/PrimaryButton";
 import { userInfoState } from "@/stores/userStore";
@@ -80,7 +80,7 @@ const ProjectPage = () => {
   );
 
   const { data: allMemberList, isSuccess: isGetAllMemberListSuccess } =
-    useQuery(["getAllMemberList"], () => getAllMemberList());
+    useQuery(["getAllAppUserList"], () => getAllAppUserList());
 
   const {
     data: allProjectMemberList,

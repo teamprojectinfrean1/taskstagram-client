@@ -1,19 +1,17 @@
 import { Box, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import { useDroppable } from "@dnd-kit/core";
-import { useRef } from "react";
+import { useCallback, useRef } from "react";
 import SearchWithDropdownFilter from "@/components/SearchWithDropdownFilter";
-import { DefaultIssueList } from "@/components/IssueManagement/DefaultIssueList";
-import { IssueSearchResults } from "@/components/IssueManagement/IssueSearchResults";
+import { IssueFullList, IssueSearchResultList } from "@/components/Issue";
 import {
-  issueStatusBoardSearchModeState,
-  issueStatusBoardSearchParamsState,
+  issueStatusBoardSearchState,
   endIssueSearchMode,
 } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
 import PrimaryButton from "@/components/PrimaryButton";
 
 type IssueStatusBoardProps = {
-  containerId: IssueStatus;
+  statusId: IssueStatus;
   isHovered: boolean;
   isIssueFeatureAvailable: boolean;
   projectId?: string;
@@ -21,46 +19,60 @@ type IssueStatusBoardProps = {
 };
 
 const IssueStatusBoard = ({
-  containerId,
+  statusId,
   isHovered,
   isIssueFeatureAvailable,
   projectId,
   title,
 }: IssueStatusBoardProps) => {
   const { setNodeRef } = useDroppable({
-    id: containerId!,
+    id: statusId,
   });
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const [issueStatusBoardSearchModes, setIssueStatusBoardSearchModes] =
-    useRecoilState(issueStatusBoardSearchModeState);
-  const isSearchMode = issueStatusBoardSearchModes[containerId];
-
-  const [searchParams, setIssueStatusBoardSearchParams] = useRecoilState(
-    issueStatusBoardSearchParamsState
+  const [issueStatusBoardSearch, setIssueStatusBoardSearch] = useRecoilState(
+    issueStatusBoardSearchState
   );
+  const { executeSearchApi, isSearchMode, searchParams } =
+    issueStatusBoardSearch[statusId];
 
-  const handleSearchParamsChange = <T extends keyof IssueSearchParams>(
+  const handleSearchParamsChange = <T extends keyof typeof searchParams>(
     key: T,
-    value: IssueSearchParams[T]
+    value: (typeof searchParams)[T]
   ) => {
-    setIssueStatusBoardSearchParams((prev) => ({
+    setIssueStatusBoardSearch((prev) => ({
       ...prev,
-      [containerId]: {
-        ...prev[containerId],
-        [key]: value,
+      [statusId]: {
+        ...prev[statusId],
+        searchParams: {
+          ...prev[statusId].searchParams,
+          [key]: value,
+        },
       },
     }));
   };
 
   const startSearchMode = () => {
-    setIssueStatusBoardSearchModes({
-      ...issueStatusBoardSearchModes,
-      [containerId]: true,
-    });
+    setIssueStatusBoardSearch((prev) => ({
+      ...prev,
+      [statusId]: {
+        ...prev[statusId],
+        isSearchMode: true,
+        executeSearchApi: true,
+      },
+    }));
   };
 
+  const endSearchApi = useCallback(() => {
+    setIssueStatusBoardSearch((prev) => ({
+      ...prev,
+      [statusId]: {
+        ...prev[statusId],
+        executeSearchApi: false,
+      },
+    }));
+  }, [setIssueStatusBoardSearch, statusId]);
 
   return (
     <Paper
@@ -97,26 +109,24 @@ const IssueStatusBoard = ({
                 color="primary"
                 sx={{ fontSize: "0.8rem", height: "28px" }}
                 onClick={() =>
-                  endIssueSearchMode(
-                    setIssueStatusBoardSearchModes,
-                    setIssueStatusBoardSearchParams,
-                    containerId
-                  )
+                  endIssueSearchMode(setIssueStatusBoardSearch, statusId)
                 }
               >
                 검색 종료
               </PrimaryButton>
             )}
           </Box>
-          {isIssueFeatureAvailable && <Box sx={{ px: 2 }}>
-            <SearchWithDropdownFilter
-              handleSearchParamsChange={handleSearchParamsChange}
-              startSearchMode={startSearchMode}
-              searchParams={searchParams[containerId]}
-            />
-          </Box>}
+          {isIssueFeatureAvailable && (
+            <Box sx={{ px: 2 }}>
+              <SearchWithDropdownFilter
+                handleSearchParamsChange={handleSearchParamsChange}
+                startSearchMode={startSearchMode}
+                searchParams={searchParams}
+              />
+            </Box>
+          )}
           <Stack
-            id={containerId!}
+            id={statusId}
             ref={containerRef}
             spacing={2}
             className="custom-scrollbar"
@@ -129,17 +139,19 @@ const IssueStatusBoard = ({
             }}
           >
             {isSearchMode ? (
-              <IssueSearchResults
-                projectId={projectId}
-                containerId={containerId}
+              <IssueSearchResultList
+                statusId={statusId}
                 containerRef={containerRef}
-                searchParams={searchParams[containerId]}
+                endSearchApi={endSearchApi}
+                executeSearchApi={executeSearchApi}
+                projectId={projectId}
+                searchParams={searchParams}
               />
             ) : (
-              <DefaultIssueList
-                projectId={projectId}
-                containerId={containerId}
+              <IssueFullList
+                statusId={statusId}
                 containerRef={containerRef}
+                projectId={projectId}
               />
             )}
           </Stack>

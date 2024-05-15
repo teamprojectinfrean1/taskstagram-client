@@ -5,37 +5,39 @@ export const issueIdToShowInModalState = atom<string | null>({
   default: null,
 });
 
-export const issueStatusBoardSearchModeState = atom<StatusBoardSearchModes>({
-  key: "issueStatusBoardSearchModeState",
+export const issueStatusBoardSearchState = atom<IssueStatusBoardSearchState>({
+  key: "issueStatusBoardState",
   default: {
-    TODO: false,
-    INPROGRESS: false,
-    DONE: false,
-  },
-});
-
-export const issueStatusBoardSearchParamsState = atom<StatusBoardSearchParams>({
-  key: "issueStatusBoardSearchParamsState",
-  default: {
-    TODO: { filter: "ISSUE", keyword: "" },
-    INPROGRESS: { filter: "ISSUE", keyword: "" },
-    DONE: { filter: "ISSUE", keyword: "" },
+    TODO: {
+      searchParams: { filter: "ISSUE", keyword: "" },
+      isSearchMode: false,
+      executeSearchApi: false,
+    },
+    INPROGRESS: {
+      searchParams: { filter: "ISSUE", keyword: "" },
+      isSearchMode: false,
+      executeSearchApi: false,
+    },
+    DONE: {
+      searchParams: { filter: "ISSUE", keyword: "" },
+      isSearchMode: false,
+      executeSearchApi: false,
+    },
   },
 });
 
 export const endIssueSearchMode = (
-  setIssueStatusBoardSearchModes: SetterOrUpdater<StatusBoardSearchModes>,
-  setIssueStatusBoardSearchParams: SetterOrUpdater<StatusBoardSearchParams>,
-  issueStatus: string
+  setIssueStatusBoardSearchState: SetterOrUpdater<IssueStatusBoardSearchState>,
+  issueStatus: IssueStatus 
 ) => {
-  setIssueStatusBoardSearchModes((prevModes) => ({
-    ...prevModes,
-    [issueStatus]: false,
-  }));
-
-  setIssueStatusBoardSearchParams((prevParams) => ({
-    ...prevParams,
-    [issueStatus]: { filter: "ISSUE", keyword: "" },
+  setIssueStatusBoardSearchState((prevState) => ({
+    ...prevState,
+    [issueStatus]: {
+      ...prevState[issueStatus],
+      searchParams: { filter: "ISSUE", keyword: "" },
+      isSearchMode: false,
+      executeSearchApi: false,
+    },
   }));
 };
 

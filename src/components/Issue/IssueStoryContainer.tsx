@@ -2,7 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { Box, IconButton, Paper, Skeleton } from "@mui/material";
 import KeyboardDoubleArrowRightIcon from "@mui/icons-material/KeyboardDoubleArrowRight";
 import KeyboardDoubleArrowLeftIcon from "@mui/icons-material/KeyboardDoubleArrowLeft";
-import { SkeletonUserStory, IssueStory } from "@/components/IssueManagement";
+import { SkeletonIssueStory, IssueStory } from "@/components/Issue";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import { getPaginatedProjectMemberList } from "@/apis/memberApi";
 import InfiniteScroller from "@/components/InfiniteScroller";
@@ -11,11 +11,11 @@ import { PROJECT_MEMBER_PER_PAGE } from "@/constants";
 const SCROLL_AMOUNT_ON_ARROW_CLICK = 500;
 const SCROLL_POSITION_TOLERANCE = 5;
 
-type UserStoryContainerProps = {
+type IssueStoryContainerProps = {
   projectId?: string;
 };
 
-const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
+const IssueStoryContainer = ({ projectId }: IssueStoryContainerProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const storyIsOverflowing = useOverflowDetection(containerRef, "horizontal");
@@ -80,7 +80,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
           >
             <InfiniteScroller<ProjectMember>
               queryFunction={getPaginatedProjectMemberList}
-              queryKey={["userStoryList", projectId]}
+              queryKey={["issueStoryList", projectId]}
               requestOptions={{
                 projectId,
                 size: PROJECT_MEMBER_PER_PAGE,
@@ -92,7 +92,7 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
               renderItem={(story) => (
                 <IssueStory key={story.memberId} story={story} />
               )}
-              renderSkeleton={(index) => <SkeletonUserStory key={index} />}
+              renderSkeleton={(index) => <SkeletonIssueStory key={index} />}
               numberOfSkeletons={9}
             />
           </Box>
@@ -113,4 +113,4 @@ const UserStoryContainer = ({ projectId }: UserStoryContainerProps) => {
   );
 };
 
-export default UserStoryContainer;
+export default IssueStoryContainer;

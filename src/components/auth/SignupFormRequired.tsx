@@ -8,7 +8,7 @@ import { Box, Button, Divider, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilValue } from "recoil";
-import { signupInfoState } from "@/stores/AuthStore";
+import { signupInfoState } from "@/stores/authStore";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 

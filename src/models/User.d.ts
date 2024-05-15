@@ -14,3 +14,10 @@ type UserSummary = {
   nickname: string;
   profileImage: string | null;
 };
+
+type User = {
+  memberUuid: string;
+  userUuid: string;
+  nickname: string | null;
+  profileUrl: string | null;
+};

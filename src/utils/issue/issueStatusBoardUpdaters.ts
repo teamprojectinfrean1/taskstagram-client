@@ -8,44 +8,32 @@ import { ISSUE_PER_PAGE } from "@/constants";
 import { SetterOrUpdater } from "recoil";
 import { endIssueSearchMode } from "@/stores/issueStore";
 
-
 type AddIssueToCacheParams = {
+  isIssueStatusBoardInSearchMode: boolean;
   issueStatus: IssueStatus;
   newOrUpdatedIssue: IssueSummary;
-  projectId: string;
   queryClient: QueryClient;
-  isIssueStatusBoardInSearchMode: boolean;
-  setIssueStatusBoardSearchModes: SetterOrUpdater<StatusBoardSearchModes>;
-  setIssueStatusBoardSearchParams: SetterOrUpdater<StatusBoardSearchParams>;
+  queryKey: string[];
+  setIssueStatusBoardSearch: SetterOrUpdater<IssueStatusBoardSearchState>;
   isOptimisticUpdate?: boolean;
 };
 
 export const addIssueToCache = ({
+  isIssueStatusBoardInSearchMode,
   issueStatus,
   newOrUpdatedIssue,
-  projectId,
   queryClient,
-  isIssueStatusBoardInSearchMode,
-  setIssueStatusBoardSearchModes,
-  setIssueStatusBoardSearchParams,
+  queryKey,
+  setIssueStatusBoardSearch,
   isOptimisticUpdate = false,
 }: AddIssueToCacheParams) => {
-
   if (isIssueStatusBoardInSearchMode && !isOptimisticUpdate) {
-    endIssueSearchMode(
-      setIssueStatusBoardSearchModes,
-      setIssueStatusBoardSearchParams,
-      issueStatus
-    );
-    // setIssueStatusBoardSearchModes((prev) => ({
-    //   ...prev,
-    //   [issueStatus]: false,
-    // }));
+    endIssueSearchMode(setIssueStatusBoardSearch, issueStatus);
   } else {
     if (newOrUpdatedIssue) {
       addItemToCache<IssueSummary>({
         queryClient,
-        queryKey: ["defaultIssueList", projectId, issueStatus],
+        queryKey,
         newItem: newOrUpdatedIssue,
         pageSize: ISSUE_PER_PAGE,
       });
@@ -54,103 +42,79 @@ export const addIssueToCache = ({
 };
 
 type RemoveIssueFromCacheParams = {
-  isIssueStatusBoardInSearchMode: boolean;
-  issueStatus: string;
   issueIdToRemove: string;
-  projectId: string;
   queryClient: QueryClient;
+  queryKey: string[];
 };
 
 export const removeIssueFromCache = ({
-  isIssueStatusBoardInSearchMode,
-  issueStatus,
   issueIdToRemove,
-  projectId,
   queryClient,
+  queryKey,
 }: RemoveIssueFromCacheParams) => {
   removeItemFromCache<IssueSummary>({
-    queryClient,
-    queryKey: [
-      isIssueStatusBoardInSearchMode
-        ? "issueSearchResults"
-        : "defaultIssueList",
-      projectId,
-      issueStatus,
-    ],
     idOfElementToRemove: issueIdToRemove,
     idPropertyName: "issueId",
+    queryClient,
+    queryKey,
   });
 };
 
 type UpdateIssueFromCachedStatusBoardParams = {
-  isIssueStatusBoardInSearchMode: boolean;
-  issueStatus: IssueStatus;
-  projectId: string;
   queryClient: QueryClient;
+  queryKey: string[];
   updatedIssue: IssueSummary;
 };
 
 export const updateIssueInCacheUninvolvingStatusChange = ({
-  isIssueStatusBoardInSearchMode,
-  issueStatus,
-  projectId,
   queryClient,
+  queryKey,
   updatedIssue,
 }: UpdateIssueFromCachedStatusBoardParams) => {
   updateItemInCache<IssueSummary>({
     idPropertyName: "issueId",
     moveToFront: true,
     queryClient,
-    queryKey: [
-      isIssueStatusBoardInSearchMode
-        ? "issueSearchResults"
-        : "defaultIssueList",
-      projectId,
-      issueStatus,
-    ],
+    queryKey,
     updatedItem: updatedIssue,
   });
 };
 
 type UpdateIssueInvolvingStatusChangeParams = {
   newOrUpdatedIssue: IssueSummary;
-  oldStatus: IssueStatus;
   newStatus: IssueStatus;
-  projectId: string;
   queryClient: QueryClient;
-  issueStatusBoardSearchModes: Record<IssueStatus, boolean>;
-  setIssueStatusBoardSearchModes: SetterOrUpdater<StatusBoardSearchModes>;
-  setIssueStatusBoardSearchParams: SetterOrUpdater<StatusBoardSearchParams>;
+  oldStatusBoardQueryKey: string[];
+  newStatusBoardQueryKey: string[];
+  isNewStatusBoardInSearchMode: boolean;
+  setIssueStatusBoardSearch: SetterOrUpdater<IssueStatusBoardSearchState>;
   isOptimisticUpdate?: boolean;
 };
 
 export const updateIssueInCacheInvolvingStatusChange = ({
   newOrUpdatedIssue,
-  oldStatus,
   newStatus,
-  projectId,
   queryClient,
-  issueStatusBoardSearchModes,
-  setIssueStatusBoardSearchModes,
-  setIssueStatusBoardSearchParams,
+  oldStatusBoardQueryKey,
+  newStatusBoardQueryKey,
+  isNewStatusBoardInSearchMode,
+  setIssueStatusBoardSearch,
   isOptimisticUpdate = false,
 }: UpdateIssueInvolvingStatusChangeParams) => {
   removeIssueFromCache({
-    issueStatus: oldStatus,
     issueIdToRemove: newOrUpdatedIssue.issueId,
-    projectId,
+    queryKey: oldStatusBoardQueryKey,
     queryClient,
-    isIssueStatusBoardInSearchMode: issueStatusBoardSearchModes[oldStatus],
   });
 
   addIssueToCache({
     issueStatus: newStatus,
     newOrUpdatedIssue: newOrUpdatedIssue,
-    projectId,
     queryClient,
-    isIssueStatusBoardInSearchMode: issueStatusBoardSearchModes[newStatus],
-    setIssueStatusBoardSearchModes,
-    setIssueStatusBoardSearchParams,
+    queryKey: newStatusBoardQueryKey,
+    isIssueStatusBoardInSearchMode:
+    isNewStatusBoardInSearchMode,
+    setIssueStatusBoardSearch,
     isOptimisticUpdate,
   });
 };

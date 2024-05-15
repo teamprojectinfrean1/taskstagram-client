@@ -1,6 +1,6 @@
 import { Box, Skeleton } from "@mui/material";
 
-const SkeletonUserStory = () => {
+const SkeletonIssueStory = () => {
   return (
     <Box
       display="flex"
@@ -15,4 +15,4 @@ const SkeletonUserStory = () => {
   );
 };
 
-export default SkeletonUserStory;
+export default SkeletonIssueStory;

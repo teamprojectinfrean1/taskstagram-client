@@ -1,5 +1,5 @@
 import { useRecoilState, useResetRecoilState } from "recoil";
-import { signupInfoState } from "@/stores/AuthStore";
+import { signupInfoState } from "@/stores/authStore";
 
 export const useChangeSignupInfo = () => {
   const [signupInfo, setSignupInfo] = useRecoilState(signupInfoState);

@@ -30,7 +30,7 @@ type SingleSelectProps<T> = {
     props: React.HTMLAttributes<HTMLLIElement>,
     option: T
   ) => React.ReactNode;
-  renderSkeleton?: () => React.ReactNode;
+  renderSkeleton?: (index: number) => React.ReactNode;
   optionsFetchErrorMessage?: React.ReactNode;
   optionIsLoading?: boolean;
   fetchOptions?: () => {};
@@ -53,7 +53,7 @@ type MultiSelectProps<T> = {
     props: React.HTMLAttributes<HTMLLIElement>,
     option: T
   ) => React.ReactNode;
-  renderSkeleton?: () => React.ReactNode;
+  renderSkeleton?: (index: number) => React.ReactNode;
   optionsFetchErrorMessage?: React.ReactNode;
   optionIsLoading?: boolean;
   fetchOptions?: () => {};
@@ -167,7 +167,7 @@ const SearchableSelect = <T extends object>({
           {/* {children} */}
           {optionIsLoading && renderSkeleton ? (
             <Stack spacing={2} sx={{ p: 2 }}>
-              {Array.from({ length: 4 }).map(() => renderSkeleton())}
+              {Array.from({ length: 4 }, (_, index) => renderSkeleton(index))}
             </Stack>
           ) : (
             children

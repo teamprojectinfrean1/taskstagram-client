@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { checkNicknameExistence } from "@/apis/user/checkExistence";
 import { useQuery } from "react-query";
 import { useRecoilValue } from "recoil";
-import { signupInfoState } from "@/stores/AuthStore";
+import { signupInfoState } from "@/stores/authStore";
 
 type NicknameInputProps = {
   nickname: string;

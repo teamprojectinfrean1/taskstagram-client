@@ -5,19 +5,19 @@ import AuthPage from "@/pages/AuthPage";
 import PageLayout from "@/components/PageLayout";
 import IssuePage from "@/pages/IssuePage";
 import TaskPage from "@/pages/TaskPage";
-import FindIdForm from "@/components/auth/FindIdForm";
-import LoginForm from "@/components/auth/LoginForm";
-import FindIdLayout from "@/components/auth/FindIdLayout";
-import FindIdSuccess from "@/components/auth/FindIdSuccess";
-import FindPasswdLayout from "@/components/auth/FindPasswordLayout";
-import FindPasswordForm from "@/components/auth/FindPasswordForm";
-import SignupSuccess from "@/components/auth/SignupSuccess";
-import SignupFormRequired from "@/components/auth/SignupFormRequired";
-import SignupFormOptional from "@/components/auth/SignupFormOptional";
+import FindIdForm from "@/components/Auth/FindIdForm";
+import LoginForm from "@/components/Auth/LoginForm";
+import FindIdLayout from "@/components/Auth/FindIdLayout";
+import FindIdSuccess from "@/components/Auth/FindIdSuccess";
+import FindPasswdLayout from "@/components/Auth/FindPasswordLayout";
+import FindPasswordForm from "@/components/Auth/FindPasswordForm";
+import SignupSuccess from "@/components/Auth/SignupSuccess";
+import SignupFormRequired from "@/components/Auth/SignupFormRequired";
+import SignupFormOptional from "@/components/Auth/SignupFormOptional";
 import ProjectPage from "./pages/ProjectPage";
 import ProtectedRouter from "./components/ProtectedRouter";
-import ResetPasswordForm from "@/components/auth/ResetPasswordForm";
-import FindPasswordSuccess from "./components/auth/FindPasswordSuccess";
+import ResetPasswordForm from "@/components/Auth/ResetPasswordForm";
+import FindPasswordSuccess from "./components/Auth/FindPasswordSuccess";
 import RedirectPage from "./components/OAuth/RedirectPage";
 import MyPage from "./pages/MyPage";
 import UserProfileLayout from "./components/MyPage/UserProfileLayout";
@@ -25,7 +25,6 @@ import ChangeNickname from "./components/MyPage/ChangeNickname";
 import ChangePassword from "./components/MyPage/ChangePassword";
 import ChangeUserInfoSuccess from "./components/MyPage/ChangeUserInfoSuccess";
 import ChangeEmail from "./components/MyPage/ChangeEmail";
-
 
 const router = createBrowserRouter([
   {

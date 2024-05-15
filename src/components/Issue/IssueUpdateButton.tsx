@@ -5,16 +5,13 @@ import { updateIssueDetails } from "@/apis/issueApi";
 import EditIcon from "@mui/icons-material/Edit";
 import Spinner from "@/components/Spinner";
 import PrimaryButton from "@/components/PrimaryButton";
-import {
-  issueStatusBoardSearchModeState,
-  issueStatusBoardSearchParamsState,
-} from "@/stores/issueStore";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { issueStatusBoardSearchState } from "@/stores/issueStore";
+import { useRecoilState } from "recoil";
 import {
   updateIssueInCacheInvolvingStatusChange,
   updateIssueInCacheUninvolvingStatusChange,
 } from "@/utils/issue/issueStatusBoardUpdaters";
-import { markMemberAsHavingActiveIssue } from "@/utils/issue/userStoryBoardUpdaters";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
 
 type MutateFunction = (issue: Issue) => void;
 
@@ -36,10 +33,8 @@ const IssueUpdateButton = ({
   projectId,
 }: IssueUpdateButtonProps) => {
   const queryClient = useQueryClient();
-  const [issueStatusBoardSearchModes, setIssueStatusBoardSearchModes] =
-    useRecoilState(issueStatusBoardSearchModeState);
-  const setIssueStatusBoardSearchParams = useSetRecoilState(
-    issueStatusBoardSearchParamsState
+  const [issueStatusBoardSearch, setIssueStatusBoardSearch] = useRecoilState(
+    issueStatusBoardSearchState
   );
 
   const {
@@ -52,34 +47,45 @@ const IssueUpdateButton = ({
 
   const successAction = useCallback(() => {
     if (updatedIssue) {
-      const involvedIssueStatusChange =
-        oldIssueStatus !== updatedIssue!.statusId;
+      const newStatus = updatedIssue!.statusId;
+
+      const involvedIssueStatusChange = oldIssueStatus !== newStatus;
 
       const { statusId, assigneeId } = updatedIssue;
 
       if (involvedIssueStatusChange) {
         updateIssueInCacheInvolvingStatusChange({
           newOrUpdatedIssue: updatedIssue!,
-          oldStatus: oldIssueStatus!,
-          newStatus: updatedIssue!.statusId,
-          projectId,
+          newStatus: newStatus,
           queryClient,
-          issueStatusBoardSearchModes,
-          setIssueStatusBoardSearchModes,
-          setIssueStatusBoardSearchParams,
+          oldStatusBoardQueryKey: createIssueStatusBoardQueryKey({
+            issueStatus: oldIssueStatus!,
+            issueStatusBoardSearch,
+            projectId,
+          }),
+          newStatusBoardQueryKey: createIssueStatusBoardQueryKey({
+            issueStatus: newStatus,
+            issueStatusBoardSearch,
+            projectId,
+          }),
+          isNewStatusBoardInSearchMode:
+            issueStatusBoardSearch[newStatus].isSearchMode,
+          setIssueStatusBoardSearch,
         });
-        queryClient.invalidateQueries(["userStoryList", projectId]);
+        queryClient.invalidateQueries(["issueStoryList", projectId]);
       } else {
         updateIssueInCacheUninvolvingStatusChange({
-          isIssueStatusBoardInSearchMode:
-            issueStatusBoardSearchModes[updatedIssue?.statusId!],
-          issueStatus: updatedIssue?.statusId!,
-          projectId,
           queryClient,
+          queryKey: createIssueStatusBoardQueryKey({
+            issueStatus: updatedIssue?.statusId!,
+            issueStatusBoardSearch,
+            projectId,
+          }),
           updatedIssue: updatedIssue!,
         });
+
         if (statusId === "INPROGRESS" && assigneeId !== oldAssigneeId) {
-          queryClient.invalidateQueries(["userStoryList", projectId]);
+          queryClient.invalidateQueries(["issueStoryList", projectId]);
         }
       }
       handleCloseIssueFormModal();
@@ -89,8 +95,8 @@ const IssueUpdateButton = ({
     oldIssueStatus,
     projectId,
     queryClient,
-    issueStatusBoardSearchModes,
-    setIssueStatusBoardSearchModes,
+    issueStatusBoardSearch,
+    oldAssigneeId,
   ]);
 
   useFeedbackHandler({

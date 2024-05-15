@@ -7,11 +7,4 @@ type ProjectMember = {
   hasAssigneeIssueInProgress: boolean;
 };
 
-type Member = {
-  memberUuid: string;
-  userUuid: string;
-  nickname: string | null;
-  profileUrl: string | null;
-};
-
 type ProjectPermission = "MEMBER" | "LEADER";

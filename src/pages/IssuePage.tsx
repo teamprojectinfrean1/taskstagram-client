@@ -5,10 +5,13 @@ import {
   IssueStoryContainer,
   IssueTicket,
   IssueStatusBoard,
-} from "@/components/IssueManagement";
+} from "@/components/Issue";
 import { Box, IconButton, Stack } from "@mui/material";
 import AddIcon from "@mui/icons-material/Add";
-import { issueIdToShowInModalState } from "@/stores/issueStore";
+import {
+  issueIdToShowInModalState,
+  issueFeatureAvailabilityState,
+} from "@/stores/issueStore";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   DndContext,
@@ -26,25 +29,27 @@ import theme from "@/theme/theme";
 import { userInfoState } from "@/stores/userStore";
 import { selectedProjectState } from "@/stores/projectStore";
 import useUpdateIssueStatus from "@/hooks/useUpdateIssueStatus";
-import { issueFeatureAvailabilityState } from "@/stores/issueStore";
 
 const IssuePage = () => {
   const queryClient = useQueryClient();
 
   const { memberId } = useRecoilValue(userInfoState);
 
-  const selectedProject = useRecoilValue(selectedProjectState);
-  const selectedProjectId = selectedProject ? selectedProject.projectId : undefined;
+  // const selectedProject = useRecoilValue(selectedProjectState);
+  // const selectedProjectId = selectedProject ? selectedProject.projectId : undefined;
+
+  const selectedProjectId = "7cd13940-d2a1-454d-aadb-430b792332d4";
 
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState
   );
 
-  const isIssueFeatureAvailable = useRecoilValue(issueFeatureAvailabilityState)
-  const [draggedIssue, setDraggedIssue] = useState<IssueSummary | null>(null);
-  const [hoveredContainerId, setHoveredContainerId] = useState<string | null>(
-    null
-  );
+  const isIssueFeatureAvailable = useRecoilValue(issueFeatureAvailabilityState);
+  const [draggedIssueTicket, setDraggedIssueTicket] =
+    useState<IssueSummary | null>(null);
+  const [hoveredStatusBoardId, setHoveredStatusBoardId] = useState<
+    string | null
+  >(null);
 
   const executeUpdateIssueStatus = useUpdateIssueStatus({
     projectId: selectedProjectId!,
@@ -60,13 +65,16 @@ const IssuePage = () => {
   );
 
   const onDragStart = (event: DragStartEvent) => {
-    setDraggedIssue(event.active.data.current?.issue);
+    setDraggedIssueTicket(event.active.data.current?.issue);
   };
 
   const onDragOver = (event: DragOverEvent) => {
-    const targetContainerId = event.over?.id;
-    if (typeof targetContainerId === "string" || targetContainerId === null) {
-      setHoveredContainerId(targetContainerId);
+    const targetStatusBoardId = event.over?.id;
+    if (
+      typeof targetStatusBoardId === "string" ||
+      targetStatusBoardId === null
+    ) {
+      setHoveredStatusBoardId(targetStatusBoardId);
     }
   };
 
@@ -75,24 +83,24 @@ const IssuePage = () => {
     const currentDraggable = active.data.current;
 
     const issueTicket: IssueSummary = currentDraggable?.issue;
-    const targetContainerId = over?.id;
-    const originContainerId = currentDraggable?.parent;
+    const targetStatusBoardId = over?.id;
+    const originStatusBoardId = currentDraggable?.parent;
 
     if (
       issueTicket &&
-      originContainerId &&
-      targetContainerId &&
-      originContainerId !== targetContainerId
+      originStatusBoardId &&
+      targetStatusBoardId &&
+      originStatusBoardId !== targetStatusBoardId
     ) {
       executeUpdateIssueStatus({
         issue: issueTicket,
-        oldStatus: originContainerId as IssueStatus,
-        newStatus: targetContainerId as IssueStatus,
+        oldStatus: originStatusBoardId as IssueStatus,
+        newStatus: targetStatusBoardId as IssueStatus,
         modifierId: memberId,
       });
     }
 
-    setHoveredContainerId(null);
+    setHoveredStatusBoardId(null);
   };
 
   return (
@@ -111,7 +119,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          <IssueStoryContainer projectId={selectedProjectId!} />
+          {/* <IssueStoryContainer projectId={selectedProjectId!} /> */}
         </Box>
         <Box
           display="flex"
@@ -126,22 +134,22 @@ const IssuePage = () => {
           }}
         >
           <IssueStatusBoard
-            containerId="TODO"
-            isHovered={hoveredContainerId === "TODO"}
+            statusId="TODO"
+            isHovered={hoveredStatusBoardId === "TODO"}
             isIssueFeatureAvailable={isIssueFeatureAvailable}
             projectId={selectedProjectId}
             title="할 일"
           />
           <IssueStatusBoard
-            containerId="INPROGRESS"
-            isHovered={hoveredContainerId === "INPROGRESS"}
+            statusId="INPROGRESS"
+            isHovered={hoveredStatusBoardId === "INPROGRESS"}
             isIssueFeatureAvailable={isIssueFeatureAvailable}
             projectId={selectedProjectId}
             title="진행 중"
           />
           <IssueStatusBoard
-            containerId="DONE"
-            isHovered={hoveredContainerId === "DONE"}
+            statusId="DONE"
+            isHovered={hoveredStatusBoardId === "DONE"}
             isIssueFeatureAvailable={isIssueFeatureAvailable}
             projectId={selectedProjectId}
             title="완료"
@@ -150,9 +158,9 @@ const IssuePage = () => {
       </Stack>
       {createPortal(
         <DragOverlay>
-          {draggedIssue && (
+          {draggedIssueTicket && (
             <IssueTicket
-              issue={draggedIssue}
+              issue={draggedIssueTicket}
               sx={{
                 backgroundColor: "#F3F3F7",
                 border: "1px solid #313449",

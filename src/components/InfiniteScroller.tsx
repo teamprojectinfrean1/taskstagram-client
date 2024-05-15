@@ -6,7 +6,7 @@ import { useInfiniteQuery } from "react-query";
 import useIntersectionObserver from "@/hooks/useIntersectionObserver";
 
 type InfiniteScrollerProps<T> = {
-  enableQuery?: boolean;
+  enabled?: boolean;
   queryFunction: (params: any) => Promise<PaginatedResponse<T>>;
   queryKey: string | string[];
   requestOptions: any;
@@ -18,10 +18,11 @@ type InfiniteScrollerProps<T> = {
   renderSkeleton: (index: number) => React.ReactNode;
   numberOfSkeletons?: number;
   handleFirstPageResponse?: (status: string, message?: string) => void;
+  successAction?: () => void;
 };
 
 const InfiniteScroller = <T,>({
-  enableQuery = true,
+  enabled = true,
   queryFunction,
   queryKey,
   requestOptions,
@@ -33,6 +34,7 @@ const InfiniteScroller = <T,>({
   renderSkeleton,
   numberOfSkeletons = 5,
   handleFirstPageResponse,
+  successAction,
 }: InfiniteScrollerProps<T>) => {
   const setSnackbar = useSetRecoilState(snackbarState);
 
@@ -60,7 +62,7 @@ const InfiniteScroller = <T,>({
       // staleTime: 30000
       refetchOnWindowFocus: false,
       refetchOnMount: "always",
-      enabled: enableQuery,
+      enabled,
     }
   );
 
@@ -75,13 +77,8 @@ const InfiniteScroller = <T,>({
 
   const lastSuccessfullyFetchedPage = data?.pages.length || 0;
 
-
   useEffect(() => {
-    if (
-      handleFirstPageResponse &&
-      isError &&
-      !data
-    ) {
+    if (handleFirstPageResponse && isError && !data) {
       const currentError = error as { message: string };
       handleFirstPageResponse("error", currentError.message);
     }
@@ -95,14 +92,19 @@ const InfiniteScroller = <T,>({
   }, [isError, lastSuccessfullyFetchedPage, setSnackbar]);
 
   useEffect(() => {
-    if (
-      handleFirstPageResponse &&
-      isSuccess &&
-      lastSuccessfullyFetchedPage === 1
-    ) {
-      handleFirstPageResponse("success");
+    if (isSuccess) {
+      if (successAction) successAction();
+
+      if (handleFirstPageResponse && lastSuccessfullyFetchedPage === 1) {
+        handleFirstPageResponse("success");
+      }
     }
-  }, [isSuccess, lastSuccessfullyFetchedPage, setSnackbar]);
+  }, [
+    isSuccess,
+    lastSuccessfullyFetchedPage,
+    successAction,
+    handleFirstPageResponse,
+  ]);
 
   const resolveErrorMessage = () => {
     const currentError = error as { message: string };

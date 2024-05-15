@@ -1,6 +1,6 @@
-import TaskTicket from "@/components/TaskManagement/TaskTicket";
-import NewTask from "@/components/TaskManagement/NewTask";
-import TaskModal from "@/components/TaskManagement/TaskModal";
+import TaskTicket from "@/components/Task/TaskTicket";
+import NewTask from "@/components/Task/NewTask";
+import TaskModal from "@/components/Task/TaskModal";
 import { useEffect, useState } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
 import { useRecoilValue } from "recoil";
@@ -14,7 +14,7 @@ import {
   CreateTaskRequest,
   ReplaceTaskRequest,
 } from "@/apis/TaskApi";
-import SkeletonTaskTicket from "@/components/TaskManagement/SkeletonTaskTicket";
+import SkeletonTaskTicket from "@/components/Task/SkeletonTaskTicket";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import Spinner from "@/components/Spinner";
 import OneFormModal from "@/components/OneFormModal";
