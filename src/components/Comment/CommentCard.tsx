@@ -14,10 +14,9 @@ import EditOutlinedIcon from "@mui/icons-material/EditOutlined";
 import DeleteOutlineOutlinedIcon from "@mui/icons-material/DeleteOutlineOutlined";
 import { useRecoilValue, useSetRecoilState } from "recoil";
 import { commentIdSelectedToDeleteState } from "@/stores/commentStore";
-import Spinner from "@/components/Spinner";
+import { PrimaryButton, Spinner } from "@/components";
 import { userInfoState } from "@/stores/userStore";
-import { CommentInputControl } from "@/components/Comment/CommentInputControl";
-import PrimaryButton from "@/components/PrimaryButton";
+import { CommentInputControl } from "@/components/Comment";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { useMutation, useQueryClient } from "react-query";
 import { updateComment } from "@/apis/commentApi";
@@ -45,7 +44,8 @@ const CommentCard = ({ comment }: CommentCardProps) => {
   } = comment;
 
   const [editMode, setEditMode] = useState<boolean>(false);
-  const [updatedCommentBody, setUpdatedCommentBody] = useState<string>(commentBody);
+  const [updatedCommentBody, setUpdatedCommentBody] =
+    useState<string>(commentBody);
 
   const isLoggedInUserCommentWriter = loggedInMemberId === commentWriterId;
 
@@ -69,7 +69,6 @@ const CommentCard = ({ comment }: CommentCardProps) => {
     handleCloseSettingsDropdown();
     setCommentIdSelectedToDelete(commentId);
   };
-  
 
   const {
     mutate: executeUpdateComment,
@@ -89,7 +88,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
   });
 
   const successAction = useCallback(() => {
-    setEditMode(false);  
+    setEditMode(false);
     updateItemInCache<ExistingComment>({
       idPropertyName: "commentId",
       moveToFront: false,

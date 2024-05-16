@@ -1,15 +1,13 @@
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { useMutation, useQueryClient } from "react-query";
 import { createComment } from "@/apis/commentApi";
-import PrimaryButton from "@/components/PrimaryButton";
+import { PrimaryButton, Spinner, UserAvatar } from "@/components";
 import { Box, Skeleton } from "@mui/material";
 import { useCallback, useState } from "react";
 import { useRecoilValue } from "recoil";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
-import Spinner from "@/components/Spinner";
 import { userInfoState } from "@/stores/userStore";
-import UserAvatar from "@/components/UserAvatar";
-import { CommentInputControl } from "./CommentInputControl";
+import { CommentInputControl } from "@/components/Comment";
 import { addItemToCache } from "@/utils/reactQueryCacheUpdaters";
 import { COMMENT_PER_PAGE } from "@/constants";
 

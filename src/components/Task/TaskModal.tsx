@@ -2,7 +2,6 @@ import {
   Modal,
   Grid,
   Box,
-  Button,
   TextField,
   InputLabel,
   RadioGroup,
@@ -21,8 +20,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import TextEditor from "@/components/Editor/TextEditor";
 import { RawDraftContentState, convertToRaw } from "draft-js";
 import theme from "@/theme/theme";
-import TaskTagChipMaker from "@/components/TagChipMaker";
-import DurationPicker from "@/components/DurationPicker";
+import { DurationPicker, PrimaryButton, TagChipMaker } from "@/components";
 import { useQuery } from "react-query";
 import {
   getTaskDetail,
@@ -32,7 +30,6 @@ import {
 import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
 import { grey } from "@mui/material/colors";
-import PrimaryButton from "../PrimaryButton";
 
 type TaskModalProps = {
   selectedTask: Task;
@@ -294,7 +291,7 @@ const TaskModal = ({
                 sx={{ borderRadius: "4px" }}
               />
             ) : (
-              <TaskTagChipMaker
+              <TagChipMaker
                 isReadOnly={isReadOnlyMode === true}
                 tagList={formData.taskTags}
                 onTagSelectionChange={(value) =>

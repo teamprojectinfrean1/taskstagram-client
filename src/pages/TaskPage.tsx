@@ -1,6 +1,9 @@
-import TaskTicket from "@/components/Task/TaskTicket";
-import NewTask from "@/components/Task/NewTask";
-import TaskModal from "@/components/Task/TaskModal";
+import {
+  NewTask,
+  SkeletonTaskTicket,
+  TaskModal,
+  TaskTicket,
+} from "@/components/Task";
 import { useEffect, useState } from "react";
 import { Grid, Box, Typography, Pagination } from "@mui/material";
 import { useRecoilValue } from "recoil";
@@ -14,10 +17,8 @@ import {
   CreateTaskRequest,
   ReplaceTaskRequest,
 } from "@/apis/TaskApi";
-import SkeletonTaskTicket from "@/components/Task/SkeletonTaskTicket";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
-import Spinner from "@/components/Spinner";
-import OneFormModal from "@/components/OneFormModal";
+import { OneFormModal, Spinner } from "@/components";
 
 const TaskPage = () => {
   const [showModal, setShowModal] = useState(false);

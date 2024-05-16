@@ -119,7 +119,7 @@ const IssuePage = () => {
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>
-          {/* <IssueStoryContainer projectId={selectedProjectId!} /> */}
+          <IssueStoryContainer projectId={selectedProjectId!} />
         </Box>
         <Box
           display="flex"

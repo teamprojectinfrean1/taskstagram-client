@@ -1,16 +1,19 @@
 import { InputLabel, Stack } from "@mui/material";
-import CommentList from "@/components/Comment/CommentList";
-import DeleteCommentModal from "@/components/Comment/DeleteCommentModal";
+import {
+  CommentCreator,
+  CommentList,
+  DeleteCommentModal,
+} from "@/components/Comment";
 import { useRecoilState } from "recoil";
 import { commentIdSelectedToDeleteState } from "@/stores/commentStore";
-import CommentCreator from "@/components/Comment/CommentCreator";
 
-type CommentsContainerProps = {
+type CommentContainerProps = {
   issueDetailsIsLoading: boolean;
 };
-const CommentsContainer = ({
+
+const CommentContainer = ({
   issueDetailsIsLoading,
-}: CommentsContainerProps) => {
+}: CommentContainerProps) => {
   const [commentIdSelectedToDelete, setCommentIdSelectedToDelete] =
     useRecoilState(commentIdSelectedToDeleteState);
 
@@ -33,4 +36,4 @@ const CommentsContainer = ({
   );
 };
 
-export default CommentsContainer;
+export default CommentContainer;

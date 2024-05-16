@@ -7,7 +7,7 @@ import { issueStatusBoardSearchState } from "@/stores/issueStore";
 import { updateIssueInCacheInvolvingStatusChange } from "@/utils/issue/issueStatusBoardUpdaters";
 import { markMemberAsHavingActiveIssue } from "@/utils/issue/userStoryBoardUpdaters";
 import { endIssueSearchMode } from "@/stores/issueStore";
-import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator";
 
 type useUpdateIssueStatusParams = {
   projectId: string;

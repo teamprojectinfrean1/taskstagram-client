@@ -8,7 +8,7 @@ import { useMutation, useQueryClient } from "react-query";
 import { issueStatusBoardSearchState } from "@/stores/issueStore";
 import { useRecoilValue } from "recoil";
 import { removeIssueFromCache } from "@/utils/issue/issueStatusBoardUpdaters";
-import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator";
 
 type IssueDeleteButtonProps = {
   handleCloseIssueFormModal: () => void;

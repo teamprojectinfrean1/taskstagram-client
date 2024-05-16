@@ -1,12 +1,11 @@
 import { useRef } from "react";
 import { Stack } from "@mui/material";
-import CommentCard from "@/components/Comment/CommentCard";
+import { CommentCard, SkeletonCommentCard } from "@/components/Comment";
 import InfiniteScroller from "@/components/InfiniteScroller";
 import { getCommentList } from "@/apis/commentApi";
 import { useRecoilValue } from "recoil";
 import { issueIdToShowInModalState } from "@/stores/issueStore";
 import { COMMENT_PER_PAGE } from "@/constants";
-import SkeletonCommentCard from "@/components/Comment/SkeletonCommentCard";
 
 const CommentList = () => {
   const issueId = useRecoilValue(issueIdToShowInModalState);
@@ -29,7 +28,7 @@ const CommentList = () => {
         renderItem={(comment) => (
           <CommentCard key={comment.commentId} comment={comment} />
         )}
-        renderSkeleton={(index) => <SkeletonCommentCard key={index}/>}
+        renderSkeleton={(index) => <SkeletonCommentCard key={index} />}
       />
     </Stack>
   );

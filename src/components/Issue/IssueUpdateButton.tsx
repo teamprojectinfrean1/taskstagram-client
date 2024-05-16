@@ -11,7 +11,7 @@ import {
   updateIssueInCacheInvolvingStatusChange,
   updateIssueInCacheUninvolvingStatusChange,
 } from "@/utils/issue/issueStatusBoardUpdaters";
-import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator";
 
 type MutateFunction = (issue: Issue) => void;
 

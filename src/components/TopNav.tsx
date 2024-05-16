@@ -12,7 +12,7 @@ import {
   Menu,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import SelectableProject from "./Project/SelectableProject";
+import { SelectableProject } from "@/components/Project";
 import { ProjectSummary } from "@/models/Project";
 import { useRecoilState, useRecoilValue } from "recoil";
 import { projectListState, selectedProjectState } from "@/stores/projectStore";
@@ -23,7 +23,7 @@ import { useNavigate } from "react-router-dom";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import { userInfoState } from "@/stores/userStore";
-import UserProfileDropdown from "./UserProfileDropdown";
+import { UserProfileDropdown } from "@/components";
 
 type TopNavProps = {
   onMenuClick: () => void;

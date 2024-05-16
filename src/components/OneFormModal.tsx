@@ -8,7 +8,7 @@ import {
   DialogTitle,
 } from "@mui/material";
 import theme from "@/theme/theme";
-import PrimaryButton from "./PrimaryButton";
+import { PrimaryButton } from "@/components";
 
 type OneFormModalProps = {
   isOpen: boolean;

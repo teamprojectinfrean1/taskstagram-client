@@ -8,6 +8,7 @@ export { default as IssueStory } from "./IssueStory";
 export { default as IssueStoryContainer } from "./IssueStoryContainer";
 export { default as IssueTicket } from "./IssueTicket";
 export { default as IssueUpdateButton } from "./IssueUpdateButton";
+export { default as SearchWithDropdownFilter } from "./SearchWithDropdownFilter";
 export { default as SkeletonIssueFormModal } from "./SkeletonIssueFormModal";
 export { default as SkeletonIssueStory } from "./SkeletonIssueStory";
 export { default as SkeletonIssueTicket } from "./SkeletonIssueTicket";

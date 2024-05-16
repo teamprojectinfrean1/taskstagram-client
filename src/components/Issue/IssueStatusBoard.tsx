@@ -1,8 +1,11 @@
 import { Box, Paper, Skeleton, Stack, Typography } from "@mui/material";
 import { useDroppable } from "@dnd-kit/core";
 import { useCallback, useRef } from "react";
-import SearchWithDropdownFilter from "@/components/SearchWithDropdownFilter";
-import { IssueFullList, IssueSearchResultList } from "@/components/Issue";
+import {
+  IssueFullList,
+  IssueSearchResultList,
+  SearchWithDropdownFilter,
+} from "@/components/Issue";
 import {
   issueStatusBoardSearchState,
   endIssueSearchMode,

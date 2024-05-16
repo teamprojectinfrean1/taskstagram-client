@@ -1,8 +1,10 @@
 import { Box, Typography, Button } from "@mui/material";
-import UserInfoForm from "./UserInfoForm";
-import PasswordForm from "./PasswordForm";
-import PermissionForm from "./PermissionForm";
-import ChangeProfileImage from "./ChangeProfileImage";
+import {
+  ChangeProfileImage,
+  PasswordForm,
+  PermissionForm,
+  UserInfoForm,
+} from "@/components/MyPage";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";

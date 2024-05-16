@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useQuery } from "react-query";
 import { requestEmailVerification } from "@/apis/user/requestEmailVerification";
-import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
+import { EmailVerificationCodeInput } from "@/components/Auth";
 
 type EmailCertificationInputProps = {
   findUserInfo: "findId" | "findPassword";

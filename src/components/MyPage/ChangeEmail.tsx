@@ -7,8 +7,8 @@ import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/user/changeUserInfo";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import ErrorHandling from "../ErrorHandling";
-import EmailInput from "../Auth/EmailInput";
+import { ErrorHandling } from "@/components";
+import { EmailInput } from "@/components/Auth";
 import { ChangeUserInfoRequest } from "@/apis/user/changeUserInfo";
 
 const ChangeEmail = () => {

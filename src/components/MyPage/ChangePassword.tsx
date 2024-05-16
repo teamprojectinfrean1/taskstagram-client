@@ -2,16 +2,17 @@ import theme from "@/theme/theme";
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Box, Button, Typography } from "@mui/material";
-import PasswordInput from "../Auth/PasswordInput";
+import { PasswordConfirmationInput, PasswordInput } from "@/components/Auth";
+import { PresentPasswordInput } from "@/components/MyPage";
 import { useState, useEffect } from "react";
-import PresentPasswordInput from "./PresentPasswordInput";
-import PasswordConfirmationInput from "../Auth/PasswordConfirmationInput";
 import { useMutation } from "react-query";
-import { changeUserInfo } from "@/apis/user/changeUserInfo";
+import {
+  changeUserInfo,
+  ChangeUserInfoRequest,
+} from "@/apis/user/changeUserInfo";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import ErrorHandling from "../ErrorHandling";
-import { ChangeUserInfoRequest } from "@/apis/user/changeUserInfo";
+import { ErrorHandling } from "@/components";
 
 const ChangePassword = () => {
   const navigate = useNavigate();

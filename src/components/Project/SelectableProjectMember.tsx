@@ -9,12 +9,12 @@ import {
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
 import SettingsIcon from "@mui/icons-material/Settings";
-import UserAvatar from "../UserAvatar";
+import UserAvatar from "@/components/UserAvatar";
 import {
   StyledAutocompletePopper,
   StyledInput,
   StyledPopper,
-} from "@/components/Project/ProjectStyled";
+} from "@/components/Project";
 
 type ProjectMemberAutocompleteProps = {
   isMemberProjectLeader: boolean;

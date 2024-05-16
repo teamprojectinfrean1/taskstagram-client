@@ -21,7 +21,7 @@ import {
   StyledAutocompletePopper,
   StyledInput,
   StyledPopper,
-} from "@/components/Project/ProjectStyled";
+} from "@/components/Project";
 
 type SelectableProjectProps = {
   projects: ProjectSummary[];

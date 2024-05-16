@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import LogoAndName from "@/components/Auth/LogoAndName";
+import { LogoAndName } from "@/components/Auth";
 import { Outlet, useNavigate } from "react-router-dom";
 import { Box } from "@mui/material";
 import { useEffect } from "react";

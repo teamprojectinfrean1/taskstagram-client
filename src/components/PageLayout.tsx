@@ -1,13 +1,11 @@
 import { useState, Fragment, useEffect } from "react";
-import TopNav from "@/components/TopNav";
-import SideNav from "@/components/SideNav";
+import { SideNav, Snackbar, TopNav } from "@/components";
 import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { getUserInfo } from "@/apis/member/getUserInfo";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import Snackbar from "@/components/Snackbar";
 import { jwtDecode } from "jwt-decode";
 
 const PageLayout = () => {

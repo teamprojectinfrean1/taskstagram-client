@@ -1,35 +1,40 @@
 import "@/App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import NotFoundPage from "@/pages/NotFoundPage";
-import AuthPage from "@/pages/AuthPage";
-import PageLayout from "@/components/PageLayout";
-import IssuePage from "@/pages/IssuePage";
-import TaskPage from "@/pages/TaskPage";
-import FindIdForm from "@/components/Auth/FindIdForm";
-import LoginForm from "@/components/Auth/LoginForm";
-import FindIdLayout from "@/components/Auth/FindIdLayout";
-import FindIdSuccess from "@/components/Auth/FindIdSuccess";
-import FindPasswdLayout from "@/components/Auth/FindPasswordLayout";
-import FindPasswordForm from "@/components/Auth/FindPasswordForm";
-import SignupSuccess from "@/components/Auth/SignupSuccess";
-import SignupFormRequired from "@/components/Auth/SignupFormRequired";
-import SignupFormOptional from "@/components/Auth/SignupFormOptional";
-import ProjectPage from "./pages/ProjectPage";
-import ProtectedRouter from "./components/ProtectedRouter";
-import ResetPasswordForm from "@/components/Auth/ResetPasswordForm";
-import FindPasswordSuccess from "./components/Auth/FindPasswordSuccess";
-import RedirectPage from "./components/OAuth/RedirectPage";
-import MyPage from "./pages/MyPage";
-import UserProfileLayout from "./components/MyPage/UserProfileLayout";
-import ChangeNickname from "./components/MyPage/ChangeNickname";
-import ChangePassword from "./components/MyPage/ChangePassword";
-import ChangeUserInfoSuccess from "./components/MyPage/ChangeUserInfoSuccess";
-import ChangeEmail from "./components/MyPage/ChangeEmail";
+import {
+  AuthPage,
+  IssuePage,
+  MyPage,
+  NotFoundPage,
+  OAuthRedirectPage,
+  ProjectPage,
+  TaskPage,
+} from "@/pages";
+import {
+  FindIdForm,
+  LoginForm,
+  FindIdLayout,
+  FindIdSuccess,
+  FindPasswordLayout,
+  FindPasswordForm,
+  SignupSuccess,
+  SignupFormRequired,
+  SignupFormOptional,
+  ResetPasswordForm,
+  FindPasswordSuccess,
+} from "@/components/Auth";
+import {
+  UserProfileLayout,
+  ChangeNickname,
+  ChangePassword,
+  ChangeUserInfoSuccess,
+  ChangeEmail,
+} from "@/components/MyPage";
+import { PageLayout, ProtectedRouteWrapper } from "@/components";
 
 const router = createBrowserRouter([
   {
     path: "/oauth/redirected/kakao",
-    element: <RedirectPage />,
+    element: <OAuthRedirectPage />,
   },
   {
     path: "/auth",
@@ -67,7 +72,7 @@ const router = createBrowserRouter([
       },
       {
         path: "find/password",
-        element: <FindPasswdLayout />,
+        element: <FindPasswordLayout />,
         children: [
           {
             index: true,
@@ -88,9 +93,9 @@ const router = createBrowserRouter([
   {
     path: "/",
     element: (
-      <ProtectedRouter>
+      <ProtectedRouteWrapper>
         <PageLayout />
-      </ProtectedRouter>
+      </ProtectedRouteWrapper>
     ),
     errorElement: <NotFoundPage />,
     children: [

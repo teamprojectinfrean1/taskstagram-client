@@ -13,7 +13,7 @@ import {
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import TextEditor from "@/components/Editor/TextEditor";
-import CommentContainer from "@/components/Comment/CommentContainer";
+import { CommentContainer } from "@/components/Comment";
 import SearchableSelect from "@/components/SearchableSelect";
 import theme from "@/theme/theme";
 import DurationPicker from "@/components/DurationPicker";
@@ -26,7 +26,7 @@ import {
   IssueCreateButton,
   IssueDeleteButton,
   IssueUpdateButton,
-  SkeletonIssueFormModal
+  SkeletonIssueFormModal,
 } from "@/components/Issue";
 import useGetIssueDetails from "@/hooks/useGetIssueDetails";
 import useGetMemberAndTaskOptions from "@/hooks/useGetMemberAndTaskOptions";

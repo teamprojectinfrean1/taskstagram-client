@@ -1,14 +1,14 @@
 import theme from "@/theme/theme";
 import { useEffect, useState } from "react";
 import SocialIcons from "../OAuth/SocialIcons";
-import AuthMenuOptions from "./AuthMenuOptions";
+import { AuthMenuOptions } from "@/components/Auth";
 import { fetchLogin, fetchLoginRequest } from "@/apis/user/fetchLogin";
 import { Box, Button, Divider, OutlinedInput, Typography } from "@mui/material";
 import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import ErrorHandling from "../ErrorHandling";
+import ErrorHandling from "@/components/ErrorHandling";
 
 const LoginForm = () => {
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);

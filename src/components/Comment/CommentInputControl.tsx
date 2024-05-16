@@ -7,7 +7,8 @@ type CommentInputControlProps = {
   renderButton: React.ReactNode;
   handleCancel: () => void;
 };
-export const CommentInputControl = ({
+
+const CommentInputControl = ({
   commentBody,
   setCommentBody,
   renderButton,
@@ -61,3 +62,5 @@ export const CommentInputControl = ({
     </Stack>
   );
 };
+
+export default CommentInputControl;

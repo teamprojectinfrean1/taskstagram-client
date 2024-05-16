@@ -6,7 +6,7 @@ import { Box } from "@mui/material";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 
-const RedirectPage = () => {
+const OAuthRedirectPage = () => {
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const code = queryParams.get("code");
@@ -41,4 +41,4 @@ const RedirectPage = () => {
   return <Box>잠시만 기다려주세요.</Box>;
 };
 
-export default RedirectPage;
+export default OAuthRedirectPage;

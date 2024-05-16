@@ -1,8 +1,7 @@
 import { Box, Typography } from "@mui/material";
-import EmailCertificationInput from "./EmailCertificationInput";
+import { EmailCertificationInput } from "@/components/Auth";
 
 const FindPasswordForm = () => {
-
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
@@ -12,7 +11,7 @@ const FindPasswordForm = () => {
         </Typography>
         <Typography>이메일을 통해 비밀번호 변경 링크가 전송됩니다.</Typography>
       </Box>
-      <EmailCertificationInput findUserInfo = "findPassword" />
+      <EmailCertificationInput findUserInfo="findPassword" />
     </>
   );
 };

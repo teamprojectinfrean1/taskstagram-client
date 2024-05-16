@@ -3,13 +3,12 @@ import EditIcon from "@mui/icons-material/Edit";
 import { useCallback } from "react";
 import { useMutation, useQueryClient } from "react-query";
 import { createIssue } from "@/apis/issueApi";
-import Spinner from "@/components/Spinner";
-import PrimaryButton from "@/components/PrimaryButton";
+import { PrimaryButton, Spinner } from "@/components";
 import { issueStatusBoardSearchState } from "@/stores/issueStore";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { addIssueToCache } from "@/utils/issue/issueStatusBoardUpdaters";
 import { markMemberAsHavingActiveIssue } from "@/utils/issue/userStoryBoardUpdaters";
-import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator.js";
+import { createIssueStatusBoardQueryKey } from "@/utils/issue/issueStatusBoardQueryKeyGenerator";
 
 type MutateFunction = (issue: Issue) => void;
 
@@ -49,7 +48,7 @@ const IssueCreateButton = ({
         }),
         queryClient,
         isIssueStatusBoardInSearchMode:
-        issueStatusBoardSearch[newIssue?.statusId!].isSearchMode,
+          issueStatusBoardSearch[newIssue?.statusId!].isSearchMode,
         setIssueStatusBoardSearch,
       });
       if (newIssue.statusId === "INPROGRESS") {
@@ -61,12 +60,7 @@ const IssueCreateButton = ({
       }
       handleCloseIssueFormModal();
     }
-  }, [
-    newIssue,
-    projectId,
-    queryClient,
-    setIssueStatusBoardSearch,
-  ]);
+  }, [newIssue, projectId, queryClient, setIssueStatusBoardSearch]);
 
   useFeedbackHandler({
     isError,

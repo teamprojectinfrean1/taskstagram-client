@@ -1,4 +1,3 @@
-import TagChipMaker from "@/components/TagChipMaker";
 import { useState, useEffect } from "react";
 import { ProjectFormData } from "@/models/Project";
 import {
@@ -12,8 +11,6 @@ import {
   Stack,
 } from "@mui/material";
 import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import DurationPicker from "@/components/DurationPicker";
-import SelectableProjectMember from "@/components/Project/SelectableProjectMember";
 import SaveAsIcon from "@mui/icons-material/SaveAs";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { grey } from "@mui/material/colors";
@@ -29,11 +26,16 @@ import { useRecoilValue } from "recoil";
 import { selectedProjectState } from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
-import Spinner from "@/components/Spinner";
 import { getAllAppUserList, getAllProjectMemberList } from "@/apis/memberApi";
-import OneFormModal from "@/components/OneFormModal";
-import PrimaryButton from "@/components/PrimaryButton";
 import { userInfoState } from "@/stores/userStore";
+import {
+  TagChipMaker,
+  DurationPicker,
+  Spinner,
+  OneFormModal,
+  PrimaryButton,
+} from "@/components";
+import { SelectableProjectMember } from "@/components/Project";
 
 const ProjectPage = () => {
   const location = useLocation();
