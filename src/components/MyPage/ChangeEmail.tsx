@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Typography, Box, Button } from "@mui/material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/user/changeUserInfo";
@@ -21,34 +21,37 @@ const ChangeEmail = () => {
   const [isEmailValid, setIsEmailValid] = useState(false);
   const [isEmailDuplicate, setIsEmailDuplicate] = useState(false);
 
-  const changeEmailMutation = useMutation(
+  const mutateChangeEmail = useMutation(
     ({ type, value, memberId }: ChangeUserInfoRequest) =>
-      changeUserInfo({ type, value, memberId }),
-    {
-      onSuccess: (data) => {
-        setUserInfo({ ...userInfo, email: data });
-        navigate("/mypage/change/success", {
-          state: "이메일",
-        });
-      },
-    }
+      changeUserInfo({ type, value, memberId })
   );
+
+  useEffect(() => {
+    if (mutateChangeEmail.data) {
+      setUserInfo({ ...userInfo, email: mutateChangeEmail.data });
+      navigate("/mypage/change/success", {
+        state: "이메일",
+      });
+    }
+  }, [mutateChangeEmail.data]);
 
   return (
     <>
       <Box
-        boxShadow={10}
+        boxShadow={2}
         sx={{
-          height: "90%",
-          backgroundColor: "white",
-          minWidth: "37rem",
+          py: 5,
+          backgroundColor: `${theme.palette.background.paper}`,
+          width: "70%",
+          minWidth: "35rem",
+          m: "auto",
           borderRadius: "7px",
         }}
       >
         <Link to="/mypage">
           <ArrowBackIcon
             fontSize="large"
-            sx={{ m: 3, color: "#5F6368", position: "absolute" }}
+            sx={{ ml: 3, color: "#5F6368", position: "absolute" }}
           />
         </Link>
         <Box sx={{ mt: 5 }}>
@@ -60,22 +63,26 @@ const ChangeEmail = () => {
           </Typography>
         </Box>
         <Box
-          className="base-layout"
           sx={{
-            border: "1px solid #F0F0F0",
-            height: "70%",
-            borderRadius: "7px",
             mt: 6,
+            mx: "auto",
+            py: 10,
+            backgroundColor: "white",
+            borderRadius: "7px",
+            border: `1px solid ${theme.palette.text.primary}`,
+            width: "60%",
+            minWidth: "30rem",
+            height: "70%",
           }}
         >
           <Box sx={{ width: "90%", margin: "auto" }}>
-            <Box sx={{ my: 7, textAlign: "center" }}>
+            <Box sx={{ my: 1, textAlign: "center" }}>
               <Typography variant="h6">일정타그램에서 사용할</Typography>
               <Typography variant="h6">
                 새로운 이메일을 입력해주세요.
               </Typography>
             </Box>
-            <Typography sx={{ ml: 0.5 }}>Email</Typography>
+            <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
             <EmailInput
               email={email}
               setEmail={(value) => setEmail(value)}
@@ -91,11 +98,11 @@ const ChangeEmail = () => {
               sx={{
                 bgcolor: `${theme.palette.secondary.main}`,
                 borderRadius: "7px",
-                mt: 5,
+                mt: 6,
               }}
               disabled={!isEmailDuplicate}
               onClick={() =>
-                changeEmailMutation.mutate({
+                mutateChangeEmail.mutate({
                   type: "email",
                   value: email,
                   memberId,
@@ -106,8 +113,8 @@ const ChangeEmail = () => {
             </Button>
           </Box>
           <ErrorHandling
-            error={changeEmailMutation.error}
-            isLoading={changeEmailMutation.isLoading}
+            error={mutateChangeEmail.error}
+            isLoading={mutateChangeEmail.isLoading}
             feature="이메일 변경"
           />
         </Box>

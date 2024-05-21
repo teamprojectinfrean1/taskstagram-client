@@ -30,7 +30,7 @@ const IdInput = ({
   // 아이디 중복 검사 상태
   const disabledState = !!(!isIdValid || isIdDuplicate);
 
-  const { data, isSuccess, isLoading, error, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "checkId",
     () => checkIdExistence(id),
     {

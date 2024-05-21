@@ -13,7 +13,7 @@ const UserProfileDropdown = () => {
 
   const userInfo = useRecoilValue(userInfoState);
   const profileImage = userInfo.profileImage;
-  
+
   const { data, refetch } = useQuery("logout", () => fetchLogout(), {
     enabled: false,
     cacheTime: 0,
@@ -46,7 +46,6 @@ const UserProfileDropdown = () => {
   };
   return (
     <>
-      {/* TopNav dropdown */}
       <IconButton
         size="large"
         edge="end"

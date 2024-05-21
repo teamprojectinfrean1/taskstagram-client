@@ -8,11 +8,12 @@ const FindPasswordSuccess = () => {
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
-        <Typography sx={{my:3}}>비밀번호 재설정이 완료되었습니다.</Typography>
+        <Typography sx={{ my: 3 }}>
+          비밀번호 재설정이 완료되었습니다.
+        </Typography>
         <Typography>확인 버튼을 누르면</Typography>
         <Typography>로그인 화면으로 이동합니다.</Typography>
       </Box>
-
       <Button
         fullWidth
         variant="contained"

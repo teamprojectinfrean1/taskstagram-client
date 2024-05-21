@@ -12,7 +12,7 @@ const FindIdForm = () => {
           사용 중인 계정의 아이디를 알려드립니다.
         </Typography>
       </Box>
-      <EmailCertificationInput findUserInfo = "findId"/>
+      <EmailCertificationInput findUserInfo="findId" />
     </>
   );
 };

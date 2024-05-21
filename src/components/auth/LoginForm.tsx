@@ -11,11 +11,12 @@ import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
+
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate();
   const mutateLogin = useMutation(({ id, password }: fetchLoginRequest) =>
     fetchLogin({ id, password })
   );

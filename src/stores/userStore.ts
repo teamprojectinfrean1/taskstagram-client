@@ -1,7 +1,7 @@
 import { atom } from "recoil";
 
 export const userInfoState = atom<UserInfo>({
-  key: 'userInfoState',
+  key: "userInfoState",
   default: {
     userId: "",
     memberId: "",
@@ -9,6 +9,6 @@ export const userInfoState = atom<UserInfo>({
     id: "",
     nickname: "",
     profileImage: "",
-    weaver: null
-  }
-})
+    weaver: null,
+  },
+});

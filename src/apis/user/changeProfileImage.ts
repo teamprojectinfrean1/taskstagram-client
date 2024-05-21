@@ -1,7 +1,7 @@
 import { authorizedAxios } from "../domainSettings";
 import { userPath } from "./userSettings";
 
-type imageType = {
+export type ChangeProfileImageRequest = {
   profileImage: File | null;
   memberId: string;
 };
@@ -10,8 +10,7 @@ type imageType = {
 export const changeProfileImage = async ({
   profileImage,
   memberId,
-}: imageType) => {
-  // console.log(profileImage, memberId);
+}: ChangeProfileImageRequest): Promise<string> => {
   const formData = new FormData();
   if (profileImage) {
     formData.append("multipartFile", profileImage);
@@ -21,11 +20,8 @@ export const changeProfileImage = async ({
       `${userPath}/update/image?uuid=${memberId}`,
       formData
     );
-    console.log(response.data);
     return response.data.data.updateURL;
-  } catch (err) {
-    if (err instanceof Error) {
-      throw err.message;
-    }
+  } catch (error) {
+    throw error;
   }
 };

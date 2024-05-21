@@ -6,111 +6,91 @@ import ChangeProfileImage from "./ChangeProfileImage";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
-import { Link } from "react-router-dom";
 import theme from "@/theme/theme";
-import { useQuery } from "react-query";
-import { useRecoilValue } from "recoil";
-import { userInfoState } from "@/stores/userStore";
 
 const UserProfileLayout = () => {
   const [permissionClick, setPermissionClick] = useState(false);
 
-  // const userInfo = useRecoilValue(userInfoState)
-  // const loginType = "WEAVER"
-
-  // const { data, refetch } = useQuery("reissue", () => reissueCheck(loginType), {
-  //   enabled: false,
-  //   cacheTime: 0,
-  // });
-
   return (
-    <>
-      <Box sx={{ display: "flex", justifyContent: "space-between" }}>
+    <Box display="flex">
+      <Box
+        boxShadow={2}
+        sx={{
+          py: 3,
+          px: 5,
+          backgroundColor: `${theme.palette.background.paper}`,
+          minWidth: "37rem",
+          width: "70%",
+          borderRadius: "7px",
+        }}
+      >
         <Box
-          boxShadow={10}
           sx={{
-            py: 3,
-            px: 5,
-            backgroundColor: 'white',
-            minWidth: "37rem",
-            borderRadius: "7px",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-            }}
-          >
-            <ChangeProfileImage />
-          </Box>
-          <UserInfoForm />
-          <PasswordForm />
-          <Box
-            sx={{
-              border: `1px solid ${theme.palette.text.primary}`,
-              mt: 3,
-              py: 2,
-              borderRadius: "7px",
-            }}
-          >
-            <Box sx={{ width: "90%", mx: "auto" }}>
-              <Box
-                display="flex"
-                justifyContent="space-between"
-                alignItems="center"
-              >
-                <Box>
-                  <Typography variant="body1" sx={{ fontWeight: "bold" }}>
-                    Permission
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    sx={{ mt: 1, color: `${theme.palette.text.primary}` }}
-                  >
-                    자신이 속한 프로젝트를 확인할 수 있습니다.
-                  </Typography>
-                </Box>
-                <Box>
-                  <Button
-                    onClick={() => {
-                      setPermissionClick(!permissionClick);
-                    }}
-                  >
-                    {permissionClick ? (
-                      <ArrowBackIosNewIcon sx={{ color: "#D9D9D9" }} />
-                    ) : (
-                      <ArrowForwardIosIcon sx={{ color: "#D9D9D9" }} />
-                    )}
-                  </Button>
-                </Box>
+          <ChangeProfileImage />
+        </Box>
+        <UserInfoForm />
+        <PasswordForm />
+        <Box
+          sx={{
+            border: `1px solid ${theme.palette.text.primary}`,
+            mt: 5,
+            py: 2,
+            borderRadius: "7px",
+            backgroundColor: "white",
+          }}
+        >
+          <Box sx={{ width: "90%", mx: "auto" }}>
+            <Box
+              display="flex"
+              justifyContent="space-between"
+              alignItems="center"
+            >
+              <Box>
+                <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                  나의 프로젝트 정보
+                </Typography>
+                <Typography
+                  variant="body2"
+                  sx={{ mt: 1, color: `${theme.palette.text.primary}` }}
+                >
+                  자신이 속한 프로젝트와 역할을 확인할 수 있습니다.
+                </Typography>
+              </Box>
+              <Box>
+                <Button
+                  onClick={() => {
+                    setPermissionClick(!permissionClick);
+                  }}
+                >
+                  {permissionClick ? (
+                    <ArrowBackIosNewIcon sx={{ color: "#D9D9D9" }} />
+                  ) : (
+                    <ArrowForwardIosIcon sx={{ color: "#D9D9D9" }} />
+                  )}
+                </Button>
               </Box>
             </Box>
           </Box>
-          <Box sx={{ mt: 2, mr: 1 }}>
-            <Link to="/">
-              <Typography
-                sx={{
-                  textAlign: "right",
-                  color: `${theme.palette.text.primary}`,
-                }}
-              >
-                회원탈퇴
-              </Typography>
-            </Link>
-          </Box>
         </Box>
-        {/* <Button
-          onClick={() => {
-            refetch();
-          }}
-        >
-          reissue 체크
-        </Button> */}
-        {permissionClick && <PermissionForm />}
+        <Box sx={{ mt: 4, mr: 1, display: "flex", justifyContent: "end" }}>
+          <Button>
+            <Typography
+              sx={{
+                color: `${theme.palette.text.primary}`,
+              }}
+            >
+              회원탈퇴
+            </Typography>
+          </Button>
+        </Box>
       </Box>
-    </>
+      {permissionClick && <PermissionForm />}
+    </Box>
   );
 };
 

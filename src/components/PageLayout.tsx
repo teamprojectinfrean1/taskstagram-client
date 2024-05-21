@@ -5,7 +5,7 @@ import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { getUserInfo } from "@/apis/member/getUserInfo";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import Snackbar from "@/components/Snackbar";
 import { jwtDecode } from "jwt-decode";
@@ -13,39 +13,33 @@ import { jwtDecode } from "jwt-decode";
 const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const { data, refetch } = useQuery("userInfo", () => getUserInfo(), {
-    enabled: false,
-    cacheTime: 0,
-    onSuccess: (data) => {
-      if (data) {
-        setUserInfo({
-          ...userInfo,
-          email: data.email,
-          id: data.id,
-          nickname: data.nickname,
-          profileImage: data.profileImage,
-          userId: data.userId,
-          weaver: data.weaver,
-        });
-      }
-    },
-  });
+  const { data } = useQuery("userInfo", () => getUserInfo());
 
   // memberId 재추출
   useEffect(() => {
-    const accessToken = sessionStorage.getItem('accessToken')
+    const accessToken = sessionStorage.getItem("accessToken");
     if (!userInfo.memberId && accessToken) {
-      const decodedToken = jwtDecode(accessToken)
-      const memberId = decodedToken.sub
+      const decodedToken = jwtDecode(accessToken);
+      const memberId = decodedToken.sub;
       if (memberId) {
-        setUserInfo({...userInfo, memberId})
+        setUserInfo({ ...userInfo, memberId });
       }
     }
-  }, [])
-  
+  }, []);
+
   useEffect(() => {
-    refetch()
-  }, [data])
+    if (data) {
+      setUserInfo({
+        ...userInfo,
+        email: data.email,
+        id: data.id,
+        nickname: data.nickname,
+        profileImage: data.profileImage,
+        userId: data.userOauthUuid,
+        weaver: data.weaver,
+      });
+    }
+  }, [data]);
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 

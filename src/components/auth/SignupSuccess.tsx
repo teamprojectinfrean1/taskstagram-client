@@ -4,17 +4,21 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 
 const SignupSuccess = () => {
-  const navigate = useNavigate();
-  const nickname = useLocation().state.nickname;
-
   const { resetSignupInfo } = useChangeSignupInfo();
+
+  const navigate = useNavigate();
+  
+  const nickname = useLocation().state.nickname;
 
   return (
     <Box className="base-layout text-center">
       <Typography variant="h2" sx={{ fontFamily: "Pattaya", mt: 12 }}>
         Welcome to
       </Typography>
-      <Typography variant="h2" sx={{ fontFamily: "Pattaya", color: "#2388B3", display: "inline" }}>
+      <Typography
+        variant="h2"
+        sx={{ fontFamily: "Pattaya", color: "#2388B3", display: "inline" }}
+      >
         Task
       </Typography>
       <Typography
