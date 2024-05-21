@@ -11,6 +11,7 @@ import { resetPasswordRequest } from "@/apis/user/resetPassword";
 const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
+
   const memberId = location.state.memberId;
 
   const [passwordInfo, setPasswordInfo] = useState({
@@ -36,18 +37,16 @@ const ResetPasswordForm = () => {
     });
   };
 
-  const resetPasswordMutation = useMutation(
+  const mutateResetPassword = useMutation(
     ({ memberId, password }: resetPasswordRequest) =>
-      resetPassword({ memberId, password }),
-    {
-      onSuccess: (data) => {
-        console.log(data);
-        if (data) {
-          navigate("/auth/find/password/success");
-        }
-      },
-    }
+      resetPassword({ memberId, password })
   );
+
+  useEffect(() => {
+    if (mutateResetPassword.data) {
+      navigate("/auth/find/password/success");
+    }
+  }, [mutateResetPassword.data]);
 
   const [isPasswordRequiredInput, setIsPasswordRequiredInput] = useState(false);
   useEffect(() => {
@@ -100,7 +99,7 @@ const ResetPasswordForm = () => {
         }}
         disabled={!isPasswordRequiredInput}
         onClick={() => {
-          resetPasswordMutation.mutate({
+          mutateResetPassword.mutate({
             memberId,
             password: passwordInfo.password,
           });

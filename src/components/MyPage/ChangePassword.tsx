@@ -6,13 +6,11 @@ import { PasswordConfirmationInput, PasswordInput } from "@/components/Auth";
 import { PresentPasswordInput } from "@/components/MyPage";
 import { useState, useEffect } from "react";
 import { useMutation } from "react-query";
-import {
-  changeUserInfo,
-  ChangeUserInfoRequest,
-} from "@/apis/user/changeUserInfo";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import { ErrorHandling } from "@/components";
+import ErrorHandling from "../ErrorHandling";
+import { ChangeUserInfoPasswordRequest } from "@/apis/user/changeUserInfoPassword";
+import { changeUserInfoPassword } from "@/apis/user/changeUserInfoPassword";
 
 const ChangePassword = () => {
   const navigate = useNavigate();
@@ -46,14 +44,13 @@ const ChangePassword = () => {
 
   const [isPasswordRequiredField, setIsPasswordRequiredField] = useState(false);
 
-  const changePasswordMutation = useMutation(
-    ({ type, value, memberId }: ChangeUserInfoRequest) =>
-      changeUserInfo({ type, value, memberId })
+  const mutateChangePassword = useMutation(
+    ({ type, value, memberId }: ChangeUserInfoPasswordRequest) =>
+      changeUserInfoPassword({ type, value, memberId })
   );
 
   useEffect(() => {
-    if (changePasswordMutation.data) {
-      console.log(changePasswordMutation.data);
+    if (mutateChangePassword.data) {
       navigate("/mypage/change/success", {
         state: "비밀번호",
       });
@@ -70,18 +67,21 @@ const ChangePassword = () => {
   return (
     <>
       <Box
-        boxShadow={10}
+        boxShadow={2}
         sx={{
-          height: "90%",
-          backgroundColor: "white",
-          minWidth: "37rem",
+          py: 5,
+          backgroundColor: `${theme.palette.background.paper}`,
+          width: "70%",
+          minWidth: "35rem",
+          m: "auto",
           borderRadius: "7px",
+          height: "40rem",
         }}
       >
         <Link to="/mypage">
           <ArrowBackIcon
             fontSize="large"
-            sx={{ m: 3, color: "#5F6368", position: "absolute" }}
+            sx={{ ml: 3, color: "#5F6368", position: "absolute" }}
           />
         </Link>
         <Box sx={{ mt: 5 }}>
@@ -95,17 +95,18 @@ const ChangePassword = () => {
         <Box
           className="base-layout"
           sx={{
-            border: "1px solid #F0F0F0",
+            backgroundColor: "white",
+            border: `1px solid ${theme.palette.text.primary}`,
             borderRadius: "7px",
-            mt: 6,
-            p: 2,
+            mt: 5,
+            p: 3,
           }}
         >
           <Typography sx={{ mb: 1, color: `${theme.palette.text.primary}` }}>
             현재 비밀번호
           </Typography>
           <PresentPasswordInput
-            isError={changePasswordMutation.error === 304 ? true : false}
+            isError={mutateChangePassword.error === 304 ? true : false}
             presentPassword={passwordInfo.presentPassword}
             setPresentPassword={(value) =>
               setPasswordInfo({
@@ -118,10 +119,11 @@ const ChangePassword = () => {
         <Box
           className="base-layout"
           sx={{
-            border: "1px solid #F0F0F0",
+            backgroundColor: "white",
+            border: `1px solid ${theme.palette.text.primary}`,
             borderRadius: "7px",
             mt: 2,
-            p: 2,
+            p: 3,
           }}
         >
           <Typography sx={{ mb: 1, color: `${theme.palette.text.primary}` }}>
@@ -160,7 +162,7 @@ const ChangePassword = () => {
             }}
             disabled={!isPasswordRequiredField}
             onClick={() => {
-              changePasswordMutation.mutate({
+              mutateChangePassword.mutate({
                 type: "password",
                 value: {
                   currentPassword: passwordInfo.presentPassword,
@@ -173,8 +175,8 @@ const ChangePassword = () => {
             확인
           </Button>
           <ErrorHandling
-            error={changePasswordMutation.error}
-            isLoading={changePasswordMutation.isLoading}
+            error={mutateChangePassword.error}
+            isLoading={mutateChangePassword.isLoading}
             feature="비밀번호 변경"
           />
         </Box>

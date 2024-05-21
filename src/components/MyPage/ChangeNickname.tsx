@@ -1,8 +1,8 @@
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Typography, Box, Button } from "@mui/material";
-import NicknameInput from "../Auth/NicknameInput";
-import { useState } from "react";
+import NicknameInput from "../auth/NicknameInput";
+import { useEffect, useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
 import { changeUserInfo } from "@/apis/user/changeUserInfo";
@@ -20,35 +20,38 @@ const ChangeNickname = () => {
   const [nickname, setNickname] = useState("");
   const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
 
-  const changeNicknameMutation = useMutation(
+  const mutateChangeNickname = useMutation(
     ({ type, value, memberId }: ChangeUserInfoRequest) =>
-      changeUserInfo({ type, value, memberId }),
-    {
-      onSuccess: (data) => {
-        console.log(data);
-        setUserInfo({ ...userInfo, nickname: data });
-        navigate("/mypage/change/success", {
-          state: "닉네임",
-        });
-      },
-    }
+      changeUserInfo({ type, value, memberId })
   );
+
+  useEffect(() => {
+    if (mutateChangeNickname.data) {
+      setUserInfo({ ...userInfo, nickname: mutateChangeNickname.data });
+      navigate("/mypage/change/success", {
+        state: "닉네임",
+      });
+    }
+  }, [mutateChangeNickname.data]);
 
   return (
     <>
       <Box
-        boxShadow={10}
+        boxShadow={2}
         sx={{
-          height: "90%",
-          backgroundColor: "white",
-          minWidth: "37rem",
+          py: 5,
+          backgroundColor: `${theme.palette.background.paper}`,
+          width: "70%",
+          minWidth: "35rem",
+          m: "auto",
           borderRadius: "7px",
+          height: "40rem",
         }}
       >
         <Link to="/mypage">
           <ArrowBackIcon
             fontSize="large"
-            sx={{ m: 3, color: "#5F6368", position: "absolute" }}
+            sx={{ ml: 3, color: "#5F6368", position: "absolute" }}
           />
         </Link>
         <Box sx={{ mt: 5 }}>
@@ -60,19 +63,25 @@ const ChangeNickname = () => {
           </Typography>
         </Box>
         <Box
-          className="base-layout"
           sx={{
-            border: "1px solid #F0F0F0",
-            height: "70%",
-            borderRadius: "7px",
             mt: 6,
+            mx: "auto",
+            py: 10,
+            backgroundColor: "white",
+            borderRadius: "7px",
+            border: `1px solid ${theme.palette.text.primary}`,
+            width: "60%",
+            minWidth: "30rem",
+            height: "70%",
           }}
         >
           <Box sx={{ width: "90%", margin: "auto" }}>
-            <Box sx={{ my: 7, textAlign: "center" }}>
+            <Box sx={{ my: 1, textAlign: "center" }}>
               <Typography variant="h6">일정타그램에서 사용할</Typography>
               <Typography variant="h6">새로운 이름을 입력해주세요.</Typography>
             </Box>
+
+            <Typography sx={{ mt: 5, ml: 0.5 }}>Nickname</Typography>
             <NicknameInput
               nickname={nickname}
               setNickname={setNickname}
@@ -86,11 +95,11 @@ const ChangeNickname = () => {
               sx={{
                 bgcolor: `${theme.palette.secondary.main}`,
                 borderRadius: "7px",
-                mt: 5,
+                mt: 6,
               }}
               disabled={!isNicknameDuplicate}
               onClick={() =>
-                changeNicknameMutation.mutate({
+                mutateChangeNickname.mutate({
                   type: "nickname",
                   value: nickname,
                   memberId,
@@ -101,8 +110,8 @@ const ChangeNickname = () => {
             </Button>
           </Box>
           <ErrorHandling
-            error={changeNicknameMutation.error}
-            isLoading={changeNicknameMutation.isLoading}
+            error={mutateChangeNickname.error}
+            isLoading={mutateChangeNickname.isLoading}
             feature="닉네임 변경"
           />
         </Box>

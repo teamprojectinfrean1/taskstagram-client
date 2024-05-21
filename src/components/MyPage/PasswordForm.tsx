@@ -5,6 +5,7 @@ import { useRecoilValue } from "recoil";
 
 const PasswordForm = () => {
   const navigate = useNavigate();
+
   const userInfo = useRecoilValue(userInfoState);
   const loginType = userInfo.weaver;
 
@@ -12,9 +13,10 @@ const PasswordForm = () => {
     <Box
       sx={{
         border: "1px solid #626262",
-        mt: 3,
+        mt: 5,
         py: 2,
         borderRadius: "7px",
+        backgroundColor: "white",
       }}
     >
       <Box sx={{ width: "90%", mx: "auto" }}>
@@ -24,19 +26,20 @@ const PasswordForm = () => {
               비밀번호 변경
             </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} textAlign="right">
             <Button
               sx={{
                 display: loginType ? "" : "none",
-                fontSize: "7px",
+                fontSize: "10px",
                 backgroundColor: "#F0EFFA",
                 borderRadius: "20px",
+                fontWeight: "bold",
               }}
               onClick={() => {
                 navigate("/mypage/change/password");
               }}
             >
-              Edit
+              수정
             </Button>
           </Grid>
         </Grid>

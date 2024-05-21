@@ -58,6 +58,7 @@ export const getProjectList = async (
       const response = await unauthorizedAxios.get(
         `${projectPath}/list/${userUuid}`
       );
+      console.log(response.data.data);
       return response.data.data;
     } catch {
       return null;

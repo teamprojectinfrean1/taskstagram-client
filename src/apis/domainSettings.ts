@@ -4,7 +4,6 @@ const BASE_URL = "https://mcpark.info/api/v1/";
 
 const unauthorizedAxios = axios.create({
   baseURL: BASE_URL,
-  withCredentials: true,
 });
 
 unauthorizedAxios.interceptors.response.use(
@@ -13,9 +12,9 @@ unauthorizedAxios.interceptors.response.use(
   },
   async (error) => {
     if (error.response) {
-      throw error.response.status
+      throw error.response.status;
     } else {
-      throw error.message
+      throw error.message;
     }
   }
 );
@@ -38,9 +37,9 @@ authorizedAxios.interceptors.response.use(
   },
   async (error) => {
     if (error.response) {
-      throw error.response.status
+      throw error.response.status;
     } else {
-      throw error.message
+      throw error.message;
     }
   }
 );

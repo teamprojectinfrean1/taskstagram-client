@@ -1,43 +1,21 @@
 import { Box, Typography } from "@mui/material";
+import logo from "@/assets/taskstagramLogo.svg";
 
 const LogoAndName = () => {
   return (
     <Box sx={{ my: "auto" }}>
-      <img src="favicon.ico" alt="..." width={50} />
-      <Box display="flex" sx={{ my: 5 }}>
+      <img src={logo} alt="..." width={300} />
+      <Box sx={{ my: 5, textAlign: "center" }}>
         <Typography
-          variant="h1"
-          sx={{ fontFamily: "Pattaya", color: "#173665" }}
-        >
-          tasks
-        </Typography>
-        <Typography
-          variant="h1"
-          sx={{ fontFamily: "Pattaya", color: "#3C4043" }}
-        >
-          tagram
-        </Typography>
-      </Box>
-
-      <Box display="flex" sx={{ ml: 3 }}>
-        <Box
+          variant="h3"
           sx={{
-            borderRadius: "50%",
-            width: "120px",
-            height: "120px",
-            bgcolor: "#dee1e6",
-            "& > *": {
-              position: "absolute",
-              borderRadius: "50%",
-              width: "120px",
-              height: "120px",
-            },
+            fontFamily: "BM HANNA_TTF",
+            color: "#00154B",
+            fontWeight: "bold",
           }}
         >
-          <Box sx={{ ml: 10, bgcolor: "#d7dadf" }} />
-          <Box sx={{ ml: 20, bgcolor: "#d1d3d8" }} />
-          <Box sx={{ ml: 30, bgcolor: "#cbcdd2" }} />
-        </Box>
+          일정타그램
+        </Typography>
       </Box>
     </Box>
   );

@@ -10,14 +10,14 @@ export type resetPasswordRequest = {
 export const resetPassword = async ({
   memberId,
   password,
-}: resetPasswordRequest) => {
+}: resetPasswordRequest): Promise<boolean> => {
   try {
     const response = await unauthorizedAxios.put(`${resetPasswordPath}`, {
       uuid: memberId,
       password,
     });
     return response.data.isSuccess;
-  } catch (err) {
-    console.error(err);
+  } catch (error) {
+    throw error
   }
 };

@@ -1,7 +1,7 @@
 import { Box, Button, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
-import basicProfileImage from "@/assets/basicProfileImage.png"
+import basicProfileImage from "@/assets/basicProfileImage.png";
 
 type ProfileImageInputProps = {
   profileImage: File | null;
@@ -25,13 +25,13 @@ const ProfileImageInput = ({
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
     if (selectedFile) {
-      const imageType = selectedFile.type
+      const imageType = selectedFile.type;
       if (acceptFileType.includes(imageType)) {
         setProfileImage(selectedFile);
         const previewUrl = URL.createObjectURL(selectedFile);
         setPreviewImage(previewUrl);
       } else {
-        alert("이미지 파일의 형식은 .png, .jpg, .jpeg만 가능합니다.")
+        alert("이미지 파일의 형식은 .png, .jpg, .jpeg만 가능합니다.");
       }
     }
   };
@@ -46,7 +46,7 @@ const ProfileImageInput = ({
           }}
         >
           <Avatar
-            src={previewImage? previewImage : basicProfileImage}
+            src={previewImage ? previewImage : basicProfileImage}
             sx={{
               width: "120px",
               height: "120px",

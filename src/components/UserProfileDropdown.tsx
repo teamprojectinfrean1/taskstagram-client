@@ -46,7 +46,6 @@ const UserProfileDropdown = () => {
   };
   return (
     <>
-      {/* TopNav dropdown */}
       <IconButton
         size="large"
         edge="end"

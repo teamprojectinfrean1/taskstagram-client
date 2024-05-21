@@ -35,12 +35,9 @@ export const checkAuthInputValidity = ({
 };
 
 // 비밀번호 확인 검증
-export const passwordDoubleCheck = ({ password, passwordDouble }: PasswordType) => {
+export const passwordDoubleCheck = ({
+  password,
+  passwordDouble,
+}: PasswordType) => {
   return password === passwordDouble ? true : false;
 };
-
-// 이메일 인증 api 구현완료 시 활용할 예정
-// export const handleEmailCertifiNumber = (emailCertifi: string) => {
-//   return emailCertifi === '123456' ? true : false
-// }
-
