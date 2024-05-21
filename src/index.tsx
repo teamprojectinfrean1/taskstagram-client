@@ -7,7 +7,7 @@ import { RecoilRoot } from "recoil";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { ThemeProvider } from "@mui/material/styles";
 import theme from "@/theme/theme";
-import { ReactQueryDevtools } from "react-query/devtools";
+// import { ReactQueryDevtools } from "react-query/devtools";
 
 const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
@@ -21,7 +21,7 @@ root.render(
       <ThemeProvider theme={theme}>
         <App />
       </ThemeProvider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {/* <ReactQueryDevtools initialIsOpen={false} /> */}
     </QueryClientProvider>{" "}
   </RecoilRoot>
 );

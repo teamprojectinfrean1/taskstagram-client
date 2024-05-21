@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Typography, Box, Button } from "@mui/material";
-import NicknameInput from "../auth/NicknameInput";
+import NicknameInput from "../Auth/NicknameInput";
 import { useEffect, useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
