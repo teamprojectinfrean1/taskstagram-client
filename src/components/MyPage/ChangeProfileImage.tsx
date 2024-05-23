@@ -45,6 +45,12 @@ const ChangeProfileImage = () => {
   );
 
   useEffect(() => {
+    if (mutateChangeProfileImage.data) {
+      setUserInfo({ ...userInfo, profileImage: mutateChangeProfileImage.data });
+    }
+  }, [mutateChangeProfileImage.data]);
+  
+  useEffect(() => {
     if (profileImage) {
       mutateChangeProfileImage.mutate({ profileImage, memberId });
     }

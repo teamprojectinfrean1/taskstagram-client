@@ -9,10 +9,18 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
 import { useState } from "react";
 import theme from "@/theme/theme";
+import DeleteUserModal from "./DeleteUserModal";
+import { useRecoilValue } from "recoil";
+import { userInfoState } from "@/stores/userStore";
 
 const UserProfileLayout = () => {
+  const [open, setOpen] = useState(false);
+
   const [permissionClick, setPermissionClick] = useState(false);
 
+  const userInfo = useRecoilValue(userInfoState);
+  const weaver = userInfo.weaver;
+  
   return (
     <Box display="flex">
       <Box
@@ -80,17 +88,31 @@ const UserProfileLayout = () => {
           </Box>
         </Box>
         <Box sx={{ mt: 4, mr: 1, display: "flex", justifyContent: "end" }}>
-          <Button>
-            <Typography
-              sx={{
-                color: `${theme.palette.text.primary}`,
+          {weaver ? (
+            <Button
+              onClick={() => {
+                setOpen(true);
               }}
             >
-              회원탈퇴
-            </Typography>
-          </Button>
+              <Typography
+                sx={{
+                  color: `${theme.palette.text.primary}`,
+                }}
+              >
+                회원탈퇴
+              </Typography>
+            </Button>
+          ) : (
+            <></>
+          )}
         </Box>
       </Box>
+      <DeleteUserModal
+        open={open}
+        handleClose={() => {
+          setOpen(false);
+        }}
+      />
       {permissionClick && <PermissionForm />}
     </Box>
   );
