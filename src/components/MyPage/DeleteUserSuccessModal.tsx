@@ -28,9 +28,10 @@ const DeleteUserSuccessModal = ({
           left: "50%",
           transform: "translate(-50%, -50%)",
           width: 480,
+          boxShadow: 2,
           backgroundColor: "white",
           border: `1px solid ${theme.palette.text.primary}`,
-          boxShadow: 2,
+          borderRadius:'7px',
           p: 3,
         }}
       >

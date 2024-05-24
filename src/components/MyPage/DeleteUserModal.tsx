@@ -66,9 +66,10 @@ const DeleteUserModal = ({ open, handleClose }: DeleteUserModalProps) => {
             left: "50%",
             transform: "translate(-50%, -50%)",
             width: 480,
+            boxShadow: 2,
             bgcolor: "white",
             border: `1px solid ${theme.palette.text.primary}`,
-            boxShadow: 2,
+            borderRadius:'7px',
             p: 3,
           }}
         >
@@ -95,7 +96,7 @@ const DeleteUserModal = ({ open, handleClose }: DeleteUserModalProps) => {
               </Typography>
               됩니다.
             </Typography>
-            <Typography sx={{ mt: 2, fontSize: "15px" }}>
+            <Typography sx={{ mt: 2, mb: 1, fontSize: "15px" }}>
               정말 탈퇴를 원하신다면, 아래 입력창에 아이디를 입력해주세요.
             </Typography>
           </Box>
@@ -120,7 +121,7 @@ const DeleteUserModal = ({ open, handleClose }: DeleteUserModalProps) => {
               setDeleteId(e.target.value);
             }}
           />
-          <Box sx={{ textAlign: "right", mt: 2 }}>
+          <Box sx={{ textAlign: "right", mt: 3 }}>
             <Button
               variant="contained"
               size="small"
