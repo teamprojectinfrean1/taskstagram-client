@@ -1,7 +1,7 @@
 type Task = {
   taskId: string | null;
   taskTitle: string | null;
-  taskContent: string | null;
+  taskContent: any | null;
   taskTags: string[] | null;
   taskStartDate: string | null;
   taskEndDate: string | null;
