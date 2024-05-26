@@ -50,6 +50,7 @@ const ProjectPage = () => {
   const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
   const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
     useState<boolean | null>(null);
+  const [formErrors, setFormErrors] = useState<Partial<ProjectFormData>>({});
 
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
@@ -66,10 +67,23 @@ const ProjectPage = () => {
     isMainProject: false,
   });
 
+  const isFormValid = () => {
+    const errors: Partial<ProjectFormData> = {};
+    const errorText = "필수 입력 항목입니다.";
+
+    if (!formData.projectName || formData.projectName === "") {
+      errors.projectName = errorText;
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
   useEffect(() => {
     setIsUserSelectedProjectLeader(
       selectedProject !== null ? selectedProject.permission === "LEADER" : null
     );
+    setFormErrors({});
   }, [selectedProject]);
 
   const { data, refetch, isLoading } = useQuery(
@@ -240,6 +254,7 @@ const ProjectPage = () => {
 
   //저장 버튼
   const handleSaveProjectBtnClicked = () => {
+    if (!isFormValid()) return;
     if (type === "new") {
       createMutation.mutate({
         projectName: formData.projectName,
@@ -446,6 +461,8 @@ const ProjectPage = () => {
                     },
                     readOnly: isUserSelectedProjectLeader === false,
                   }}
+                  error={"projectName" in formErrors}
+                  helperText={formErrors["projectName"]}
                 />
               )}
             </Grid>

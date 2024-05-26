@@ -128,30 +128,19 @@ export const createOneTask = async ({
   endDate,
   editDeletePermission,
 }: CreateTaskRequest): Promise<boolean> => {
-  if (
-    projectId !== null &&
-    writerUuid !== null &&
-    taskTitle !== null &&
-    startDate !== null &&
-    endDate !== null &&
-    editDeletePermission !== null
-  ) {
-    try {
-      const response = await unauthorizedAxios.post(`${taskPath}`, {
-        projectId,
-        writerUuid,
-        taskTitle,
-        taskContent,
-        taskTagList,
-        startDate,
-        endDate,
-        editDeletePermission,
-      });
-      return response.data.isSuccess;
-    } catch {
-      return false;
-    }
-  } else {
+  try {
+    const response = await unauthorizedAxios.post(`${taskPath}`, {
+      projectId,
+      writerUuid,
+      taskTitle,
+      taskContent,
+      taskTagList,
+      startDate,
+      endDate,
+      editDeletePermission,
+    });
+    return response.data.isSuccess;
+  } catch {
     return false;
   }
 };
@@ -167,37 +156,26 @@ export const replaceOneTask = async ({
   endDate,
   editDeletePermission,
 }: ReplaceTaskRequest): Promise<boolean> => {
-  if (
-    selectedTaskId !== null &&
-    updaterUuid !== null &&
-    taskTitle !== null &&
-    startDate !== null &&
-    endDate !== null &&
-    editDeletePermission !== null
-  ) {
-    try {
-      const response = await unauthorizedAxios.put(
-        `${taskPath}`,
-        {
-          updaterUuid,
-          taskTitle,
-          taskContent,
-          taskTagList,
-          startDate,
-          endDate,
-          editDeletePermission,
+  try {
+    const response = await unauthorizedAxios.put(
+      `${taskPath}`,
+      {
+        updaterUuid,
+        taskTitle,
+        taskContent,
+        taskTagList,
+        startDate,
+        endDate,
+        editDeletePermission,
+      },
+      {
+        params: {
+          taskId: selectedTaskId,
         },
-        {
-          params: {
-            taskId: selectedTaskId,
-          },
-        }
-      );
-      return response.data.isSuccess;
-    } catch {
-      return false;
-    }
-  } else {
+      }
+    );
+    return response.data.isSuccess;
+  } catch {
     return false;
   }
 };
