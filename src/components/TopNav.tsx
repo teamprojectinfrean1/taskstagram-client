@@ -9,6 +9,7 @@ import { useMutation, useQuery } from "react-query";
 import { getProjectList, changeMainProject } from "@/apis/ProjectApi";
 import { userInfoState } from "@/stores/userStore";
 import { UserProfileDropdown } from "@/components";
+import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -25,10 +26,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   const [projectDataList, setProjectDataList] =
     useRecoilState(projectListState);
 
-  const { data, isSuccess, refetch } = useQuery(
-    "getProjectList",
+  const { data, isSuccess, refetch, isError } = useQuery(
+    ["getProjectList", userUuid],
     () => getProjectList(userUuid)
-    //추후 실패시 동작되는 로직도 추가 예정
   );
 
   useEffect(() => {
@@ -61,7 +61,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   }, [changeMainprojectMuation.isSuccess]);
 
   const handleChangeMainProject = (selectedProjectId: string | null) => {
-    changeMainprojectMuation.mutate(selectedProjectId);
+    if (selectedProjectId !== null) {
+      changeMainprojectMuation.mutate(selectedProjectId);
+    }
   };
 
   const handleChangeSelectedProject = (
@@ -69,6 +71,12 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   ) => {
     setSelectedProject(selectedProject);
   };
+
+  useFeedbackHandler({
+    isError: changeMainprojectMuation.isError,
+    errorMessage:
+      "메인 프로젝트를 변경하는 중 문제가 발생하였습니다. 잠시 후 다시 시도해주세요.",
+  });
 
   return (
     <AppBar position="static">

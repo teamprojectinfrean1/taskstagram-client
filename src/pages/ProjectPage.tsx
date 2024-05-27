@@ -86,7 +86,7 @@ const ProjectPage = () => {
     setFormErrors({});
   }, [selectedProject]);
 
-  const { data, refetch, isLoading } = useQuery(
+  const { data, refetch, isLoading, isError } = useQuery(
     ["getProjectDetail", selectedProject],
     () =>
       getProjectDetail(

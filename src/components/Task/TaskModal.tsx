@@ -30,6 +30,7 @@ import {
 import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
 import { grey } from "@mui/material/colors";
+import { userInfoState } from "@/stores/userStore";
 
 type TaskModalProps = {
   selectedTask: Task;
@@ -83,6 +84,9 @@ const TaskModal = ({
   const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
   const [formErrors, setFormErrors] = useState<Partial<Task>>({});
 
+  const userInfo = useRecoilValue(userInfoState);
+  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+
   const isFormValid = () => {
     const errors: Partial<Task> = {};
     const errorText = "필수 입력 항목입니다.";
@@ -105,7 +109,7 @@ const TaskModal = ({
     );
   };
 
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isError } = useQuery(
     ["getTaskDetail", selectedTask],
     () => getTaskDetail(selectedTask.taskId!),
     { enabled: !!selectedTask && !!selectedTask.taskId }
@@ -174,7 +178,7 @@ const TaskModal = ({
       //새로운 task 생성시
       onAdd({
         projectId: selectedProject.projectId,
-        writerUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
+        writerUuid: userUuid,
         taskTitle: formData.taskTitle!,
         taskContent:
           formData.taskContent && isTaskContentEmpty(formData.taskContent)
@@ -195,7 +199,7 @@ const TaskModal = ({
       //이미 생성된 Task
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
-        updaterUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
+        updaterUuid: userUuid,
         taskTitle: formData.taskTitle!,
         taskContent:
           formData.taskContent && isTaskContentEmpty(formData.taskContent)

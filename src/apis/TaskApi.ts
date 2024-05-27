@@ -59,7 +59,7 @@ export const getPaginatedTaskList = async ({
   size,
   projectId,
 }: GetTaskListRequest): Promise<TaskListResponse | null> => {
-  if (page && size && projectId !== null) {
+  if (projectId !== null) {
     try {
       const response = await unauthorizedAxios.get(taskPath, {
         params: {
@@ -72,8 +72,10 @@ export const getPaginatedTaskList = async ({
         taskList: response.data.data.dataList,
         toalTaskpage: response.data.data.totalPage,
       };
-    } catch {
-      return null;
+    } catch (error) {
+      throw new Error(
+        "프로젝트의 테스트 목록을 가져오는 중 오류가 발생했습니다."
+      );
     }
   } else {
     return null;
@@ -105,15 +107,11 @@ export const getAllTaskList = async ({
 export const getTaskDetail = async (
   taskId: string
 ): Promise<TaskDetailReponse | null> => {
-  if (taskId) {
-    try {
-      const response = await unauthorizedAxios.get(`${taskPath}/${taskId}`);
-      return response.data.data;
-    } catch {
-      return null;
-    }
-  } else {
-    return null;
+  try {
+    const response = await unauthorizedAxios.get(`${taskPath}/${taskId}`);
+    return response.data.data;
+  } catch (error) {
+    throw new Error("테스크 상세 정보를 가져오는 중 오류가 발생했습니다.");
   }
 };
 
@@ -140,8 +138,8 @@ export const createOneTask = async ({
       editDeletePermission,
     });
     return response.data.isSuccess;
-  } catch {
-    return false;
+  } catch (error) {
+    throw new Error("테스크를 생성하는 중 오류가 발생했습니다.");
   }
 };
 
@@ -182,18 +180,14 @@ export const replaceOneTask = async ({
 
 //task 삭제
 export const deleteOneTask = async (taskId: string): Promise<boolean> => {
-  if (taskId) {
-    try {
-      const response = await unauthorizedAxios.delete(`${taskPath}`, {
-        params: {
-          taskId: taskId,
-        },
-      });
-      return response.data.isSuccess;
-    } catch {
-      return false;
-    }
-  } else {
-    return false;
+  try {
+    const response = await unauthorizedAxios.delete(`${taskPath}`, {
+      params: {
+        taskId: taskId,
+      },
+    });
+    return response.data.isSuccess;
+  } catch (error) {
+    throw new Error("테스크 상세 정보를 업데이트하는 중 오류가 발생했습니다.");
   }
 };

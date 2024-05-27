@@ -29,8 +29,8 @@ const TaskPage = () => {
   const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
     useState<boolean | null>(null);
 
-  const { data, isLoading, refetch } = useQuery(
-    ["getTaskList", selectedProject, currentPage],
+  const { data, isLoading, refetch, isError } = useQuery(
+    ["getTaskList", selectedProject?.projectId, currentPage],
     () =>
       getPaginatedTaskList({
         page: currentPage,
@@ -38,9 +38,8 @@ const TaskPage = () => {
         projectId: selectedProject !== null ? selectedProject.projectId : null,
       }),
     {
-      enabled: !!selectedProject && !!selectedProject.projectId,
+      enabled: false,
     }
-    //추후 실패시 동작되는 로직도 추가 예정
   );
 
   const deleteMutation = useMutation({
@@ -80,6 +79,7 @@ const TaskPage = () => {
   });
 
   useEffect(() => {
+    refetch();
     setIsUserSelectedProjectLeader(
       selectedProject !== null ? selectedProject.permission === "LEADER" : null
     );
@@ -191,7 +191,7 @@ const TaskPage = () => {
             </>
           )}
         </Grid>
-        <Box sx={{ display: "flex", justifyContent: "center", m: 3 }}>
+        <Box sx={{ display: "flex", justifyContent: "center", m: 5 }}>
           <Pagination
             count={data?.toalTaskpage}
             page={currentPage}
