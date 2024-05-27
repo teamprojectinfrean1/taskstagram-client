@@ -120,7 +120,7 @@ const TaskModal = ({
       setFormData({
         taskId: data.taskId,
         taskTitle: data.taskTitle,
-        taskContent: data.taskContent,
+        taskContent: data.taskContent ? JSON.parse(data.taskContent) : null,
         taskTags:
           data.taskTags !== null && data.taskTags !== ""
             ? data.taskTags.split(",")
@@ -183,7 +183,7 @@ const TaskModal = ({
         taskContent:
           formData.taskContent && isTaskContentEmpty(formData.taskContent)
             ? null
-            : formData.taskContent,
+            : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
         startDate:
           formData.taskStartDate !== null
@@ -204,7 +204,7 @@ const TaskModal = ({
         taskContent:
           formData.taskContent && isTaskContentEmpty(formData.taskContent)
             ? null
-            : formData.taskContent,
+            : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
         startDate:
           formData.taskStartDate !== null

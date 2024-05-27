@@ -125,7 +125,9 @@ const TaskTicket = ({
             {/* {convertFromRaw(
               selectedTask.taskContent as RawDraftContentState
             ).getPlainText()} */}
-            {selectedTask.taskContent}
+            {convertFromRaw(
+              JSON.parse(selectedTask.taskContent) as RawDraftContentState
+            ).getPlainText()}
           </Typography>
         )}
       </CardContent>
