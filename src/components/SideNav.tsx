@@ -7,6 +7,7 @@ import {
   ListItemText,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import theme from "@/theme/theme";
 
 type SideNavProps = {
   open: boolean;
@@ -30,6 +31,8 @@ const SideNav = ({ open }: SideNavProps) => {
         width: "var(--side-nav-width)",
         ".MuiDrawer-paper": {
           marginTop: "var(--top-nav-height)",
+          backgroundColor:`${theme.palette.primary.main}`,
+          color:`${theme.palette.background.default}`
         },
       }}
     >
