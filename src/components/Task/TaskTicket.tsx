@@ -111,7 +111,7 @@ const TaskTicket = ({
         }}
         onClick={onClick}
       >
-        {selectedTask.taskContent && (
+        {selectedTask.taskContent !== null && (
           <Typography
             variant="subtitle1"
             sx={{

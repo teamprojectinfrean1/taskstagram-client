@@ -181,7 +181,8 @@ const TaskModal = ({
         writerUuid: userUuid,
         taskTitle: formData.taskTitle!,
         taskContent:
-          formData.taskContent && isTaskContentEmpty(formData.taskContent)
+          formData.taskContent === null ||
+          isTaskContentEmpty(formData.taskContent)
             ? null
             : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
@@ -202,7 +203,8 @@ const TaskModal = ({
         updaterUuid: userUuid,
         taskTitle: formData.taskTitle!,
         taskContent:
-          formData.taskContent && isTaskContentEmpty(formData.taskContent)
+          formData.taskContent === null ||
+          isTaskContentEmpty(formData.taskContent)
             ? null
             : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
