@@ -9,7 +9,7 @@ type LastUpdateDetailType = {
   updatedDate: string;
 };
 
-type PrjectListResponse = {
+export type PrjectListResponse = {
   mainProject: ProjectSummary[];
   noMainProject: ProjectSummary[];
 };
@@ -47,6 +47,11 @@ export type ReplaceProjectRequest = {
   startDate: string | null;
   endDate: string | null;
   memberUuidList: string[] | null;
+};
+
+export type ChangeMainProjectResponse = {
+  changedProjectId: string;
+  isSuccess: boolean;
 };
 
 // 프로젝트 리스트 조회
@@ -193,12 +198,15 @@ export const deleteOneProject = async (projectId: string): Promise<boolean> => {
 // 메인 프로젝트 변경
 export const changeMainProject = async (
   projectId: string | null
-): Promise<boolean> => {
+): Promise<ChangeMainProjectResponse> => {
   try {
     const response = await unauthorizedAxios.put(
       `${projectPath}/main-project/${projectId}`
     );
-    return response.data.isSuccess;
+    return {
+      changedProjectId: response.data.data,
+      isSuccess: response.data.isSuccess,
+    };
   } catch (error) {
     throw new Error("메인 프로젝트를 변경하는 중 오류가 발생했습니다.");
   }

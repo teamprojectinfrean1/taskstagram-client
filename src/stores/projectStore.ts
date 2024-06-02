@@ -7,7 +7,12 @@ export const selectedProjectState = atom<ProjectSummary | null>({
 });
 
 // 프로젝트 리스트 Recoil 변경
-export const projectListState = atom<ProjectSummary[]> ({
+export const projectListState = atom<ProjectSummary[]>({
   key: "projectListState",
-  default: []
-})
+  default: [],
+});
+
+export const projectActingModeState = atom<string | null>({
+  key: "projectActingModeState",
+  default: null,
+});

@@ -21,9 +21,14 @@ import {
   replaceOneProject,
   deleteOneProject,
   getProjectDetail,
+  PrjectListResponse,
 } from "@/apis/ProjectApi";
-import { useRecoilValue } from "recoil";
-import { selectedProjectState } from "@/stores/projectStore";
+import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  selectedProjectState,
+  projectListState,
+  projectActingModeState,
+} from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { getAllAppUserList, getAllProjectMemberList } from "@/apis/memberApi";
@@ -43,7 +48,11 @@ const ProjectPage = () => {
   const queryClient = useQueryClient();
 
   const [memberList, setMemberList] = useState<UserSummary[]>([]);
-  const selectedProject = useRecoilValue(selectedProjectState);
+  const [selectedProject, setSelectedProject] =
+    useRecoilState(selectedProjectState);
+  const [projectActingMode, setProjectActingMode] = useRecoilState(
+    projectActingModeState
+  );
   const type = location.state !== null ? location.state.type : "";
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
@@ -235,27 +244,38 @@ const ProjectPage = () => {
   });
 
   useEffect(() => {
-    if (
-      (createMutation.isSuccess && createMutation.isSuccess === true) ||
-      (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
-    ) {
-      refetch();
-      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
-    }
+    const fetchProject = async () => {
+      if (
+        (createMutation.isSuccess && createMutation.isSuccess === true) ||
+        (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
+      ) {
+        refetch(); //프로젝트 상세조회 재조회
+        await queryClient.refetchQueries({
+          queryKey: ["getProjectList", userUuid],
+        }); //프로젝트 리스트 재조회
+      }
+    };
+    fetchProject();
   }, [createMutation.isSuccess, replaceMutation.isSuccess]);
 
   useEffect(() => {
-    if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
-      //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
-      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
-      navigate("/");
-    }
+    const fetchProjects = async () => {
+      if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
+        //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
+        await queryClient.refetchQueries({
+          queryKey: ["getProjectList", userUuid],
+        }); //프로젝트 리스트 재조회
+        navigate("/");
+      }
+    };
+    fetchProjects();
   }, [deleteMutation.isSuccess]);
 
   //저장 버튼
   const handleSaveProjectBtnClicked = () => {
     if (!isFormValid()) return;
     if (type === "new") {
+      setProjectActingMode("Create");
       createMutation.mutate({
         projectName: formData.projectName,
         writerUuid: userUuid,
@@ -278,6 +298,7 @@ const ProjectPage = () => {
         memberUuidList: formData.projectMemberUuidList ?? [],
       });
     } else if (selectedProject !== null) {
+      setProjectActingMode("Update");
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
         projectName: formData.projectName,
@@ -307,6 +328,7 @@ const ProjectPage = () => {
   //삭제 모달창 확인 버튼
   const handleConfirmModal = (inputText: string) => {
     if (selectedProject !== null && selectedProject.projectId) {
+      setProjectActingMode("Delete");
       deleteMutation.mutate(selectedProject.projectId);
       setShowDeleteFormModal(false);
     }
