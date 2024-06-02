@@ -249,7 +249,9 @@ const ProjectPage = () => {
         (createMutation.isSuccess && createMutation.isSuccess === true) ||
         (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
       ) {
-        refetch(); //프로젝트 상세조회 재조회
+        if (projectActingMode === "Update") {
+          refetch(); //프로젝트 수정일 때만 상세조회 재조회
+        }
         await queryClient.refetchQueries({
           queryKey: ["getProjectList", userUuid],
         }); //프로젝트 리스트 재조회

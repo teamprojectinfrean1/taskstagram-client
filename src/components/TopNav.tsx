@@ -69,12 +69,6 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
           (x) => x.projectId === previousSelectedProjectId
         );
         setSelectedProject(projectData ?? null);
-      } else if (selectedProject === null && projectActingMode === "Create") {
-        const createdProjectId = projectList[1].projectId;
-        const projectData = projectList.find(
-          (x) => x.projectId === createdProjectId
-        );
-        setSelectedProject(projectData ?? null);
       }
     }
   }, [data, isSuccess, projectActingMode]);
