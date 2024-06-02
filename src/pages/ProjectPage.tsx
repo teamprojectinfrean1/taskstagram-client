@@ -246,19 +246,34 @@ const ProjectPage = () => {
   useEffect(() => {
     const fetchProject = async () => {
       if (
-        (createMutation.isSuccess && createMutation.isSuccess === true) ||
+        (createMutation.data && createMutation.data.isSuccess === true) ||
         (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
       ) {
-        if (projectActingMode === "Update") {
-          refetch(); //프로젝트 수정일 때만 상세조회 재조회
-        }
+        refetch(); //프로젝트 상세조회 재조회
         await queryClient.refetchQueries({
           queryKey: ["getProjectList", userUuid],
         }); //프로젝트 리스트 재조회
+        if (projectActingMode === "Create" && createMutation.data) {
+          //프로젝트 생성일때는 콤보박스의 프로젝트 여기서 주입!
+          const createdProjectId = createMutation.data.createdProjectId;
+          const projectList = queryClient.getQueryData<PrjectListResponse>([
+            "getProjectList",
+            userUuid,
+          ]);
+          if (projectList) {
+            const projects = projectList.mainProject.concat(
+              projectList.noMainProject
+            );
+            const projectData = projects.find(
+              (x) => x.projectId === createdProjectId
+            );
+            setSelectedProject(projectData ?? null);
+          }
+        }
       }
     };
     fetchProject();
-  }, [createMutation.isSuccess, replaceMutation.isSuccess]);
+  }, [createMutation.data, replaceMutation.isSuccess]);
 
   useEffect(() => {
     const fetchProjects = async () => {

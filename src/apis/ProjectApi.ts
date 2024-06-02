@@ -54,6 +54,11 @@ export type ChangeMainProjectResponse = {
   isSuccess: boolean;
 };
 
+export type CreateProjectResponse = {
+  createdProjectId: string;
+  isSuccess: boolean;
+};
+
 // 프로젝트 리스트 조회
 export const getProjectList = async (
   userUuid: string
@@ -97,7 +102,7 @@ export const createOneProject = async ({
   startDate,
   endDate,
   createDate,
-}: CreateProjectRequest): Promise<boolean> => {
+}: CreateProjectRequest): Promise<CreateProjectResponse> => {
   try {
     const formData = new FormData();
     formData.append(
@@ -126,7 +131,10 @@ export const createOneProject = async ({
     const response = await unauthorizedAxios.post(`${projectPath}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
-    return response.data.isSuccess;
+    return {
+      createdProjectId: response.data.data,
+      isSuccess: response.data.isSuccess,
+    };
   } catch (error) {
     throw new Error("프로젝트를 생성하는 중 오류가 발생했습니다.");
   }
