@@ -41,6 +41,7 @@ import {
   PrimaryButton,
 } from "@/components";
 import { SelectableProjectMember } from "@/components/Project";
+import UserAvatar from "@/components/UserAvatar";
 
 const ProjectPage = () => {
   const location = useLocation();
@@ -74,6 +75,9 @@ const ProjectPage = () => {
     lastUpdateUserNickname: "",
     lastUpdateDate: "",
     isMainProject: false,
+    projectLeaderUuid: "",
+    projectLeaderNickname: "",
+    projectLeaderProfileImage: null,
   });
 
   const isFormValid = () => {
@@ -142,6 +146,9 @@ const ProjectPage = () => {
           .replace("T", " ")
           .slice(0, -3),
         isMainProject: selectedProject?.isMainProject,
+        projectLeaderUuid: data.projectLeader.leaderUUID,
+        projectLeaderNickname: data.projectLeader.nickname,
+        projectLeaderProfileImage: data.projectLeader.profileImage,
       });
       //선택된 프로젝트 변경될 때마다 location.state 초기화
       navigate(location.pathname, { replace: true });
@@ -160,6 +167,9 @@ const ProjectPage = () => {
         lastUpdateUserNickname: "",
         lastUpdateDate: "",
         isMainProject: false,
+        projectLeaderUuid: "",
+        projectLeaderNickname: "",
+        projectLeaderProfileImage: null,
       });
     }
   }, [type, data]);
@@ -537,6 +547,58 @@ const ProjectPage = () => {
                 />
               )}
             </Grid>
+            {type !== "new" && (
+              <>
+                <Grid item xs={3}>
+                  <InputLabel htmlFor="리더" sx={{ fontWeight: "bold", mb: 1 }}>
+                    리더
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={9}>
+                  {isLoading ? (
+                    <Skeleton
+                      variant="rectangular"
+                      height={40}
+                      sx={{ borderRadius: "4px" }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        p: 1,
+                        border: "1px solid lightGray",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          height: 20,
+                          mb: "3px",
+                          display: "flex",
+                          padding: ".15em 4px",
+                          lineHeight: "15px",
+                        }}
+                      >
+                        <Box>
+                          <UserAvatar
+                            sx={{ width: 18, height: 18, mr: "6px" }}
+                            src={formData.projectLeaderProfileImage ?? ""}
+                          />
+                        </Box>
+                        <Box
+                          sx={{
+                            flexGrow: 1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {formData.projectLeaderNickname}
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+                </Grid>
+              </>
+            )}
             <Grid item xs={3}>
               <InputLabel htmlFor="구성원" sx={{ fontWeight: "bold", mb: 1 }}>
                 구성원

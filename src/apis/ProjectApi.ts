@@ -9,6 +9,12 @@ type LastUpdateDetailType = {
   updatedDate: string;
 };
 
+type ProjectLeaderType = {
+  leaderUUID: string;
+  nickname: string;
+  profileImage: string | null;
+};
+
 export type PrjectListResponse = {
   mainProject: ProjectSummary[];
   noMainProject: ProjectSummary[];
@@ -23,6 +29,7 @@ type ProjectDetailReponse = {
   endDate: string;
   lastUpdateDetail: LastUpdateDetailType;
   projectTags: string | null;
+  projectLeader: ProjectLeaderType;
 };
 
 export type CreateProjectRequest = {

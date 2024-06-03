@@ -11,6 +11,9 @@ export type ProjectFormData = {
   lastUpdateUserNickname: string;
   lastUpdateDate: string;
   isMainProject: bool;
+  projectLeaderUuid: string;
+  projectLeaderNickname: string;
+  projectLeaderProfileImage: string | null;
 };
 
 export type ProjectSummary = {
