@@ -35,10 +35,8 @@ const IssuePage = () => {
 
   const { memberId } = useRecoilValue(userInfoState);
 
-  // const selectedProject = useRecoilValue(selectedProjectState);
-  // const selectedProjectId = selectedProject ? selectedProject.projectId : undefined;
-
-  const selectedProjectId = "7cd13940-d2a1-454d-aadb-430b792332d4";
+  const selectedProject = useRecoilValue(selectedProjectState);
+  const selectedProjectId = selectedProject ? selectedProject.projectId : undefined;
 
   const [issueIdToShowInModal, setIssueIdToShowInModal] = useRecoilState(
     issueIdToShowInModalState

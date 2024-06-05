@@ -28,7 +28,6 @@ const useGetMemberAndTaskOptions = ({
     () => getAllTaskList({ projectId }),
     {
       enabled: false,
-      // refetchOnWindowFocus: false
     }
   );
 

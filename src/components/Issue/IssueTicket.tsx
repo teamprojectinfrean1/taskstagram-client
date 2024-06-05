@@ -7,7 +7,6 @@ import {
   Tooltip,
   Typography,
 } from "@mui/material";
-import WorkIcon from "@mui/icons-material/Work";
 import UserAvatar from "@/components/UserAvatar";
 import useOverflowDetection from "@/hooks/useOverflowDetection";
 import theme from "@/theme/theme";
@@ -16,6 +15,7 @@ import { useSetRecoilState } from "recoil";
 import { useDraggable } from "@dnd-kit/core";
 import { CSS } from "@dnd-kit/utilities";
 import { SxProps } from "@mui/material";
+import { grey } from "@mui/material/colors";
 
 type IssueTicketProps = {
   index?: number;
@@ -76,11 +76,10 @@ const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
               alignItems="start"
             >
               <Box display="flex" alignItems="center" gap={1}>
-                <WorkIcon aria-label="Task Icon" sx={{ fontSize: "20px" }} />
                 <Typography
                   variant="body2"
                   className="textClamping lineClampOne"
-                  sx={{ wordBreak: "break-all" }}
+                  sx={{ wordBreak: "break-all", color: grey[500], fontWeight: "bold" }}
                 >
                   {taskTitle}
                 </Typography>
@@ -103,7 +102,10 @@ const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
               <Typography
                 ref={taskTitleRef}
                 className="textClamping lineClampTwo"
-                sx={{ wordBreak: "break-all" }}
+                sx={{
+                  wordBreak: "break-all",
+                  color: theme.palette.text.secondary,
+                }}
               >
                 {issueTitle}
               </Typography>

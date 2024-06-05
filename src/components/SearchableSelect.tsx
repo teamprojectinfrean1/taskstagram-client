@@ -2,24 +2,17 @@ import { useState } from "react";
 import {
   Autocomplete,
   AutocompleteRenderInputParams,
-  Box,
-  InputLabel,
   Paper,
   Stack,
-  Skeleton,
   Typography,
   TextField,
   TextFieldProps,
 } from "@mui/material";
-import theme from "@/theme/theme";
 
-type SingleSelectProps<T> = {
+type BaseProps<T> = {
   possibleOptions: T[];
-  selectedOptions: T;
-  onSelectionChange: (value: T | null) => void;
   optionIdentifier: keyof T;
   optionLabel: keyof T;
-  multiselect: false;
   error?: boolean;
   helperText?: string | null;
   InputProps?: (
@@ -36,27 +29,16 @@ type SingleSelectProps<T> = {
   fetchOptions?: () => {};
 };
 
-type MultiSelectProps<T> = {
-  possibleOptions: T[];
+type SingleSelectProps<T> = BaseProps<T> & {
+  selectedOptions: T;
+  onSelectionChange: (value: T | null) => void;
+  multiselect: false;
+};
+
+type MultiSelectProps<T> = BaseProps<T> & {
   selectedOptions: T[];
   onSelectionChange: (value: T[]) => void;
-  optionIdentifier: keyof T;
-  optionLabel: keyof T;
   multiselect: true;
-  error?: boolean;
-  helperText?: string;
-  InputProps?: (
-    params: AutocompleteRenderInputParams
-  ) => Partial<TextFieldProps["InputProps"]>;
-  renderInput?: (params: TextFieldProps) => React.ReactNode;
-  renderOption?: (
-    props: React.HTMLAttributes<HTMLLIElement>,
-    option: T
-  ) => React.ReactNode;
-  renderSkeleton?: (index: number) => React.ReactNode;
-  optionsFetchErrorMessage?: React.ReactNode;
-  optionIsLoading?: boolean;
-  fetchOptions?: () => {};
 };
 
 type SearchableSelectProps<T> = SingleSelectProps<T> | MultiSelectProps<T>;
@@ -147,13 +129,6 @@ const SearchableSelect = <T extends object>({
           onSelectionChange(value as T | null);
         }
       }}
-      // options={
-      //   optionsFetchErrorMessage
-      //     ? []
-      //     : optionIsLoading
-      //     ? Array(4).fill({})
-      //     : possibleOptions
-      // }
       options={optionsFetchErrorMessage ? [] : possibleOptions}
       isOptionEqualToValue={isOptionEqualToValue}
       getOptionLabel={getOptionLabel}
@@ -198,16 +173,6 @@ const SearchableSelect = <T extends object>({
         renderOption ||
         ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
       }
-      // renderOption={
-      //    optionIsLoading
-      //     ? renderSkeleton
-      //     : renderOption ||
-      //       ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
-      // }
-      // renderOption={
-      //   renderOption ||
-      //   ((props, option) => <li {...props}>{getOptionLabel(option)}</li>)
-      // }
     />
   );
 };

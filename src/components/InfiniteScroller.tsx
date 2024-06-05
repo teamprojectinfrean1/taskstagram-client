@@ -18,6 +18,7 @@ type InfiniteScrollerProps<T> = {
   renderSkeleton: (index: number) => React.ReactNode;
   numberOfSkeletons?: number;
   handleFirstPageResponse?: (status: string, message?: string) => void;
+  triggerRefetch?: boolean;
   successAction?: () => void;
 };
 
@@ -26,7 +27,6 @@ const InfiniteScroller = <T,>({
   queryFunction,
   queryKey,
   requestOptions,
-  containerRef,
   firstPageErrorMessage,
   subsequentPageErrorMessage,
   noDataToShowMessage,
@@ -34,6 +34,7 @@ const InfiniteScroller = <T,>({
   renderSkeleton,
   numberOfSkeletons = 5,
   handleFirstPageResponse,
+  triggerRefetch,
   successAction,
 }: InfiniteScrollerProps<T>) => {
   const setSnackbar = useSetRecoilState(snackbarState);
@@ -46,7 +47,9 @@ const InfiniteScroller = <T,>({
     isError,
     isSuccess,
     hasNextPage,
+    refetch,
     fetchNextPage,
+    dataUpdatedAt,
   } = useInfiniteQuery(
     queryKey,
     ({ pageParam = 1 }) =>
@@ -59,15 +62,19 @@ const InfiniteScroller = <T,>({
           return undefined;
         }
       },
-      // staleTime: 30000
       refetchOnWindowFocus: false,
       refetchOnMount: "always",
       enabled,
     }
   );
 
+  useEffect(() => {
+    if (triggerRefetch) {
+      refetch();
+    }
+  }, [triggerRefetch, refetch]);
+
   const lastItemRef = useIntersectionObserver({
-    containerElement: containerRef.current,
     isError,
     isLoading,
     isFetchingNextPage,
@@ -100,6 +107,7 @@ const InfiniteScroller = <T,>({
       }
     }
   }, [
+    dataUpdatedAt,
     isSuccess,
     lastSuccessfullyFetchedPage,
     successAction,
@@ -132,7 +140,7 @@ const InfiniteScroller = <T,>({
       {!isError && hasNextPage && (
         <div
           ref={hasNextPage ? lastItemRef : undefined}
-          style={{ display: "none", border: "2px solid blue" }}
+          style={{ display: "none" }}
         />
       )}
       {isError && (

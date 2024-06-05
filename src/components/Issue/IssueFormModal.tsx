@@ -284,20 +284,6 @@ const IssueFormModal = ({
                     optionIdentifier="memberId"
                     optionLabel="userNickname"
                     multiselect={false}
-                    // InputProps={(params) => ({
-                    //   ...params.InputProps,
-                    //   startAdornment: formData.assigneeId && (
-                    //     <UserAvatar
-                    //       sx={{
-                    //         imageUrl: formData.assigneeProfileImage,
-                    //         width: 40,
-                    //         height: 40,
-                    //         ml: 3,
-                    //         mr: 10,
-                    //       }}
-                    //     />
-                    //   ),
-                    // })}
                     renderOption={(
                       props,
                       { memberId, userNickname, userProfileImage }

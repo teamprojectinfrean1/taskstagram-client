@@ -1,7 +1,6 @@
 import { useRef, useCallback, useEffect } from "react";
 
 type UseIntersectionObserverParams = {
-  containerElement: Element | null;  
   isError: boolean;
   isLoading: boolean;
   hasNextPage: boolean | undefined;
@@ -10,7 +9,6 @@ type UseIntersectionObserverParams = {
 };
 
 const useIntersectionObserver = ({
-  containerElement,
   isError,
   isLoading,
   hasNextPage,
@@ -36,14 +34,13 @@ const useIntersectionObserver = ({
           }
         },
         {
-          root: containerElement, 
           rootMargin: "100px",
           threshold: 0,
         }
       );
       observer.current.observe(targetElementRef.current);
     }
-  }, [containerElement, isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  }, [isError, isLoading, hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   useEffect(() => {
     observeElement();

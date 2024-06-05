@@ -20,13 +20,11 @@ const IssueSearchResultList = ({
   projectId,
   searchParams,
 }: IssueSearchResultListProps) => {
-  const { filter } = searchParams;
-
   return (
     <InfiniteScroller<IssueSummary>
-      enabled={executeSearchApi}
+      enabled={false}
       queryFunction={searchIssue}
-      queryKey={["issueSearchResults", projectId, statusId!, filter]}
+      queryKey={["issueSearchResults", projectId, statusId!]}
       requestOptions={{
         filter: searchParams.filter,
         issueStatus: statusId,
@@ -42,6 +40,7 @@ const IssueSearchResultList = ({
         <IssueTicket key={issue.issueId} issue={issue} parent={statusId!} />
       )}
       renderSkeleton={(index) => <SkeletonIssueTicket key={index} />}
+      triggerRefetch={executeSearchApi}
       successAction={endSearchApi}
     />
   );

@@ -1,4 +1,5 @@
 import { Select, MenuItem, SelectChangeEvent } from "@mui/material";
+import theme from "@/theme/theme";
 
 type Option = {
   value: string;
@@ -25,18 +26,26 @@ const DropdownSelect = ({
       }}
       label="Option"
       sx={{
-        "&.MuiSelect-select": {
-          pl: 0,
+        "& .MuiSelect-select": {
+          fontWeight: "bold",
+          color: theme.palette.text.secondary,
         },
         "& .MuiSelect-icon": {
-          mr: -.5,
+          mr: -0.5,
         },
         border: "none",
         "& .MuiOutlinedInput-notchedOutline": { border: "none" },
       }}
     >
       {options.map((option) => (
-        <MenuItem key={option.value} value={option.value}>
+        <MenuItem
+          key={option.value}
+          value={option.value}
+          sx={{
+            fontWeight: "bold",
+            color: theme.palette.text.secondary,
+          }}
+        >
           {option.label}
         </MenuItem>
       ))}

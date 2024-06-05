@@ -12,6 +12,7 @@ import {
 } from "@/stores/issueStore";
 import { useRecoilState } from "recoil";
 import PrimaryButton from "@/components/PrimaryButton";
+import theme from "@/theme/theme";
 
 type IssueStatusBoardProps = {
   statusId: IssueStatus;
@@ -104,7 +105,15 @@ const IssueStatusBoard = ({
               px: 2,
             }}
           >
-            <Typography noWrap sx={{ borderBottom: "1px solid black", p: 1 }}>
+            <Typography
+              noWrap
+              sx={{
+                fontWeight: "bold",
+                color: theme.palette.text.secondary,
+                borderBottom: `2px solid ${theme.palette.text.secondary}`,
+                p: 1,
+              }}
+            >
               {title}
             </Typography>
             {isSearchMode && (

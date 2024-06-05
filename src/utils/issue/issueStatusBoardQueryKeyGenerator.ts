@@ -9,9 +9,9 @@ export const createIssueStatusBoardQueryKey = ({
   issueStatusBoardSearch,
   projectId,
 }: GetQueryKeyParams) => {
-  const { isSearchMode, searchParams } = issueStatusBoardSearch[issueStatus];
+  const { isSearchMode } = issueStatusBoardSearch[issueStatus];
 
   return isSearchMode
-    ? ["issueSearchResults", projectId, issueStatus, searchParams.filter]
-    : ["defaultIssueList", projectId, issueStatus];
+    ? ["issueSearchResults", projectId, issueStatus]
+    : ["issueFullList", projectId, issueStatus];
 };

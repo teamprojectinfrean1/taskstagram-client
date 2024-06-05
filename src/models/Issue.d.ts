@@ -35,7 +35,7 @@ type Issue = {
 };
 
 /* Issue Search */
-type IssueSearchFilter = "ISSUE" | "TASK" | "ASSIGNEE";
+type IssueSearchFilter = "ISSUE" | "TASK" | "MANAGER";
 
 type IssueSearchParams = {
   filter: IssueSearchFilter;

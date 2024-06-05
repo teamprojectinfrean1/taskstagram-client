@@ -5,8 +5,8 @@ import { SxProps } from '@mui/system';
 interface UserAvatarProps extends AvatarProps {
   imageUrl?: string | null;
   sx?: SxProps;
-  width?: number | string;  // Width can be a number (like 50) or a string (like '50px')
-  height?: number | string; // Same for height
+  width?: number | string;  
+  height?: number | string; 
 }
 
 const UserAvatar = forwardRef<HTMLDivElement, UserAvatarProps>(

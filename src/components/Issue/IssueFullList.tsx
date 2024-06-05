@@ -19,11 +19,10 @@ const IssueFullList = ({
   const setIssueFeatureAvailability = useSetRecoilState(
     issueFeatureAvailabilityState
   );
-
   return (
     <InfiniteScroller<IssueSummary>
       queryFunction={getIssueList}
-      queryKey={["defaultIssueList", projectId, statusId!]}
+      queryKey={["issueFullList", projectId, statusId!]}
       requestOptions={{
         issueStatus: statusId,
         projectId,

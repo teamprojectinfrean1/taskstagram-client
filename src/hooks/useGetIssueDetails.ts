@@ -24,12 +24,10 @@ const useGetIssueDetails = ({
     isLoading,
     isSuccess,
   } = useQuery(
-    ["issueDetails", currentIssueId],
+    ["issueDetails", currentIssueId], 
     () => getIssueDetails({ issueId: currentIssueId }),
     {
       enabled: !isNewIssue,
-      // staleTime: 30000,
-      // refetchOnWindowFocus: false
     }
   );
 

@@ -58,7 +58,7 @@ const SearchWithDropdownFilter = ({
                 options={[
                   { value: "ISSUE", label: "이슈" },
                   { value: "TASK", label: "태스크" },
-                  { value: "ASSIGNEE", label: "담당자" },
+                  { value: "MANAGER", label: "담당자" },
                 ]}
               />
             </Box>
