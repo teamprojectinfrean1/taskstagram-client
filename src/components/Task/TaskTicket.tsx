@@ -111,7 +111,7 @@ const TaskTicket = ({
         }}
         onClick={onClick}
       >
-        {selectedTask.taskContent && (
+        {selectedTask.taskContent !== null && (
           <Typography
             variant="subtitle1"
             sx={{
@@ -125,7 +125,9 @@ const TaskTicket = ({
             {/* {convertFromRaw(
               selectedTask.taskContent as RawDraftContentState
             ).getPlainText()} */}
-            {selectedTask.taskContent}
+            {convertFromRaw(
+              JSON.parse(selectedTask.taskContent) as RawDraftContentState
+            ).getPlainText()}
           </Typography>
         )}
       </CardContent>

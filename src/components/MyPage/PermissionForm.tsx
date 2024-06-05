@@ -1,11 +1,13 @@
-import { Box, Grid, Typography, Button, Avatar } from "@mui/material";
+import { Box, Grid, Typography, Avatar } from "@mui/material";
 import { useRecoilValue } from "recoil";
 import { projectListState } from "@/stores/projectStore";
 import basicProjectImage from "@/assets/basicProjectImage.png";
 import StarIcon from "@mui/icons-material/Star";
+import theme from "@/theme/theme";
 
 const PermissionForm = () => {
   const projectList = useRecoilValue(projectListState);
+
   const showProjectPermisson = () => {
     return projectList.length !== 0 ? (
       <>
@@ -17,6 +19,7 @@ const PermissionForm = () => {
               mt: 2,
               p: 1,
               borderRadius: "7px",
+              backgroundColor: "white",
             }}
           >
             <Grid container spacing={1}>
@@ -60,7 +63,7 @@ const PermissionForm = () => {
     ) : (
       <Box sx={{ mx: 2, my: 4 }}>
         <Typography sx={{ fontFamily: "Poppins", color: "#A4A4A4" }}>
-          포함된 프로젝트가 없습니다.
+          현재 포함된 프로젝트가 없습니다.
         </Typography>
       </Box>
     );
@@ -68,13 +71,13 @@ const PermissionForm = () => {
 
   return (
     <Box
-      boxShadow={10}
+      boxShadow={2}
       sx={{
         p: 3,
-        ml: 10,
+        ml: 4,
         borderRadius: "7px",
-        width: "300px",
-        backgroundColor: "white",
+        minWidth: "21rem",
+        backgroundColor: `${theme.palette.background.paper}`,
       }}
     >
       <Box
@@ -92,7 +95,7 @@ const PermissionForm = () => {
         <Typography
           sx={{ color: "1F1F1F", fontSize: "11px", fontWeight: "bold" }}
         >
-          Permisson
+          프로젝트 정보
         </Typography>
       </Box>
       {showProjectPermisson()}

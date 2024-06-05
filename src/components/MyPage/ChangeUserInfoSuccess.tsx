@@ -3,22 +3,24 @@ import { Box, Typography, Button } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ChangeUserInfoSuccess = () => {
-
-  const navigate = useNavigate()
-  const location = useLocation()
-  const changeUserInfo = location.state
+  const navigate = useNavigate();
+  const location = useLocation();
+  const changeUserInfo = location.state;
 
   return (
     <Box
-      boxShadow={10}
+      boxShadow={2}
       sx={{
-        height: "90%",
-        backgroundColor: 'white',
-        minWidth: "37rem",
+        py: 5,
+        backgroundColor: `${theme.palette.background.paper}`,
+        width: "70%",
+        minWidth: "35rem",
+        m: "auto",
         borderRadius: "7px",
+        height: "40rem",
       }}
     >
-      <Box sx={{ mt: 10 }}>
+      <Box sx={{ mt: 5 }}>
         <Typography
           variant="h5"
           sx={{ fontWeight: "bold", textAlign: "center" }}
@@ -27,18 +29,25 @@ const ChangeUserInfoSuccess = () => {
         </Typography>
       </Box>
       <Box
-        className="base-layout"
         sx={{
-          border: '1px solid #F0F0F0',
-          height: "50%",
+          py: 10,
+          backgroundColor: "white",
+          border: `1px solid ${theme.palette.text.primary}`,
+          height: "70%",
+          width: "60%",
+          mx: "auto",
           borderRadius: "7px",
           mt: 6,
+          minWidth: "30rem",
         }}
       >
         <Box sx={{ width: "90%", margin: "auto" }}>
-          <Box sx={{ my: 8, textAlign: "center" }}>
+          <Box sx={{ mt: 5, mb: 8, textAlign: "center" }}>
             <Typography variant="h6">
-              {changeUserInfo === "비밀번호"? `${changeUserInfo}가`: `${changeUserInfo}이`} 성공적으로 변경되었습니다.
+              {changeUserInfo === "비밀번호"
+                ? `${changeUserInfo}가`
+                : `${changeUserInfo}이`}{" "}
+              성공적으로 변경되었습니다.
             </Typography>
             <Typography variant="h6">
               확인 버튼을 클릭하면 My Page로 돌아갑니다.
@@ -53,7 +62,7 @@ const ChangeUserInfoSuccess = () => {
               borderRadius: "7px",
             }}
             onClick={() => {
-              navigate("/mypage")
+              navigate("/mypage");
             }}
           >
             확인

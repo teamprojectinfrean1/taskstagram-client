@@ -1,16 +1,16 @@
 import { unauthorizedAxios } from "../domainSettings";
 import { userPath } from "./userSettings";
 
-type requestEmailVerificationRequest = {
+export type EmailCertificationRequest = {
   findUserInfo: string;
   email: string;
 };
 
 // 이메일 인증 코드 요청 api(아이디 찾기, 비밀번호 찾기)
-export const requestEmailVerification = async ({
+export const requestEmailCertification = async ({
   findUserInfo,
   email,
-}: requestEmailVerificationRequest): Promise<boolean> => {
+}: EmailCertificationRequest): Promise<boolean> => {
   try {
     const response = await unauthorizedAxios.post(
       `${userPath}/${findUserInfo}/verification/request`,
@@ -18,7 +18,6 @@ export const requestEmailVerification = async ({
         email,
       }
     );
-    console.log(response.data.data.isSuccess);
     return response.data.data.isSuccess;
   } catch (error) {
     throw error;

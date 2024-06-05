@@ -6,6 +6,7 @@ import theme from "@/theme/theme";
 
 const UserInfoForm = () => {
   const navigate = useNavigate();
+
   const userInfo = useRecoilValue(userInfoState);
   const loginType = userInfo.weaver;
 
@@ -13,21 +14,22 @@ const UserInfoForm = () => {
     <Box
       sx={{
         border: `1px solid ${theme.palette.text.primary}`,
-        mt: 3,
+        mt: 5,
         py: 2,
         borderRadius: "7px",
+        backgroundColor: "white",
       }}
     >
       <Box sx={{ width: "90%", mx: "auto" }}>
         <Grid container spacing={1} alignItems="center">
           <Grid item xs={2}>
-            <Typography variant="body2" sx={{ fontWeight: "bold" }}>
+            <Typography variant="body1" sx={{ fontWeight: "bold" }}>
               닉네임
             </Typography>
           </Grid>
           <Grid item xs={8}>
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{
                 color: `${theme.palette.text.primary}`,
                 fontWeight: "bold",
@@ -36,31 +38,32 @@ const UserInfoForm = () => {
               {userInfo.nickname}
             </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} textAlign="right">
             <Button
               sx={{
-                fontSize: "7px",
+                fontSize: "10px",
                 backgroundColor: "#F0EFFA",
                 borderRadius: "20px",
+                fontWeight: "bold",
               }}
               onClick={() => {
                 navigate("/mypage/change/nickname");
               }}
             >
-              Edit
+              수정
             </Button>
           </Grid>
         </Grid>
 
-        <Grid container spacing={1} sx={{ mt: 2, alignItems: "center" }}>
+        <Grid container spacing={1} sx={{ mt: 3, alignItems: "center" }}>
           <Grid item xs={2}>
-            <Typography variant="body2" fontWeight="bold">
+            <Typography variant="body1" fontWeight="bold">
               이메일
             </Typography>
           </Grid>
           <Grid item xs={8}>
             <Typography
-              variant="body2"
+              variant="body1"
               sx={{
                 color: `${theme.palette.text.primary}`,
                 fontWeight: "bold",
@@ -71,32 +74,33 @@ const UserInfoForm = () => {
                 : "카카오 로그인 상태는 이메일이 없습니다."}
             </Typography>
           </Grid>
-          <Grid item xs={2}>
+          <Grid item xs={2} textAlign="right">
             <Button
               sx={{
                 display: loginType ? "" : "none",
-                fontSize: "7px",
+                fontSize: "10px",
                 backgroundColor: "#F0EFFA",
                 borderRadius: "20px",
+                fontWeight: "bold",
               }}
               onClick={() => {
                 navigate("/mypage/change/email");
               }}
             >
-              Edit
+              수정
             </Button>
           </Grid>
         </Grid>
 
-        <Grid container spacing={1} sx={{ mt: 2, alignItems: "center" }}>
+        <Grid container spacing={1} sx={{ mt: 3, alignItems: "center" }}>
           <Grid item xs={2}>
-            <Typography variant="body2" fontWeight="bold">
+            <Typography variant="body1" fontWeight="bold">
               아이디
             </Typography>
           </Grid>
           <Grid item xs={10}>
             <Typography
-              variant="body2"
+              variant="body1"
               fontWeight="bold"
               sx={{ color: `${theme.palette.text.primary}` }}
             >

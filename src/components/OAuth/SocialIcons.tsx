@@ -1,11 +1,6 @@
 import { Box } from "@mui/material";
-import kakaoLoginButton from "@/assets/kakako_login_button.png";
-import kakaoSignupButton from "@/assets/kakao_signup_button.png";
+import kakaoLoginButton from "@/assets/kakakoLoginButton.png";
 import { Link } from "react-router-dom";
-
-type SocialIconsProps = {
-  authPage: "login" | "signup";
-};
 
 const SocialIcons = () => {
   return (

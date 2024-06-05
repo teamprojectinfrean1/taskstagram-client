@@ -11,23 +11,7 @@ import { jwtDecode } from "jwt-decode";
 const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
-  const { data, refetch } = useQuery("userInfo", () => getUserInfo(), {
-    enabled: false,
-    cacheTime: 0,
-    onSuccess: (data) => {
-      if (data) {
-        setUserInfo({
-          ...userInfo,
-          email: data.email,
-          id: data.id,
-          nickname: data.nickname,
-          profileImage: data.profileImage,
-          userId: data.userId,
-          weaver: data.weaver,
-        });
-      }
-    },
-  });
+  const { data } = useQuery("userInfo", () => getUserInfo());
 
   // memberId 재추출
   useEffect(() => {
@@ -42,7 +26,17 @@ const PageLayout = () => {
   }, []);
 
   useEffect(() => {
-    refetch();
+    if (data) {
+      setUserInfo({
+        ...userInfo,
+        email: data.email,
+        id: data.id,
+        nickname: data.nickname,
+        profileImage: data.profileImage,
+        userId: data.userOauthUuid,
+        weaver: data.weaver,
+      });
+    }
   }, [data]);
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);

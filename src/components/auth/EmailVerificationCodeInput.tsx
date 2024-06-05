@@ -1,11 +1,16 @@
 import theme from "@/theme/theme";
-import { checkEmailVerification } from "@/apis/user/checkEmailVerification";
 import { Typography, Grid, Button, Box, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useNavigate } from "react-router-dom";
+import {
+  CheckFindIdEmailVerificationResponse,
+  CheckFindPasswordEmailVerificationResponse,
+  CheckEmailVerificationRequest,
+  checkEmailVerification,
+} from "@/apis/user/checkEmailVerification";
 
-type EmailVerificationCodeInputpProps = {
+type EmailVerificationCodeInputProps = {
   isSuccess: boolean;
   email: string;
   findUserInfo: string;
@@ -15,37 +20,41 @@ const EmailVerificationCodeInput = ({
   isSuccess,
   email,
   findUserInfo,
-}: EmailVerificationCodeInputpProps) => {
-  const [verificationCode, setVerificationCode] = useState("");
-
+}: EmailVerificationCodeInputProps) => {
   const navigate = useNavigate();
 
-  const { data, refetch, error } = useQuery(
-    "checkEmailVerification",
-    () => checkEmailVerification({ findUserInfo, email, verificationCode }),
-    {
-      enabled: false,
-      cacheTime: 0,
-    }
+  const [verificationCode, setVerificationCode] = useState("");
+  const mutateEmailVerification = useMutation(
+    ({
+      findUserInfo,
+      email,
+      verificationCode,
+    }: CheckEmailVerificationRequest) =>
+      checkEmailVerification({ findUserInfo, email, verificationCode })
   );
 
   useEffect(() => {
-    if (data) {
-      if (findUserInfo === "findId" && data) {
-        navigate("/auth/find/id/success", {
-          state: {
-            id: data.id,
-          },
-        });
-      } else if (findUserInfo === "findPassword" && data) {
-        navigate("/auth/find/password/reset", {
-          state: {
-            memberId: data.uuid,
-          },
-        });
-      }
+    if (findUserInfo === "findId" && mutateEmailVerification.data) {
+      const findIdResponse =
+        mutateEmailVerification.data as CheckFindIdEmailVerificationResponse;
+      navigate("/auth/find/id/success", {
+        state: {
+          id: findIdResponse.id,
+        },
+      });
+    } else if (
+      findUserInfo === "findPassword" &&
+      mutateEmailVerification.data
+    ) {
+      const findPasswordResponse =
+        mutateEmailVerification.data as CheckFindPasswordEmailVerificationResponse;
+      navigate("/auth/find/password/reset", {
+        state: {
+          memberId: findPasswordResponse.memberUuid,
+        },
+      });
     }
-  }, [data]);
+  }, [mutateEmailVerification.data]);
 
   return (
     <>
@@ -69,7 +78,7 @@ const EmailVerificationCodeInput = ({
             error={isSuccess}
             helperText={
               isSuccess &&
-              (error === 403
+              (mutateEmailVerification.error === 403
                 ? "인증번호를 다시 확인해주세요."
                 : "인증번호를 확인해주세요.")
             }
@@ -88,9 +97,13 @@ const EmailVerificationCodeInput = ({
               borderRadius: "7px",
             }}
             disabled={!isSuccess}
-            onClick={() => {
-              refetch();
-            }}
+            onClick={() =>
+              mutateEmailVerification.mutate({
+                findUserInfo,
+                email,
+                verificationCode,
+              })
+            }
           >
             인증
           </Button>

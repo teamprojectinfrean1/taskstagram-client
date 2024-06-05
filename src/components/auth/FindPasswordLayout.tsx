@@ -3,7 +3,6 @@ import { Box, Typography, Divider } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 const FindPasswordLayout = () => {
-
   return (
     <>
       <Link to="/auth/login">

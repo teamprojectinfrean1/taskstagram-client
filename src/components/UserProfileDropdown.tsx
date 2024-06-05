@@ -7,6 +7,7 @@ import { useRecoilValue } from "recoil";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { useQuery } from "react-query";
 import { fetchLogout } from "@/apis/user/fetchLogout";
+import theme from "@/theme/theme";
 
 const UserProfileDropdown = () => {
   const navigate = useNavigate();
@@ -46,7 +47,6 @@ const UserProfileDropdown = () => {
   };
   return (
     <>
-      {/* TopNav dropdown */}
       <IconButton
         size="large"
         edge="end"
@@ -58,9 +58,15 @@ const UserProfileDropdown = () => {
         <KeyboardArrowDownIcon sx={{ color: "#afbaca" }} />
       </IconButton>
       <Menu
+        sx={{
+          mt: "45px",
+          "& .MuiPaper-root": {
+            backgroundColor: `${theme.palette.primary.main}`,
+            color:`${theme.palette.background.default}`
+          },
+        }}
         open={!!anchorElUser}
         onClose={handleCloseUserMenu}
-        sx={{ mt: "45px" }}
         anchorEl={anchorElUser}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         keepMounted

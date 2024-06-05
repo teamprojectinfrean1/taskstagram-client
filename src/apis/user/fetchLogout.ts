@@ -1,7 +1,6 @@
 import { logoutPath } from "./userSettings";
 import { authorizedAxios } from "../domainSettings";
 
-
 export const fetchLogout = () => {
   sessionStorage.setItem('accessToken', "")
   return true

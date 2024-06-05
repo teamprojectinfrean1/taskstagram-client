@@ -1,10 +1,13 @@
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { Button, Typography, Avatar } from "@mui/material";
 import { useRef, useState, useEffect, ChangeEvent } from "react";
-import { useMutation, useQuery } from "react-query";
+import { useMutation } from "react-query";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import { changeProfileImage } from "@/apis/user/changeUserInfoImage";
+import {
+  changeProfileImage,
+  ChangeProfileImageRequest,
+} from "@/apis/user/changeProfileImage";
 import { styled } from "@mui/material/styles";
 
 const ChangeProfileImage = () => {
@@ -36,22 +39,20 @@ const ChangeProfileImage = () => {
 
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const memberId = userInfo.memberId;
-
-  const { data, refetch } = useQuery(
-    "changeProfileImage",
-    () => changeProfileImage({ profileImage, memberId }),
-    {
-      cacheTime: 0,
-      enabled: false,
-      onSuccess: (data) => {
-        setUserInfo({ ...userInfo, profileImage: data });
-      },
-    }
+  const mutateChangeProfileImage = useMutation(
+    ({ profileImage, memberId }: ChangeProfileImageRequest) =>
+      changeProfileImage({ profileImage, memberId })
   );
 
   useEffect(() => {
+    if (mutateChangeProfileImage.data) {
+      setUserInfo({ ...userInfo, profileImage: mutateChangeProfileImage.data });
+    }
+  }, [mutateChangeProfileImage.data]);
+  
+  useEffect(() => {
     if (profileImage) {
-      refetch();
+      mutateChangeProfileImage.mutate({ profileImage, memberId });
     }
   }, [profileImage]);
 
@@ -82,7 +83,7 @@ const ChangeProfileImage = () => {
             fontSize: "11px",
           }}
         >
-          Upload Photo +
+          이미지 업로드 +
         </Typography>
         <VisuallyHiddenInput
           type="file"

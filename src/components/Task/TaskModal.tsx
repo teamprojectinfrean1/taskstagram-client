@@ -30,6 +30,7 @@ import {
 import { selectedProjectState } from "@/stores/projectStore";
 import { useRecoilValue } from "recoil";
 import { grey } from "@mui/material/colors";
+import { userInfoState } from "@/stores/userStore";
 
 type TaskModalProps = {
   selectedTask: Task;
@@ -81,8 +82,34 @@ const TaskModal = ({
   const selectedProject = useRecoilValue(selectedProjectState);
 
   const [isReadOnlyMode, setIsReadOnlyMode] = useState(false);
+  const [formErrors, setFormErrors] = useState<Partial<Task>>({});
 
-  const { data, isLoading } = useQuery(
+  const userInfo = useRecoilValue(userInfoState);
+  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+
+  const isFormValid = () => {
+    const errors: Partial<Task> = {};
+    const errorText = "필수 입력 항목입니다.";
+
+    if (!formData.taskTitle || formData.taskTitle === "") {
+      errors.taskTitle = errorText;
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const isTaskContentEmpty = (rawContentState: RawDraftContentState) => {
+    return (
+      rawContentState.blocks.length === 1 &&
+      rawContentState.blocks[0].text === "" &&
+      rawContentState.blocks[0].inlineStyleRanges.length === 0 &&
+      rawContentState.blocks[0].entityRanges.length === 0 &&
+      Object.keys(rawContentState.entityMap).length === 0
+    );
+  };
+
+  const { data, isLoading, isError } = useQuery(
     ["getTaskDetail", selectedTask],
     () => getTaskDetail(selectedTask.taskId!),
     { enabled: !!selectedTask && !!selectedTask.taskId }
@@ -93,7 +120,7 @@ const TaskModal = ({
       setFormData({
         taskId: data.taskId,
         taskTitle: data.taskTitle,
-        taskContent: data.taskContent,
+        taskContent: data.taskContent ? JSON.parse(data.taskContent) : null,
         taskTags:
           data.taskTags !== null && data.taskTags !== ""
             ? data.taskTags.split(",")
@@ -138,20 +165,26 @@ const TaskModal = ({
       lastUpdateUserNickname: "",
       lastUpdateDate: "",
     });
+    setFormErrors({});
     //모달창 닫기
     onCloseModal();
   };
 
   //저장버튼 이벤트
   const onClickSaveBtn = () => {
-    if (selectedProject !== null && !selectedTask) {
+    if (selectedProject === null || !isFormValid()) return;
+
+    if (!selectedTask) {
       //새로운 task 생성시
-      //필수값 체크 로직 추가해야함.
       onAdd({
         projectId: selectedProject.projectId,
-        writerUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
+        writerUuid: userUuid,
         taskTitle: formData.taskTitle!,
-        taskContent: formData.taskContent !== null ? formData.taskContent : "",
+        taskContent:
+          formData.taskContent === null ||
+          isTaskContentEmpty(formData.taskContent)
+            ? null
+            : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
         startDate:
           formData.taskStartDate !== null
@@ -167,9 +200,13 @@ const TaskModal = ({
       //이미 생성된 Task
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
-        updaterUuid: "085fe931-da02-456e-b8ff-67d6521a32b4", //임시 고정
+        updaterUuid: userUuid,
         taskTitle: formData.taskTitle!,
-        taskContent: formData.taskContent !== null ? formData.taskContent : "",
+        taskContent:
+          formData.taskContent === null ||
+          isTaskContentEmpty(formData.taskContent)
+            ? null
+            : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
         startDate:
           formData.taskStartDate !== null
@@ -182,7 +219,6 @@ const TaskModal = ({
         editDeletePermission: formData.taskAuthorityType,
       });
     }
-    //handleModalClose();
   };
 
   //삭제버튼 이벤트
@@ -205,9 +241,7 @@ const TaskModal = ({
           <PrimaryButton
             sx={{ mr: "3px" }}
             onClick={onClickSaveBtn}
-            disabled={
-              isLoading || isReadOnlyMode === true || formData.taskTitle === ""
-            }
+            disabled={isLoading || isReadOnlyMode === true}
             startIcon={<SaveAsIcon />}
           >
             저장
@@ -256,6 +290,8 @@ const TaskModal = ({
                   onChange={(e) =>
                     handleInputChange("taskTitle", e.target.value)
                   }
+                  error={"taskTitle" in formErrors}
+                  helperText={formErrors["taskTitle"]}
                 />
               )}
 
@@ -272,7 +308,7 @@ const TaskModal = ({
                 <TextEditor
                   id="content"
                   isReadOnly={isReadOnlyMode === true}
-                  initialContent={null}
+                  initialContent={formData.taskContent}
                   handleContentChange={(value) =>
                     handleInputChange("taskContent", value)
                   }
@@ -351,8 +387,6 @@ const TaskModal = ({
               >
                 <FormControl>
                   <RadioGroup
-                    aria-labelledby="demo-controlled-radio-buttons-group"
-                    name="controlled-radio-buttons-group"
                     value={formData.taskAuthorityType}
                     onChange={(e) =>
                       handleInputChange("taskAuthorityType", e.target.value)

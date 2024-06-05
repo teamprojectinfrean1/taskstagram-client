@@ -1,1 +1,1 @@
-export const oauthPath = "oauth"
+export const oauthLoginPath = "oauth/login"

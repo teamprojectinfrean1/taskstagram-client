@@ -21,9 +21,14 @@ import {
   replaceOneProject,
   deleteOneProject,
   getProjectDetail,
+  PrjectListResponse,
 } from "@/apis/ProjectApi";
-import { useRecoilValue } from "recoil";
-import { selectedProjectState } from "@/stores/projectStore";
+import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  selectedProjectState,
+  projectListState,
+  projectActingModeState,
+} from "@/stores/projectStore";
 import { useLocation, useNavigate } from "react-router-dom";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { getAllAppUserList, getAllProjectMemberList } from "@/apis/memberApi";
@@ -36,6 +41,7 @@ import {
   PrimaryButton,
 } from "@/components";
 import { SelectableProjectMember } from "@/components/Project";
+import UserAvatar from "@/components/UserAvatar";
 
 const ProjectPage = () => {
   const location = useLocation();
@@ -43,13 +49,18 @@ const ProjectPage = () => {
   const queryClient = useQueryClient();
 
   const [memberList, setMemberList] = useState<UserSummary[]>([]);
-  const selectedProject = useRecoilValue(selectedProjectState);
+  const [selectedProject, setSelectedProject] =
+    useRecoilState(selectedProjectState);
+  const [projectActingMode, setProjectActingMode] = useRecoilState(
+    projectActingModeState
+  );
   const type = location.state !== null ? location.state.type : "";
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
   const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
   const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
     useState<boolean | null>(null);
+  const [formErrors, setFormErrors] = useState<Partial<ProjectFormData>>({});
 
   const [formData, setFormData] = useState<ProjectFormData>({
     projectId: "",
@@ -64,15 +75,31 @@ const ProjectPage = () => {
     lastUpdateUserNickname: "",
     lastUpdateDate: "",
     isMainProject: false,
+    projectLeaderUuid: "",
+    projectLeaderNickname: "",
+    projectLeaderProfileImage: null,
   });
+
+  const isFormValid = () => {
+    const errors: Partial<ProjectFormData> = {};
+    const errorText = "필수 입력 항목입니다.";
+
+    if (!formData.projectName || formData.projectName === "") {
+      errors.projectName = errorText;
+    }
+
+    setFormErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
 
   useEffect(() => {
     setIsUserSelectedProjectLeader(
       selectedProject !== null ? selectedProject.permission === "LEADER" : null
     );
+    setFormErrors({});
   }, [selectedProject]);
 
-  const { data, refetch, isLoading } = useQuery(
+  const { data, refetch, isLoading, isError } = useQuery(
     ["getProjectDetail", selectedProject],
     () =>
       getProjectDetail(
@@ -119,6 +146,9 @@ const ProjectPage = () => {
           .replace("T", " ")
           .slice(0, -3),
         isMainProject: selectedProject?.isMainProject,
+        projectLeaderUuid: data.projectLeader.leaderUUID,
+        projectLeaderNickname: data.projectLeader.nickname,
+        projectLeaderProfileImage: data.projectLeader.profileImage,
       });
       //선택된 프로젝트 변경될 때마다 location.state 초기화
       navigate(location.pathname, { replace: true });
@@ -137,6 +167,9 @@ const ProjectPage = () => {
         lastUpdateUserNickname: "",
         lastUpdateDate: "",
         isMainProject: false,
+        projectLeaderUuid: "",
+        projectLeaderNickname: "",
+        projectLeaderProfileImage: null,
       });
     }
   }, [type, data]);
@@ -221,26 +254,55 @@ const ProjectPage = () => {
   });
 
   useEffect(() => {
-    if (
-      (createMutation.isSuccess && createMutation.isSuccess === true) ||
-      (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
-    ) {
-      refetch();
-      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
-    }
-  }, [createMutation.isSuccess, replaceMutation.isSuccess]);
+    const fetchProject = async () => {
+      if (
+        (createMutation.data && createMutation.data.isSuccess === true) ||
+        (replaceMutation.isSuccess && replaceMutation.isSuccess === true)
+      ) {
+        refetch(); //프로젝트 상세조회 재조회
+        await queryClient.refetchQueries({
+          queryKey: ["getProjectList", userUuid],
+        }); //프로젝트 리스트 재조회
+        if (projectActingMode === "Create" && createMutation.data) {
+          //프로젝트 생성일때는 콤보박스의 프로젝트 여기서 주입!
+          const createdProjectId = createMutation.data.createdProjectId;
+          const projectList = queryClient.getQueryData<PrjectListResponse>([
+            "getProjectList",
+            userUuid,
+          ]);
+          if (projectList) {
+            const projects = projectList.mainProject.concat(
+              projectList.noMainProject
+            );
+            const projectData = projects.find(
+              (x) => x.projectId === createdProjectId
+            );
+            setSelectedProject(projectData ?? null);
+          }
+        }
+      }
+    };
+    fetchProject();
+  }, [createMutation.data, replaceMutation.isSuccess]);
 
   useEffect(() => {
-    if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
-      //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
-      queryClient.invalidateQueries({ queryKey: ["getProjectList"] });
-      navigate("/");
-    }
+    const fetchProjects = async () => {
+      if (deleteMutation.isSuccess && deleteMutation.isSuccess === true) {
+        //모달창에서 예/아니오 중 예를 선택하여 삭제가 완료되면 이슈보드로 리다이렉트
+        await queryClient.refetchQueries({
+          queryKey: ["getProjectList", userUuid],
+        }); //프로젝트 리스트 재조회
+        navigate("/");
+      }
+    };
+    fetchProjects();
   }, [deleteMutation.isSuccess]);
 
   //저장 버튼
   const handleSaveProjectBtnClicked = () => {
+    if (!isFormValid()) return;
     if (type === "new") {
+      setProjectActingMode("Create");
       createMutation.mutate({
         projectName: formData.projectName,
         writerUuid: userUuid,
@@ -263,6 +325,7 @@ const ProjectPage = () => {
         memberUuidList: formData.projectMemberUuidList ?? [],
       });
     } else if (selectedProject !== null) {
+      setProjectActingMode("Update");
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
         projectName: formData.projectName,
@@ -292,6 +355,7 @@ const ProjectPage = () => {
   //삭제 모달창 확인 버튼
   const handleConfirmModal = (inputText: string) => {
     if (selectedProject !== null && selectedProject.projectId) {
+      setProjectActingMode("Delete");
       deleteMutation.mutate(selectedProject.projectId);
       setShowDeleteFormModal(false);
     }
@@ -446,6 +510,8 @@ const ProjectPage = () => {
                     },
                     readOnly: isUserSelectedProjectLeader === false,
                   }}
+                  error={"projectName" in formErrors}
+                  helperText={formErrors["projectName"]}
                 />
               )}
             </Grid>
@@ -481,6 +547,58 @@ const ProjectPage = () => {
                 />
               )}
             </Grid>
+            {type !== "new" && (
+              <>
+                <Grid item xs={3}>
+                  <InputLabel htmlFor="리더" sx={{ fontWeight: "bold", mb: 1 }}>
+                    리더
+                  </InputLabel>
+                </Grid>
+                <Grid item xs={9}>
+                  {isLoading ? (
+                    <Skeleton
+                      variant="rectangular"
+                      height={40}
+                      sx={{ borderRadius: "4px" }}
+                    />
+                  ) : (
+                    <Box
+                      sx={{
+                        p: 1,
+                        border: "1px solid lightGray",
+                        borderRadius: "4px",
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          height: 20,
+                          mb: "3px",
+                          display: "flex",
+                          padding: ".15em 4px",
+                          lineHeight: "15px",
+                        }}
+                      >
+                        <Box>
+                          <UserAvatar
+                            sx={{ width: 18, height: 18, mr: "6px" }}
+                            src={formData.projectLeaderProfileImage ?? ""}
+                          />
+                        </Box>
+                        <Box
+                          sx={{
+                            flexGrow: 1,
+                            overflow: "hidden",
+                            textOverflow: "ellipsis",
+                          }}
+                        >
+                          {formData.projectLeaderNickname}
+                        </Box>
+                      </Box>
+                    </Box>
+                  )}
+                </Grid>
+              </>
+            )}
             <Grid item xs={3}>
               <InputLabel htmlFor="구성원" sx={{ fontWeight: "bold", mb: 1 }}>
                 구성원

@@ -3,7 +3,7 @@ import { userPath } from "./userSettings";
 
 export type ChangeUserInfoRequest = {
   type: string;
-  value: File | string | Object | null;
+  value: string;
   memberId: string;
 };
 
@@ -12,7 +12,7 @@ export const changeUserInfo = async ({
   type,
   value,
   memberId,
-}: ChangeUserInfoRequest) => {
+}: ChangeUserInfoRequest): Promise<string | undefined> => {
   try {
     const response = await authorizedAxios.put(
       `${userPath}/update?uuid=${memberId}`,
@@ -25,8 +25,6 @@ export const changeUserInfo = async ({
       return response.data.data.email;
     } else if (type === "nickname") {
       return response.data.data.nickname;
-    } else {
-      return response.data.isSuccess;
     }
   } catch (error) {
     throw error;

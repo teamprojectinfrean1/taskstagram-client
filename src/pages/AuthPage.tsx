@@ -24,7 +24,7 @@ const AuthPage = () => {
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
+            justifyContent: "space-around",
             minWidth: "1050px",
           }}
         >

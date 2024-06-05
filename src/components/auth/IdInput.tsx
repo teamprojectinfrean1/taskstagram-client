@@ -30,7 +30,7 @@ const IdInput = ({
   // 아이디 중복 검사 상태
   const disabledState = !!(!isIdValid || isIdDuplicate);
 
-  const { data, isSuccess, isLoading, error, refetch } = useQuery(
+  const { data, isLoading, error, refetch } = useQuery(
     "checkId",
     () => checkIdExistence(id),
     {
@@ -56,7 +56,7 @@ const IdInput = ({
 
   useEffect(() => {
     if (validState) {
-      setShowErrorMessage("아이디는 5 ~ 20자만 사용 가능합니다.");
+      setShowErrorMessage("아이디는 5~20자의 영문 소문자, 숫자만 사용 가능합니다.");
       setErrorState(true);
     } else {
       setShowErrorMessage("");

@@ -2,9 +2,12 @@ import theme from "@/theme/theme";
 import { Grid, Typography, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
-import { useQuery } from "react-query";
-import { requestEmailVerification } from "@/apis/user/requestEmailVerification";
-import { EmailVerificationCodeInput } from "@/components/Auth";
+import { useMutation } from "react-query";
+import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
+import {
+  EmailCertificationRequest,
+  requestEmailCertification,
+} from "@/apis/user/requestEmailCertification";
 
 type EmailCertificationInputProps = {
   findUserInfo: "findId" | "findPassword";
@@ -21,14 +24,9 @@ const EmailCertificationInput = ({
   // 이메일 유효성 검사 상태
   const validState = !!(email && !isEmailValid);
 
-  // 이메일 인증 useQuery
-  const { data, isLoading, error, refetch } = useQuery(
-    "emailVerification",
-    () => requestEmailVerification({ findUserInfo, email }),
-    {
-      enabled: false,
-      cacheTime: 0,
-    }
+  const mutateEmailCertification = useMutation(
+    ({ findUserInfo, email }: EmailCertificationRequest) =>
+      requestEmailCertification({ findUserInfo, email })
   );
 
   useEffect(() => {
@@ -42,28 +40,28 @@ const EmailCertificationInput = ({
   }, [email]);
 
   useEffect(() => {
-    if (isLoading !== undefined) {
-      if (isLoading) {
+    if (mutateEmailCertification.isLoading !== undefined) {
+      if (mutateEmailCertification.isLoading) {
         setShowErrorMessage("요청 중입니다. 잠시만 기다려주세요...");
         setErrorState(true);
       }
     }
-  }, [isLoading]);
+  }, [mutateEmailCertification.isLoading]);
 
   useEffect(() => {
-    if (error === "Network Error") {
+    if (mutateEmailCertification.error === "Network Error") {
       setShowErrorMessage(
         "네트워크 에러가 발생했습니다. 잠시 후 다시 시도해주세요."
       );
       setErrorState(true);
     }
-  }, [error]);
+  }, [mutateEmailCertification.error]);
 
   useEffect(() => {
-    if (!!data) {
+    if (!!mutateEmailCertification.data) {
       setShowErrorMessage("인증 번호가 전송되었습니다.");
     }
-  }, [data]);
+  }, [mutateEmailCertification.data]);
 
   return (
     <>
@@ -109,16 +107,19 @@ const EmailCertificationInput = ({
               borderRadius: "7px",
             }}
             disabled={!isEmailValid}
-            onClick={() => {
-              refetch();
-            }}
+            onClick={() =>
+              mutateEmailCertification.mutate({
+                findUserInfo,
+                email,
+              })
+            }
           >
-            {data ? "재전송" : "인증요청"}
+            {mutateEmailCertification.data ? "재전송" : "인증요청"}
           </Button>
         </Grid>
       </Grid>
       <EmailVerificationCodeInput
-        isSuccess={!!data}
+        isSuccess={!!mutateEmailCertification.data}
         email={email}
         findUserInfo={findUserInfo}
       />

@@ -5,15 +5,14 @@ import { useLocation, useNavigate } from "react-router-dom";
 const FindEmailSuccess = () => {
   const navigate = useNavigate();
 
-  const location = useLocation()
-  const id = location.state.id
+  const location = useLocation();
+  const id = location.state.id;
 
   return (
     <>
       <Box sx={{ textAlign: "center" }}>
         <Typography>인증한 이메일로 가입한 아이디입니다.</Typography>
       </Box>
-
       <Box
         sx={{
           mt: 7,

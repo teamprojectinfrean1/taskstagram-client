@@ -1,10 +1,9 @@
 import theme from "@/theme/theme";
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import SocialIcons from "../OAuth/SocialIcons";
 import EmailInput from "./EmailInput";
 import PasswordInput from "./PasswordInput";
-import { Box, Button, Divider, Typography } from "@mui/material";
+import { Box, Button, Typography } from "@mui/material";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import IdInput from "./IdInput";
 import { useRecoilValue } from "recoil";
@@ -13,11 +12,11 @@ import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 
 const SignupFormRequired = () => {
+  const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
+
   const navigate = useNavigate();
 
   const signupInfo = useRecoilValue(signupInfoState);
-
-  const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   // 회원가입 필수 input(이메일, 아이디, 비밀번호) 유효성 확인 변수
   const [isValid, setIsValid] = useState({

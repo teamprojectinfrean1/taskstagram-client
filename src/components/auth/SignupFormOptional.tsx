@@ -1,5 +1,5 @@
 import theme from "@/theme/theme";
-import { Button, Box } from "@mui/material";
+import { Button, Box, Typography } from "@mui/material";
 import NicknameInput from "./NicknameInput";
 import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
@@ -18,22 +18,31 @@ const SingupFormOptional = () => {
   const { changeSignupInfo, resetSignupInfo } = useChangeSignupInfo();
 
   const signupInfo = useRecoilValue(signupInfoState);
-
-  const signupMutation = useMutation((signupInfo: SignupInfo) =>
+  const mutateSignup = useMutation((signupInfo: SignupInfo) =>
     fetchSignup(signupInfo)
   );
 
   useEffect(() => {
-    if (signupMutation.data) {
+    if (mutateSignup.data) {
       navigate("/auth/signup/success", {
         state: {
-          nickname: signupMutation.data,
+          nickname: mutateSignup.data,
         },
       });
     }
   });
 
   const [isNicknameDuplicate, setIsNicknameDuplicate] = useState(false);
+
+  const [signupDuplicate, setSignupDuplicate] = useState(false);
+
+  useEffect(() => {
+    if (signupInfo.nickname) {
+      setSignupDuplicate(!isNicknameDuplicate);
+    } else {
+      setSignupDuplicate(false);
+    }
+  }, [signupInfo.nickname, isNicknameDuplicate]);
 
   return (
     <>
@@ -51,13 +60,23 @@ const SingupFormOptional = () => {
             changeSignupInfo({ key: "profileImage", value })
           }
         />
+
+        <Typography
+          sx={{
+            mt: 4,
+            fontSize: "11px",
+            color: `${theme.palette.text.primary}`,
+          }}
+        >
+          * 닉네임을 입력하지 않으면, 자동으로 아이디가 닉네임으로 대체됩니다.
+        </Typography>
+        <Typography sx={{ mt: 1, ml: 0.5 }}>Nickname</Typography>
         <NicknameInput
           nickname={signupInfo.nickname}
           setNickname={(value) => changeSignupInfo({ key: "nickname", value })}
           isNicknameDuplicate={isNicknameDuplicate}
           setIsNicknameDuplicate={(value) => setIsNicknameDuplicate(value)}
         />
-
         <Box sx={{ textAlign: "center", mt: 5 }}>
           <Button
             variant="contained"
@@ -67,16 +86,17 @@ const SingupFormOptional = () => {
               bgcolor: `${theme.palette.secondary.main}`,
               borderRadius: "7px",
             }}
+            disabled={signupDuplicate}
             onClick={() => {
-              signupMutation.mutate(signupInfo);
+              mutateSignup.mutate(signupInfo);
             }}
           >
             가입하기
           </Button>
         </Box>
         <ErrorHandling
-          error={signupMutation.error}
-          isLoading={signupMutation.isLoading}
+          error={mutateSignup.error}
+          isLoading={mutateSignup.isLoading}
           feature="회원가입"
         />
       </Box>
