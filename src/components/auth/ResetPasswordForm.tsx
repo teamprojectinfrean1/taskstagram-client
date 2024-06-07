@@ -11,7 +11,6 @@ import { resetPasswordRequest } from "@/apis/user/resetPassword";
 const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
-
   const memberId = location.state?.memberId;
 
   const [passwordInfo, setPasswordInfo] = useState({

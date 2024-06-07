@@ -5,12 +5,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 const FindEmailSuccess = () => {
   const navigate = useNavigate();
-
   const location = useLocation();
   const id = location.state?.id;
 
   useEffect(() => {
-    console.log(id);
     if (!id) {
       navigate("/auth/login")
     }
