@@ -114,7 +114,7 @@ const EmailCertificationInput = ({
               })
             }
           >
-            {mutateEmailCertification.data ? "재전송" : "인증요청"}
+            {mutateEmailCertification.isLoading || mutateEmailCertification.data ? "재전송" : "인증요청" }
           </Button>
         </Grid>
       </Grid>

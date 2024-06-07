@@ -12,7 +12,7 @@ const ResetPasswordForm = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const memberId = location.state.memberId;
+  const memberId = location.state?.memberId;
 
   const [passwordInfo, setPasswordInfo] = useState({
     password: "",
@@ -43,8 +43,14 @@ const ResetPasswordForm = () => {
   );
 
   useEffect(() => {
+    if (!memberId) {
+      navigate("/auth/find/password")
+    }
+  }, [])
+
+  useEffect(() => {
     if (mutateResetPassword.data) {
-      navigate("/auth/find/password/success");
+      navigate("/auth/find/password/success", {state: true});
     }
   }, [mutateResetPassword.data]);
 

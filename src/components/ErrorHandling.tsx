@@ -2,10 +2,10 @@ import theme from "@/theme/theme";
 import { Box, Typography } from "@mui/material";
 
 type ErrorHandlingProps = {
-  error: unknown,
-  isLoading: boolean,
-  feature : string
-}
+  error: unknown;
+  isLoading: boolean;
+  feature: string;
+};
 
 const ErrorHandling = ({ error, isLoading, feature }: ErrorHandlingProps) => {
   return (
@@ -32,7 +32,21 @@ const ErrorHandling = ({ error, isLoading, feature }: ErrorHandlingProps) => {
           }}
         >
           <Typography fontSize="11px" fontWeight="bold">
-            {feature} 요청 중 네트워크 문제가 발생했습니다. 잠시 후 다시 시도해주세요.
+            {feature} 요청 중 네트워크 문제가 발생했습니다. 잠시 후 다시
+            시도해주세요.
+          </Typography>
+        </Box>
+      )}
+      {error === 500 && (
+        <Box
+          sx={{
+            mt: 3,
+            color: `${theme.palette.error.main}`,
+            textAlign: "center",
+          }}
+        >
+          <Typography fontSize="11px" fontWeight="bold">
+            {feature} 요청 중 서버 문제가 발생했습니다. 잠시 후 다시 시도해주세요.
           </Typography>
         </Box>
       )}

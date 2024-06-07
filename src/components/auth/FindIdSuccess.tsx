@@ -1,12 +1,20 @@
 import theme from "@/theme/theme";
 import { Box, Typography, Button } from "@mui/material";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const FindEmailSuccess = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-  const id = location.state.id;
+  const id = location.state?.id;
+
+  useEffect(() => {
+    console.log(id);
+    if (!id) {
+      navigate("/auth/login")
+    }
+  }, [])
 
   return (
     <>

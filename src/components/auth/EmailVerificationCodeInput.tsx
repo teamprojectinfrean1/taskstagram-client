@@ -56,6 +56,12 @@ const EmailVerificationCodeInput = ({
     }
   }, [mutateEmailVerification.data]);
 
+  useEffect(() => {
+    if (mutateEmailVerification.error === 404) {
+      alert("해당 이메일로 가입하신 계정이 없습니다. ")
+    }
+  }, [mutateEmailVerification.error])
+
   return (
     <>
       <Grid container spacing={3} sx={{ mt: 1 }}>

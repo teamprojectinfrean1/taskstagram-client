@@ -1,9 +1,18 @@
 import theme from "@/theme/theme";
 import { Box, Typography, Button } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const FindPasswordSuccess = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const resetPasswordSuccess = location.state
+    
+  useEffect(() => {
+    if (!resetPasswordSuccess) {
+      navigate("/auth/login")
+    }
+  }, [])
 
   return (
     <>

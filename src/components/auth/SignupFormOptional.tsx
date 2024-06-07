@@ -23,6 +23,12 @@ const SingupFormOptional = () => {
   );
 
   useEffect(() => {
+    if (!signupInfo.email || !signupInfo.id || !signupInfo.password) {
+      navigate("/auth/signup/required");
+    }
+  }, []);
+
+  useEffect(() => {
     if (mutateSignup.data) {
       navigate("/auth/signup/success", {
         state: {
