@@ -27,6 +27,12 @@ const ChangeEmail = () => {
   );
 
   useEffect(() => {
+    if (!userInfo.weaver) {
+      navigate("/mypage")
+    }
+  }, [])
+
+  useEffect(() => {
     if (mutateChangeEmail.data) {
       setUserInfo({ ...userInfo, email: mutateChangeEmail.data });
       navigate("/mypage/change/success", {

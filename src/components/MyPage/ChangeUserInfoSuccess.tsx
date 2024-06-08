@@ -1,11 +1,18 @@
 import theme from "@/theme/theme";
 import { Box, Typography, Button } from "@mui/material";
+import { useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 const ChangeUserInfoSuccess = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const changeUserInfo = location.state;
+
+  useEffect(() => {
+   if (!changeUserInfo) {
+    navigate("/mypage")
+   } 
+  }, [])
 
   return (
     <Box

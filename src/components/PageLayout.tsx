@@ -12,7 +12,7 @@ const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const { data } = useQuery("userInfo", () => getUserInfo());
-
+  
   // memberId 재추출
   useEffect(() => {
     const accessToken = sessionStorage.getItem("accessToken");

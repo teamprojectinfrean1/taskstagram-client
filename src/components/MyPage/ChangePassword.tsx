@@ -50,6 +50,12 @@ const ChangePassword = () => {
   );
 
   useEffect(() => {
+    if (!userInfo.weaver) {
+      navigate("/mypage")
+    }
+  }, [])
+
+  useEffect(() => {
     if (mutateChangePassword.data) {
       navigate("/mypage/change/success", {
         state: "비밀번호",
