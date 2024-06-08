@@ -35,6 +35,10 @@ export const StyledAutocompletePopper = styled("div")(({ theme }) => ({
         {
           backgroundColor: theme.palette.background.light,
         },
+        [`&[aria-selected="true"].${autocompleteClasses.focused}`]:
+        {
+          backgroundColor: theme.palette.secondary.light,
+        },
     },
   },
   [`& .${autocompleteClasses.noOptions}`]: {
