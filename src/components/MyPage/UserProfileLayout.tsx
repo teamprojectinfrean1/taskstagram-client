@@ -1,4 +1,4 @@
-import { Box, Typography, Button } from "@mui/material";
+import { Box, Typography, IconButton, Button } from "@mui/material";
 import {
   ChangeProfileImage,
   PasswordForm,
@@ -20,7 +20,7 @@ const UserProfileLayout = () => {
 
   const userInfo = useRecoilValue(userInfoState);
   const weaver = userInfo.weaver;
-  
+
   return (
     <Box display="flex">
       <Box

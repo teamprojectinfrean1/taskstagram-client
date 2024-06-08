@@ -54,6 +54,7 @@ const TextEditor = ({
         height: "360px",
         width: "100%",
         border: "1px solid lightgray",
+        borderRadius: 4,
         padding: "20px",
       }}
     />

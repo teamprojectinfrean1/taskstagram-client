@@ -13,6 +13,7 @@ const theme = createTheme({
     background: {
       paper: "rgba(228, 230, 237)",
       default: "#FFFFFF",
+      light: "#233043",
     },
     text: {
       primary: "#626262",

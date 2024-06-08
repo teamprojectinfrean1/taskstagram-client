@@ -4,6 +4,7 @@ import { projectListState } from "@/stores/projectStore";
 import basicProjectImage from "@/assets/basicProjectImage.png";
 import StarIcon from "@mui/icons-material/Star";
 import theme from "@/theme/theme";
+import { yellow } from "@mui/material/colors";
 
 const PermissionForm = () => {
   const projectList = useRecoilValue(projectListState);
@@ -53,7 +54,7 @@ const PermissionForm = () => {
               </Grid>
               <Grid item xs={2}>
                 {data.isMainProject && (
-                  <StarIcon fontSize="medium" sx={{ color: "#E5DC00" }} />
+                  <StarIcon fontSize="medium" sx={{ color: yellow[600] }} />
                 )}
               </Grid>
             </Grid>

@@ -292,10 +292,7 @@ const IssueFormModal = ({
                         <Box display="flex" alignItems="center" gap={2}>
                           <UserAvatar
                             imageUrl={userProfileImage}
-                            sx={{
-                              width: 40,
-                              height: 40,
-                            }}
+                            size={40}
                           />
                           {userNickname}
                         </Box>

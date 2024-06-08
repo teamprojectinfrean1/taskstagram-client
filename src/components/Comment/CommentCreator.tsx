@@ -79,7 +79,7 @@ const CommentCreator = ({ issueDetailsIsLoading }: CommentCreatorProps) => {
         <Spinner />
       ) : (
         <Box display="flex" gap={4}>
-          <UserAvatar sx={{ width: 50, height: 50 }} />
+          <UserAvatar />
           <CommentInputControl
             commentBody={commentBody}
             setCommentBody={setCommentBody}

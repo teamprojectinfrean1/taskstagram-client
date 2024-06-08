@@ -22,7 +22,7 @@ root.render(
         <App />
       </ThemeProvider>
       {/* <ReactQueryDevtools initialIsOpen={false} /> */}
-    </QueryClientProvider>{" "}
+    </QueryClientProvider>
   </RecoilRoot>
 );
 

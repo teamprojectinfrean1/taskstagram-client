@@ -79,7 +79,11 @@ const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
                 <Typography
                   variant="body2"
                   className="textClamping lineClampOne"
-                  sx={{ wordBreak: "break-all", color: grey[500], fontWeight: "bold" }}
+                  sx={{
+                    wordBreak: "break-all",
+                    color: grey[500],
+                    fontWeight: "bold",
+                  }}
                 >
                   {taskTitle}
                 </Typography>
@@ -89,10 +93,7 @@ const IssueTicket = ({ index, issue, parent, sx }: IssueTicketProps) => {
                 placement="top"
                 sx={{ zIndex: 10 }}
               >
-                <UserAvatar
-                  sx={{ width: 28, height: 28 }}
-                  imageUrl={assigneeProfileImage}
-                />
+                <UserAvatar imageUrl={assigneeProfileImage} size={28} />
               </Tooltip>
             </Box>
             <Tooltip

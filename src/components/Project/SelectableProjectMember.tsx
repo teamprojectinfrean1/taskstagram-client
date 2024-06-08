@@ -5,6 +5,7 @@ import {
   Paper,
   ClickAwayListener,
   Box,
+  Stack,
   IconButton,
 } from "@mui/material";
 import DoneIcon from "@mui/icons-material/Done";
@@ -94,39 +95,6 @@ const ProjectMemberAutocomplete = ({
           </IconButton>
         </Box>
       )}
-      {value.length > 0 && (
-        <Box sx={{ p: 1, border: "1px solid lightGray", borderRadius: "4px" }}>
-          {value.map((label) => (
-            <Box
-              key={label.id}
-              sx={{
-                height: 20,
-                mb: "3px",
-                display: "flex",
-                padding: ".15em 4px",
-                lineHeight: "15px",
-              }}
-            >
-              <Box>
-                <UserAvatar
-                  sx={{ width: 18, height: 18, mr: "6px" }}
-                  src={label.profileImage ?? ""}
-                />
-              </Box>
-              <Box
-                sx={{
-                  flexGrow: 1,
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                }}
-              >
-                {label.nickname}
-              </Box>
-            </Box>
-          ))}
-        </Box>
-      )}
-
       <StyledPopper
         id={id}
         open={open}
@@ -134,7 +102,7 @@ const ProjectMemberAutocomplete = ({
         placement="bottom-end"
       >
         <ClickAwayListener onClickAway={handleClose}>
-          <div>
+          <Stack>
             <Autocomplete
               disableClearable
               multiple
@@ -150,8 +118,8 @@ const ProjectMemberAutocomplete = ({
                 <li {...props} key={option.id}>
                   <Box>
                     <UserAvatar
-                      sx={{ width: 17, height: 17, mr: "6px", mt: "2px" }}
-                      src={option.profileImage ?? ""}
+                      imageUrl={option.profileImage ?? ""}
+                      size={25}
                     />
                   </Box>
                   <Box
@@ -185,31 +153,13 @@ const ProjectMemberAutocomplete = ({
                   {...props}
                   sx={{
                     "& .MuiAutocomplete-listbox": {
-                      backgroundColor: theme.palette.primary.main,
-                      color: theme.palette.background.default,
-                      p: 0,
                       maxHeight: "30vh",
-                    },
-                    "& .MuiAutocomplete-noOptions": {
-                      backgroundColor: theme.palette.primary.main,
-                      color: theme.palette.background.default,
                     },
                   }}
                 />
               )}
-              sx={{
-                width: "100%",
-                "& .MuiOutlinedInput-root": {
-                  p: "0px 0px 0px 9px",
-                  color: theme.palette.background.default,
-                  border: "1px solid white",
-                },
-                "& .MuiAutocomplete-popupIndicator": {
-                  color: theme.palette.background.default,
-                },
-              }}
             />
-          </div>
+          </Stack>
         </ClickAwayListener>
       </StyledPopper>
     </>

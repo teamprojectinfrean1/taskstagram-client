@@ -113,7 +113,7 @@ const CommentCard = ({ comment }: CommentCardProps) => {
 
   return (
     <Box display="flex" gap={4}>
-      <UserAvatar sx={{ width: 50, height: 50 }} imageUrl={userProfileImage} />
+      <UserAvatar imageUrl={userProfileImage} />
       {editMode ? (
         <CommentInputControl
           commentBody={updatedCommentBody}

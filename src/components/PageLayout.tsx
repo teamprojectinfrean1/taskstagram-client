@@ -41,30 +41,34 @@ const PageLayout = () => {
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
-  const handleClose = () => {
+  const toggleSideNav = () => {
+    setIsSideNavOpen((prev) => !prev);
+  };
+
+  const closeSideNav = () => {
     setIsSideNavOpen(false);
   };
 
   return (
     <Fragment>
-      <TopNav onMenuClick={() => setIsSideNavOpen((prev) => !prev)} />
+      <TopNav onMenuClick={toggleSideNav} />
       <SideNav open={isSideNavOpen} />
       <Backdrop
         open={isSideNavOpen}
-        onClick={handleClose}
-        sx={{ zIndex: (theme) => theme.zIndex.drawer - 1 }}
+        onClick={closeSideNav}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer - 1,
+        }}
       />
       <Snackbar />
       <Box
-        component="main"
+        className="custom-scrollbar"
         sx={{
-          width: { sm: "100%", lg: "80%" },
+          width: "100%",
           height: "calc(100% - var(--top-nav-height))",
-          marginLeft: isSideNavOpen ? "var(--side-nav-width)" : "0",
-          transition: "margin-left 0.5s ease-out",
           justifyContent: "center",
-          m: "auto",
-          p: 4,
+          py: 4,
+          px: { sm: 4, lg: 20 },
         }}
       >
         <Outlet />

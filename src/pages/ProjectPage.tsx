@@ -580,8 +580,9 @@ const ProjectPage = () => {
                       >
                         <Box>
                           <UserAvatar
-                            sx={{ width: 18, height: 18, mr: "6px" }}
-                            src={formData.projectLeaderProfileImage ?? ""}
+                            imageUrl={formData.projectLeaderProfileImage ?? ""}
+                            size={18}
+                            sx={{ mr: "6px" }}
                           />
                         </Box>
                         <Box

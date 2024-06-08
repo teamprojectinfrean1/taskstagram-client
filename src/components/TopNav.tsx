@@ -16,7 +16,7 @@ import {
   PrjectListResponse,
 } from "@/apis/ProjectApi";
 import { userInfoState } from "@/stores/userStore";
-import { UserProfileDropdown } from "@/components";
+import { UserMenu } from "@/components";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 
 type TopNavProps = {
@@ -136,7 +136,13 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   });
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="sticky"
+      sx={{ 
+        // zIndex: (theme) => theme.zIndex.drawer, 
+        boxShadow: 0,
+      }}
+    >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
@@ -155,7 +161,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
             onClickCheckBox={handleChangeMainProject}
           />
         </Box>
-        <UserProfileDropdown />
+        <UserMenu />
       </Toolbar>
     </AppBar>
   );
