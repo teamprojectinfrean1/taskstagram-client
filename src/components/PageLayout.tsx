@@ -4,15 +4,17 @@ import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { getUserInfo } from "@/apis/member/getUserInfo";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import { jwtDecode } from "jwt-decode";
+import { projectListState } from "@/stores/projectStore";
 
 const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const { data } = useQuery("userInfo", () => getUserInfo());
-  
+  const projectDataList = useRecoilValue(projectListState);
+
   // memberId 재추출
   useEffect(() => {
     const accessToken = sessionStorage.getItem("accessToken");
@@ -41,30 +43,34 @@ const PageLayout = () => {
 
   const [isSideNavOpen, setIsSideNavOpen] = useState(false);
 
-  const handleClose = () => {
+  const toggleSideNav = () => {
+    setIsSideNavOpen((prev) => !prev);
+  };
+
+  const closeSideNav = () => {
     setIsSideNavOpen(false);
   };
 
   return (
     <Fragment>
-      <TopNav onMenuClick={() => setIsSideNavOpen((prev) => !prev)} />
-      <SideNav open={isSideNavOpen} />
+      <TopNav onMenuClick={toggleSideNav} />
+      {projectDataList?.length > 0 && <SideNav open={isSideNavOpen} />}
       <Backdrop
         open={isSideNavOpen}
-        onClick={handleClose}
-        sx={{ zIndex: (theme) => theme.zIndex.drawer - 1 }}
+        onClick={closeSideNav}
+        sx={{
+          zIndex: (theme) => theme.zIndex.drawer - 1,
+        }}
       />
       <Snackbar />
       <Box
-        component="main"
+        className="custom-scrollbar"
         sx={{
-          width: { sm: "100%", lg: "80%" },
+          width: "100%",
           height: "calc(100% - var(--top-nav-height))",
-          marginLeft: isSideNavOpen ? "var(--side-nav-width)" : "0",
-          transition: "margin-left 0.5s ease-out",
           justifyContent: "center",
-          m: "auto",
-          p: 4,
+          py: 4,
+          px: { sm: 4, lg: 20 },
         }}
       >
         <Outlet />

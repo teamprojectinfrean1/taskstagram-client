@@ -3,16 +3,15 @@ import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Checkbox,
-  Paper,
   ClickAwayListener,
   Box,
-  Button,
+  IconButton,
   InputLabel,
+  Stack,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-import DoneIcon from "@mui/icons-material/Done";
 import React, { useState, useEffect } from "react";
 import theme from "@/theme/theme";
 import { useRecoilValue } from "recoil";
@@ -22,6 +21,7 @@ import {
   StyledInput,
   StyledPopper,
 } from "@/components/Project";
+import { yellow } from "@mui/material/colors";
 
 type SelectableProjectProps = {
   projects: ProjectSummary[];
@@ -49,6 +49,7 @@ const SelectableProject = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const selectedProject = useRecoilValue(selectedProjectState);
   const [projectList, setProjectList] = useState<ProjectSummary[]>([]);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     if (projects && projects.length > 0) {
@@ -93,6 +94,7 @@ const SelectableProject = ({
     value: ProjectSummary | null
   ) => {
     onSelectedProjectChanged(value);
+    setInputValue(''); 
     handleClose();
   };
 
@@ -101,12 +103,18 @@ const SelectableProject = ({
 
   return (
     <>
+    {projectList?.length > 0 && (
       <Box
         sx={{
           width: 300,
-          fontSize: 13,
-          border: "1px solid white",
+          justifyContent: "space-between",
           display: "flex",
+          alignItems: "center",
+          px: 1,
+          borderBottom: "1px solid white",
+          "&:hover *": {
+            cursor: "pointer",
+          },
         }}
         onClick={handleClick}
         aria-describedby={id}
@@ -114,29 +122,17 @@ const SelectableProject = ({
         <InputLabel
           htmlFor={`input-${selectedProject?.projectName}`}
           sx={{
-            color: theme.palette.background.default,
+            color: "white",
             width: "80%",
             fontWeight: "bold",
-            mb: 0,
-            mt: 1,
-            ml: 1,
           }}
         >
-          {selectedProject?.projectName ?? "새 프로젝트 추가"}
+          {selectedProject?.projectName}
         </InputLabel>
-        <Button
-          disableRipple
-          sx={{
-            fontSize: 13,
-            width: "20%",
-            textAlign: "right",
-            color: theme.palette.background.default,
-            fontWeight: 600,
-          }}
-        >
+        <IconButton edge="end" color="inherit">
           <UnfoldMoreIcon />
-        </Button>
-      </Box>
+        </IconButton>
+      </Box>)}
       <StyledPopper
         id={id}
         open={open}
@@ -144,24 +140,25 @@ const SelectableProject = ({
         placement="bottom-start"
       >
         <ClickAwayListener onClickAway={handleClose}>
-          <div>
-            <Autocomplete
-              open
-              disableClearable
-              disableCloseOnSelect
-              options={projectList}
-              isOptionEqualToValue={(option, value) => option === value}
-              noOptionsText={
-                projectList && projectList.length > 0
-                  ? "일치하는 옵션이 없습니다"
-                  : "프로젝트가 없습니다"
-              }
-              PopperComponent={PopperComponent}
-              onChange={handleOptionChange}
-              getOptionLabel={(option) => option.projectName}
-              renderOption={(props, option, { selected }) => (
-                <li {...props} key={option.projectId}>
-                  <Box>
+          <Stack>
+            {projectList?.length > 0 && (
+              <Autocomplete
+                open
+                disableClearable
+                disableCloseOnSelect
+                options={projectList}
+                value={selectedProject!}
+                isOptionEqualToValue={(option, value) => option === value}
+                noOptionsText="일치하는 옵션이 없습니다"
+                PopperComponent={PopperComponent}
+                onChange={handleOptionChange}
+                getOptionLabel={(option) => option.projectName}
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue);
+                }}
+                renderOption={(props, option) => (
+                  <li {...props} key={option.projectId}>
                     <Checkbox
                       disableRipple
                       onClick={(e) => {
@@ -170,86 +167,65 @@ const SelectableProject = ({
                       checked={option.isMainProject}
                       icon={
                         <StarBorderIcon
-                          fontSize="small"
-                          sx={{ color: theme.palette.background.default }}
+                          fontSize="medium"
+                          sx={{
+                            color: "white",
+                          }}
                         />
                       }
                       checkedIcon={
-                        <StarIcon fontSize="small" sx={{ color: "yellow" }} />
+                        <StarIcon
+                          fontSize="medium"
+                          sx={{
+                            color: yellow[600],
+                          }}
+                        />
                       }
-                      sx={{ width: 17, height: 17, mr: "5px", ml: "-2px" }}
+                      sx={{
+                        width: 17,
+                        height: 17,
+                        "&:hover .MuiSvgIcon-root": {
+                          color: yellow[600],
+                        },
+                      }}
                     />
-                  </Box>
-                  <Box
-                    sx={{
-                      flexGrow: 1,
-                      overflow: "hidden",
-                      textOverflow: "ellipsis",
-                    }}
-                  >
-                    {option.projectName}
-                  </Box>
-                  <Box
-                    component={DoneIcon}
-                    sx={{ opacity: 0.6, width: 18, height: 18 }}
-                    style={{
-                      visibility:
-                        selectedProject?.projectId === option.projectId
-                          ? "visible"
-                          : "hidden",
-                    }}
+                    <Box
+                      sx={{
+                        overflow: "hidden",
+                        textOverflow: "ellipsis",
+                      }}
+                    >
+                      {option.projectName}
+                    </Box>
+                  </li>
+                )}
+                renderInput={(params) => (
+                  <StyledInput
+                    ref={params.InputProps.ref}
+                    inputProps={params.inputProps}
+                    autoFocus
+                    placeholder="프로젝트명 입력"
                   />
-                </li>
-              )}
-              renderInput={(params) => (
-                <StyledInput
-                  ref={params.InputProps.ref}
-                  inputProps={params.inputProps}
-                  autoFocus
-                  placeholder="프로젝트명 입력"
-                />
-              )}
-              PaperComponent={(props) => (
-                <Paper
-                  {...props}
-                  sx={{
-                    "& .MuiAutocomplete-listbox": {
-                      backgroundColor: theme.palette.primary.main,
-                      color: theme.palette.background.default,
-                      p: 0,
-                    },
-                    "& .MuiAutocomplete-noOptions": {
-                      backgroundColor: theme.palette.primary.main,
-                      color: theme.palette.background.default,
-                    },
-                  }}
-                />
-              )}
-              sx={{
-                width: 300,
-                "& .MuiOutlinedInput-root": {
-                  p: 0,
-                  color: theme.palette.background.default,
-                  border: "1px solid white",
-                },
-                "& .MuiAutocomplete-popupIndicator": {
-                  color: theme.palette.background.default,
-                },
-              }}
-            />
+                )}
+                
+              />
+            )}
             <Box
               sx={{
-                borderBottom: "1px solid white",
-                borderTop: "1px solid gray",
-                padding: "10px 10px",
+                py: 2,
+                px: 2,
                 fontWeight: 600,
-                "&:hover": { cursor: "pointer" },
+                cursor: "pointer",
+                borderTop: "1px solid white",
+                "&:hover": {
+                  color: theme.palette.background.paper,
+                },
               }}
               onClick={handleCreateProjectBtnClick}
             >
               새 프로젝트 추가
             </Box>
-          </div>
+          </Stack>
         </ClickAwayListener>
       </StyledPopper>
     </>

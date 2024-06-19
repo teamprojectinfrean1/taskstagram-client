@@ -3,7 +3,6 @@ import {
   List,
   ListItem,
   ListItemButton,
-  ListItemIcon,
   ListItemText,
 } from "@mui/material";
 import { useNavigate } from "react-router-dom";
@@ -31,28 +30,44 @@ const SideNav = ({ open }: SideNavProps) => {
         width: "var(--side-nav-width)",
         ".MuiDrawer-paper": {
           marginTop: "var(--top-nav-height)",
-          backgroundColor:`${theme.palette.primary.main}`,
-          color:`${theme.palette.background.default}`
+          backgroundColor: `${theme.palette.primary.main}`,
+          color: `${theme.palette.background.default}`,
+          py: 2,
         },
       }}
     >
-      <List>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleNavigation("/")}>
-            <ListItemIcon>{/* 아이콘 */}</ListItemIcon>
-            <ListItemText primary="이슈 보드" />
+      <List
+        sx={{
+          ".MuiListItem-root": {
+            py: 0.5,
+            px: 5,
+            cursor: "pointer",
+            "&:hover": {
+              backgroundColor: theme.palette.background.light,
+            },
+          },
+          ".MuiButtonBase-root": {
+            backgroundColor: "transparent",
+          },
+          ".MuiTypography-root": {
+            fontSize: "18px",
+            fontWeight: "bold",
+          },
+        }}
+      >
+        <ListItem>
+          <ListItemButton onClick={handleNavigation("/")} disableRipple>
+            <ListItemText primary="이슈" />
           </ListItemButton>
         </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleNavigation("/tasks")}>
-            <ListItemIcon>{/* 아이콘 */}</ListItemIcon>
-            <ListItemText primary="태스크 관리" />
+        <ListItem>
+          <ListItemButton onClick={handleNavigation("/tasks")} disableRipple>
+            <ListItemText primary="태스크" />
           </ListItemButton>
         </ListItem>
-        <ListItem disablePadding>
-          <ListItemButton onClick={handleNavigation("/project")}>
-            <ListItemIcon>{/* 아이콘 */}</ListItemIcon>
-            <ListItemText primary="프로젝트 설정" />
+        <ListItem>
+          <ListItemButton onClick={handleNavigation("/project")} disableRipple>
+            <ListItemText primary="프로젝트" />
           </ListItemButton>
         </ListItem>
       </List>

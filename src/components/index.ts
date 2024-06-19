@@ -14,4 +14,4 @@ export { default as Spinner } from "./Spinner";
 export { default as TagChipMaker } from "./TagChipMaker";
 export { default as TopNav } from "./TopNav";
 export { default as UserAvatar } from "./UserAvatar";
-export { default as UserProfileDropdown } from "./UserProfileDropdown";
+export { default as UserMenu } from "./UserMenu";

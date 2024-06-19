@@ -1,4 +1,4 @@
-export const ISSUE_PER_PAGE = 4;
+export const ISSUE_PER_PAGE = 15;
 
 export const COMMENT_PER_PAGE = 15;
 

@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { userInfoState } from "@/stores/userStore";
-import { IconButton, Avatar, MenuItem, Typography, Menu } from "@mui/material";
+import { Box, MenuItem, Typography, Menu } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useRecoilValue } from "recoil";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { useQuery } from "react-query";
 import { fetchLogout } from "@/apis/user/fetchLogout";
 import theme from "@/theme/theme";
+import UserAvatar from "@/components/UserAvatar";
 
-const UserProfileDropdown = () => {
+const UserMenu = () => {
   const navigate = useNavigate();
 
   const userInfo = useRecoilValue(userInfoState);
@@ -28,12 +30,12 @@ const UserProfileDropdown = () => {
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
-  const handleOpenUserMenu = (e: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(e.currentTarget);
-  };
-
-  const handleCloseUserMenu = (e: React.MouseEvent<HTMLElement>) => {
-    setAnchorElUser(null);
+  const handleToggleUserMenu = (e: React.MouseEvent<HTMLElement>) => {
+    if (anchorElUser) {
+      setAnchorElUser(null);
+    } else {
+      setAnchorElUser(e.currentTarget);
+    }
   };
 
   const settings = ["마이페이지", "로그아웃"];
@@ -46,27 +48,34 @@ const UserProfileDropdown = () => {
     }
   };
   return (
-    <>
-      <IconButton
-        size="large"
-        edge="end"
-        onClick={handleOpenUserMenu}
-        color="inherit"
-        sx={{ p: 0 }}
-      >
-        <Avatar src={profileImage ? profileImage : basicProfileImage} />
-        <KeyboardArrowDownIcon sx={{ color: "#afbaca" }} />
-      </IconButton>
+    <Box
+      sx={{
+        display: "flex",
+        alignItems: "center",
+        gap: 1,
+        "&:hover": { cursor: "pointer" },
+      }}
+      onClick={handleToggleUserMenu}
+    >
+      <UserAvatar
+        imageUrl={profileImage ? profileImage : basicProfileImage}
+        size={35}
+      />
+      {!anchorElUser ? (
+        <KeyboardArrowDownIcon sx={{ color: "white", fontSize: 30 }} />
+      ) : (
+        <KeyboardArrowUpIcon sx={{ color: "white", fontSize: 30 }} />
+      )}
       <Menu
         sx={{
           mt: "45px",
           "& .MuiPaper-root": {
             backgroundColor: `${theme.palette.primary.main}`,
-            color:`${theme.palette.background.default}`
+            color: `${theme.palette.background.default}`,
           },
         }}
         open={!!anchorElUser}
-        onClose={handleCloseUserMenu}
+        onClose={handleToggleUserMenu}
         anchorEl={anchorElUser}
         anchorOrigin={{ vertical: "top", horizontal: "right" }}
         keepMounted
@@ -76,20 +85,31 @@ const UserProfileDropdown = () => {
         }}
       >
         {settings.map((setting) => (
-          <MenuItem key={setting} onClick={handleCloseUserMenu}>
+          <MenuItem
+            key={setting}
+            onClick={handleToggleUserMenu}
+            sx={{
+              py: 1,
+              px: 3,
+              justifyContent: "center",
+              "&:hover": {
+                backgroundColor: theme.palette.background.light,
+              },
+            }}
+          >
             <Typography
-              textAlign="center"
               onClick={() => {
                 handleRedirect(setting);
               }}
+              sx={{ fontWeight: "bold" }}
             >
               {setting}
             </Typography>
           </MenuItem>
         ))}
       </Menu>
-    </>
+    </Box>
   );
 };
 
-export default UserProfileDropdown;
+export default UserMenu;

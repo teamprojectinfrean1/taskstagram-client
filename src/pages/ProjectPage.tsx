@@ -93,10 +93,12 @@ const ProjectPage = () => {
   };
 
   useEffect(() => {
+    if(selectedProject) {
     setIsUserSelectedProjectLeader(
       selectedProject !== null ? selectedProject.permission === "LEADER" : null
     );
     setFormErrors({});
+  }
   }, [selectedProject]);
 
   const { data, refetch, isLoading, isError } = useQuery(
@@ -580,8 +582,9 @@ const ProjectPage = () => {
                       >
                         <Box>
                           <UserAvatar
-                            sx={{ width: 18, height: 18, mr: "6px" }}
-                            src={formData.projectLeaderProfileImage ?? ""}
+                            imageUrl={formData.projectLeaderProfileImage ?? ""}
+                            size={18}
+                            sx={{ mr: "6px" }}
                           />
                         </Box>
                         <Box

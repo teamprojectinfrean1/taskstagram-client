@@ -113,7 +113,7 @@ const IssuePage = () => {
         spacing={4}
         sx={{
           height: "100%",
-          minHeight: "700px",
+          minHeight: "700px",  
         }}
       >
         <Box sx={{ height: "10%", minHeight: "120px" }}>

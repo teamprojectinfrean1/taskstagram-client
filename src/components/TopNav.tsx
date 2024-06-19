@@ -16,22 +16,22 @@ import {
   PrjectListResponse,
 } from "@/apis/ProjectApi";
 import { userInfoState } from "@/stores/userStore";
-import { UserProfileDropdown } from "@/components";
+import { UserMenu } from "@/components";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
+import { useNavigate } from "react-router-dom";
 
 type TopNavProps = {
   onMenuClick: () => void;
 };
 
 const TopNav = ({ onMenuClick }: TopNavProps) => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userInfo = useRecoilValue(userInfoState);
-  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
-  //"3f0351b0-6141-4ed6-ac0c-47c3685045bf"; //임시 고정
+  const userUuid = userInfo.memberId;
 
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
-  // const [projectDataList, setProjectDataList] = useState<ProjectSummary[]>([]);
   const [projectDataList, setProjectDataList] =
     useRecoilState(projectListState);
   const projectActingMode = useRecoilValue(projectActingModeState);
@@ -47,7 +47,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   }, []);
 
   useEffect(() => {
-    if (isSuccess === true) {
+    if (isSuccess) {
       let projectList: ProjectSummary[] = [];
       const mainProjectDataList = data?.mainProject ?? [];
       const noMainProjectDataList = data?.noMainProject ?? [];
@@ -56,6 +56,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
       }
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
+      }
+      if(projectList?.length === 0) {
+        navigate("/getting-started");
       }
       //전체 프로젝트 초기화
       setProjectDataList(projectList);
@@ -136,7 +139,13 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   });
 
   return (
-    <AppBar position="static">
+    <AppBar
+      position="sticky"
+      sx={{ 
+        // zIndex: (theme) => theme.zIndex.drawer, 
+        boxShadow: 0,
+      }}
+    >
       <Toolbar sx={{ justifyContent: "space-between" }}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <IconButton
@@ -155,7 +164,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
             onClickCheckBox={handleChangeMainProject}
           />
         </Box>
-        <UserProfileDropdown />
+        <UserMenu />
       </Toolbar>
     </AppBar>
   );

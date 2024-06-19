@@ -2,6 +2,7 @@ import "@/App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import {
   AuthPage,
+  GettingStartedPage,
   IssuePage,
   MyPage,
   NotFoundPage,
@@ -102,6 +103,10 @@ const router = createBrowserRouter([
       {
         index: true,
         element: <IssuePage />,
+      },
+      {
+        path: "/getting-started",
+        element: <GettingStartedPage />,
       },
       {
         path: "/tasks",

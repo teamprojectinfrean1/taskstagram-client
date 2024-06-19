@@ -3,27 +3,48 @@ import { autocompleteClasses, Popper, InputBase } from "@mui/material";
 
 export const StyledAutocompletePopper = styled("div")(({ theme }) => ({
   [`& .${autocompleteClasses.paper}`]: {
-    boxShadow: "none",
+    backgroundColor: theme.palette.primary.main,
+    padding: "0 6px 0 0",
+  },
+  [`& .${autocompleteClasses.paper} *`]: {
     margin: 0,
-    color: "inherit",
-    fontSize: 14,
   },
   [`& .${autocompleteClasses.listbox}`]: {
-    backgroundColor: theme.palette.primary.main,
-    padding: 0,
+    color: "white",
+    overflowY: "scroll",
+    "&::-webkit-scrollbar": {
+      width: "6px",
+      height: "6px",
+    },
+    "&::-webkit-scrollbar-thumb": {
+      background: theme.palette.background.paper,
+      borderRadius: "50px",
+    },
+    "&::-webkit-scrollbar-thumb:hover": {
+      background: "#C2C6D6",
+    },
     [`& .${autocompleteClasses.option}`]: {
-      minHeight: "auto",
-      alignItems: "flex-start",
-      padding: 8,
-      borderBottom: "1px solid white",
+      fontSize: 14,
+      display: "flex",
+      gap: "10px",
+      padding: "10px 20px",
       '&[aria-selected="true"]': {
-        backgroundColor: "transparent",
+        backgroundColor: theme.palette.secondary.main,
       },
-      [`&.${autocompleteClasses.focused}, &.${autocompleteClasses.focused}[aria-selected="true"]`]:
+      [`&.${autocompleteClasses.focused}, &[aria-selected="true"].${autocompleteClasses.focused}`]:
         {
-          backgroundColor: theme.palette.action.hover,
+          backgroundColor: theme.palette.background.light,
+        },
+        [`&[aria-selected="true"].${autocompleteClasses.focused}`]:
+        {
+          backgroundColor: theme.palette.secondary.light,
         },
     },
+  },
+  [`& .${autocompleteClasses.noOptions}`]: {
+    fontSize: 14,
+    color: "white",
+    paddingLeft: 20,
   },
   [`&.${autocompleteClasses.popperDisablePortal}`]: {
     position: "relative",
@@ -31,21 +52,19 @@ export const StyledAutocompletePopper = styled("div")(({ theme }) => ({
 }));
 
 export const StyledInput = styled(InputBase)(({ theme }) => ({
-  padding: 10,
+  padding: "20px 20px 10px",
   width: "100%",
-  borderBottom: "1px solid white",
   "& input": {
     borderRadius: 4,
     backgroundColor: theme.palette.background.default,
     padding: 8,
-    transition: theme.transitions.create(["border-color", "box-shadow"]),
-    border: "1px solid white",
     fontSize: 14,
   },
 }));
 
 export const StyledPopper = styled(Popper)(({ theme }) => ({
-  border: "1px solid white",
+  width: "300px",
+  boxShadow: theme.shadows[3],
   borderRadius: 6,
   fontSize: 13,
   color: theme.palette.background.default,
