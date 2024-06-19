@@ -3,19 +3,15 @@ import { useNavigate } from "react-router-dom";
 import {
   Autocomplete,
   Checkbox,
-  Paper,
   ClickAwayListener,
   Box,
-  Button,
   IconButton,
   InputLabel,
   Stack,
-  Typography,
 } from "@mui/material";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
 import StarIcon from "@mui/icons-material/Star";
 import UnfoldMoreIcon from "@mui/icons-material/UnfoldMore";
-import DoneIcon from "@mui/icons-material/Done";
 import React, { useState, useEffect } from "react";
 import theme from "@/theme/theme";
 import { useRecoilValue } from "recoil";
@@ -53,6 +49,7 @@ const SelectableProject = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const selectedProject = useRecoilValue(selectedProjectState);
   const [projectList, setProjectList] = useState<ProjectSummary[]>([]);
+  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     if (projects && projects.length > 0) {
@@ -97,6 +94,7 @@ const SelectableProject = ({
     value: ProjectSummary | null
   ) => {
     onSelectedProjectChanged(value);
+    setInputValue(''); 
     handleClose();
   };
 
@@ -105,6 +103,7 @@ const SelectableProject = ({
 
   return (
     <>
+    {projectList?.length > 0 && (
       <Box
         sx={{
           width: 300,
@@ -128,14 +127,12 @@ const SelectableProject = ({
             fontWeight: "bold",
           }}
         >
-          {projectList?.length > 0
-            ? selectedProject?.projectName
-            : "프로젝트가 없습니다"}
+          {selectedProject?.projectName}
         </InputLabel>
         <IconButton edge="end" color="inherit">
           <UnfoldMoreIcon />
         </IconButton>
-      </Box>
+      </Box>)}
       <StyledPopper
         id={id}
         open={open}
@@ -156,7 +153,11 @@ const SelectableProject = ({
                 PopperComponent={PopperComponent}
                 onChange={handleOptionChange}
                 getOptionLabel={(option) => option.projectName}
-                renderOption={(props, option, { selected }) => (
+                inputValue={inputValue}
+                onInputChange={(event, newInputValue) => {
+                  setInputValue(newInputValue);
+                }}
+                renderOption={(props, option) => (
                   <li {...props} key={option.projectId}>
                     <Checkbox
                       disableRipple
@@ -206,6 +207,7 @@ const SelectableProject = ({
                     placeholder="프로젝트명 입력"
                   />
                 )}
+                
               />
             )}
             <Box

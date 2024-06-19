@@ -93,10 +93,12 @@ const ProjectPage = () => {
   };
 
   useEffect(() => {
+    if(selectedProject) {
     setIsUserSelectedProjectLeader(
       selectedProject !== null ? selectedProject.permission === "LEADER" : null
     );
     setFormErrors({});
+  }
   }, [selectedProject]);
 
   const { data, refetch, isLoading, isError } = useQuery(

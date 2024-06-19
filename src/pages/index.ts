@@ -1,4 +1,5 @@
 export { default as AuthPage } from "./AuthPage";
+export { default as GettingStartedPage } from "./GettingStartedPage";
 export { default as IssuePage } from "./IssuePage";
 export { default as MyPage } from "./MyPage";
 export { default as NotFoundPage } from "./NotFoundPage";

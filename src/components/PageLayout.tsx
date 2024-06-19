@@ -4,14 +4,16 @@ import { Outlet } from "react-router-dom";
 import { Backdrop, Box } from "@mui/material";
 import { useQuery } from "react-query";
 import { getUserInfo } from "@/apis/member/getUserInfo";
-import { useRecoilState } from "recoil";
+import { useRecoilValue, useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import { jwtDecode } from "jwt-decode";
+import { projectListState } from "@/stores/projectStore";
 
 const PageLayout = () => {
   // 사용자 정보 recoil에 담는 코드
   const [userInfo, setUserInfo] = useRecoilState(userInfoState);
   const { data } = useQuery("userInfo", () => getUserInfo());
+  const projectDataList = useRecoilValue(projectListState);
 
   // memberId 재추출
   useEffect(() => {
@@ -52,7 +54,7 @@ const PageLayout = () => {
   return (
     <Fragment>
       <TopNav onMenuClick={toggleSideNav} />
-      <SideNav open={isSideNavOpen} />
+      {projectDataList?.length > 0 && <SideNav open={isSideNavOpen} />}
       <Backdrop
         open={isSideNavOpen}
         onClick={closeSideNav}
