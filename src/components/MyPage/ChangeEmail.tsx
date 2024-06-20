@@ -28,9 +28,9 @@ const ChangeEmail = () => {
 
   useEffect(() => {
     if (!userInfo.weaver) {
-      navigate("/mypage")
+      navigate("/mypage");
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (mutateChangeEmail.data) {
@@ -52,6 +52,7 @@ const ChangeEmail = () => {
           minWidth: "35rem",
           m: "auto",
           borderRadius: "7px",
+          height: "40rem",
         }}
       >
         <Link to="/mypage">
@@ -88,35 +89,36 @@ const ChangeEmail = () => {
                 새로운 이메일을 입력해주세요.
               </Typography>
             </Box>
-            <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
-            <EmailInput
-              email={email}
-              setEmail={(value) => setEmail(value)}
-              isEmailValid={isEmailValid}
-              setIsEmailValid={(value) => setIsEmailValid(value)}
-              isEmailDuplicate={isEmailDuplicate}
-              setIsEmailDuplicate={(value) => setIsEmailDuplicate(value)}
-            />
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              sx={{
-                bgcolor: `${theme.palette.secondary.main}`,
-                borderRadius: "7px",
-                mt: 6,
-              }}
-              disabled={!isEmailDuplicate}
-              onClick={() =>
-                mutateChangeEmail.mutate({
-                  type: "email",
-                  value: email,
-                  memberId,
-                })
-              }
-            >
-              변경
-            </Button>
+            <Box sx={{ mt: 5 }}>
+              <EmailInput
+                email={email}
+                setEmail={(value) => setEmail(value)}
+                isEmailValid={isEmailValid}
+                setIsEmailValid={(value) => setIsEmailValid(value)}
+                isEmailDuplicate={isEmailDuplicate}
+                setIsEmailDuplicate={(value) => setIsEmailDuplicate(value)}
+              />
+              <Button
+                variant="contained"
+                size="large"
+                fullWidth
+                sx={{
+                  bgcolor: `${theme.palette.secondary.main}`,
+                  borderRadius: "7px",
+                  mt: 6,
+                }}
+                disabled={!isEmailDuplicate}
+                onClick={() =>
+                  mutateChangeEmail.mutate({
+                    type: "email",
+                    value: email,
+                    memberId,
+                  })
+                }
+              >
+                변경
+              </Button>
+            </Box>
           </Box>
           <ErrorHandling
             error={mutateChangeEmail.error}

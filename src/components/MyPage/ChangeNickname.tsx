@@ -81,33 +81,36 @@ const ChangeNickname = () => {
               <Typography variant="h6">새로운 이름을 입력해주세요.</Typography>
             </Box>
 
-            <Typography sx={{ mt: 5, ml: 0.5 }}>Nickname</Typography>
-            <NicknameInput
-              nickname={nickname}
-              setNickname={setNickname}
-              isNicknameDuplicate={isNicknameDuplicate}
-              setIsNicknameDuplicate={(value) => setIsNicknameDuplicate(value)}
-            />
-            <Button
-              variant="contained"
-              size="large"
-              fullWidth
-              sx={{
-                bgcolor: `${theme.palette.secondary.main}`,
-                borderRadius: "7px",
-                mt: 6,
-              }}
-              disabled={!isNicknameDuplicate}
-              onClick={() =>
-                mutateChangeNickname.mutate({
-                  type: "nickname",
-                  value: nickname,
-                  memberId,
-                })
-              }
-            >
-              변경
-            </Button>
+            <Box sx={{ mt: 5 }}>
+              <NicknameInput
+                nickname={nickname}
+                setNickname={setNickname}
+                isNicknameDuplicate={isNicknameDuplicate}
+                setIsNicknameDuplicate={(value) =>
+                  setIsNicknameDuplicate(value)
+                }
+              />
+              <Button
+                variant="contained"
+                size="large"
+                fullWidth
+                sx={{
+                  bgcolor: `${theme.palette.secondary.main}`,
+                  borderRadius: "7px",
+                  mt: 6,
+                }}
+                disabled={!isNicknameDuplicate}
+                onClick={() =>
+                  mutateChangeNickname.mutate({
+                    type: "nickname",
+                    value: nickname,
+                    memberId,
+                  })
+                }
+              >
+                변경
+              </Button>
+            </Box>
           </Box>
           <ErrorHandling
             error={mutateChangeNickname.error}

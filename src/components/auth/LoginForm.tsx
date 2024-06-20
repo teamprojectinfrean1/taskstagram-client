@@ -35,6 +35,7 @@ const LoginForm = () => {
       </Typography>
       <Typography sx={{ mt: 5, ml: 0.5 }}>ID</Typography>
       <OutlinedInput
+        autoFocus
         type="email"
         fullWidth
         size="small"
