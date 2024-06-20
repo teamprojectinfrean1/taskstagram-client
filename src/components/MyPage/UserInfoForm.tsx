@@ -45,7 +45,7 @@ const UserInfoForm = () => {
                 backgroundColor: "#F0EFFA",
                 borderRadius: "20px",
                 fontWeight: "bold",
-                    }}
+              }}
               onClick={() => {
                 navigate("/mypage/change/nickname");
               }}
