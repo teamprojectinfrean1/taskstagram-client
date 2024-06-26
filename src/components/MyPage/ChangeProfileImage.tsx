@@ -9,7 +9,6 @@ import {
   ChangeProfileImageRequest,
 } from "@/apis/user/changeProfileImage";
 import { styled } from "@mui/material/styles";
-import theme from "@/theme/theme";
 
 const ChangeProfileImage = () => {
   const VisuallyHiddenInput = styled("input")({
@@ -83,8 +82,8 @@ const ChangeProfileImage = () => {
             fontFamily: "Outfit",
             fontSize: "11px",
           }}
-      >
-        이미지 업로드 +
+        >
+          이미지 변경 +
         </Typography>
         <VisuallyHiddenInput
           type="file"

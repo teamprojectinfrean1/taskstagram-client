@@ -65,10 +65,10 @@ const EmailCertificationInput = ({
 
   return (
     <>
-      <Typography sx={{ mt: 5, ml: 0.5 }}>Email</Typography>
-      <Grid container spacing={3}>
+      <Grid container spacing={3} sx={{ mt: 5 }}>
         <Grid item xs={8}>
           <TextField
+            autoFocus
             sx={{
               "& .MuiFormHelperText-root": {
                 position: "absolute",
@@ -86,6 +86,7 @@ const EmailCertificationInput = ({
             value={email}
             error={errorState}
             helperText={showErrorMessage}
+            disabled={!!mutateEmailCertification.data}
             onChange={(e) => {
               setEmail(e.target.value);
               setIsEmailValid(
@@ -114,7 +115,9 @@ const EmailCertificationInput = ({
               })
             }
           >
-            {mutateEmailCertification.isLoading || mutateEmailCertification.data ? "재전송" : "인증요청" }
+            {mutateEmailCertification.isLoading || mutateEmailCertification.data
+              ? "재전송"
+              : "인증요청"}
           </Button>
         </Grid>
       </Grid>

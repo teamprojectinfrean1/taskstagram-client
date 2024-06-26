@@ -69,14 +69,14 @@ const SingupFormOptional = () => {
 
         <Typography
           sx={{
-            mt: 4,
+            mt: 7,
             fontSize: "11px",
             color: `${theme.palette.text.primary}`,
           }}
         >
           * 닉네임을 입력하지 않으면, 자동으로 아이디가 닉네임으로 대체됩니다.
         </Typography>
-        <Typography sx={{ mt: 1, ml: 0.5 }}>Nickname</Typography>
+        <Typography sx={{ mt: 1 }}></Typography>
         <NicknameInput
           nickname={signupInfo.nickname}
           setNickname={(value) => changeSignupInfo({ key: "nickname", value })}

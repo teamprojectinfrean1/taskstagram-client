@@ -84,6 +84,7 @@ const NicknameInput = ({
     <Grid container spacing={2}>
       <Grid item xs={9}>
         <TextField
+          autoFocus
           sx={{
             "& .MuiFormHelperText-root": {
               position: "absolute",

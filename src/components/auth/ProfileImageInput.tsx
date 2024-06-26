@@ -2,6 +2,7 @@ import { Box, Button, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
 import { useState } from "react";
 import basicProfileImage from "@/assets/basicProfileImage.png";
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 type ProfileImageInputProps = {
   profileImage: File | null;
@@ -38,6 +39,9 @@ const ProfileImageInput = ({
 
   return (
     <>
+      <Typography variant="h5" fontWeight="bold">
+        프로필 설정
+      </Typography>
       <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
         <Button
           component="label"
@@ -60,11 +64,6 @@ const ProfileImageInput = ({
             }}
           />
         </Button>
-      </Box>
-      <Box sx={{ mt: 3, textAlign: "center" }}>
-        <Typography variant="h4" fontWeight="bold">
-          프로필 설정
-        </Typography>
       </Box>
     </>
   );
