@@ -28,7 +28,6 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userInfo = useRecoilValue(userInfoState);
-  debugger;
   const userUuid = userInfo.memberId;
 
   const [selectedProject, setSelectedProject] =
