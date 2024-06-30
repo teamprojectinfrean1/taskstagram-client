@@ -28,6 +28,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
   const userInfo = useRecoilValue(userInfoState);
+  debugger;
   const userUuid = userInfo.memberId;
 
   const [selectedProject, setSelectedProject] =
@@ -44,7 +45,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
 
   useEffect(() => {
     refetch();
-  }, []);
+  }, [userUuid]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -57,7 +58,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
       }
-      if(projectList?.length === 0) {
+      if (projectList?.length === 0) {
         navigate("/getting-started");
       }
       //전체 프로젝트 초기화
@@ -141,8 +142,8 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   return (
     <AppBar
       position="sticky"
-      sx={{ 
-        // zIndex: (theme) => theme.zIndex.drawer, 
+      sx={{
+        // zIndex: (theme) => theme.zIndex.drawer,
         boxShadow: 0,
       }}
     >
