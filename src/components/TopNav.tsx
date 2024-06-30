@@ -43,7 +43,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   );
 
   useEffect(() => {
-    refetch();
+    if (userUuid && userUuid !== null) {
+      refetch();
+    }
   }, [userUuid]);
 
   useEffect(() => {
