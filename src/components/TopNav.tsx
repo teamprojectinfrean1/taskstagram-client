@@ -108,12 +108,22 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
           }
         });
 
+        //메인 프로젝트였던 것을 메인 프로젝트로 재변경할 시
+        const isBeforeMainProject =
+          changeMainprojectMuation.data.changedProjectId ===
+          mainProject[0].projectId;
+
         queryClient.setQueryData<PrjectListResponse>(
           ["getProjectList", userUuid],
           {
             mainProject:
               mainProject.length > 0
-                ? [{ ...oldData.mainProject[0], isMainProject: false }]
+                ? [
+                    {
+                      ...oldData.mainProject[0],
+                      isMainProject: isBeforeMainProject,
+                    },
+                  ]
                 : [],
             noMainProject: newNoMainProjectData,
           }
