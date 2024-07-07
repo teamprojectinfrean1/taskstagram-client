@@ -116,29 +116,44 @@ const TaskModal = ({
   );
 
   useEffect(() => {
-    if (isOpen === true && data) {
-      setFormData({
-        taskId: data.taskId,
-        taskTitle: data.taskTitle,
-        taskContent: data.taskContent ? JSON.parse(data.taskContent) : null,
-        taskTags:
-          data.taskTags !== null && data.taskTags !== ""
-            ? data.taskTags.split(",")
-            : null,
-        taskStartDate: data.startDate,
-        taskEndDate: data.endDate,
-        taskAuthorityType: data.editDeletePermission,
-        taskStatus: data.taskStatus,
-        lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
-        lastUpdateDate: data.lastUpdateDetail.updatedDate
-          .replace("T", " ")
-          .slice(0, -3),
-      });
-      //로그인된 사용자가 프로젝트 리더가 아닌데 수정/삭제 권한이 프로젝트 리더만 인 경우는 편집 불가 모드
-      if (data.editDeletePermission === "projectLeader") {
-        setIsReadOnlyMode(isUserSelectedProjectLeader === false);
+    if (isOpen === true) {
+      if (data) {
+        setFormData({
+          taskId: data.taskId,
+          taskTitle: data.taskTitle,
+          taskContent: data.taskContent ? JSON.parse(data.taskContent) : null,
+          taskTags:
+            data.taskTags !== null && data.taskTags !== ""
+              ? data.taskTags.split(",")
+              : null,
+          taskStartDate: data.startDate,
+          taskEndDate: data.endDate,
+          taskAuthorityType: data.editDeletePermission,
+          taskStatus: data.taskStatus,
+          lastUpdateUserNickname: data.lastUpdateDetail.userNickname,
+          lastUpdateDate: data.lastUpdateDetail.updatedDate
+            .replace("T", " ")
+            .slice(0, -3),
+        });
+        //로그인된 사용자가 프로젝트 리더가 아닌데 수정/삭제 권한이 프로젝트 리더만 인 경우는 편집 불가 모드
+        if (data.editDeletePermission === "projectLeader") {
+          setIsReadOnlyMode(isUserSelectedProjectLeader === false);
+        } else {
+          setIsReadOnlyMode(false);
+        }
       } else {
-        setIsReadOnlyMode(false);
+        setFormData({
+          taskId: "",
+          taskTitle: "",
+          taskContent: null,
+          taskTags: null,
+          taskStartDate: null,
+          taskEndDate: null,
+          taskAuthorityType: "allProjectMember",
+          taskStatus: null,
+          lastUpdateUserNickname: "",
+          lastUpdateDate: "",
+        });
       }
     }
   }, [data, isOpen]);
