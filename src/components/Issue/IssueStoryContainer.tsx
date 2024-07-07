@@ -77,6 +77,7 @@ const IssueStoryContainer = ({ projectId }: IssueStoryContainerProps) => {
               scrollBehavior: "smooth",
             }}
             alignSelf="center"
+            gap={1}
           >
             <InfiniteScroller<ProjectMember>
               queryFunction={getPaginatedProjectMemberList}

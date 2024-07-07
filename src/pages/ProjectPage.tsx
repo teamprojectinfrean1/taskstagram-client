@@ -57,7 +57,7 @@ const ProjectPage = () => {
   const type = location.state !== null ? location.state.type : "";
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+  const userUuid = userInfo.memberId;
   const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
     useState<boolean | null>(null);
   const [formErrors, setFormErrors] = useState<Partial<ProjectFormData>>({});
@@ -148,9 +148,9 @@ const ProjectPage = () => {
           .replace("T", " ")
           .slice(0, -3),
         isMainProject: selectedProject?.isMainProject,
-        projectLeaderUuid: data.projectLeader.leaderUUID,
-        projectLeaderNickname: data.projectLeader.nickname,
-        projectLeaderProfileImage: data.projectLeader.profileImage,
+        projectLeaderUuid: data.projectLeader?.leaderUUID ?? "123",
+        projectLeaderNickname: data.projectLeader?.nickname ?? "sdfsd",
+        projectLeaderProfileImage: data.projectLeader?.profileImage ?? "",
       });
       //선택된 프로젝트 변경될 때마다 location.state 초기화
       navigate(location.pathname, { replace: true });

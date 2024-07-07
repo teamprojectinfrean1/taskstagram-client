@@ -19,6 +19,10 @@ import { userInfoState } from "@/stores/userStore";
 import { UserMenu } from "@/components";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { useNavigate } from "react-router-dom";
+import {
+  issueStatusBoardSearchState,
+  endIssueSearchMode,
+} from "@/stores/issueStore";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -30,6 +34,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   const userInfo = useRecoilValue(userInfoState);
   const userUuid = userInfo.memberId;
 
+  const [issueStatusBoardSearch, setIssueStatusBoardSearch] = useRecoilState(
+    issueStatusBoardSearchState
+  );
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
   const [projectDataList, setProjectDataList] =
@@ -57,7 +64,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
       }
-      if(projectList?.length === 0) {
+      if (projectList?.length === 0) {
         navigate("/getting-started");
       }
       //전체 프로젝트 초기화
@@ -130,6 +137,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
     selectedProject: ProjectSummary | null
   ) => {
     setSelectedProject(selectedProject);
+    endIssueSearchMode(setIssueStatusBoardSearch, "TODO");
+    endIssueSearchMode(setIssueStatusBoardSearch, "INPROGRESS");
+    endIssueSearchMode(setIssueStatusBoardSearch, "DONE");
   };
 
   useFeedbackHandler({
@@ -141,8 +151,8 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   return (
     <AppBar
       position="sticky"
-      sx={{ 
-        // zIndex: (theme) => theme.zIndex.drawer, 
+      sx={{
+        // zIndex: (theme) => theme.zIndex.drawer,
         boxShadow: 0,
       }}
     >
