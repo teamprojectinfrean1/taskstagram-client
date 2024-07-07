@@ -30,7 +30,7 @@ const TaskPage = () => {
     useState<boolean | null>(null);
 
   const { data, isLoading, refetch, isError } = useQuery(
-    ["getTaskList", selectedProject?.projectId],
+    ["getTaskList", selectedProject?.projectId, currentPage],
     () =>
       getPaginatedTaskList({
         page: currentPage,
@@ -80,10 +80,15 @@ const TaskPage = () => {
 
   useEffect(() => {
     refetch();
+    setCurrentPage(1);
     setIsUserSelectedProjectLeader(
       selectedProject !== null ? selectedProject.permission === "LEADER" : null
     );
-  }, [selectedProject, currentPage]);
+  }, [selectedProject]);
+
+  useEffect(() => {
+    refetch();
+  }, [currentPage]);
 
   useEffect(() => {
     if (
