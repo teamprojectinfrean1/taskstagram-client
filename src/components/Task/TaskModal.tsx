@@ -194,7 +194,7 @@ const TaskModal = ({
       onAdd({
         projectId: selectedProject.projectId,
         writerUuid: userUuid,
-        taskTitle: formData.taskTitle!,
+        taskTitle: formData.taskTitle!.trim(),
         taskContent:
           formData.taskContent === null ||
           isTaskContentEmpty(formData.taskContent)
@@ -216,7 +216,7 @@ const TaskModal = ({
       onReplace({
         selectedTaskId: selectedTask !== null ? selectedTask.taskId : null,
         updaterUuid: userUuid,
-        taskTitle: formData.taskTitle!,
+        taskTitle: formData.taskTitle!.trim(),
         taskContent:
           formData.taskContent === null ||
           isTaskContentEmpty(formData.taskContent)

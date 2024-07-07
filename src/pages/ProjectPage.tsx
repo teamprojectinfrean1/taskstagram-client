@@ -307,7 +307,7 @@ const ProjectPage = () => {
     if (type === "new") {
       setProjectActingMode("Create");
       createMutation.mutate({
-        projectName: formData.projectName,
+        projectName: formData.projectName.trim(),
         writerUuid: userUuid,
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
@@ -331,7 +331,7 @@ const ProjectPage = () => {
       setProjectActingMode("Update");
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
-        projectName: formData.projectName,
+        projectName: formData.projectName.trim(),
         updaterUuid: userUuid,
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
