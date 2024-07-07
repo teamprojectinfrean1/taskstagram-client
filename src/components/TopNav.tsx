@@ -168,24 +168,26 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
         boxShadow: 0,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={onMenuClick}
-          >
-            <MenuIcon />
-          </IconButton>
-          <SelectableProject
-            projects={projectDataList}
-            onSelectedProjectChanged={handleChangeSelectedProject}
-            onClickCheckBox={handleChangeMainProject}
-          />
-        </Box>
+      <Toolbar sx={{ justifyContent: projectDataList?.length > 0  ? "space-between" : "flex-end" }}>
+        {projectDataList?.length > 0 && (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={onMenuClick}
+            >
+              <MenuIcon />
+            </IconButton>
+            <SelectableProject
+              projects={projectDataList}
+              onSelectedProjectChanged={handleChangeSelectedProject}
+              onClickCheckBox={handleChangeMainProject}
+            />
+          </Box>
+        )}
         <UserMenu />
       </Toolbar>
     </AppBar>
