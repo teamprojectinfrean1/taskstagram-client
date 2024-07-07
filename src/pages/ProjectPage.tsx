@@ -94,7 +94,7 @@ const ProjectPage = () => {
 
   useEffect(() => {
     setIsUserSelectedProjectLeader(
-      selectedProject !== null ? selectedProject.permission === "LEADER" : null
+      selectedProject ? selectedProject.permission === "LEADER" : null
     );
     setFormErrors({});
   }, [selectedProject]);
