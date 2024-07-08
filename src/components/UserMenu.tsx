@@ -4,7 +4,7 @@ import { userInfoState } from "@/stores/userStore";
 import { Box, MenuItem, Typography, Menu } from "@mui/material";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useResetRecoilState } from "recoil";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { useQuery } from "react-query";
 import { fetchLogout } from "@/apis/user/fetchLogout";
@@ -16,6 +16,7 @@ const UserMenu = () => {
 
   const userInfo = useRecoilValue(userInfoState);
   const profileImage = userInfo.profileImage;
+  const resetUserInfo = useResetRecoilState(userInfoState);
 
   const { data, refetch } = useQuery("logout", () => fetchLogout(), {
     enabled: false,
@@ -27,6 +28,10 @@ const UserMenu = () => {
       navigate("/auth/login");
     }
   });
+
+  const resetUserData = () => {
+    return resetUserInfo;
+  };
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -44,6 +49,7 @@ const UserMenu = () => {
     if (setting === "마이페이지") {
       navigate("/mypage");
     } else {
+      resetUserData();
       refetch();
     }
   };
