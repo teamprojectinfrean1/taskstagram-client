@@ -7,7 +7,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { useRecoilValue, useResetRecoilState } from "recoil";
 import basicProfileImage from "@/assets/basicProfileImage.png";
 import { useQuery } from "react-query";
-import { fetchLogout } from "@/apis/user/fetchLogout";
+import { fetchLogout } from "@/apis/member/fetchLogout";
 import theme from "@/theme/theme";
 import UserAvatar from "@/components/UserAvatar";
 
