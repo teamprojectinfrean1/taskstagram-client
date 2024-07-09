@@ -1,4 +1,4 @@
-import { unauthorizedAxios } from "./domainSettings";
+import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 import { ProjectSummary } from "@/models/Project";
 
 const projectPath = "project";
@@ -71,7 +71,7 @@ export const getProjectList = async (
   userUuid: string
 ): Promise<PrjectListResponse> => {
   try {
-    const response = await unauthorizedAxios.get(
+    const response = await authorizedAxios.get(
       `${projectPath}/list/${userUuid}`
     );
     return response.data.data;
@@ -86,9 +86,7 @@ export const getProjectDetail = async (
 ): Promise<ProjectDetailReponse | null> => {
   if (projectId) {
     try {
-      const response = await unauthorizedAxios.get(
-        `${projectPath}/${projectId}`
-      );
+      const response = await authorizedAxios.get(`${projectPath}/${projectId}`);
       return response.data.data;
     } catch (error) {
       throw new Error("프로젝트 상세 정보를 가져오는 중 오류가 발생했습니다.");
@@ -135,7 +133,7 @@ export const createOneProject = async ({
     if (projectImageFile) {
       formData.append("multipartFile", projectImageFile);
     }
-    const response = await unauthorizedAxios.post(`${projectPath}`, formData, {
+    const response = await authorizedAxios.post(`${projectPath}`, formData, {
       headers: { "Content-Type": "multipart/form-data" },
     });
     return {
@@ -183,7 +181,7 @@ export const replaceOneProject = async ({
     if (projectImageFile) {
       formData.append("multipartFile", projectImageFile);
     }
-    const response = await unauthorizedAxios.put(
+    const response = await authorizedAxios.put(
       `${projectPath}/${projectId}`,
       formData,
       {
@@ -201,7 +199,7 @@ export const replaceOneProject = async ({
 //프로젝트 삭제
 export const deleteOneProject = async (projectId: string): Promise<boolean> => {
   try {
-    const response = await unauthorizedAxios.delete(
+    const response = await authorizedAxios.delete(
       `${projectPath}/${projectId}`
     );
     return response.data.isSuccess; //추후 변경 필요
@@ -215,7 +213,7 @@ export const changeMainProject = async (
   projectId: string | null
 ): Promise<ChangeMainProjectResponse> => {
   try {
-    const response = await unauthorizedAxios.put(
+    const response = await authorizedAxios.put(
       `${projectPath}/main-project/${projectId}`
     );
     return {

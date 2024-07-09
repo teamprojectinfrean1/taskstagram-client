@@ -24,9 +24,7 @@ const DurationPicker = ({
   onEndDateSelectionChange,
 }: DurationPickerProps) => {
   const handleStartDateChange = (startDate: Dayjs | null) => {
-    const dateString = startDate
-      ? startDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
-      : null;
+    const dateString = startDate ? startDate.format("YYYY-MM-DDTHH:mm:ss.SSS[Z]") : null;
     onStartDateSelectionChange(dateString);
     if (
       selectedEndDate &&
@@ -36,13 +34,11 @@ const DurationPicker = ({
       onEndDateSelectionChange(null);
     }
   };
-
+  
   const handleEndDateChange = (endDate: Dayjs | null) => {
-    const dateString = endDate
-      ? endDate.utc().format("YYYY-MM-DDTHH:mm:ss.SSS[Z]")
-      : null;
+    const dateString = endDate ? endDate.format("YYYY-MM-DDTHH:mm:ss.SSS[Z]") : null;
     onEndDateSelectionChange(dateString);
-  };
+  };  
 
   return (
     <Box display="flex" gap={2}>

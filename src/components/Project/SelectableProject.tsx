@@ -49,7 +49,7 @@ const SelectableProject = ({
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const selectedProject = useRecoilValue(selectedProjectState);
   const [projectList, setProjectList] = useState<ProjectSummary[]>([]);
-  const [inputValue, setInputValue] = useState('');
+  const [inputValue, setInputValue] = useState("");
 
   useEffect(() => {
     if (projects && projects.length > 0) {
@@ -94,7 +94,7 @@ const SelectableProject = ({
     value: ProjectSummary | null
   ) => {
     onSelectedProjectChanged(value);
-    setInputValue(''); 
+    setInputValue("");
     handleClose();
   };
 
@@ -103,7 +103,6 @@ const SelectableProject = ({
 
   return (
     <>
-    {projectList?.length > 0 && (
       <Box
         sx={{
           width: 300,
@@ -132,7 +131,7 @@ const SelectableProject = ({
         <IconButton edge="end" color="inherit">
           <UnfoldMoreIcon />
         </IconButton>
-      </Box>)}
+      </Box>
       <StyledPopper
         id={id}
         open={open}
@@ -207,7 +206,6 @@ const SelectableProject = ({
                     placeholder="프로젝트명 입력"
                   />
                 )}
-                
               />
             )}
             <Box

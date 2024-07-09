@@ -57,7 +57,7 @@ const ProjectPage = () => {
   const type = location.state !== null ? location.state.type : "";
   const [showDeleteFormModal, setShowDeleteFormModal] = useState(false);
   const userInfo = useRecoilValue(userInfoState);
-  const userUuid = userInfo.memberId || "085fe931-da02-456e-b8ff-67d6521a32b4";
+  const userUuid = userInfo.memberId;
   const [isUserSelectedProjectLeader, setIsUserSelectedProjectLeader] =
     useState<boolean | null>(null);
   const [formErrors, setFormErrors] = useState<Partial<ProjectFormData>>({});
@@ -93,12 +93,10 @@ const ProjectPage = () => {
   };
 
   useEffect(() => {
-    if(selectedProject) {
     setIsUserSelectedProjectLeader(
-      selectedProject !== null ? selectedProject.permission === "LEADER" : null
+      selectedProject ? selectedProject.permission === "LEADER" : null
     );
     setFormErrors({});
-  }
   }, [selectedProject]);
 
   const { data, refetch, isLoading, isError } = useQuery(
@@ -148,9 +146,12 @@ const ProjectPage = () => {
           .replace("T", " ")
           .slice(0, -3),
         isMainProject: selectedProject?.isMainProject,
-        projectLeaderUuid: data.projectLeader.leaderUUID,
-        projectLeaderNickname: data.projectLeader.nickname,
-        projectLeaderProfileImage: data.projectLeader.profileImage,
+        projectLeaderUuid:
+          data.projectLeader != null ? data.projectLeader.leaderUUID : "",
+        projectLeaderNickname:
+          data.projectLeader != null ? data.projectLeader.nickname : "",
+        projectLeaderProfileImage:
+          data.projectLeader != null ? data.projectLeader.profileImage : null,
       });
       //선택된 프로젝트 변경될 때마다 location.state 초기화
       navigate(location.pathname, { replace: true });
@@ -306,7 +307,7 @@ const ProjectPage = () => {
     if (type === "new") {
       setProjectActingMode("Create");
       createMutation.mutate({
-        projectName: formData.projectName,
+        projectName: formData.projectName.trim(),
         writerUuid: userUuid,
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
@@ -330,7 +331,7 @@ const ProjectPage = () => {
       setProjectActingMode("Update");
       replaceMutation.mutate({
         projectId: selectedProject.projectId,
-        projectName: formData.projectName,
+        projectName: formData.projectName.trim(),
         updaterUuid: userUuid,
         projectContent:
           formData.projectContent !== null ? formData.projectContent : "",
@@ -580,22 +581,25 @@ const ProjectPage = () => {
                           lineHeight: "15px",
                         }}
                       >
-                        <Box>
-                          <UserAvatar
-                            imageUrl={formData.projectLeaderProfileImage ?? ""}
-                            size={18}
-                            sx={{ mr: "6px" }}
-                          />
-                        </Box>
-                        <Box
-                          sx={{
-                            flexGrow: 1,
-                            overflow: "hidden",
-                            textOverflow: "ellipsis",
-                          }}
-                        >
-                          {formData.projectLeaderNickname}
-                        </Box>
+                        {formData.projectLeaderUuid && (
+                          <>
+                            <Box>
+                              <UserAvatar
+                                sx={{ width: 18, height: 18, mr: "6px" }}
+                                src={formData.projectLeaderProfileImage ?? ""}
+                              />
+                            </Box>
+                            <Box
+                              sx={{
+                                flexGrow: 1,
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {formData.projectLeaderNickname}
+                            </Box>
+                          </>
+                        )}
                       </Box>
                     </Box>
                   )}

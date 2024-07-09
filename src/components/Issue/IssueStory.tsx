@@ -19,18 +19,22 @@ const IssueStory = ({ story }: UserStoryProps) => {
       flexDirection="column"
       alignItems="center"
       gap={1}
-      sx={{ m: 2 }}
+      sx={{ width: "80px" }}
     >
       <UserAvatar
         sx={{
           border: `4px solid ${
-            hasAssigneeIssueInProgress ? green[400] : grey[400]
+            hasAssigneeIssueInProgress ? green[400] : grey[500]
           }`,
         }}
         imageUrl={userProfileImage}
       />
       <Tooltip title={textIsOverflowing ? userNickname : ""} placement="bottom">
-        <Typography ref={userNameRef} className="textClamping lineClampOne" sx={{fontSize: 18, fontWeight: 600}}>
+        <Typography
+          ref={userNameRef}
+          className="textClamping lineClampOne"
+          sx={{ fontSize: 18, fontWeight: 600 }}
+        >
           {userNickname}
         </Typography>
       </Tooltip>

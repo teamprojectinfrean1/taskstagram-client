@@ -19,6 +19,10 @@ import { userInfoState } from "@/stores/userStore";
 import { UserMenu } from "@/components";
 import useFeedbackHandler from "@/hooks/useFeedbackHandler";
 import { useNavigate } from "react-router-dom";
+import {
+  issueStatusBoardSearchState,
+  endIssueSearchMode,
+} from "@/stores/issueStore";
 
 type TopNavProps = {
   onMenuClick: () => void;
@@ -30,6 +34,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   const userInfo = useRecoilValue(userInfoState);
   const userUuid = userInfo.memberId;
 
+  const [issueStatusBoardSearch, setIssueStatusBoardSearch] = useRecoilState(
+    issueStatusBoardSearchState
+  );
   const [selectedProject, setSelectedProject] =
     useRecoilState(selectedProjectState);
   const [projectDataList, setProjectDataList] =
@@ -43,8 +50,10 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   );
 
   useEffect(() => {
-    refetch();
-  }, []);
+    if (userUuid && userUuid !== null) {
+      refetch();
+    }
+  }, [userUuid]);
 
   useEffect(() => {
     if (isSuccess) {
@@ -57,7 +66,7 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
       if (noMainProjectDataList && noMainProjectDataList.length > 0) {
         projectList = projectList.concat(noMainProjectDataList);
       }
-      if(projectList?.length === 0) {
+      if (projectList?.length === 0) {
         navigate("/getting-started");
       }
       //전체 프로젝트 초기화
@@ -106,12 +115,22 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
           }
         });
 
+        //메인 프로젝트였던 것을 메인 프로젝트로 재변경할 시
+        const isBeforeMainProject =
+          changeMainprojectMuation.data.changedProjectId ===
+          mainProject[0].projectId;
+
         queryClient.setQueryData<PrjectListResponse>(
           ["getProjectList", userUuid],
           {
             mainProject:
               mainProject.length > 0
-                ? [{ ...oldData.mainProject[0], isMainProject: false }]
+                ? [
+                    {
+                      ...oldData.mainProject[0],
+                      isMainProject: isBeforeMainProject,
+                    },
+                  ]
                 : [],
             noMainProject: newNoMainProjectData,
           }
@@ -130,6 +149,9 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
     selectedProject: ProjectSummary | null
   ) => {
     setSelectedProject(selectedProject);
+    endIssueSearchMode(setIssueStatusBoardSearch, "TODO");
+    endIssueSearchMode(setIssueStatusBoardSearch, "INPROGRESS");
+    endIssueSearchMode(setIssueStatusBoardSearch, "DONE");
   };
 
   useFeedbackHandler({
@@ -141,29 +163,31 @@ const TopNav = ({ onMenuClick }: TopNavProps) => {
   return (
     <AppBar
       position="sticky"
-      sx={{ 
-        // zIndex: (theme) => theme.zIndex.drawer, 
+      sx={{
+        // zIndex: (theme) => theme.zIndex.drawer,
         boxShadow: 0,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between" }}>
-        <Box sx={{ display: "flex", alignItems: "center" }}>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-            onClick={onMenuClick}
-          >
-            <MenuIcon />
-          </IconButton>
-          <SelectableProject
-            projects={projectDataList}
-            onSelectedProjectChanged={handleChangeSelectedProject}
-            onClickCheckBox={handleChangeMainProject}
-          />
-        </Box>
+      <Toolbar sx={{ justifyContent: projectDataList?.length > 0  ? "space-between" : "flex-end" }}>
+        {projectDataList?.length > 0 && (
+          <Box sx={{ display: "flex", alignItems: "center" }}>
+            <IconButton
+              size="large"
+              edge="start"
+              color="inherit"
+              aria-label="menu"
+              sx={{ mr: 2 }}
+              onClick={onMenuClick}
+            >
+              <MenuIcon />
+            </IconButton>
+            <SelectableProject
+              projects={projectDataList}
+              onSelectedProjectChanged={handleChangeSelectedProject}
+              onClickCheckBox={handleChangeMainProject}
+            />
+          </Box>
+        )}
         <UserMenu />
       </Toolbar>
     </AppBar>
