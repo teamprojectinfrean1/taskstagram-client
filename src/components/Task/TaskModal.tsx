@@ -188,14 +188,8 @@ const TaskModal = ({
             ? null
             : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
-        startDate:
-          formData.taskStartDate !== null
-            ? new Date(formData.taskStartDate).toISOString()
-            : null,
-        endDate:
-          formData.taskEndDate !== null
-            ? new Date(formData.taskEndDate).toISOString()
-            : null,
+        startDate: formData.taskStartDate ?? null,
+        endDate: formData.taskEndDate ?? null,
         editDeletePermission: formData.taskAuthorityType,
       });
     } else {
@@ -210,14 +204,8 @@ const TaskModal = ({
             ? null
             : JSON.stringify(formData.taskContent),
         taskTagList: formData.taskTags ?? [],
-        startDate:
-          formData.taskStartDate !== null
-            ? new Date(formData.taskStartDate).toISOString()
-            : null,
-        endDate:
-          formData.taskEndDate !== null
-            ? new Date(formData.taskEndDate).toISOString()
-            : null,
+        startDate: formData.taskStartDate ?? null,
+        endDate: formData.taskEndDate ?? null,
         editDeletePermission: formData.taskAuthorityType,
       });
     }
