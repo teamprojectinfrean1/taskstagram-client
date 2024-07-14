@@ -13,16 +13,22 @@ export const fetchLogin = async ({
   password,
 }: fetchLoginRequest): Promise<string | undefined> => {
   try {
-    const response = await unauthorizedAxios.post(`${loginPath}`, {
-      id,
-      password,
-    });
+    const response = await unauthorizedAxios.post(
+      `${loginPath}`,
+      {
+        id,
+        password,
+      },
+      {
+        withCredentials: true,
+      }
+    );
     const accessToken = response.data.data.Authorization[0];
     const decodedToken = jwtDecode(accessToken);
     const memberId = decodedToken.sub;
     sessionStorage.setItem("accessToken", accessToken);
     return memberId;
   } catch (error) {
-    throw error
+    throw error;
   }
 };
