@@ -141,19 +141,6 @@ const TaskModal = ({
         } else {
           setIsReadOnlyMode(false);
         }
-      } else {
-        setFormData({
-          taskId: "",
-          taskTitle: "",
-          taskContent: null,
-          taskTags: null,
-          taskStartDate: null,
-          taskEndDate: null,
-          taskAuthorityType: "allProjectMember",
-          taskStatus: null,
-          lastUpdateUserNickname: "",
-          lastUpdateDate: "",
-        });
       }
     }
   }, [data, isOpen]);

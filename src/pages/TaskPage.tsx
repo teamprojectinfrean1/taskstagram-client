@@ -205,15 +205,17 @@ const TaskPage = () => {
           />
         </Box>
       </Grid>
-      <TaskModal
-        selectedTask={selectedTask as Task}
-        isOpen={showModal}
-        isUserSelectedProjectLeader={isUserSelectedProjectLeader}
-        onAdd={addTask}
-        onReplace={replaceTask}
-        onDelete={deleteTask}
-        onCloseModal={handleCloseTaskModal}
-      ></TaskModal>
+      {showModal && (
+        <TaskModal
+          selectedTask={selectedTask as Task}
+          isOpen={showModal}
+          isUserSelectedProjectLeader={isUserSelectedProjectLeader}
+          onAdd={addTask}
+          onReplace={replaceTask}
+          onDelete={deleteTask}
+          onCloseModal={handleCloseTaskModal}
+        ></TaskModal>
+      )}
       {(createMutation.isLoading ||
         replaceMutation.isLoading ||
         deleteMutation.isLoading) && <Spinner centerInViewport size={70} />}
