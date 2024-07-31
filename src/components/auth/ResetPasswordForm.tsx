@@ -5,8 +5,7 @@ import { useEffect, useState } from "react";
 import PasswordInput from "./PasswordInput";
 import PasswordConfirmationInput from "./PasswordConfirmationInput";
 import { useMutation } from "react-query";
-import { resetPassword } from "@/apis/user/resetPassword";
-import { resetPasswordRequest } from "@/apis/user/resetPassword";
+import { resetPassword, resetPasswordRequest } from "@/apis/userApi";
 
 const ResetPasswordForm = () => {
   const navigate = useNavigate();

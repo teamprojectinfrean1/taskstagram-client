@@ -4,11 +4,8 @@ import { useRef, useState, useEffect, ChangeEvent } from "react";
 import { useMutation } from "react-query";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
-import {
-  changeProfileImage,
-  ChangeProfileImageRequest,
-} from "@/apis/user/changeProfileImage";
 import { styled } from "@mui/material/styles";
+import { changeProfileImage, ChangeProfileImageRequest } from "@/apis/userApi";
 
 const ChangeProfileImage = () => {
   const VisuallyHiddenInput = styled("input")({

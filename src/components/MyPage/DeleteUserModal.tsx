@@ -6,7 +6,7 @@ import { useRecoilValue } from "recoil";
 import CloseIcon from "@mui/icons-material/Close";
 import DeleteUserSuccessModal from "./DeleteUserSuccessModal";
 import { useMutation } from "react-query";
-import { deleteUser } from "@/apis/member/deleteUser";
+import { deleteUser } from "@/apis/memberApi";
 
 type DeleteUserModalProps = {
   open: boolean;

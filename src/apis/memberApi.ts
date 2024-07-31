@@ -1,6 +1,6 @@
 import { authorizedAxios, unauthorizedAxios } from "./domainSettings";
 
-const memberPath = "/member";
+const memberPath = "member";
 
 type GetPaginatedProjectMemberListRequest = {
   page: number;
@@ -73,3 +73,36 @@ export const getAllAppUserList =
       throw new Error("전체 멤버 목록을 가져오는 중 오류가 발생했습니다.");
     }
   };
+
+export const deleteUser = async (memberId: string) => {
+  try {
+    const response = await authorizedAxios.delete(
+      `${memberPath}?memberId=${memberId}`
+    );
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+type GetUserInfoResponse = {
+  userOauthUuid: string,
+  id: string,
+  nickname: string,
+  email: string,
+  profileImage: string,
+  weaver: boolean
+}
+
+export const getUserInfo = async (): Promise<GetUserInfoResponse | undefined> => {
+  try {
+    const response = await authorizedAxios.get(`${memberPath}/token`, {
+      headers: {
+        Authorization: sessionStorage.getItem("accessToken"),
+      },
+    });
+    return response.data.data;
+  } catch (error) {
+    throw error
+  }
+};

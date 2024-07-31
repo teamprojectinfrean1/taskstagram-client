@@ -5,12 +5,12 @@ import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { Link, useNavigate } from "react-router-dom";
 import { useRecoilValue } from "recoil";
 import { signupInfoState } from "@/stores/authStore";
-import { fetchSignup } from "@/apis/user/fetchSignup";
 import ProfileImageInput from "./ProfileImageInput";
 import { useChangeSignupInfo } from "@/hooks/useChangeSignupInfo";
 import { useMutation } from "react-query";
 import { useEffect, useState } from "react";
 import ErrorHandling from "../ErrorHandling";
+import { fetchSignup } from "@/apis/userApi";
 
 const SingupFormOptional = () => {
   const navigate = useNavigate();

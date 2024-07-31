@@ -9,8 +9,7 @@ import { useMutation } from "react-query";
 import { useRecoilValue } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import ErrorHandling from "../ErrorHandling";
-import { ChangeUserInfoPasswordRequest } from "@/apis/user/changeUserInfoPassword";
-import { changeUserInfoPassword } from "@/apis/user/changeUserInfoPassword";
+import { ChangeUserInfoPasswordRequest, changeUserInfoPassword } from "@/apis/userApi";
 
 const ChangePassword = () => {
   const navigate = useNavigate();

@@ -2,8 +2,8 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, Button, TextField } from "@mui/material";
 import { useEffect, useState } from "react";
-import { checkIdExistence } from "@/apis/user/checkExistence";
 import { useQuery } from "react-query";
+import { checkIdExistence } from "@/apis/userApi";
 
 type IdInputProps = {
   id: string;

@@ -3,7 +3,7 @@ import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { useQuery } from "react-query";
-import { checkEmailExistence } from "@/apis/user/checkExistence";
+import { checkEmailExistence } from "@/apis/userApi";
 
 type EmailInputProps = {
   email: string;

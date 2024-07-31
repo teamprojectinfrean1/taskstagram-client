@@ -1,11 +1,14 @@
-import { unauthorizedAxios } from "../domainSettings";
-import { oauthLoginPath } from "./oauthSettings";
+import { unauthorizedAxios } from "./domainSettings";
 import { jwtDecode } from "jwt-decode";
 
-export const fetchKakaoLogin = async (code: string | null): Promise<string | undefined> => {
+export const oauthPath = "oauth";
+
+export const fetchKakaoLogin = async (
+  code: string | null
+): Promise<string | undefined> => {
   try {
     const response = await unauthorizedAxios.get(
-      `${oauthLoginPath}/kakao?code=${code}`
+      `${oauthPath}/login/kakao?code=${code}`
     );
     const accessToken = response.data.data.Authorization[0];
     const decodedToken = jwtDecode(accessToken);

@@ -1,13 +1,10 @@
 import theme from "@/theme/theme";
-import { Grid, Typography, Button, TextField } from "@mui/material";
+import { Grid, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { useMutation } from "react-query";
 import EmailVerificationCodeInput from "./EmailVerificationCodeInput";
-import {
-  EmailCertificationRequest,
-  requestEmailCertification,
-} from "@/apis/user/requestEmailCertification";
+import { EmailCertificationRequest, requestEmailCertification } from "@/apis/userApi";
 
 type EmailCertificationInputProps = {
   findUserInfo: "findId" | "findPassword";

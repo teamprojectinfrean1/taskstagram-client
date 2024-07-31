@@ -4,12 +4,11 @@ import { Typography, Box, Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import theme from "@/theme/theme";
 import { useMutation } from "react-query";
-import { changeUserInfo } from "@/apis/user/changeUserInfo";
 import { useRecoilState } from "recoil";
 import { userInfoState } from "@/stores/userStore";
 import { ErrorHandling } from "@/components";
 import { EmailInput } from "@/components/Auth";
-import { ChangeUserInfoRequest } from "@/apis/user/changeUserInfo";
+import { changeUserInfo, ChangeUserInfoRequest } from "@/apis/userApi";
 
 const ChangeEmail = () => {
   const navigate = useNavigate();

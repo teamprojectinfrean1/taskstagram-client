@@ -8,7 +8,7 @@ import {
   CheckFindPasswordEmailVerificationResponse,
   CheckEmailVerificationRequest,
   checkEmailVerification,
-} from "@/apis/user/checkEmailVerification";
+} from "@/apis/userApi";
 
 type EmailVerificationCodeInputProps = {
   isSuccess: boolean;
@@ -58,9 +58,9 @@ const EmailVerificationCodeInput = ({
 
   useEffect(() => {
     if (mutateEmailVerification.error === 404) {
-      alert("해당 이메일로 가입하신 계정이 없습니다. ")
+      alert("해당 이메일로 가입하신 계정이 없습니다. ");
     }
-  }, [mutateEmailVerification.error])
+  }, [mutateEmailVerification.error]);
 
   return (
     <>

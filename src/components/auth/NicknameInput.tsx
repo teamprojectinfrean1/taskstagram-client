@@ -2,8 +2,8 @@ import theme from "@/theme/theme";
 import { checkAuthInputValidity } from "@/utils/authCheck";
 import { Grid, Button, TextField } from "@mui/material";
 import { useState, useEffect } from "react";
-import { checkNicknameExistence } from "@/apis/user/checkExistence";
 import { useQuery } from "react-query";
+import { checkNicknameExistence } from "@/apis/userApi";
 
 type NicknameInputProps = {
   nickname: string;
