@@ -12,7 +12,7 @@ Tasktagram은 Kanban 보드 스타일의 협업 관리 웹 애플리케이션으
 
 # 목차
 
-#### [🔧 기술 스택](#기술-스택)
+#### [🔧 기술 스택](#-기술-스택)
   - [Typescript를 선택한 이유](#typescript를-선택한-이유)
   - [Material UI를 선택한 이유](#material-ui를-선택한-이유)
   - [Recoil을 선택한 이유](#recoil을-선택한-이유)
@@ -26,44 +26,93 @@ Tasktagram은 Kanban 보드 스타일의 협업 관리 웹 애플리케이션으
 <br />
 <br />
 
-## 기술 스택
+## 🔧 기술 스택
 
 여기에 기술 스택에 대한 내용을 작성합니다.
 
-## Typescript를 선택한 이유
+### Typescript를 선택한 이유
 
-여기에 Typescript를 선택한 이유에 대한 내용을 작성합니다.
 
-## Material UI를 선택한 이유
 
-여기에 Material UI를 선택한 이유에 대한 내용을 작성합니다.
+### Material UI를 선택한 이유
 
-## Recoil을 선택한 이유
 
-여기에 Recoil을 선택한 이유에 대한 내용을 작성합니다.
 
-## React Query를 선택한 이유
+### Recoil을 선택한 이유
 
-여기에 React Query를 선택한 이유에 대한 내용을 작성합니다.
+
+
+### React Query를 선택한 이유
+
+
 
 ## 상세 기능
 
-상세 기능에 대한 내용을 작성합니다.
+
 
 ## 시스템 아키텍쳐
 
-시스템 아키텍쳐에 대한 내용을 작성합니다.
+
 
 ## 디렉토리 구조
 
-디렉토리 구조에 대한 내용을 작성합니다.
+
 
 ## 개선이 필요한 부분
 
-개선이 필요한 부분에 대한 내용을 작성합니다.
+
 
 ## 팀원 소개
-
-팀원 소개에 대한 내용을 작성합니다.
-
+<table>
+  <tbody>
+    <tr>
+      <td rowspan="3" style="background-color: #f5f5f5;"><strong>Frontend</strong></td>
+      <td>박수빈</td>
+      <td><a href="mailto:sooparksb@gmail.com">sooparksb@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/sooparkdev">
+          <img src="https://img.shields.io/badge/GitHub-ED8B00?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 박수빈" style="background-color: #ED8B00;" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>정석호</td>
+      <td><a href="mailto:sfdjsh@naver.com">sfdjsh@naver.com</a></td>
+      <td>
+        <a href="https://github.com/sfdjsh">
+          <img src="https://img.shields.io/badge/GitHub-8E44AD?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 정석호" style="background-color: #8E44AD;" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td>마효리</td>
+      <td><a href="mailto:hyori100@gmail.com">hyori100@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/hyori100">
+          <img src="https://img.shields.io/badge/GitHub-0094D8?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 마효리" style="background-color: #0094D8;" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Backend</strong></td>
+      <td>전창준</td>
+      <td><a href="mailto:jcjk0302@gmail.com">jcjk0302@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/ondjj">
+          <img src="https://img.shields.io/badge/GitHub-00A86B?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 전창준" style="background-color: #00A86B;" />
+        </a>
+      </td>
+    </tr>
+    <tr>
+      <td><strong>Designer</strong></td>
+      <td>윤소은</td>
+      <td><a href="mailto:thdmadns@gmail.com">thdmadns@gmail.com</a></td>
+      <td>
+        <a href="https://github.com/Dubabbi">
+          <img src="https://img.shields.io/badge/GitHub-FB6C6C?style=flat-square&logo=GitHub&logoColor=white" alt="GitHub - 윤소은" style="background-color: #FB6C6C;" />
+        </a>
+      </td>
+    </tr>
+  </tbody>
+</table>
 
