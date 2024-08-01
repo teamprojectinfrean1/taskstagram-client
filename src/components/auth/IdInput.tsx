@@ -25,9 +25,7 @@ const IdInput = ({
   const [errorState, setErrorState] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState("");
 
-  // 아이디 유효성 검사 상태
   const validState = !!(id && !isIdValid);
-  // 아이디 중복 검사 상태
   const disabledState = !!(!isIdValid || isIdDuplicate);
 
   const { data, isLoading, error, refetch } = useQuery(

@@ -15,7 +15,6 @@ const PasswordInput = ({
   isPasswordValid,
   setIsPasswordValid,
 }: PasswordInputProps) => {
-  // 비밀번호 유효성 검사 상태
   const validState = !!(password && !isPasswordValid);
 
   return (

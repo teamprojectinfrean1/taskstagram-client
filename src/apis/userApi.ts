@@ -9,7 +9,6 @@ export type ChangeProfileImageRequest = {
   memberId: string;
 };
 
-// 사용자 프로필 이미지 변경 api
 export const changeProfileImage = async ({
   profileImage,
   memberId,
@@ -35,7 +34,6 @@ export type ChangeUserInfoRequest = {
   memberId: string;
 };
 
-// 사용자 정보(닉네임, 비밀번호, 이메일) 변경 api
 export const changeUserInfo = async ({
   type,
   value,
@@ -100,7 +98,6 @@ export type CheckFindPasswordEmailVerificationResponse = {
   userUuid: string;
 };
 
-// 이메일 인증 코드 확인 api(아이디 찾기, 비밀번호 찾기)
 export const checkEmailVerification = async ({
   findUserInfo,
   email,
@@ -222,7 +219,6 @@ export type EmailCertificationRequest = {
   email: string;
 };
 
-// 이메일 인증 코드 요청 api(아이디 찾기, 비밀번호 찾기)
 export const requestEmailCertification = async ({
   findUserInfo,
   email,
@@ -245,7 +241,6 @@ export type resetPasswordRequest = {
   password: string;
 };
 
-// 비밀번호 찾기(재설정) api
 export const resetPassword = async ({
   memberId,
   password,

@@ -1,12 +1,8 @@
-// 이메일 유효성 검사
 const emailRegEx =
   /^[A-Za-z0-9]([-_.]?[A-Za-z0-9])*@[A-Za-z0-9]([-_.]?[A-Za-z0-9])*\.[A-Za-z]{2,3}$/i;
-// 아이디 유효성 검사
 const idRegEx = /^([a-z0-9]){5,20}$/;
-// 비밀번호 유효성 검사
 const passwordRegEx =
   /^(?!((?:[A-Za-z]+)|(?:[~!@#$%^&*()_+=]+)|(?:[0-9]+))$)[A-Za-z\d~!@#$%^&*()_+=]{8,20}$/;
-// 닉네임 유효성 검사
 const nicknameRegEx = /^[^ㄱ-ㅎ]{2,20}$/;
 
 type PasswordType = {
@@ -14,7 +10,6 @@ type PasswordType = {
   passwordDouble: string;
 };
 
-// 회원가입 input 유효성 검사
 export const checkAuthInputValidity = ({
   type,
   authValue,
@@ -34,7 +29,6 @@ export const checkAuthInputValidity = ({
   }
 };
 
-// 비밀번호 확인 검증
 export const passwordDoubleCheck = ({
   password,
   passwordDouble,

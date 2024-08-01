@@ -21,11 +21,8 @@ const NicknameInput = ({
   const [errorState, setErrorState] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState("");
 
-  // 닉네임 유효성 검사 변수
   const [isNicknameValid, setIsNicknameValid] = useState(false);
-  // 닉네임 유효성 검사 상태
   const validState = !!(nickname && !isNicknameValid);
-  // 닉네임 중복 검사 상태
   const disabledState = !!(!isNicknameValid || isNicknameDuplicate);
 
   const { data, isLoading, error, refetch } = useQuery(

@@ -18,7 +18,6 @@ const SignupFormRequired = () => {
 
   const signupInfo = useRecoilValue(signupInfoState);
 
-  // 회원가입 필수 input(이메일, 아이디, 비밀번호) 유효성 확인 변수
   const [isValid, setIsValid] = useState({
     isEmailValid: false,
     isIdValid: false,
@@ -26,13 +25,11 @@ const SignupFormRequired = () => {
     isPasswordConfirmValid: false,
   });
 
-  // 회원가입 필수 input 중복 확인 변수
   const [isDuplicate, setIsDuplicate] = useState({
     isEmailDuplicate: false,
     isIdDuplicate: false,
   });
 
-  // 회원가입 필수 input 작성 확인 변수
   const requiredField = {
     emailField: !!(isValid.isEmailValid && isDuplicate.isEmailDuplicate),
     idField: !!(isValid.isIdValid && isDuplicate.isIdDuplicate),
@@ -47,7 +44,6 @@ const SignupFormRequired = () => {
     });
   };
 
-  // 회원가입 필수 input 체크 변수
   const [isTotalRequiredInput, setIsTotalRequiredInput] = useState(false);
 
   useEffect(() => {

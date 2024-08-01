@@ -18,7 +18,6 @@ const EmailCertificationInput = ({
 
   const [email, setEmail] = useState("");
   const [isEmailValid, setIsEmailValid] = useState(false);
-  // 이메일 유효성 검사 상태
   const validState = !!(email && !isEmailValid);
 
   const mutateEmailCertification = useMutation(

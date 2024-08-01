@@ -1,4 +1,4 @@
-import { Box, Typography, IconButton, Button } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import {
   ChangeProfileImage,
   PasswordForm,

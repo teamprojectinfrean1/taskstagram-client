@@ -25,9 +25,7 @@ const EmailInput = ({
   const [errorState, setErrorState] = useState(false);
   const [showErrorMessage, setShowErrorMessage] = useState("");
 
-  // 이메일 유효성 검사 상태
   const validState = !!(email && !isEmailValid);
-  // 이메일 중복 검사 상태
   const disabledState = !!(!isEmailValid || isEmailDuplicate);
 
   const { data, isLoading, error, refetch } = useQuery(
