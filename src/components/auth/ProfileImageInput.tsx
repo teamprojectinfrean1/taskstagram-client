@@ -1,8 +1,7 @@
 import { Box, Button, Typography, Avatar } from "@mui/material";
 import { styled } from "@mui/material/styles";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import basicProfileImage from "@/assets/basicProfileImage.png";
-import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 type ProfileImageInputProps = {
   profileImage: File | null;
@@ -14,6 +13,7 @@ const ProfileImageInput = ({
   setProfileImage,
 }: ProfileImageInputProps) => {
   const [previewImage, setPreviewImage] = useState("");
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const VisuallyHiddenInput = styled("input")({
     clip: "rect(0 0 0 0)",
@@ -42,7 +42,14 @@ const ProfileImageInput = ({
       <Typography variant="h5" fontWeight="bold">
         프로필 설정
       </Typography>
-      <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          mt: 3,
+        }}
+      >
         <Button
           component="label"
           sx={{
@@ -62,7 +69,17 @@ const ProfileImageInput = ({
             onChange={(e) => {
               handleFileChange(e);
             }}
+            ref={fileInputRef}
           />
+        </Button>
+        <Button
+          sx={{
+            backgroundColor: "#F0EFFA",
+            fontSize: "13px",
+          }}
+          onClick={() => fileInputRef.current?.click()}
+        >
+          이미지 등록
         </Button>
       </Box>
     </>
