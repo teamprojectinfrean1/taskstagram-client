@@ -129,7 +129,7 @@ https://github.com/user-attachments/assets/0d4cb8b0-4e32-4d96-b393-e8e3ffd541f9
 
 
 ## 📂 디렉토리 구조
-![폴더구조](https://github.com/user-attachments/assets/8b200289-e92e-43bb-b03d-137e2a15082a)  
+![폴더 구조](https://github.com/user-attachments/assets/74352d4c-a053-495d-9e35-edceb02cc139)  
 <br />
 <br />
 
